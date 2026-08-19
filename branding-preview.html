@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WD Group — Brand Identity & Palette Direction Explorer</title>
+  <!-- Google Fonts: Inter & Noto Kufi Arabic (Same as SwissBlue) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Kufi+Arabic:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'Noto Kufi Arabic', 'system-ui', 'sans-serif'],
+            arabic: ['Noto Kufi Arabic', 'Inter', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Shared SwissBlue Foundation Tokens */
+    :root {
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 20px;
+      --radius-2xl: 24px;
+      --radius-pill: 999px;
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    body {
+      font-family: 'Inter', 'Noto Kufi Arabic', sans-serif;
+      transition: background-color 0.4s var(--ease-out);
+    }
+
+    [dir="rtl"] {
+      font-family: 'Noto Kufi Arabic', 'Inter', sans-serif;
+    }
+
+    /* Option A: Executive Obsidian & Sovereign Gold */
+    .theme-a {
+      --bg-page: #f8fafc;
+      --bg-card: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+      --brand-accent: #c5a059;
+      --brand-accent-light: #fbf6ec;
+      --brand-accent-border: #e9d7b4;
+      --hero-bg: #0a0f1d;
+      --hero-surface: #131c33;
+      --shadow-ambient: 0 10px 30px -10px rgba(15, 23, 42, 0.12);
+      --shadow-hover: 0 20px 40px -15px rgba(197, 160, 89, 0.22);
+      --sec1-color: #d97706;
+      --sec1-bg: #fffbeb;
+      --sec2-color: #0d9488;
+      --sec2-bg: #f0fdfa;
+      --sec3-color: #b45309;
+      --sec3-bg: #fff7ed;
+    }
+
+    /* Option B: Sovereign Forest Emerald & Sand */
+    .theme-b {
+      --bg-page: #f9faf8;
+      --bg-card: #ffffff;
+      --text-main: #062e24;
+      --text-muted: #526660;
+      --border-color: #e3eae7;
+      --brand-accent: #10b981;
+      --brand-accent-light: #ecfdf5;
+      --brand-accent-border: #a7f3d0;
+      --hero-bg: #03241d;
+      --hero-surface: #074033;
+      --shadow-ambient: 0 10px 30px -10px rgba(6, 46, 36, 0.12);
+      --shadow-hover: 0 20px 40px -15px rgba(16, 185, 129, 0.2);
+      --sec1-color: #059669;
+      --sec1-bg: #ecfdf5;
+      --sec2-color: #475569;
+      --sec2-bg: #f8fafc;
+      --sec3-color: #c2410c;
+      --sec3-bg: #fff7ed;
+    }
+
+    /* Option C: Tech-Industrial Graphite & Royal Sapphire */
+    .theme-c {
+      --bg-page: #f4f5f8;
+      --bg-card: #ffffff;
+      --text-main: #18181b;
+      --text-muted: #71717a;
+      --border-color: #e4e4e7;
+      --brand-accent: #2563eb;
+      --brand-accent-light: #eff6ff;
+      --brand-accent-border: #bfdbfe;
+      --hero-bg: #09090b;
+      --hero-surface: #18181b;
+      --shadow-ambient: 0 10px 30px -10px rgba(24, 24, 27, 0.12);
+      --shadow-hover: 0 20px 40px -15px rgba(37, 99, 235, 0.22);
+      --sec1-color: #ca8a04;
+      --sec1-bg: #fefce8;
+      --sec2-color: #0891b2;
+      --sec2-bg: #ecfeff;
+      --sec3-color: #ea580c;
+      --sec3-bg: #fff7ed;
+    }
+
+    .card-transition {
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .card-transition:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-hover);
+      border-color: var(--brand-accent-border);
+    }
+
+    .btn-pill {
+      border-radius: var(--radius-pill);
+    }
+    .card-radius {
+      border-radius: var(--radius-2xl);
+    }
+  </style>
+</head>
+<body class="theme-a bg-[var(--bg-page)] text-[var(--text-main)] min-h-screen">
+
+  <!-- Top Controller Bar -->
+  <header class="sticky top-0 z-50 backdrop-blur-md bg-white/90 border-b border-gray-200 shadow-sm py-3 px-4 sm:px-8">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center text-white font-bold text-lg tracking-wider border border-slate-700">
+          WD
+        </div>
+        <div>
+          <h1 class="text-sm font-bold tracking-tight text-slate-900">WD GROUP BRAND EXPLORER</h1>
+          <p class="text-xs text-slate-500">Live 3-Sector Section Brand Preview</p>
+        </div>
+      </div>
+
+      <!-- Theme Switcher Buttons -->
+      <div class="flex items-center gap-2 bg-slate-100 p-1.5 rounded-full border border-slate-200 text-xs font-semibold">
+        <button onclick="setTheme('theme-a')" id="btn-theme-a" class="theme-btn px-4 py-1.5 rounded-full bg-white text-slate-900 shadow-sm transition-all flex items-center gap-2 font-bold">
+          <span class="w-2.5 h-2.5 rounded-full bg-[#c5a059]"></span>
+          <span>Option A: Sovereign Gold</span>
+        </button>
+        <button onclick="setTheme('theme-b')" id="btn-theme-b" class="theme-btn px-4 py-1.5 rounded-full text-slate-600 hover:text-slate-900 transition-all flex items-center gap-2 font-medium">
+          <span class="w-2.5 h-2.5 rounded-full bg-[#10b981]"></span>
+          <span>Option B: Sovereign Emerald</span>
+        </button>
+        <button onclick="setTheme('theme-c')" id="btn-theme-c" class="theme-btn px-4 py-1.5 rounded-full text-slate-600 hover:text-slate-900 transition-all flex items-center gap-2 font-medium">
+          <span class="w-2.5 h-2.5 rounded-full bg-[#2563eb]"></span>
+          <span>Option C: Tech Sapphire</span>
+        </button>
+      </div>
+
+      <!-- Language Switcher -->
+      <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-lg border border-slate-200 text-xs font-medium">
+        <button onclick="setLang('en')" id="btn-lang-en" class="px-2.5 py-1 rounded bg-white text-slate-900 shadow-xs font-bold">EN</button>
+        <button onclick="setLang('ar')" id="btn-lang-ar" class="px-2.5 py-1 rounded text-slate-600 hover:text-slate-900 font-bold">عربي</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Active Option Info Banner -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-8 pt-8 pb-2">
+    <div id="palette-banner" class="p-5 rounded-2xl border transition-all duration-300 bg-white/70 backdrop-blur border-[var(--border-color)]">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <span id="palette-tag" class="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider bg-[var(--brand-accent-light)] text-[var(--text-main)] border border-[var(--brand-accent-border)]">
+            Option A — Prestigious & Established
+          </span>
+          <h2 id="palette-title" class="text-lg font-bold mt-1 text-[var(--text-main)]">
+            Executive Obsidian Slate & Sovereign Brushed Gold
+          </h2>
+          <p id="palette-desc" class="text-xs text-[var(--text-muted)] mt-0.5">
+            Reflects high-value investment governance, luxury hospitality pedigree, and sovereign-grade engineering.
+          </p>
+        </div>
+        <!-- Swatches -->
+        <div class="flex items-center gap-2" id="swatches-container">
+          <div class="text-center">
+            <div class="w-8 h-8 rounded-lg shadow-sm border border-black/10" style="background: var(--hero-bg)"></div>
+            <span class="text-[10px] text-gray-500 font-mono">Primary</span>
+          </div>
+          <div class="text-center">
+            <div class="w-8 h-8 rounded-lg shadow-sm border border-black/10" style="background: var(--brand-accent)"></div>
+            <span class="text-[10px] text-gray-500 font-mono">Gold</span>
+          </div>
+          <div class="text-center">
+            <div class="w-8 h-8 rounded-lg shadow-sm border border-black/10" style="background: var(--sec1-color)"></div>
+            <span class="text-[10px] text-gray-500 font-mono">Hosp.</span>
+          </div>
+          <div class="text-center">
+            <div class="w-8 h-8 rounded-lg shadow-sm border border-black/10" style="background: var(--sec2-color)"></div>
+            <span class="text-[10px] text-gray-500 font-mono">Mfg.</span>
+          </div>
+          <div class="text-center">
+            <div class="w-8 h-8 rounded-lg shadow-sm border border-black/10" style="background: var(--sec3-color)"></div>
+            <span class="text-[10px] text-gray-500 font-mono">Contr.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN SAMPLE SECTION: The 3 Core Pillars / Sectors -->
+  <section class="py-12 sm:py-16 px-4 sm:px-8">
+    <div class="max-w-7xl mx-auto">
+      
+      <!-- Section Header -->
+      <div class="text-center max-w-3xl mx-auto mb-14">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide uppercase bg-[var(--brand-accent-light)] text-[var(--text-main)] border border-[var(--brand-accent-border)] mb-4">
+          <span class="w-2 h-2 rounded-full" style="background: var(--brand-accent)"></span>
+          <span data-i18n="badge">Our Core Divisions</span>
+        </div>
+        <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-[var(--text-main)] mb-4 leading-tight" data-i18n="heading">
+          Three Pillars of Industrial & Service Excellence
+        </h2>
+        <p class="text-base sm:text-lg text-[var(--text-muted)] leading-relaxed" data-i18n="subheading">
+          WD Group drives sustainable value across three strategic sectors shaping modern infrastructure, manufacturing capability, and premier guest experiences.
+        </p>
+      </div>
+
+      <!-- 3 Sector Cards Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+        <!-- Sector 1: Hospitality -->
+        <div class="card-transition card-radius bg-[var(--bg-card)] border border-[var(--border-color)] p-8 flex flex-col justify-between relative overflow-hidden" style="box-shadow: var(--shadow-ambient)">
+          <!-- Top Accent Stripe -->
+          <div class="absolute top-0 inset-x-0 h-1.5" style="background: var(--sec1-color)"></div>
+
+          <div>
+            <!-- Sector Pill & Number -->
+            <div class="flex items-center justify-between mb-6">
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold" style="background: var(--sec1-bg); color: var(--sec1-color)">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                <span data-i18n="s1_badge">Hospitality Division</span>
+              </span>
+              <span class="text-2xl font-extrabold font-mono text-gray-300">01</span>
+            </div>
+
+            <!-- Title & Description -->
+            <h3 class="text-2xl font-bold text-[var(--text-main)] mb-3 tracking-tight" data-i18n="s1_title">
+              Hospitality & Leisure
+            </h3>
+            <p class="text-sm text-[var(--text-muted)] leading-relaxed mb-6" data-i18n="s1_desc">
+              Developing and operating world-class hotels, serviced apartments, and luxury guest destinations with authentic warmth and streamlined digital experiences.
+            </p>
+
+            <!-- Key Metrics Bar -->
+            <div class="grid grid-cols-2 gap-3 p-3.5 rounded-xl mb-6 bg-slate-50 border border-gray-100">
+              <div>
+                <div class="text-lg font-extrabold text-[var(--text-main)] font-mono" data-i18n="s1_stat1">1,200+</div>
+                <div class="text-[11px] text-[var(--text-muted)]" data-i18n="s1_stat1_label">Keys & Suites</div>
+              </div>
+              <div>
+                <div class="text-lg font-extrabold text-[var(--text-main)] font-mono" data-i18n="s1_stat2">4.8 / 5</div>
+                <div class="text-[11px] text-[var(--text-muted)]" data-i18n="s1_stat2_label">Guest Rating</div>
+              </div>
+            </div>
+
+            <!-- Tags -->
+            <div class="flex flex-wrap gap-2 mb-8">
+              <span class="text-[11px] font-medium px-2.5 py-1 rounded-md bg-gray-100 text-gray-700" data-i18n="s1_tag1">Hotel Chains</span>
+              <span class="text-[11px] font-medium px-2.5 py-1 rounded-md bg-gray-100 text-gray-700" data-i18n="s1_tag2">Serviced Suites</span>
+              <span class="text-[11px] font-medium px-2.5 py-1 rounded-md bg-gray-100 text-gray-700" data-i18n="s1_tag3">F&B Management</span>
+            </div>
+          </div>
+
+          <!-- Action Button -->
+          <a href="#hospitality" class="group inline-flex items-center justify-between w-full px-5 py-3 rounded-xl font-semibold text-sm transition-all border border-gray-200 hover:border-[var(--brand-accent)] text-[var(--text-main)] hover:bg-[var(--brand-accent-light)]">
+            <span data-i18n="btn_explore">Explore Sector</span>
+            <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+          </a>
+        </div>
+
+        <!-- Sector 2: Manufacturing -->
+        <div class="card-transition card-radius bg-[var(--bg-card)] border border-[var(--border-color)] p-8 flex flex-col justify-between relative overflow-hidden" style="box-shadow: var(--shadow-ambient)">
+          <!-- Top Accent Stripe -->
+          <div class="absolute top-0 inset-x-0 h-1.5" style="background: var(--sec2-color)"></div>
+
+          <div>
+            <!-- Sector Pill & Number -->
+            <div class="flex items-center justify-between mb-6">
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold" style="background: var(--sec2-bg); color: var(--sec2-color)">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
+                <span data-i18n="s2_badge">Manufacturing Division</span>
+              </span>
+              <span class="text-2xl font-extrabold font-mono text-gray-300">02</span>
+            </div>
+
+            <!-- Title & Description -->
+            <h3 class="text-2xl font-bold text-[var(--text-main)] mb-3 tracking-tight" data-i18n="s2_title">
+              Industrial Manufacturing
+            </h3>
+            <p class="text-sm text-[var(--text-muted)] leading-relaxed mb-6" data-i18n="s2_desc">
+              State-of-the-art manufacturing plants supplying industrial solutions, architectural fittings, and high-precision components meeting rigorous international standards.
+            </p>
+
+            <!-- Key Metrics Bar -->
+            <div class="grid grid-cols-2 gap-3 p-3.5 rounded-xl mb-6 bg-slate-50 border border-gray-100">
+              <div>
+                <div class="text-lg font-extrabold text-[var(--text-main)] font-mono" data-i18n="s2_stat1">50,000 m²</div>
+                <div class="text-[11px] text-[var(--text-muted)]" data-i18n="s2_stat1_label">Production Area</div>
+              </div>
+              <div>
+                <div class="text-lg font-extrabold text-[var(--text-main)] font-mono" data-i18n="s2_stat2">ISO 9001</div>
+                <div class="text-[11px] text-[var(--text-muted)]" data-i18n="s2_stat2_label">Certified Quality</div>
+              </div>
+            </div>
+
+            <!-- Tags -->
+            <div class="flex flex-wrap gap-2 mb-8">
+              <span class="text-[11px] font-medium px-2.5 py-1 rounded-md bg-gray-100 text-gray-700" data-i18n="s2_tag1">Precision Engineering</span>
+              <span class="text-[11px] font-medium px-2.5 py-1 rounded-md bg-gray-100 text-gray-700" data-i18n="s2_tag2">High Capacity</span>
+              <span class="text-[11px] font-medium px-2.5 py-1 rounded-md bg-gray-100 text-gray-700" data-i18n="s2_tag3">Supply Chain</span>
+            </div>
+          </div>
+
+          <!-- Action Button -->
+          <a href="#manufacturing" class="group inline-flex items-center justify-between w-full px-5 py-3 rounded-xl font-semibold text-sm transition-all border border-gray-200 hover:border-[var(--brand-accent)] text-[var(--text-main)] hover:bg-[var(--brand-accent-light)]">
+            <span data-i18n="btn_explore">Explore Sector</span>
+            <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+          </a>
+        </div>
+
+        <!-- Sector 3: Contracting -->
+        <div class="card-transition card-radius bg-[var(--bg-card)] border border-[var(--border-color)] p-8 flex flex-col justify-between relative overflow-hidden" style="box-shadow: var(--shadow-ambient)">
+          <!-- Top Accent Stripe -->
+          <div class="absolute top-0 inset-x-0 h-1.5" style="background: var(--sec3-color)"></div>
+
+          <div>
+            <!-- Sector Pill & Number -->
+            <div class="flex items-center justify-between mb-6">
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold" style="background: var(--sec3-bg); color: var(--sec3-color)">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                <span data-i18n="s3_badge">Contracting Division</span>
+              </span>
+              <span class="text-2xl font-extrabold font-mono text-gray-300">03</span>
+            </div>
+
+            <!-- Title & Description -->
+            <h3 class="text-2xl font-bold text-[var(--text-main)] mb-3 tracking-tight" data-i18n="s3_title">
+              Contracting & Construction
+            </h3>
+            <p class="text-sm text-[var(--text-muted)] leading-relaxed mb-6" data-i18n="s3_desc">
+              Turnkey general contracting, commercial developments, and civil infrastructure delivered with zero-compromise safety records and engineering precision.
+            </p>
+
+            <!-- Key Metrics Bar -->
+            <div class="grid grid-cols-2 gap-3 p-3.5 rounded-xl mb-6 bg-slate-50 border border-gray-100">
+              <div>
+                <div class="text-lg font-extrabold text-[var(--text-main)] font-mono" data-i18n="s3_stat1">150+</div>
+                <div class="text-[11px] text-[var(--text-muted)]" data-i18n="s3_stat1_label">Delivered Projects</div>
+              </div>
+              <div>
+                <div class="text-lg font-extrabold text-[var(--text-main)] font-mono" data-i18n="s3_stat2">Grade A</div>
+                <div class="text-[11px] text-[var(--text-muted)]" data-i18n="s3_stat2_label">Classification</div>
+              </div>
+            </div>
+
+            <!-- Tags -->
+            <div class="flex flex-wrap gap-2 mb-8">
+              <span class="text-[11px] font-medium px-2.5 py-1 rounded-md bg-gray-100 text-gray-700" data-i18n="s3_tag1">General Contracting</span>
+              <span class="text-[11px] font-medium px-2.5 py-1 rounded-md bg-gray-100 text-gray-700" data-i18n="s3_tag2">Infrastructure</span>
+              <span class="text-[11px] font-medium px-2.5 py-1 rounded-md bg-gray-100 text-gray-700" data-i18n="s3_tag3">Turnkey Fitouts</span>
+            </div>
+          </div>
+
+          <!-- Action Button -->
+          <a href="#contracting" class="group inline-flex items-center justify-between w-full px-5 py-3 rounded-xl font-semibold text-sm transition-all border border-gray-200 hover:border-[var(--brand-accent)] text-[var(--text-main)] hover:bg-[var(--brand-accent-light)]">
+            <span data-i18n="btn_explore">Explore Sector</span>
+            <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+          </a>
+        </div>
+
+      </div>
+
+      <!-- Corporate Footer Bar in Section -->
+      <div class="mt-12 p-6 rounded-2xl border border-[var(--border-color)] bg-white flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-lg flex items-center justify-center font-bold text-white text-xs" style="background: var(--hero-bg)">WD</div>
+          <div>
+            <div class="text-xs font-bold text-[var(--text-main)]" data-i18n="foot_title">WD Group Corporate Headquarters</div>
+            <div class="text-[11px] text-[var(--text-muted)]" data-i18n="foot_subtitle">Integrated holding structure powering Saudi Arabia's strategic vision.</div>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <button class="px-5 py-2.5 rounded-xl font-bold text-xs text-white shadow-sm transition-all hover:opacity-90" style="background: var(--hero-bg)" data-i18n="foot_btn">
+            Corporate Profile PDF
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <script>
+    const themes = {
+      'theme-a': {
+        tag: 'Option A — Prestigious & Established',
+        title: 'Executive Obsidian Slate & Sovereign Brushed Gold',
+        desc: 'Reflects high-value investment governance, luxury hospitality pedigree, and sovereign-grade engineering.',
+      },
+      'theme-b': {
+        tag: 'Option B — Sustainable Growth & Solidity',
+        title: 'Deep Forest Sovereign Emerald & Warm Sand',
+        desc: 'Conveys long-term institutional stability, environmental and sustainable development standards.',
+      },
+      'theme-c': {
+        tag: 'Option C — Precision & Innovation',
+        title: 'Tech-Industrial Graphite & Polished Royal Sapphire',
+        desc: 'Modern tech-forward aesthetic focused on industrial automation, engineering accuracy, and speed.',
+      }
+    };
+
+    const i18n = {
+      en: {
+        badge: 'Our Core Divisions',
+        heading: 'Three Pillars of Industrial & Service Excellence',
+        subheading: 'WD Group drives sustainable value across three strategic sectors shaping modern infrastructure, manufacturing capability, and premier guest experiences.',
+        s1_badge: 'Hospitality Division',
+        s1_title: 'Hospitality & Leisure',
+        s1_desc: 'Developing and operating world-class hotels, serviced apartments, and luxury guest destinations with authentic warmth and streamlined digital experiences.',
+        s1_stat1: '1,200+',
+        s1_stat1_label: 'Keys & Suites',
+        s1_stat2: '4.8 / 5',
+        s1_stat2_label: 'Guest Rating',
+        s1_tag1: 'Hotel Chains',
+        s1_tag2: 'Serviced Suites',
+        s1_tag3: 'F&B Management',
+        s2_badge: 'Manufacturing Division',
+        s2_title: 'Industrial Manufacturing',
+        s2_desc: 'State-of-the-art manufacturing plants supplying industrial solutions, architectural fittings, and high-precision components meeting rigorous international standards.',
+        s2_stat1: '50,000 m²',
+        s2_stat1_label: 'Production Area',
+        s2_stat2: 'ISO 9001',
+        s2_stat2_label: 'Certified Quality',
+        s2_tag1: 'Precision Engineering',
+        s2_tag2: 'High Capacity',
+        s2_tag3: 'Supply Chain',
+        s3_badge: 'Contracting Division',
+        s3_title: 'Contracting & Construction',
+        s3_desc: 'Turnkey general contracting, commercial developments, and civil infrastructure delivered with zero-compromise safety records and engineering precision.',
+        s3_stat1: '150+',
+        s3_stat1_label: 'Delivered Projects',
+        s3_stat2: 'Grade A',
+        s3_stat2_label: 'Classification',
+        s3_tag1: 'General Contracting',
+        s3_tag2: 'Infrastructure',
+        s3_tag3: 'Turnkey Fitouts',
+        btn_explore: 'Explore Sector',
+        foot_title: 'WD Group Corporate Headquarters',
+        foot_subtitle: 'Integrated holding structure powering strategic regional development.',
+        foot_btn: 'Corporate Profile PDF'
+      },
+      ar: {
+        badge: 'قطاعاتنا الرئيسية',
+        heading: 'ثلاث ركائز للتميز الصناعي والخدمي',
+        subheading: 'تقود مجموعة دبليو دي القيمة المستدامة عبر ثلاثة قطاعات استراتيجية تُسهم في تطوير البنية التحتية، والقدرات الصناعية، وتجارب الضيافة الراقية.',
+        s1_badge: 'قطاع الضيافة',
+        s1_title: 'الضيافة وإدارة الفنادق',
+        s1_desc: 'تطوير وتشغيل سلاسل فندقية وأجنحة فندقية ومرافق سياحية بمعايير عالمية تجمع بين كرم الضيافة وأحدث التجارب الرقمية.',
+        s1_stat1: '+١,٢٠٠',
+        s1_stat1_label: 'غرفة وجناح فندقي',
+        s1_stat2: '٤.٨ / ٥',
+        s1_stat2_label: 'تقييم الضيوف',
+        s1_tag1: 'فنادق وأجنحة',
+        s1_tag2: 'شقق مخدومة',
+        s1_tag3: 'إدارة الضيافة',
+        s2_badge: 'قطاع الصناعة',
+        s2_title: 'التصنيع والإنتاج الصناعي',
+        s2_desc: 'مجمعات صناعية متقدمة لإنتاج الحلول الصناعية والتجهيزات المعمارية والمكونات عالية الدقة وفق أعلى معايير الجودة العالمية.',
+        s2_stat1: '٥٠,٠٠٠ م²',
+        s2_stat1_label: 'المساحة الإنتاجية',
+        s2_stat2: 'ISO 9001',
+        s2_stat2_label: 'شهادات الجودة',
+        s2_tag1: 'هندسة دقيقة',
+        s2_tag2: 'طاقة إنتاجية عالية',
+        s2_tag3: 'سلاسل الإمداد',
+        s3_badge: 'قطاع المقاولات',
+        s3_title: 'المقاولات والإنشاءات',
+        s3_desc: 'تنفيذ المشروعات الكبرى، وتطوير البنية التحتية والأعمال المدنية والمعمارية بأعلى معايير السلامة والدقة الهندسية.',
+        s3_stat1: '+١٥٠',
+        s3_stat1_label: 'مشروع منجز',
+        s3_stat2: 'تصنيف أول',
+        s3_stat2_label: 'تصنيف المقاولين',
+        s3_tag1: 'مقاولات عامة',
+        s3_tag2: 'بنية تحتية',
+        s3_tag3: 'تشطيبات متكاملة',
+        btn_explore: 'استكشف القطاع',
+        foot_title: 'المقر الرئيسي لمجموعة دبليو دي',
+        foot_subtitle: 'منظومة قابضة متكاملة تدعم التنمية الاستراتيجية في المملكة.',
+        foot_btn: 'الملف التعريفي للمجموعة'
+      }
+    };
+
+    let currentLang = 'en';
+
+    function setTheme(themeClass) {
+      document.body.className = `${themeClass} bg-[var(--bg-page)] text-[var(--text-main)] min-h-screen`;
+      
+      // Update buttons
+      ['theme-a', 'theme-b', 'theme-c'].forEach(t => {
+        const btn = document.getElementById(`btn-${t}`);
+        if (t === themeClass) {
+          btn.className = 'theme-btn px-4 py-1.5 rounded-full bg-white text-slate-900 shadow-sm transition-all flex items-center gap-2 font-bold';
+        } else {
+          btn.className = 'theme-btn px-4 py-1.5 rounded-full text-slate-600 hover:text-slate-900 transition-all flex items-center gap-2 font-medium';
+        }
+      });
+
+      // Update info banner
+      const info = themes[themeClass];
+      document.getElementById('palette-tag').innerText = info.tag;
+      document.getElementById('palette-title').innerText = info.title;
+      document.getElementById('palette-desc').innerText = info.desc;
+    }
+
+    function setLang(lang) {
+      currentLang = lang;
+      document.documentElement.lang = lang;
+      document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+
+      document.getElementById('btn-lang-en').className = lang === 'en' ? 'px-2.5 py-1 rounded bg-white text-slate-900 shadow-xs font-bold' : 'px-2.5 py-1 rounded text-slate-600 hover:text-slate-900 font-bold';
+      document.getElementById('btn-lang-ar').className = lang === 'ar' ? 'px-2.5 py-1 rounded bg-white text-slate-900 shadow-xs font-bold' : 'px-2.5 py-1 rounded text-slate-600 hover:text-slate-900 font-bold';
+
+      // Update strings
+      const strings = i18n[lang];
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (strings[key]) {
+          el.innerText = strings[key];
+        }
+      });
+    }
+  </script>
+</body>
+</html>
