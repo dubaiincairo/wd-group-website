@@ -2,38 +2,36 @@
 
 import React from 'react';
 import { useLanguage } from '@/context/LanguageContext';
-import { Quote, Sparkles } from 'lucide-react';
+import { Quote } from 'lucide-react';
 
 export default function CEOQuote() {
   const { lang, dict } = useLanguage();
 
   return (
-    <section className="py-20 sm:py-24 bg-brand-dark text-white relative overflow-hidden">
-      
-      {/* Ambient Lighting */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-brand-accent/15 blur-[120px] rounded-full pointer-events-none"></div>
-
-      <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <section className="py-20 sm:py-28 bg-gray-50 border-y border-gray-200">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         
-        {/* Quote Icon */}
-        <div className="w-14 h-14 rounded-2xl bg-brand-surface border border-brand-slate text-brand-accent flex items-center justify-center mx-auto mb-8 shadow-md">
-          <Quote className="w-7 h-7" />
+        {/* Quote Icon (Untitled UI Testimonial Pattern) */}
+        <div className="w-12 h-12 rounded-xl bg-white border border-gray-200 text-brand-600 flex items-center justify-center mx-auto mb-8 shadow-xs">
+          <Quote className="w-6 h-6" />
         </div>
 
-        {/* The Approved Quote */}
-        <blockquote className="text-xl sm:text-2xl md:text-3xl font-medium text-zinc-100 leading-relaxed max-w-3xl mx-auto mb-10 tracking-tight">
+        {/* Large Testimonial Quote */}
+        <blockquote className="text-xl sm:text-2xl md:text-3xl font-medium text-gray-900 leading-relaxed mb-10 tracking-tight">
           &ldquo;{dict.ceo.quote}&rdquo;
         </blockquote>
 
-        {/* CEO Identity */}
-        <div className="inline-flex flex-col items-center">
-          <div className="w-12 h-1 rounded-full bg-brand-accent mb-4"></div>
-          <h4 className="text-lg font-bold text-white tracking-tight">
+        {/* Author Avatar & Identity (Untitled UI Style) */}
+        <div className="flex flex-col items-center">
+          <div className="w-12 h-12 rounded-full bg-gray-900 text-white flex items-center justify-center font-bold text-sm mb-3 shadow-xs border border-gray-300">
+            MS
+          </div>
+          <div className="text-base font-semibold text-gray-900 tracking-tight">
             {dict.ceo.name}
-          </h4>
-          <p className="text-xs sm:text-sm text-zinc-400 mt-1 font-medium">
+          </div>
+          <div className="text-sm text-gray-600 mt-0.5 font-normal">
             {dict.ceo.title}
-          </p>
+          </div>
         </div>
 
       </div>

@@ -7,12 +7,9 @@ import {
   Send, 
   CheckCircle2, 
   X, 
-  Building2, 
-  Factory, 
-  HardHat, 
-  Briefcase,
-  Mail,
-  Phone
+  Mail, 
+  Phone,
+  ArrowRight
 } from 'lucide-react';
 
 export default function ContactCTA() {
@@ -33,98 +30,113 @@ export default function ContactCTA() {
   };
 
   return (
-    <section id="contact" className="py-20 sm:py-28 bg-white text-brand-dark border-t border-brand-border">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <section id="contact" className="py-20 sm:py-28 bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Tag */}
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide uppercase bg-brand-pearl border border-brand-border text-brand-accent mb-6 shadow-2xs">
-          <MessageSquare className="w-3.5 h-3.5" />
-          <span>{dict.contact_cta.tag}</span>
-        </div>
+        {/* Untitled UI Card CTA Block */}
+        <div className="bg-gray-50 border border-gray-200 rounded-3xl p-8 sm:p-14 text-center max-w-5xl mx-auto shadow-xs">
+          
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-brand-50 border border-brand-200 text-brand-700 mb-6 shadow-xs">
+            <MessageSquare className="w-3.5 h-3.5" />
+            <span>{dict.contact_cta.tag}</span>
+          </div>
 
-        {/* Title */}
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-brand-dark mb-5 leading-tight">
-          {dict.contact_cta.title}
-        </h2>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-gray-900 mb-4">
+            {dict.contact_cta.title}
+          </h2>
 
-        {/* Subtitle */}
-        <p className="text-base sm:text-lg text-brand-muted max-w-2xl mx-auto mb-10 leading-relaxed">
-          {dict.contact_cta.subtitle}
-        </p>
+          <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto mb-8 font-normal leading-relaxed">
+            {dict.contact_cta.subtitle}
+          </p>
 
-        {/* Action Button */}
-        <button
-          onClick={() => { setModalOpen(true); setSubmitted(false); }}
-          className="inline-flex items-center gap-2.5 px-8 py-4 rounded-xl font-bold text-sm text-white bg-brand-dark hover:bg-brand-surface border border-brand-slate shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-0.5"
-        >
-          <Mail className="w-4 h-4 text-brand-accent" />
-          <span>{dict.contact_cta.button}</span>
-        </button>
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            <button
+              onClick={() => { setModalOpen(true); setSubmitted(false); }}
+              className="u-btn-primary !px-6 !py-3 !text-base"
+            >
+              <Mail className="w-4 h-4" />
+              <span>{dict.contact_cta.button}</span>
+            </button>
 
-        {/* Contact Info Pills */}
-        <div className="mt-12 flex flex-wrap items-center justify-center gap-6 text-xs text-zinc-500 font-medium">
-          <a href="mailto:info@wdgroup.com.sa" className="flex items-center gap-1.5 hover:text-brand-accent transition-colors">
-            <Mail className="w-3.5 h-3.5 text-zinc-400" />
-            <span>info@wdgroup.com.sa</span>
-          </a>
-          <span className="text-zinc-300">•</span>
-          <a href="tel:+966123456789" className="flex items-center gap-1.5 hover:text-brand-accent transition-colors font-mono">
-            <Phone className="w-3.5 h-3.5 text-zinc-400" />
-            <span>+966 12 345 6789</span>
-          </a>
+            <a
+              href="mailto:info@wdgroup.com.sa"
+              className="u-btn-secondary !px-6 !py-3 !text-base"
+            >
+              <span>info@wdgroup.com.sa</span>
+              <ArrowRight className="w-4 h-4 rtl:rotate-180" />
+            </a>
+          </div>
+
+          {/* Contact Direct Details */}
+          <div className="mt-10 pt-8 border-t border-gray-200 flex flex-wrap items-center justify-center gap-6 text-xs font-medium text-gray-500">
+            <span className="flex items-center gap-1.5">
+              <Phone className="w-3.5 h-3.5 text-gray-400" />
+              <span className="font-mono">+966 12 345 6789</span>
+            </span>
+            <span>•</span>
+            <span className="flex items-center gap-1.5">
+              <Mail className="w-3.5 h-3.5 text-gray-400" />
+              <span>info@wdgroup.sa</span>
+            </span>
+          </div>
+
         </div>
 
       </div>
 
-      {/* Interactive Contact Modal */}
+      {/* Untitled UI Clean Modal Form */}
       {modalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-brand-dark text-white rounded-3xl p-6 sm:p-8 max-w-lg w-full border border-brand-slate shadow-2xl relative">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-sm animate-in fade-in duration-150">
+          <div className="bg-white rounded-2xl p-6 sm:p-8 max-w-lg w-full border border-gray-200 shadow-xl relative">
             
             <button 
               onClick={() => setModalOpen(false)}
-              className="absolute top-5 right-5 rtl:right-auto rtl:left-5 p-2 rounded-xl bg-brand-surface hover:bg-zinc-800 text-zinc-400 hover:text-white transition-colors"
+              className="absolute top-5 right-5 rtl:right-auto rtl:left-5 p-2 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
 
             {submitted ? (
               <div className="text-center py-8">
-                <div className="w-14 h-14 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center justify-center mx-auto mb-4">
-                  <CheckCircle2 className="w-8 h-8" />
+                <div className="w-12 h-12 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-200 flex items-center justify-center mx-auto mb-4">
+                  <CheckCircle2 className="w-6 h-6" />
                 </div>
-                <h3 className="text-xl font-bold text-white mb-2">
-                  {lang === 'ar' ? 'تم الإرسال بنجاح' : 'Inquiry Received'}
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                  {lang === 'ar' ? 'تم استلام استفساركم بنجاح' : 'Inquiry Submitted'}
                 </h3>
-                <p className="text-xs text-zinc-300 mb-6">
+                <p className="text-sm text-gray-600 mb-6">
                   {dict.contact_cta.form_success}
                 </p>
                 <button
                   onClick={() => setModalOpen(false)}
-                  className="px-6 py-2.5 rounded-xl bg-brand-accent text-white font-bold text-xs"
+                  className="u-btn-secondary !px-5 !py-2"
                 >
                   {dict.contact_cta.close}
                 </button>
               </div>
             ) : (
               <div>
-                <h3 className="text-xl font-bold text-white mb-1">
+                <div className="w-10 h-10 rounded-xl bg-brand-50 text-brand-600 border border-brand-200 flex items-center justify-center mb-4 shadow-xs">
+                  <Mail className="w-5 h-5" />
+                </div>
+                
+                <h3 className="text-xl font-semibold text-gray-900 mb-1">
                   {dict.contact_cta.form_title}
                 </h3>
-                <p className="text-xs text-zinc-400 mb-6">
+                <p className="text-sm text-gray-600 mb-6">
                   {dict.contact_cta.subtitle}
                 </p>
 
                 <form onSubmit={handleSubmit} className="space-y-4 text-start">
                   <div>
-                    <label className="block text-[11px] font-bold uppercase tracking-wider text-zinc-400 mb-1">
+                    <label className="block text-xs font-semibold text-gray-700 mb-1.5">
                       {dict.contact_cta.form_sector}
                     </label>
                     <select
                       value={formData.sector}
                       onChange={(e) => setFormData({ ...formData, sector: e.target.value })}
                       required
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-900 border border-brand-slate text-white text-xs focus:outline-none focus:border-brand-accent"
+                      className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-gray-300 text-gray-900 text-sm shadow-xs focus:outline-none focus:ring-4 focus:ring-brand-100 focus:border-brand-300 transition-all"
                     >
                       <option value="hospitality">{dict.contact_cta.opt_hosp}</option>
                       <option value="manufacturing">{dict.contact_cta.opt_mfg}</option>
@@ -134,9 +146,9 @@ export default function ContactCTA() {
                     </select>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-[11px] font-bold uppercase tracking-wider text-zinc-400 mb-1">
+                      <label className="block text-xs font-semibold text-gray-700 mb-1.5">
                         {dict.contact_cta.form_name}
                       </label>
                       <input
@@ -145,11 +157,11 @@ export default function ContactCTA() {
                         placeholder="John Doe"
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-900 border border-brand-slate text-white text-xs focus:outline-none focus:border-brand-accent"
+                        className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-gray-300 text-gray-900 text-sm shadow-xs focus:outline-none focus:ring-4 focus:ring-brand-100 focus:border-brand-300 transition-all"
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] font-bold uppercase tracking-wider text-zinc-400 mb-1">
+                      <label className="block text-xs font-semibold text-gray-700 mb-1.5">
                         {dict.contact_cta.form_email}
                       </label>
                       <input
@@ -158,13 +170,13 @@ export default function ContactCTA() {
                         placeholder="name@company.com"
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-900 border border-brand-slate text-white text-xs focus:outline-none focus:border-brand-accent"
+                        className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-gray-300 text-gray-900 text-sm shadow-xs focus:outline-none focus:ring-4 focus:ring-brand-100 focus:border-brand-300 transition-all"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-bold uppercase tracking-wider text-zinc-400 mb-1">
+                    <label className="block text-xs font-semibold text-gray-700 mb-1.5">
                       {dict.contact_cta.form_phone}
                     </label>
                     <input
@@ -173,30 +185,30 @@ export default function ContactCTA() {
                       placeholder="+966 50 000 0000"
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-900 border border-brand-slate text-white text-xs focus:outline-none focus:border-brand-accent"
+                      className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-gray-300 text-gray-900 text-sm shadow-xs focus:outline-none focus:ring-4 focus:ring-brand-100 focus:border-brand-300 transition-all"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-bold uppercase tracking-wider text-zinc-400 mb-1">
+                    <label className="block text-xs font-semibold text-gray-700 mb-1.5">
                       {dict.contact_cta.form_message}
                     </label>
                     <textarea
                       rows={3}
                       required
-                      placeholder={lang === 'ar' ? 'اكتب استفسارك هنا...' : 'Type your inquiry here...'}
+                      placeholder={lang === 'ar' ? 'اكتب تفاصيل طلبكم...' : 'Please write your message or project details...'}
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-900 border border-brand-slate text-white text-xs focus:outline-none focus:border-brand-accent resize-none"
+                      className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-gray-300 text-gray-900 text-sm shadow-xs focus:outline-none focus:ring-4 focus:ring-brand-100 focus:border-brand-300 transition-all resize-none"
                     ></textarea>
                   </div>
 
                   <button
                     type="submit"
-                    className="w-full py-3.5 rounded-xl font-bold text-xs text-white bg-brand-accent hover:bg-brand-accentHover transition-all flex items-center justify-center gap-2 shadow-md"
+                    className="u-btn-primary w-full !py-3"
                   >
                     <span>{dict.contact_cta.form_submit}</span>
-                    <Send className="w-3.5 h-3.5 rtl:rotate-180" />
+                    <Send className="w-4 h-4 rtl:rotate-180" />
                   </button>
                 </form>
               </div>

@@ -9,54 +9,54 @@ import {
   HardHat, 
   ArrowRight, 
   Compass,
-  Layers,
-  Users,
-  Percent,
-  Sparkles
+  ArrowUpRight,
+  TrendingUp
 } from 'lucide-react';
 
 export default function HeroSection() {
   const { lang, dict } = useLanguage();
 
   return (
-    <section className="relative pt-32 pb-16 sm:pt-40 sm:pb-24 overflow-hidden bg-brand-dark text-white">
+    <section className="relative pt-16 pb-20 sm:pt-24 sm:pb-28 overflow-hidden bg-gradient-to-b from-gray-50 via-white to-white">
       
-      {/* Background Subtle Tech-Grid & Radial Lighting */}
-      <div className="absolute inset-0 opacity-20 bg-[radial-gradient(#38bdf8_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none"></div>
-      
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-brand-accent/20 blur-[130px] rounded-full pointer-events-none"></div>
-      <div className="absolute bottom-0 right-10 w-[400px] h-[300px] bg-emerald-600/10 blur-[120px] rounded-full pointer-events-none"></div>
+      {/* Background Subtle Gradient Grid (Untitled UI Style) */}
+      <div className="absolute inset-0 bg-[radial-gradient(#E2E8F0_1px,transparent_1px)] [background-size:32px_32px] opacity-40 pointer-events-none"></div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Main Hero Header */}
+        {/* Main Content (Untitled UI Centered Hero Header) */}
         <div className="max-w-4xl mx-auto text-center">
           
-          {/* Executive Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold tracking-wide uppercase bg-brand-surface/90 border border-brand-slate text-brand-accentLight mb-6 shadow-sm">
-            <span className="w-2 h-2 rounded-full bg-brand-accent animate-pulse"></span>
-            <span>{dict.hero.badge}</span>
+          {/* Announcement Pill Badge (Untitled UI Signature Pattern) */}
+          <div className="inline-flex items-center gap-2 p-1 pl-1.5 pr-3 rounded-full bg-brand-50 border border-brand-200 text-brand-700 hover:bg-brand-100 transition-all cursor-pointer mb-8 shadow-xs">
+            <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-white text-brand-700 shadow-xs border border-brand-200">
+              {dict.hero.badge}
+            </span>
+            <span className="text-xs font-semibold">
+              {lang === 'ar' ? 'استكشف قطاعاتنا الاستراتيجية الثلاثة' : 'Explore our 3 strategic sectors'}
+            </span>
+            <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
           </div>
 
-          {/* Approved Heading */}
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.15] mb-6 text-white">
+          {/* Display Heading (Untitled UI Display 2xl) */}
+          <h1 className="text-4xl sm:text-6xl md:text-7xl font-semibold tracking-tight text-gray-900 leading-[1.1] mb-6">
             <span className="block">{dict.hero.title_line1}</span>
-            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-sky-300 to-indigo-200">
+            <span className="block text-brand-600">
               {dict.hero.title_line2}
             </span>
-            <span className="block text-zinc-100">{dict.hero.title_line3}</span>
+            <span className="block text-gray-900">{dict.hero.title_line3}</span>
           </h1>
 
-          {/* Approved Description */}
-          <p className="text-base sm:text-lg md:text-xl text-zinc-300 max-w-2xl mx-auto mb-10 leading-relaxed font-normal">
+          {/* Subtitle / Description (Untitled UI Gray 600 Lead Text) */}
+          <p className="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto mb-10 leading-relaxed font-normal">
             {dict.hero.description}
           </p>
 
-          {/* Approved CTA Buttons */}
-          <div className="flex flex-wrap items-center justify-center gap-4 mb-16">
+          {/* Dual Action CTA Buttons (Untitled UI Pattern: Primary + Secondary Gray) */}
+          <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 mb-16">
             <Link 
               href="#about" 
-              className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl font-bold text-sm text-white bg-brand-accent hover:bg-brand-accentHover transition-all shadow-lg hover:shadow-hover-sapphire transform hover:-translate-y-0.5"
+              className="u-btn-primary !px-6 !py-3 !text-base"
             >
               <Compass className="w-4 h-4" />
               <span>{dict.hero.cta_primary}</span>
@@ -64,7 +64,7 @@ export default function HeroSection() {
 
             <Link 
               href="#sectors" 
-              className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl font-bold text-sm text-zinc-200 bg-brand-surface hover:bg-zinc-800 border border-brand-slate transition-all"
+              className="u-btn-secondary !px-6 !py-3 !text-base"
             >
               <span>{dict.hero.cta_secondary}</span>
               <ArrowRight className="w-4 h-4 rtl:rotate-180" />
@@ -73,46 +73,46 @@ export default function HeroSection() {
 
         </div>
 
-        {/* Section 2: Approved Statistics Bar */}
-        <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-6 sm:p-8 rounded-3xl bg-brand-surface/90 border border-brand-slate shadow-2xl backdrop-blur-lg">
+        {/* Section 2: Untitled UI 4-Column Metric Grid Card */}
+        <div className="max-w-5xl mx-auto">
+          <div className="bg-white border border-gray-200 rounded-3xl p-8 sm:p-10 shadow-sm divide-y sm:divide-y-0 sm:divide-x rtl:sm:divide-x-reverse divide-gray-200 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-0">
             
-            {/* Stat 1 */}
-            <div className="flex flex-col items-center text-center p-3">
-              <div className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#38bdf8] font-mono mb-2">
+            {/* Metric 1: Hospitality */}
+            <div className="flex flex-col items-center text-center sm:px-6 pt-4 sm:pt-0">
+              <div className="text-4xl sm:text-5xl font-semibold tracking-tight text-brand-600 mb-2">
                 {dict.stats.stat1_num}
               </div>
-              <div className="text-xs sm:text-sm text-zinc-300 font-medium leading-snug">
+              <div className="text-sm font-medium text-gray-600 leading-snug">
                 {dict.stats.stat1_text}
               </div>
             </div>
 
-            {/* Stat 2 */}
-            <div className="flex flex-col items-center text-center p-3 border-t sm:border-t-0 sm:border-l border-brand-slate/60 rtl:sm:border-l-0 rtl:sm:border-r">
-              <div className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#34d399] font-mono mb-2">
+            {/* Metric 2: Factories */}
+            <div className="flex flex-col items-center text-center sm:px-6 pt-6 sm:pt-0">
+              <div className="text-4xl sm:text-5xl font-semibold tracking-tight text-emerald-700 mb-2">
                 {dict.stats.stat2_num}
               </div>
-              <div className="text-xs sm:text-sm text-zinc-300 font-medium leading-snug">
+              <div className="text-sm font-medium text-gray-600 leading-snug">
                 {dict.stats.stat2_text}
               </div>
             </div>
 
-            {/* Stat 3 */}
-            <div className="flex flex-col items-center text-center p-3 border-t lg:border-t-0 lg:border-l border-brand-slate/60 rtl:lg:border-l-0 rtl:lg:border-r">
-              <div className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#fbbf24] font-mono mb-2">
+            {/* Metric 3: Employees */}
+            <div className="flex flex-col items-center text-center sm:px-6 pt-6 sm:pt-0">
+              <div className="text-4xl sm:text-5xl font-semibold tracking-tight text-amber-700 mb-2">
                 {dict.stats.stat3_num}
               </div>
-              <div className="text-xs sm:text-sm text-zinc-300 font-medium leading-snug">
+              <div className="text-sm font-medium text-gray-600 leading-snug">
                 {dict.stats.stat3_text}
               </div>
             </div>
 
-            {/* Stat 4 */}
-            <div className="flex flex-col items-center text-center p-3 border-t lg:border-t-0 sm:border-l border-brand-slate/60 rtl:sm:border-l-0 rtl:sm:border-r">
-              <div className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white font-mono mb-2">
+            {/* Metric 4: Occupancy */}
+            <div className="flex flex-col items-center text-center sm:px-6 pt-6 sm:pt-0">
+              <div className="text-4xl sm:text-5xl font-semibold tracking-tight text-gray-900 mb-2">
                 {dict.stats.stat4_num}
               </div>
-              <div className="text-xs sm:text-sm text-zinc-300 font-medium leading-snug">
+              <div className="text-sm font-medium text-gray-600 leading-snug">
                 {dict.stats.stat4_text}
               </div>
             </div>

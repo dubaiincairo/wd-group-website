@@ -3,53 +3,39 @@
 @tailwind utilities;
 
 :root {
-  /* SwissBlue Foundation Tokens */
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 20px;
-  --radius-2xl: 24px;
-  --radius-pill: 999px;
-  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  /* Untitled UI Core Colors */
+  --bg-primary: #FFFFFF;
+  --bg-secondary: #F9FAFB;
+  --bg-tertiary: #F2F4F7;
+  --border-primary: #EAECF0;
+  --border-secondary: #D0D5DD;
+  --text-primary: #101828;
+  --text-secondary: #475467;
+  --text-tertiary: #667085;
+  --text-placeholder: #98A2B3;
 
-  /* WD Group Tech Sapphire Palette */
-  --bg-page: #f4f5f8;
-  --bg-card: #ffffff;
-  --bg-dark: #09090b;
-  --bg-surface: #18181b;
-  --bg-slate: #27272a;
-  
-  --text-main: #18181b;
-  --text-muted: #71717a;
-  --text-tertiary: #a1a1aa;
-  --text-on-dark: #ffffff;
+  /* Untitled UI Brand Tokens */
+  --brand-primary: #1570EF;
+  --brand-hover: #175CD3;
+  --brand-light: #EFF8FF;
+  --brand-border: #B2DDFF;
 
-  --border-color: #e4e4e7;
-  --border-dark: #27272a;
-  
-  --brand-accent: #2563eb;
-  --brand-accent-hover: #1d4ed8;
-  --brand-accent-light: #eff6ff;
-  --brand-accent-border: #bfdbfe;
+  /* Untitled UI Radii */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 10px;
+  --radius-xl: 12px;
+  --radius-2xl: 16px;
+  --radius-3xl: 20px;
+  --radius-pill: 9999px;
 
-  /* Sector Accents */
-  --sec-hosp: #ca8a04;
-  --sec-hosp-light: #fefce8;
-  --sec-hosp-border: #fef08a;
-
-  --sec-mfg: #0891b2;
-  --sec-mfg-light: #ecfeff;
-  --sec-mfg-border: #a5f3fc;
-
-  --sec-contr: #ea580c;
-  --sec-contr-light: #fff7ed;
-  --sec-contr-border: #fed7aa;
-
-  /* Fluid Typography Scales */
-  --t-hero: clamp(2.4rem, 5.5vw, 4.5rem);
-  --t-h1: clamp(2.2rem, 4.5vw, 3.5rem);
-  --t-h2: clamp(1.8rem, 3.5vw, 2.75rem);
-  --t-h3: clamp(1.4rem, 2.5vw, 2rem);
-  --t-lead: clamp(1rem, 1.3vw, 1.25rem);
+  /* Untitled UI Typography Scales */
+  --font-display-2xl: clamp(2.5rem, 5.5vw, 4.5rem);
+  --font-display-xl: clamp(2.25rem, 4.5vw, 3.75rem);
+  --font-display-lg: clamp(2rem, 3.5vw, 3rem);
+  --font-display-md: clamp(1.75rem, 2.8vw, 2.25rem);
+  --font-display-sm: clamp(1.5rem, 2.2vw, 1.875rem);
 }
 
 html {
@@ -57,54 +43,64 @@ html {
 }
 
 body {
-  background-color: var(--bg-page);
-  color: var(--text-main);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 [dir="rtl"] {
-  font-family: var(--font-noto-kufi), var(--font-inter), sans-serif;
+  font-family: var(--font-noto-kufi), var(--font-inter), system-ui, sans-serif;
 }
 
 [dir="ltr"] {
-  font-family: var(--font-inter), var(--font-noto-kufi), sans-serif;
+  font-family: var(--font-inter), var(--font-noto-kufi), system-ui, sans-serif;
 }
 
-/* Custom Utilities */
-.card-hover {
-  transition: all 0.35s var(--ease-out);
-}
+/* Untitled UI Component Helpers */
+@layer components {
+  /* Primary Button (Untitled UI) */
+  .u-btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold text-white bg-brand-600 hover:bg-brand-700 active:bg-brand-800 shadow-xs transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-brand-100 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
 
-.card-hover:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 20px 40px -15px rgba(24, 24, 27, 0.14);
-}
+  /* Secondary Gray Button (Untitled UI) */
+  .u-btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold text-gray-700 bg-white hover:bg-gray-50 active:bg-gray-100 border border-gray-300 shadow-xs transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-gray-100 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
 
-.glass-header {
-  background: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-}
+  /* Dark Button (Untitled UI) */
+  .u-btn-dark {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold text-white bg-gray-900 hover:bg-gray-800 active:bg-gray-950 shadow-xs transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-gray-300;
+  }
 
-.glass-dark {
-  background: rgba(24, 24, 27, 0.75);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  /* Modern Announcement Pill Badge (Untitled UI Signature) */
+  .u-badge-announcement {
+    @apply inline-flex items-center gap-2 p-1 pl-1.5 pr-3 rounded-full text-xs font-medium bg-brand-50 border border-brand-200 text-brand-700 hover:bg-brand-100 transition-colors cursor-pointer;
+  }
+
+  .u-badge-pill {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200;
+  }
+
+  /* Card elevation with Untitled UI crisp border */
+  .u-card {
+    @apply bg-white border border-gray-200 rounded-2xl p-6 transition-all duration-200 hover:border-gray-300 hover:shadow-md;
+  }
 }
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 7px;
 }
 ::-webkit-scrollbar-track {
-  background: #f4f5f8;
+  background: #F9FAFB;
 }
 ::-webkit-scrollbar-thumb {
-  background: #d4d4d8;
+  background: #D0D5DD;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #a1a1aa;
+  background: #98A2B3;
 }
