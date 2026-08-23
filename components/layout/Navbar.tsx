@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useLanguage } from '@/context/LanguageContext';
 import { 
   Building2, 
@@ -33,37 +34,36 @@ export default function Navbar() {
     <header 
       className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
         scrolled 
-          ? 'bg-brand-dark/85 backdrop-blur-xl border-b border-brand-border py-3.5 shadow-2xl' 
-          : 'bg-transparent py-5'
+          ? 'bg-brand-dark/90 backdrop-blur-xl border-b border-brand-border py-3 shadow-2xl' 
+          : 'bg-transparent py-4 sm:py-5'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           
-          {/* Brand Logo */}
-          <Link href="/" className="flex items-center gap-3.5 group">
-            <div className="w-10 h-10 rounded-xl bg-brand-surface border border-white/10 text-white flex items-center justify-center font-extrabold text-sm tracking-wider shadow-glow-card group-hover:border-blue-500/50 transition-colors">
-              <span className="font-mono">WD</span>
+          {/* Official Brand Logo */}
+          <Link href="/" className="flex items-center gap-3 group">
+            <div className="relative h-9 sm:h-11 w-32 sm:w-36 transition-transform group-hover:scale-105">
+              <Image 
+                src="/brand/wd-group-logo.png" 
+                alt="WD Group" 
+                fill
+                className="object-contain drop-shadow-[0_0_12px_rgba(37,99,235,0.3)]"
+                priority
+              />
             </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className={`font-extrabold tracking-tight text-white text-lg ${
-                  lang === 'ar' ? 'font-arabic' : 'font-mono'
-                }`}>
-                  {dict.nav.brand}
-                </span>
-                <span className="hidden sm:inline-block text-[10px] uppercase font-bold tracking-widest px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/40">
-                  HOLDING
-                </span>
-              </div>
-              <p className="text-[11px] font-medium text-zinc-400 -mt-0.5">
+            <div className="hidden sm:block border-l rtl:border-l-0 rtl:border-r border-white/15 pl-3 rtl:pl-0 rtl:pr-3 py-0.5">
+              <span className="text-[10px] font-extrabold uppercase tracking-widest text-blue-400 block font-mono">
+                HOLDING
+              </span>
+              <span className="text-[11px] text-zinc-400 font-medium block -mt-0.5">
                 {dict.nav.holding}
-              </p>
+              </span>
             </div>
           </Link>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden lg:flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-brand-surface/70 border border-white/10 backdrop-blur-md">
+          <nav className="hidden lg:flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-brand-surface/80 border border-white/10 backdrop-blur-md">
             <Link 
               href="#about" 
               className="px-3.5 py-1.5 rounded-full text-xs font-semibold text-zinc-300 hover:text-white hover:bg-white/5 transition-colors"
@@ -163,7 +163,7 @@ export default function Navbar() {
           <div className="hidden lg:flex items-center gap-3">
             <button 
               onClick={toggleLanguage}
-              className="px-3 py-2 rounded-xl text-xs font-bold text-zinc-300 hover:text-white bg-brand-surface/70 border border-white/10 hover:border-white/20 transition-colors flex items-center gap-1.5"
+              className="px-3 py-2 rounded-xl text-xs font-bold text-zinc-300 hover:text-white bg-brand-surface/80 border border-white/10 hover:border-white/20 transition-colors flex items-center gap-1.5"
             >
               <Globe className="w-3.5 h-3.5 text-blue-400" />
               <span>{dict.nav.lang_toggle}</span>
