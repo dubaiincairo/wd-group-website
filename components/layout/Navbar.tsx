@@ -30,6 +30,8 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const logoSrc = lang === 'ar' ? '/brand/wd-group-logo-ar-white.png' : '/brand/wd-group-logo-white.png';
+
   return (
     <header 
       className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
@@ -41,20 +43,20 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           
-          {/* Official Crisp White Brand Logo with Sapphire Glow */}
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="relative h-9 sm:h-11 w-32 sm:w-36 transition-transform group-hover:scale-105">
+          {/* Dynamic Language-Aware Brand Logo (Arabic for AR, English for EN) */}
+          <Link href="/" className="flex items-center gap-3.5 group shrink-0">
+            <div className={`relative h-10 sm:h-12 ${lang === 'ar' ? 'w-36 sm:w-44' : 'w-32 sm:w-36'} transition-transform group-hover:scale-105`}>
               <Image 
-                src="/brand/wd-group-logo-white.png" 
-                alt="WD Group" 
+                src={logoSrc} 
+                alt={lang === 'ar' ? 'مجموعة دبليو دي' : 'WD Group'} 
                 fill
                 className="object-contain drop-shadow-[0_0_14px_rgba(37,99,235,0.45)]"
                 priority
               />
             </div>
-            <div className="hidden sm:block border-l rtl:border-l-0 rtl:border-r border-white/15 pl-3 rtl:pl-0 rtl:pr-3 py-0.5">
+            <div className="hidden sm:block border-l rtl:border-l-0 rtl:border-r border-white/15 pl-3.5 rtl:pl-0 rtl:pr-3.5 py-0.5">
               <span className="text-[10px] font-extrabold uppercase tracking-widest text-blue-400 block font-mono">
-                HOLDING
+                {lang === 'ar' ? 'قابضة' : 'HOLDING'}
               </span>
               <span className="text-[11px] text-zinc-400 font-medium block -mt-0.5">
                 {dict.nav.holding}
