@@ -3,7 +3,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/context/LanguageContext';
-import { Quote } from 'lucide-react';
+import { Quote, ShieldCheck } from 'lucide-react';
 
 export default function CEOQuote() {
   const { lang, dict } = useLanguage();
@@ -12,7 +12,7 @@ export default function CEOQuote() {
     <section className="py-24 sm:py-32 bg-brand-darker text-white relative overflow-hidden border-t border-brand-border">
       
       {/* Radiant Executive Spotlight */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[350px] bg-blue-600/15 blur-[140px] rounded-full pointer-events-none animate-pulse-slow"></div>
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-blue-600/15 blur-[140px] rounded-full pointer-events-none animate-pulse-slow"></div>
 
       <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         
@@ -38,7 +38,7 @@ export default function CEOQuote() {
           &ldquo;{dict.ceo.quote}&rdquo;
         </motion.blockquote>
 
-        {/* CEO Identity */}
+        {/* CEO Identity & Governance Credentials */}
         <motion.div 
           initial={{ opacity: 0, y: 15 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -46,10 +46,16 @@ export default function CEOQuote() {
           transition={{ duration: 0.7, delay: 0.2 }}
           className="inline-flex flex-col items-center"
         >
-          <div className="w-12 h-1 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 mb-4 shadow-glow-blue"></div>
-          <h4 className="text-lg font-bold text-white tracking-tight">
-            {dict.ceo.name}
-          </h4>
+          <div className="w-14 h-1 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 mb-4 shadow-glow-blue"></div>
+          <div className="flex items-center gap-2">
+            <h4 className="text-lg font-bold text-white tracking-tight">
+              {dict.ceo.name}
+            </h4>
+            <span className="inline-flex items-center gap-1 text-[10px] font-mono bg-blue-500/20 text-blue-300 border border-blue-500/40 px-2 py-0.5 rounded-full">
+              <ShieldCheck className="w-3 h-3 text-blue-400" />
+              <span>LEADERSHIP</span>
+            </span>
+          </div>
           <p className="text-xs sm:text-sm text-zinc-400 mt-1 font-medium">
             {dict.ceo.title}
           </p>

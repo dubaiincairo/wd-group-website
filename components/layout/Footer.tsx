@@ -27,12 +27,12 @@ export default function Footer() {
           {/* Col 1 & 2: Holding Brand Info & Tagline */}
           <div className="lg:col-span-2">
             <Link href="/" className="flex items-center gap-3.5 group mb-4 inline-flex">
-              <div className="relative h-11 w-40">
+              <div className="relative h-11 w-36">
                 <Image 
-                  src="/brand/wd-group-logo.png" 
+                  src="/brand/wd-group-logo-white.png" 
                   alt="WD Group" 
                   fill
-                  className="object-contain drop-shadow-[0_0_12px_rgba(37,99,235,0.3)]"
+                  className="object-contain drop-shadow-[0_0_14px_rgba(37,99,235,0.45)]"
                 />
               </div>
               <span className="text-[9px] uppercase font-bold tracking-widest px-2.5 py-0.5 rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/40 font-mono">

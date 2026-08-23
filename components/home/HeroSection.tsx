@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '@/context/LanguageContext';
 import { 
   Building2, 
@@ -12,35 +12,58 @@ import {
   Compass, 
   Sparkles,
   ArrowUpRight,
-  ExternalLink
+  ChevronDown
 } from 'lucide-react';
 import AnimatedCounter from './AnimatedCounter';
 
 const SECTOR_PHOTOS = {
-  hospitality: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1600&q=85', // Luxury Hotel Suite / SwissBlue
-  manufacturing: 'https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=1600&q=85', // Master Woodcraft & Furniture / GreenWood
-  contracting: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=85', // Turnkey Architectural Interior Fit-out
+  hospitality: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1600&q=85',
+  manufacturing: 'https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=1600&q=85',
+  contracting: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=85',
 };
+
+const SECTORS_LIST: ('hospitality' | 'manufacturing' | 'contracting')[] = ['hospitality', 'manufacturing', 'contracting'];
 
 export default function HeroSection() {
   const { lang, dict } = useLanguage();
   const [selectedSector, setSelectedSector] = useState<'hospitality' | 'manufacturing' | 'contracting'>('hospitality');
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+
+  // Auto-cycle through sectors every 6 seconds unless manually paused
+  useEffect(() => {
+    if (!isAutoPlaying) return;
+    const interval = setInterval(() => {
+      setSelectedSector((prev) => {
+        const nextIdx = (SECTORS_LIST.indexOf(prev) + 1) % SECTORS_LIST.length;
+        return SECTORS_LIST[nextIdx];
+      });
+    }, 6000);
+    return () => clearInterval(interval);
+  }, [isAutoPlaying]);
+
+  const handleSelectSector = (sec: 'hospitality' | 'manufacturing' | 'contracting') => {
+    setSelectedSector(sec);
+    setIsAutoPlaying(false); // lock on user selection
+  };
 
   return (
-    <section className="relative min-h-[92vh] flex flex-col justify-center pt-28 pb-20 sm:pt-36 sm:pb-28 overflow-hidden bg-brand-dark">
+    <section className="relative min-h-[95vh] flex flex-col justify-center pt-28 pb-20 sm:pt-36 sm:pb-24 overflow-hidden bg-brand-dark">
       
       {/* 1. Full-Bleed Dynamic Atmospheric Photography Backdrop */}
       <div className="absolute inset-0 z-0 pointer-events-none">
-        <motion.img
-          key={selectedSector}
-          src={SECTOR_PHOTOS[selectedSector]}
-          alt="WD Group Sector Horizon"
-          initial={{ scale: 1.08, opacity: 0.5 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="w-full h-full object-cover"
-        />
-        {/* Dark Luxury Vignette & Radial Gradients */}
+        <AnimatePresence mode="wait">
+          <motion.img
+            key={selectedSector}
+            src={SECTOR_PHOTOS[selectedSector]}
+            alt="WD Group Sector Horizon"
+            initial={{ scale: 1.06, opacity: 0.4 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ opacity: 0.3 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="w-full h-full object-cover"
+          />
+        </AnimatePresence>
+        {/* Luxury Vignettes */}
         <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/80 to-black/95"></div>
         <div className="absolute inset-0 bg-gradient-to-t from-brand-dark via-transparent to-black/80"></div>
         <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.04)_1px,transparent_1px)] [background-size:32px_32px]"></div>
@@ -53,7 +76,7 @@ export default function HeroSection() {
           initial={{ opacity: 0, y: -15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold bg-brand-surface/90 border border-white/20 text-zinc-300 backdrop-blur-xl mb-8 shadow-glow-card shimmer-badge"
+          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold bg-brand-surface/90 border border-white/20 text-zinc-300 backdrop-blur-xl mb-8 shadow-glow-card shimmer-badge cursor-pointer"
         >
           <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
           <span className="font-bold text-white">{dict.hero.badge}</span>
@@ -87,17 +110,17 @@ export default function HeroSection() {
           {dict.hero.description}
         </motion.p>
 
-        {/* 2. Floating Interactive Sector Dock */}
+        {/* 2. Floating Interactive Sector Dock with Auto-Progress Line */}
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className="inline-flex flex-wrap items-center justify-center gap-2.5 p-2 rounded-2xl bg-black/80 border border-white/20 backdrop-blur-2xl mb-12 shadow-2xl"
+          className="inline-flex flex-wrap items-center justify-center gap-2.5 p-2 rounded-2xl bg-black/85 border border-white/20 backdrop-blur-2xl mb-12 shadow-2xl relative"
         >
           {/* SwissBlue Button */}
           <button
-            onClick={() => setSelectedSector('hospitality')}
-            className={`flex items-center gap-2.5 px-5 py-3 rounded-xl text-xs font-bold transition-all ${
+            onClick={() => handleSelectSector('hospitality')}
+            className={`relative overflow-hidden flex items-center gap-2.5 px-5 py-3 rounded-xl text-xs font-bold transition-all ${
               selectedSector === 'hospitality'
                 ? 'bg-[#1A476A] text-white shadow-glow-blue border border-sky-400/60 scale-105'
                 : 'text-zinc-400 hover:text-white hover:bg-white/5'
@@ -108,12 +131,15 @@ export default function HeroSection() {
             <span className="text-[10px] bg-sky-500/20 px-2 py-0.5 rounded-full text-sky-300 font-mono">
               6 {lang === 'ar' ? 'فنادق' : 'Hotels'}
             </span>
+            {selectedSector === 'hospitality' && isAutoPlaying && (
+              <div className="absolute bottom-0 inset-x-0 h-0.5 bg-sky-400 animate-[shimmer_6s_linear_infinite]" />
+            )}
           </button>
 
           {/* GreenWood Button */}
           <button
-            onClick={() => setSelectedSector('manufacturing')}
-            className={`flex items-center gap-2.5 px-5 py-3 rounded-xl text-xs font-bold transition-all ${
+            onClick={() => handleSelectSector('manufacturing')}
+            className={`relative overflow-hidden flex items-center gap-2.5 px-5 py-3 rounded-xl text-xs font-bold transition-all ${
               selectedSector === 'manufacturing'
                 ? 'bg-[#0B5C3D] text-white shadow-glow-emerald border border-emerald-400/60 scale-105'
                 : 'text-zinc-400 hover:text-white hover:bg-white/5'
@@ -124,12 +150,15 @@ export default function HeroSection() {
             <span className="text-[10px] bg-emerald-500/20 px-2 py-0.5 rounded-full text-emerald-300 font-mono">
               3 {lang === 'ar' ? 'مصانع' : 'Factories'}
             </span>
+            {selectedSector === 'manufacturing' && isAutoPlaying && (
+              <div className="absolute bottom-0 inset-x-0 h-0.5 bg-emerald-400 animate-[shimmer_6s_linear_infinite]" />
+            )}
           </button>
 
           {/* Contracting Button */}
           <button
-            onClick={() => setSelectedSector('contracting')}
-            className={`flex items-center gap-2.5 px-5 py-3 rounded-xl text-xs font-bold transition-all ${
+            onClick={() => handleSelectSector('contracting')}
+            className={`relative overflow-hidden flex items-center gap-2.5 px-5 py-3 rounded-xl text-xs font-bold transition-all ${
               selectedSector === 'contracting'
                 ? 'bg-[#8A7340] text-white shadow-glow-gold border border-amber-400/60 scale-105'
                 : 'text-zinc-400 hover:text-white hover:bg-white/5'
@@ -140,6 +169,9 @@ export default function HeroSection() {
             <span className="text-[10px] bg-amber-500/20 px-2 py-0.5 rounded-full text-amber-300 font-mono">
               {lang === 'ar' ? 'تشطيب شامل' : 'Fit-out'}
             </span>
+            {selectedSector === 'contracting' && isAutoPlaying && (
+              <div className="absolute bottom-0 inset-x-0 h-0.5 bg-amber-400 animate-[shimmer_6s_linear_infinite]" />
+            )}
           </button>
         </motion.div>
 
@@ -172,7 +204,7 @@ export default function HeroSection() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="max-w-5xl mx-auto"
+          className="max-w-5xl mx-auto mb-10"
         >
           <div className="glass-card rounded-3xl p-8 sm:p-10 shadow-glow-card divide-y sm:divide-y-0 sm:divide-x rtl:sm:divide-x-reverse divide-white/10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-0 relative overflow-hidden border border-white/15">
             
@@ -221,6 +253,12 @@ export default function HeroSection() {
 
           </div>
         </motion.div>
+
+        {/* Scroll Cue Indicator */}
+        <div className="inline-flex flex-col items-center gap-1 text-[11px] text-zinc-400 opacity-70 hover:opacity-100 transition-opacity">
+          <span>{lang === 'ar' ? 'استكشف المنظومة القابضة' : 'Scroll to explore'}</span>
+          <ChevronDown className="w-4 h-4 animate-bounce text-blue-400" />
+        </div>
 
       </div>
     </section>

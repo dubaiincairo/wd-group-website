@@ -10,7 +10,10 @@ import {
   X, 
   Mail, 
   Phone,
-  ArrowRight
+  ArrowRight,
+  Building2,
+  Factory,
+  HardHat
 } from 'lucide-react';
 
 export default function ContactCTA() {
@@ -24,6 +27,12 @@ export default function ContactCTA() {
     sector: 'hospitality',
     message: '',
   });
+
+  const openSectorInquiry = (sectorKey: string) => {
+    setFormData((prev) => ({ ...prev, sector: sectorKey }));
+    setSubmitted(false);
+    setModalOpen(true);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -71,33 +80,52 @@ export default function ContactCTA() {
           {dict.contact_cta.subtitle}
         </motion.p>
 
-        {/* Action Buttons */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="flex flex-wrap items-center justify-center gap-4"
-        >
+        {/* 3 Fast-Action Direct Sector Inquiry Buttons */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 max-w-3xl mx-auto mb-10">
+          
           <button
-            onClick={() => { setModalOpen(true); setSubmitted(false); }}
-            className="inline-flex items-center gap-2.5 px-8 py-4 rounded-xl font-bold text-sm text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 shadow-glow-blue hover:shadow-xl transition-all transform hover:-translate-y-0.5"
+            onClick={() => openSectorInquiry('hospitality')}
+            className="p-4 rounded-2xl bg-brand-surface/80 hover:bg-[#1A476A]/30 border border-white/10 hover:border-sky-400/60 transition-all flex items-center justify-between group text-start"
           >
-            <Mail className="w-4 h-4" />
-            <span>{dict.contact_cta.button}</span>
+            <div className="flex items-center gap-2.5">
+              <Building2 className="w-4 h-4 text-sky-400" />
+              <span className="text-xs font-bold text-white">
+                {lang === 'ar' ? 'طلب شراكة فندقية' : 'Hotel Partnership'}
+              </span>
+            </div>
+            <ArrowRight className="w-3.5 h-3.5 text-zinc-500 group-hover:text-sky-400 rtl:rotate-180 transition-colors" />
           </button>
 
-          <a
-            href="mailto:info@wdgroup.com.sa"
-            className="inline-flex items-center gap-2.5 px-7 py-4 rounded-xl font-bold text-sm text-zinc-300 bg-brand-surface/90 hover:bg-brand-card border border-brand-border hover:border-zinc-500 transition-all"
+          <button
+            onClick={() => openSectorInquiry('manufacturing')}
+            className="p-4 rounded-2xl bg-brand-surface/80 hover:bg-[#0B5C3D]/30 border border-white/10 hover:border-emerald-400/60 transition-all flex items-center justify-between group text-start"
           >
-            <span>info@wdgroup.com.sa</span>
-            <ArrowRight className="w-4 h-4 rtl:rotate-180 text-zinc-400" />
-          </a>
-        </motion.div>
+            <div className="flex items-center gap-2.5">
+              <Factory className="w-4 h-4 text-emerald-400" />
+              <span className="text-xs font-bold text-white">
+                {lang === 'ar' ? 'توريد أثاث ومصانع' : 'Furniture Supply B2B'}
+              </span>
+            </div>
+            <ArrowRight className="w-3.5 h-3.5 text-zinc-500 group-hover:text-emerald-400 rtl:rotate-180 transition-colors" />
+          </button>
 
-        {/* Contact Info Pills */}
-        <div className="mt-14 pt-8 border-t border-brand-border/60 flex flex-wrap items-center justify-center gap-6 text-xs text-zinc-400 font-medium">
+          <button
+            onClick={() => openSectorInquiry('contracting')}
+            className="p-4 rounded-2xl bg-brand-surface/80 hover:bg-[#8A7340]/30 border border-white/10 hover:border-amber-400/60 transition-all flex items-center justify-between group text-start"
+          >
+            <div className="flex items-center gap-2.5">
+              <HardHat className="w-4 h-4 text-amber-400" />
+              <span className="text-xs font-bold text-white">
+                {lang === 'ar' ? 'مناقصات مقاولات وديكور' : 'Fit-out Contracting RFP'}
+              </span>
+            </div>
+            <ArrowRight className="w-3.5 h-3.5 text-zinc-500 group-hover:text-amber-400 rtl:rotate-180 transition-colors" />
+          </button>
+
+        </div>
+
+        {/* Contact Info Footer Strip */}
+        <div className="pt-8 border-t border-brand-border/60 flex flex-wrap items-center justify-center gap-6 text-xs text-zinc-400 font-medium">
           <a href="mailto:info@wdgroup.sa" className="flex items-center gap-1.5 hover:text-blue-400 transition-colors">
             <Mail className="w-3.5 h-3.5 text-zinc-500" />
             <span>info@wdgroup.sa</span>

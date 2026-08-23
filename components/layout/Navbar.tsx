@@ -41,14 +41,14 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           
-          {/* Official Brand Logo */}
+          {/* Official Crisp White Brand Logo with Sapphire Glow */}
           <Link href="/" className="flex items-center gap-3 group">
             <div className="relative h-9 sm:h-11 w-32 sm:w-36 transition-transform group-hover:scale-105">
               <Image 
-                src="/brand/wd-group-logo.png" 
+                src="/brand/wd-group-logo-white.png" 
                 alt="WD Group" 
                 fill
-                className="object-contain drop-shadow-[0_0_12px_rgba(37,99,235,0.3)]"
+                className="object-contain drop-shadow-[0_0_14px_rgba(37,99,235,0.45)]"
                 priority
               />
             </div>
