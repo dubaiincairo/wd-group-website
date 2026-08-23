@@ -1,15 +1,41 @@
 {
-  "name": "WD Group Next.js Cloud Environment",
-  "image": "mcr.microsoft.com/devcontainers/javascript-node:1-20-bullseye",
+  "name": "WD Group Website Cloud Environment",
+  "image": "mcr.microsoft.com/devcontainers/universal:2-linux",
   "forwardPorts": [3000],
-  "postCreateCommand": "npm install",
+  "portsAttributes": {
+    "3000": {
+      "label": "Next.js Web Preview",
+      "onAutoForward": "openBrowser"
+    }
+  },
   "customizations": {
     "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "typescript.tsdk": "node_modules/typescript/lib",
+        "codespaces.defaultIdleTimeoutMinutes": 10,
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "errorLens.enabled": true,
+        "errorLens.fontStyleItalic": true,
+        "tailwindCSS.experimental.classRegex": [
+          ["clsx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"],
+          ["cn\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
+        ]
+      },
       "extensions": [
         "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
         "bradlc.vscode-tailwindcss",
-        "esbenp.prettier-vscode"
+        "formulahendry.auto-rename-tag",
+        "yoavbls.pretty-ts-errors",
+        "usernamehw.errorlens",
+        "mikestead.dotenv",
+        "github.vscode-pull-request-github",
+        "humao.rest-client",
+        "openai.chatgpt"
       ]
     }
-  }
+  },
+  "postCreateCommand": "npm install"
 }
