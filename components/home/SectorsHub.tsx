@@ -2,7 +2,6 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
 import { useLanguage } from '@/context/LanguageContext';
 import { 
   Building2, 
@@ -11,8 +10,7 @@ import {
   ExternalLink, 
   Check, 
   ArrowRight,
-  Layers,
-  Sparkles
+  Layers
 } from 'lucide-react';
 
 const SECTOR_CARD_PHOTOS = {
@@ -53,17 +51,13 @@ export default function SectorsHub() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           
           {/* SECTOR 1: HOSPITALITY (SwissBlue) */}
-          <motion.div 
+          <div 
             id="hospitality" 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="glass-card rounded-3xl overflow-hidden flex flex-col justify-between group hover:shadow-glow-blue border border-white/10 hover:border-sky-500/50"
+            className="glass-card rounded-3xl overflow-hidden flex flex-col justify-between group hover:shadow-glow-blue border border-white/10 hover:border-sky-500/50 transition-all duration-300"
           >
             <div>
               {/* Photo Header */}
-              <div className="relative h-52 overflow-hidden">
+              <div className="relative h-56 overflow-hidden">
                 <img 
                   src={SECTOR_CARD_PHOTOS.hospitality} 
                   alt="SwissBlue Hospitality"
@@ -119,20 +113,16 @@ export default function SectorsHub() {
                 <ExternalLink className="w-4 h-4 text-white/90 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
               </a>
             </div>
-          </motion.div>
+          </div>
 
           {/* SECTOR 2: MANUFACTURING & FURNITURE (GreenWood) */}
-          <motion.div 
+          <div 
             id="manufacturing" 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="glass-card rounded-3xl overflow-hidden flex flex-col justify-between group hover:shadow-glow-emerald border border-white/10 hover:border-emerald-500/50"
+            className="glass-card rounded-3xl overflow-hidden flex flex-col justify-between group hover:shadow-glow-emerald border border-white/10 hover:border-emerald-500/50 transition-all duration-300"
           >
             <div>
               {/* Photo Header */}
-              <div className="relative h-52 overflow-hidden">
+              <div className="relative h-56 overflow-hidden">
                 <img 
                   src={SECTOR_CARD_PHOTOS.manufacturing} 
                   alt="GreenWood Manufacturing"
@@ -186,20 +176,16 @@ export default function SectorsHub() {
                 <ArrowRight className="w-4 h-4 text-white/90 group-hover/btn:translate-x-1 rtl:group-hover/btn:-translate-x-1 rtl:rotate-180 transition-transform" />
               </Link>
             </div>
-          </motion.div>
+          </div>
 
           {/* SECTOR 3: CONTRACTING (Engineering Excellence) */}
-          <motion.div 
+          <div 
             id="contracting" 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="glass-card rounded-3xl overflow-hidden flex flex-col justify-between group hover:shadow-glow-gold border border-white/10 hover:border-amber-500/50"
+            className="glass-card rounded-3xl overflow-hidden flex flex-col justify-between group hover:shadow-glow-gold border border-white/10 hover:border-amber-500/50 transition-all duration-300"
           >
             <div>
               {/* Photo Header */}
-              <div className="relative h-52 overflow-hidden">
+              <div className="relative h-56 overflow-hidden">
                 <img 
                   src={SECTOR_CARD_PHOTOS.contracting} 
                   alt="Contracting and Fit-outs"
@@ -253,7 +239,7 @@ export default function SectorsHub() {
                 <ArrowRight className="w-4 h-4 text-white/90 group-hover/btn:translate-x-1 rtl:group-hover/btn:-translate-x-1 rtl:rotate-180 transition-transform" />
               </Link>
             </div>
-          </motion.div>
+          </div>
 
         </div>
 

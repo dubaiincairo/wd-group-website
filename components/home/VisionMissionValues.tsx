@@ -1,13 +1,11 @@
 'use client';
 
 import React from 'react';
-import { motion } from 'framer-motion';
 import { useLanguage } from '@/context/LanguageContext';
 import { 
   Eye, 
   Target, 
   Award, 
-  Sparkles, 
   CheckCircle2, 
   ShieldCheck,
   Compass
@@ -40,13 +38,7 @@ export default function VisionMissionValues() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           
           {/* VISION CARD */}
-          <motion.div 
-            initial={{ opacity: 0, y: 25 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="glass-card rounded-3xl p-8 flex flex-col justify-between shadow-xs group hover:border-blue-500/40 hover:shadow-glow-blue"
-          >
+          <div className="glass-card rounded-3xl p-8 flex flex-col justify-between shadow-xs group hover:border-blue-500/40 hover:shadow-glow-blue transition-all duration-300">
             <div>
               <div className="w-14 h-14 rounded-2xl bg-blue-500/10 text-blue-400 border border-blue-500/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                 <Eye className="w-7 h-7" />
@@ -62,16 +54,10 @@ export default function VisionMissionValues() {
               <CheckCircle2 className="w-4 h-4" />
               <span>{lang === 'ar' ? 'مواكبة لرؤية المملكة ٢٠٣٠' : 'Aligned with Saudi Vision 2030'}</span>
             </div>
-          </motion.div>
+          </div>
 
           {/* MISSION CARD */}
-          <motion.div 
-            initial={{ opacity: 0, y: 25 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="glass-card rounded-3xl p-8 flex flex-col justify-between shadow-xs group hover:border-emerald-500/40 hover:shadow-glow-emerald"
-          >
+          <div className="glass-card rounded-3xl p-8 flex flex-col justify-between shadow-xs group hover:border-emerald-500/40 hover:shadow-glow-emerald transition-all duration-300">
             <div>
               <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                 <Target className="w-7 h-7" />
@@ -87,16 +73,10 @@ export default function VisionMissionValues() {
               <CheckCircle2 className="w-4 h-4" />
               <span>{lang === 'ar' ? 'كوادر وطنية وتقنيات متقدمة' : 'Qualified Talent & Advanced Tech'}</span>
             </div>
-          </motion.div>
+          </div>
 
           {/* VALUES CARD */}
-          <motion.div 
-            initial={{ opacity: 0, y: 25 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="glass-card rounded-3xl p-8 flex flex-col justify-between shadow-xs group hover:border-amber-500/40 hover:shadow-glow-gold"
-          >
+          <div className="glass-card rounded-3xl p-8 flex flex-col justify-between shadow-xs group hover:border-amber-500/40 hover:shadow-glow-gold transition-all duration-300">
             <div>
               <div className="w-14 h-14 rounded-2xl bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                 <Award className="w-7 h-7" />
@@ -112,7 +92,7 @@ export default function VisionMissionValues() {
               <ShieldCheck className="w-4 h-4" />
               <span>{lang === 'ar' ? 'التزام بالجودة والشفافية' : 'Institutional Governance & Ethics'}</span>
             </div>
-          </motion.div>
+          </div>
 
         </div>
 
