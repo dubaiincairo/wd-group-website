@@ -17,68 +17,64 @@ export default function Footer() {
   const { lang, dict, toggleLanguage } = useLanguage();
 
   return (
-    <footer className="bg-white border-t border-gray-200 pt-16 pb-12">
+    <footer className="bg-brand-darker text-white border-t border-brand-border pt-16 pb-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Main Footer Multi-Column Grid (Untitled UI Footer Pattern) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-gray-200">
+        {/* Main Footer Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-brand-border">
           
           {/* Col 1 & 2: Holding Brand Info & Tagline */}
           <div className="lg:col-span-2">
-            <Link href="/" className="flex items-center gap-3 mb-4 inline-flex">
-              <div className="w-10 h-10 rounded-xl bg-gray-900 text-white flex items-center justify-center font-extrabold text-sm tracking-wider shadow-xs">
+            <Link href="/" className="flex items-center gap-3.5 group mb-4 inline-flex">
+              <div className="w-10 h-10 rounded-xl bg-brand-surface border border-white/10 text-white flex items-center justify-center font-extrabold text-base tracking-wider shadow-glow-card group-hover:border-blue-500/50 transition-colors">
                 <span className="font-mono">WD</span>
               </div>
-              <div className="flex flex-col">
-                <div className="flex items-center gap-2">
-                  <span className={`font-bold tracking-tight text-gray-900 text-base sm:text-lg ${lang === 'ar' ? 'font-arabic' : ''}`}>
-                    {dict.nav.brand}
-                  </span>
-                  <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-brand-50 text-brand-700 border border-brand-200">
-                    Holding
-                  </span>
-                </div>
-                <span className="text-xs text-gray-500 font-medium -mt-0.5">
-                  {dict.nav.holding}
+              <div>
+                <span className={`font-extrabold tracking-tight text-white text-lg ${
+                  lang === 'ar' ? 'font-arabic' : 'font-mono'
+                }`}>
+                  {dict.nav.brand}
+                </span>
+                <span className="ml-2 rtl:ml-0 rtl:mr-2 text-[9px] uppercase font-bold tracking-widest px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/40">
+                  HOLDING
                 </span>
               </div>
             </Link>
 
             {/* Approved Tagline */}
-            <div className="text-xs font-semibold text-brand-700 tracking-wider uppercase mb-3">
+            <div className="text-xs font-extrabold text-blue-400 tracking-widest uppercase mb-3">
               {dict.footer.tagline}
             </div>
 
             {/* Approved Description */}
-            <p className="text-sm text-gray-600 leading-relaxed max-w-sm mb-6 font-normal">
+            <p className="text-xs text-zinc-400 leading-relaxed max-w-sm mb-6">
               {dict.footer.description}
             </p>
 
-            {/* Untitled UI Status Pill */}
-            <div className="inline-flex items-center gap-2 text-xs font-medium text-gray-700 px-3 py-1 rounded-full bg-gray-50 border border-gray-200 shadow-xs">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <div className="inline-flex items-center gap-2 text-[11px] font-semibold text-zinc-300 px-3 py-1 rounded-full bg-brand-surface border border-brand-border shadow-xs">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
               <span>{lang === 'ar' ? 'مواكبة لرؤية المملكة ٢٠٣٠' : 'Aligned with Saudi Vision 2030'}</span>
             </div>
           </div>
 
           {/* Col 3: Company (الشركة) */}
           <div>
-            <h4 className="text-xs font-semibold uppercase tracking-wider text-gray-900 mb-4">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-zinc-300 mb-4">
               {dict.footer.col1_title}
             </h4>
-            <ul className="space-y-3 text-sm text-gray-600">
+            <ul className="space-y-2.5 text-xs text-zinc-400">
               <li>
-                <Link href="#about" className="hover:text-gray-900 font-medium transition-colors">
+                <Link href="#about" className="hover:text-white transition-colors">
                   {dict.footer.about_us}
                 </Link>
               </li>
               <li>
-                <Link href="#careers" className="hover:text-gray-900 font-medium transition-colors">
+                <Link href="#careers" className="hover:text-white transition-colors">
                   {dict.footer.careers}
                 </Link>
               </li>
               <li>
-                <Link href="#contact" className="hover:text-gray-900 font-medium transition-colors">
+                <Link href="#contact" className="hover:text-white transition-colors">
                   {dict.footer.contact}
                 </Link>
               </li>
@@ -87,25 +83,25 @@ export default function Footer() {
 
           {/* Col 4: Sectors (القطاعات) */}
           <div>
-            <h4 className="text-xs font-semibold uppercase tracking-wider text-gray-900 mb-4">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-zinc-300 mb-4">
               {dict.footer.col2_title}
             </h4>
-            <ul className="space-y-3 text-sm text-gray-600">
+            <ul className="space-y-2.5 text-xs text-zinc-400">
               <li>
-                <Link href="#hospitality" className="hover:text-[#1A476A] font-medium transition-colors flex items-center gap-2">
-                  <Building2 className="w-4 h-4 text-[#1A476A]" />
+                <Link href="#hospitality" className="hover:text-sky-300 transition-colors flex items-center gap-1.5">
+                  <Building2 className="w-3.5 h-3.5 text-sky-400" />
                   <span>{dict.footer.hosp_title}</span>
                 </Link>
               </li>
               <li>
-                <Link href="#manufacturing" className="hover:text-[#0B5C3D] font-medium transition-colors flex items-center gap-2">
-                  <Factory className="w-4 h-4 text-[#0B5C3D]" />
+                <Link href="#manufacturing" className="hover:text-emerald-300 transition-colors flex items-center gap-1.5">
+                  <Factory className="w-3.5 h-3.5 text-emerald-400" />
                   <span>{dict.footer.mfg_title}</span>
                 </Link>
               </li>
               <li>
-                <Link href="#contracting" className="hover:text-[#8A7340] font-medium transition-colors flex items-center gap-2">
-                  <HardHat className="w-4 h-4 text-[#8A7340]" />
+                <Link href="#contracting" className="hover:text-amber-300 transition-colors flex items-center gap-1.5">
+                  <HardHat className="w-3.5 h-3.5 text-amber-400" />
                   <span>{dict.footer.contr_title}</span>
                 </Link>
               </li>
@@ -114,39 +110,39 @@ export default function Footer() {
 
           {/* Col 5: Connect (تواصل) */}
           <div>
-            <h4 className="text-xs font-semibold uppercase tracking-wider text-gray-900 mb-4">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-zinc-300 mb-4">
               {dict.footer.col3_title}
             </h4>
-            <ul className="space-y-3 text-sm text-gray-600">
+            <ul className="space-y-2.5 text-xs text-zinc-400">
               <li>
                 <a 
                   href="https://swissblue.sa" 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className="text-brand-600 hover:text-brand-700 font-medium flex items-center gap-1.5"
+                  className="text-sky-400 hover:underline flex items-center gap-1 font-semibold"
                 >
                   <span>{dict.footer.swissblue}</span>
-                  <ExternalLink className="w-3.5 h-3.5" />
+                  <ExternalLink className="w-3 h-3" />
                 </a>
               </li>
               <li>
                 <Link 
                   href="#manufacturing" 
-                  className="text-emerald-700 hover:text-emerald-800 font-medium flex items-center gap-1.5"
+                  className="text-emerald-400 hover:underline flex items-center gap-1 font-semibold"
                 >
                   <span>{dict.footer.greenwood}</span>
-                  <ExternalLink className="w-3.5 h-3.5" />
+                  <ExternalLink className="w-3 h-3" />
                 </Link>
               </li>
-              <li className="pt-2 border-t border-gray-100 flex items-center gap-2 text-gray-700">
-                <Mail className="w-4 h-4 text-gray-400 shrink-0" />
-                <a href={`mailto:${dict.footer.email}`} className="hover:text-brand-600 transition-colors font-medium">
+              <li className="pt-2 border-t border-brand-border flex items-center gap-1.5 text-zinc-300">
+                <Mail className="w-3.5 h-3.5 text-blue-400 shrink-0" />
+                <a href={`mailto:${dict.footer.email}`} className="hover:underline">
                   {dict.footer.email}
                 </a>
               </li>
-              <li className="flex items-center gap-2 text-gray-700 font-mono">
-                <Phone className="w-4 h-4 text-gray-400 shrink-0" />
-                <a href={`tel:${dict.footer.phone.replace(/\\s/g, '')}`} className="hover:text-brand-600 transition-colors">
+              <li className="flex items-center gap-1.5 text-zinc-300 font-mono">
+                <Phone className="w-3.5 h-3.5 text-blue-400 shrink-0" />
+                <a href={`tel:${dict.footer.phone.replace(/\\s/g, '')}`} className="hover:underline">
                   {dict.footer.phone}
                 </a>
               </li>
@@ -155,16 +151,16 @@ export default function Footer() {
 
         </div>
 
-        {/* Bottom Bar: Copyright & Language Switcher (Untitled UI Style) */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-500 font-medium">
+        {/* Bottom Copyright & Language */}
+        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-500 font-medium">
           <p>{dict.footer.rights}</p>
           <div className="flex items-center gap-6">
-            <span className="text-gray-500">{dict.footer.location_sa}</span>
+            <span className="text-zinc-400">{dict.footer.location_sa}</span>
             <button 
               onClick={toggleLanguage}
-              className="inline-flex items-center gap-1.5 text-gray-700 hover:text-brand-600 font-semibold transition-colors"
+              className="inline-flex items-center gap-1 text-zinc-300 hover:text-white font-bold"
             >
-              <Globe className="w-4 h-4 text-gray-400" />
+              <Globe className="w-3.5 h-3.5 text-blue-400" />
               <span>{lang === 'ar' ? 'English' : 'عربي'}</span>
             </button>
           </div>

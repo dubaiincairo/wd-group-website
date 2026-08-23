@@ -3,49 +3,22 @@
 @tailwind utilities;
 
 :root {
-  /* Untitled UI Core Colors */
-  --bg-primary: #FFFFFF;
-  --bg-secondary: #F9FAFB;
-  --bg-tertiary: #F2F4F7;
-  --border-primary: #EAECF0;
-  --border-secondary: #D0D5DD;
-  --text-primary: #101828;
-  --text-secondary: #475467;
-  --text-tertiary: #667085;
-  --text-placeholder: #98A2B3;
-
-  /* Untitled UI Brand Tokens */
-  --brand-primary: #1570EF;
-  --brand-hover: #175CD3;
-  --brand-light: #EFF8FF;
-  --brand-border: #B2DDFF;
-
-  /* Untitled UI Radii */
-  --radius-xs: 4px;
-  --radius-sm: 6px;
-  --radius-md: 8px;
-  --radius-lg: 10px;
-  --radius-xl: 12px;
-  --radius-2xl: 16px;
-  --radius-3xl: 20px;
-  --radius-pill: 9999px;
-
-  /* Untitled UI Typography Scales */
-  --font-display-2xl: clamp(2.5rem, 5.5vw, 4.5rem);
-  --font-display-xl: clamp(2.25rem, 4.5vw, 3.75rem);
-  --font-display-lg: clamp(2rem, 3.5vw, 3rem);
-  --font-display-md: clamp(1.75rem, 2.8vw, 2.25rem);
-  --font-display-sm: clamp(1.5rem, 2.2vw, 1.875rem);
+  --bg-dark: #08090C;
+  --bg-surface: #0F1117;
+  --text-main: #F8FAFC;
+  --text-muted: #94A3B8;
 }
 
 html {
   scroll-behavior: smooth;
+  background-color: var(--bg-dark);
+  color: var(--text-main);
 }
 
 body {
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
-  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -58,49 +31,60 @@ body {
   font-family: var(--font-inter), var(--font-noto-kufi), system-ui, sans-serif;
 }
 
-/* Untitled UI Component Helpers */
-@layer components {
-  /* Primary Button (Untitled UI) */
-  .u-btn-primary {
-    @apply inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold text-white bg-brand-600 hover:bg-brand-700 active:bg-brand-800 shadow-xs transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-brand-100 disabled:opacity-50 disabled:cursor-not-allowed;
-  }
+/* Glassmorphism & Glowing Utilities */
+.glass-panel {
+  background: rgba(15, 17, 23, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
 
-  /* Secondary Gray Button (Untitled UI) */
-  .u-btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold text-gray-700 bg-white hover:bg-gray-50 active:bg-gray-100 border border-gray-300 shadow-xs transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-gray-100 disabled:opacity-50 disabled:cursor-not-allowed;
-  }
+.glass-card {
+  background: linear-gradient(180deg, rgba(20, 23, 33, 0.8) 0%, rgba(15, 17, 23, 0.95) 100%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
 
-  /* Dark Button (Untitled UI) */
-  .u-btn-dark {
-    @apply inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold text-white bg-gray-900 hover:bg-gray-800 active:bg-gray-950 shadow-xs transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-gray-300;
-  }
+.glass-card:hover {
+  border-color: rgba(255, 255, 255, 0.18);
+  transform: translateY(-4px);
+}
 
-  /* Modern Announcement Pill Badge (Untitled UI Signature) */
-  .u-badge-announcement {
-    @apply inline-flex items-center gap-2 p-1 pl-1.5 pr-3 rounded-full text-xs font-medium bg-brand-50 border border-brand-200 text-brand-700 hover:bg-brand-100 transition-colors cursor-pointer;
-  }
+/* Radiant Shimmer effect on buttons & badges */
+.shimmer-badge {
+  position: relative;
+  overflow: hidden;
+}
 
-  .u-badge-pill {
-    @apply inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200;
-  }
-
-  /* Card elevation with Untitled UI crisp border */
-  .u-card {
-    @apply bg-white border border-gray-200 rounded-2xl p-6 transition-all duration-200 hover:border-gray-300 hover:shadow-md;
-  }
+.shimmer-badge::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.15) 50%,
+    transparent 100%
+  );
+  animation: shimmer 3.5s infinite;
 }
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 7px;
+  width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #F9FAFB;
+  background: #08090C;
 }
 ::-webkit-scrollbar-thumb {
-  background: #D0D5DD;
+  background: #252B3B;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #98A2B3;
+  background: #3B82F6;
 }
