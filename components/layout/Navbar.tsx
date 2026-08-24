@@ -12,8 +12,8 @@ import {
   Globe, 
   Menu, 
   X, 
-  ArrowUpRight, 
-  ExternalLink
+  ArrowUpRight,
+  LayoutTemplate
 } from 'lucide-react';
 
 export default function Navbar() {
@@ -43,7 +43,7 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           
-          {/* Dynamic Language-Aware Brand Logo (Arabic for AR, English for EN) */}
+          {/* Dynamic Language-Aware Brand Logo */}
           <Link href="/" className="flex items-center gap-3.5 group shrink-0">
             <div className={`relative h-10 sm:h-12 ${lang === 'ar' ? 'w-36 sm:w-44' : 'w-32 sm:w-36'} transition-transform group-hover:scale-105`}>
               <Image 
@@ -67,7 +67,7 @@ export default function Navbar() {
           {/* Desktop Navigation Links */}
           <nav className="hidden lg:flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-brand-surface/80 border border-white/10 backdrop-blur-md">
             <Link 
-              href="#about" 
+              href="/about" 
               className="px-3.5 py-1.5 rounded-full text-xs font-semibold text-zinc-300 hover:text-white hover:bg-white/5 transition-colors"
             >
               {dict.nav.about}
@@ -95,7 +95,7 @@ export default function Navbar() {
 
                   <div className="space-y-1">
                     <Link 
-                      href="#hospitality" 
+                      href="/sectors/hospitality" 
                       onClick={() => setSectorsOpen(false)}
                       className="flex items-center justify-between p-2.5 rounded-xl hover:bg-white/5 transition-colors group/item"
                     >
@@ -111,7 +111,7 @@ export default function Navbar() {
                     </Link>
 
                     <Link 
-                      href="#manufacturing" 
+                      href="/sectors/manufacturing" 
                       onClick={() => setSectorsOpen(false)}
                       className="flex items-center justify-between p-2.5 rounded-xl hover:bg-white/5 transition-colors group/item"
                     >
@@ -127,7 +127,7 @@ export default function Navbar() {
                     </Link>
 
                     <Link 
-                      href="#contracting" 
+                      href="/sectors/contracting" 
                       onClick={() => setSectorsOpen(false)}
                       className="flex items-center justify-between p-2.5 rounded-xl hover:bg-white/5 transition-colors group/item"
                     >
@@ -147,17 +147,25 @@ export default function Navbar() {
             </div>
 
             <Link 
-              href="#careers" 
+              href="/careers" 
               className="px-3.5 py-1.5 rounded-full text-xs font-semibold text-zinc-300 hover:text-white hover:bg-white/5 transition-colors"
             >
               {dict.nav.careers}
             </Link>
 
             <Link 
-              href="#contact" 
+              href="/contact" 
               className="px-3.5 py-1.5 rounded-full text-xs font-semibold text-zinc-300 hover:text-white hover:bg-white/5 transition-colors"
             >
               {dict.nav.contact}
+            </Link>
+
+            <Link 
+              href="/wireframes" 
+              className="px-3 py-1 rounded-full text-[11px] font-mono font-bold text-blue-400 hover:text-blue-300 bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/30 transition-colors flex items-center gap-1.5"
+            >
+              <LayoutTemplate className="w-3 h-3" />
+              <span>{lang === 'ar' ? 'المخططات' : 'Wireframes'}</span>
             </Link>
           </nav>
 
@@ -172,7 +180,7 @@ export default function Navbar() {
             </button>
 
             <Link 
-              href="#contact"
+              href="/contact"
               className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-white bg-blue-600 hover:bg-blue-500 shadow-glow-blue transition-all"
             >
               <span>{dict.nav.rfp_btn}</span>
@@ -205,14 +213,14 @@ export default function Navbar() {
         <div className="lg:hidden bg-brand-surface border-b border-white/10 p-5 mt-3 shadow-2xl">
           <div className="flex flex-col gap-2.5">
             <Link 
-              href="#about"
+              href="/about"
               onClick={() => setMobileMenuOpen(false)}
               className="px-3 py-2 rounded-xl text-sm font-semibold text-zinc-200 hover:bg-white/5"
             >
               {dict.nav.about}
             </Link>
             <Link 
-              href="#hospitality"
+              href="/sectors/hospitality"
               onClick={() => setMobileMenuOpen(false)}
               className="px-3 py-2 rounded-xl text-sm font-semibold text-sky-400 hover:bg-white/5 flex items-center justify-between"
             >
@@ -220,7 +228,7 @@ export default function Navbar() {
               <span className="text-xs bg-sky-500/10 px-2 py-0.5 rounded-full">SwissBlue</span>
             </Link>
             <Link 
-              href="#manufacturing"
+              href="/sectors/manufacturing"
               onClick={() => setMobileMenuOpen(false)}
               className="px-3 py-2 rounded-xl text-sm font-semibold text-emerald-400 hover:bg-white/5 flex items-center justify-between"
             >
@@ -228,21 +236,29 @@ export default function Navbar() {
               <span className="text-xs bg-emerald-500/10 px-2 py-0.5 rounded-full">GreenWood</span>
             </Link>
             <Link 
-              href="#contracting"
+              href="/sectors/contracting"
               onClick={() => setMobileMenuOpen(false)}
               className="px-3 py-2 rounded-xl text-sm font-semibold text-amber-400 hover:bg-white/5"
             >
               {dict.nav.contracting}
             </Link>
             <Link 
-              href="#careers"
+              href="/careers"
               onClick={() => setMobileMenuOpen(false)}
               className="px-3 py-2 rounded-xl text-sm font-semibold text-zinc-200 hover:bg-white/5"
             >
               {dict.nav.careers}
             </Link>
             <Link 
-              href="#contact"
+              href="/wireframes"
+              onClick={() => setMobileMenuOpen(false)}
+              className="px-3 py-2 rounded-xl text-sm font-semibold text-blue-400 hover:bg-white/5 flex items-center gap-2"
+            >
+              <LayoutTemplate className="w-4 h-4" />
+              <span>{lang === 'ar' ? 'خريطة المخططات الهيكلية' : 'Wireframes Content Map'}</span>
+            </Link>
+            <Link 
+              href="/contact"
               onClick={() => setMobileMenuOpen(false)}
               className="w-full py-2.5 rounded-xl text-xs font-bold text-center text-white bg-blue-600 mt-2"
             >
