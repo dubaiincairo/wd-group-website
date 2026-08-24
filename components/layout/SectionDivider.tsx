@@ -19,7 +19,7 @@ export default function SectionDivider({ label, badge }: SectionDividerProps) {
           
           {/* Left Blueprint Crosshair */}
           <div className="text-zinc-600 font-mono text-[10px] hidden sm:block">
-            + 21.5433° N
+            + WD // KSA
           </div>
 
           {/* Central Hairline Rule with Monogram / Badge Pill */}
@@ -29,7 +29,7 @@ export default function SectionDivider({ label, badge }: SectionDividerProps) {
             {/* Center Monogram / Coordinate Pill */}
             <div className="absolute px-3 py-1 rounded-full bg-brand-surface/90 border border-white/10 text-[9px] font-mono font-bold tracking-widest text-zinc-500 uppercase flex items-center gap-2 backdrop-blur-md">
               <span className="w-1.5 h-1.5 rounded-full bg-blue-500/80 animate-pulse"></span>
-              <span>{badge || (lang === 'ar' ? 'مجموعة دبليو دي القابضة' : 'WD GROUP HOLDING')}</span>
+              <span>{badge || (lang === 'ar' ? 'مجموعة دبليو دي للأعمال' : 'WD GROUP FOR BUSINESS')}</span>
               {label && (
                 <>
                   <span className="text-zinc-600">/</span>
@@ -41,7 +41,7 @@ export default function SectionDivider({ label, badge }: SectionDividerProps) {
 
           {/* Right Blueprint Crosshair */}
           <div className="text-zinc-600 font-mono text-[10px] hidden sm:block">
-            + 39.1728° E
+            + 2030
           </div>
 
         </div>

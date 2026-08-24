@@ -8,245 +8,260 @@ import {
   Factory, 
   HardHat, 
   ArrowRight, 
-  Compass,
-  ArrowUpRight
+  Compass, 
+  ChevronDown
 } from 'lucide-react';
 import AnimatedCounter from './AnimatedCounter';
 
-const SECTORS_VIDEO_DATA = [
+const SECTORS_HERO_VIDEOS = [
   {
     id: 'hospitality',
-    nameEn: 'Hospitality',
-    nameAr: 'الضيافة',
-    subEn: 'SwissBlue',
-    subAr: 'SwissBlue',
     video: '/videos/hospitality.mp4',
-    poster: '/images/hospitality-hero.jpg',
-    color: 'from-sky-600 to-blue-800',
-    tagColor: 'border-sky-500/40 text-sky-400 bg-sky-500/10',
-    activeBtn: 'border-sky-400 bg-sky-500/20 text-white shadow-[0_0_20px_rgba(56,189,248,0.35)]',
-    gradientOverlay: 'from-[#08090C]/90 via-[#08090C]/65 to-[#08090C]/90',
+    poster: 'https://cdn.sanity.io/images/uoj8zwj3/production/00b20cc6cb3d8c613964965da5556e8396305950-2400x1792.jpg',
+    glowColor: 'bg-sky-500/25',
+    activeBtn: 'bg-[#1A476A] text-white shadow-glow-blue border border-sky-400/80 ring-1 ring-sky-400/40',
   },
   {
     id: 'manufacturing',
-    nameEn: 'Manufacturing & Furniture',
-    nameAr: 'التصنيع والأثاث',
-    subEn: 'GreenWood',
-    subAr: 'GreenWood',
     video: '/videos/manufacturing.mp4',
-    poster: '/images/manufacturing-hero.jpg',
-    color: 'from-emerald-600 to-teal-800',
-    tagColor: 'border-emerald-500/40 text-emerald-400 bg-emerald-500/10',
-    activeBtn: 'border-emerald-400 bg-emerald-500/20 text-white shadow-[0_0_20px_rgba(52,211,153,0.35)]',
-    gradientOverlay: 'from-[#08090C]/90 via-[#08090C]/65 to-[#08090C]/90',
+    poster: 'https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=2400&q=85',
+    glowColor: 'bg-emerald-500/25',
+    activeBtn: 'bg-[#0B5C3D] text-white shadow-glow-emerald border border-emerald-400/80 ring-1 ring-emerald-400/40',
   },
   {
     id: 'contracting',
-    nameEn: 'Contracting & Fit-Out',
-    nameAr: 'المقاولات والتجهيز الداخلي',
-    subEn: 'Projects',
-    subAr: 'Projects',
     video: '/videos/contracting.mp4',
-    poster: '/images/contracting-hero.jpg',
-    color: 'from-amber-600 to-yellow-800',
-    tagColor: 'border-amber-500/40 text-amber-400 bg-amber-500/10',
-    activeBtn: 'border-amber-400 bg-amber-500/20 text-white shadow-[0_0_20px_rgba(251,191,36,0.35)]',
-    gradientOverlay: 'from-[#08090C]/90 via-[#08090C]/65 to-[#08090C]/90',
-  }
+    poster: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2400&q=85',
+    glowColor: 'bg-amber-500/25',
+    activeBtn: 'bg-[#8A7340] text-white shadow-glow-gold border border-amber-400/80 ring-1 ring-amber-400/40',
+  },
 ];
 
 export default function HeroSection() {
   const { lang, dict } = useLanguage();
-  const [activeSectorIndex, setActiveSectorIndex] = useState(0);
-  const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
+  const [selectedSector, setSelectedSector] = useState<'hospitality' | 'manufacturing' | 'contracting'>('hospitality');
+  const videoRefs = useRef<{ [key: string]: HTMLVideoElement | null }>({});
 
-  // Rotate background video every 8 seconds
+  // Auto-cycle through the 3 sectors every 8 seconds
   useEffect(() => {
     const timer = setInterval(() => {
-      setActiveSectorIndex((prev) => (prev + 1) % SECTORS_VIDEO_DATA.length);
+      setSelectedSector((current) => {
+        if (current === 'hospitality') return 'manufacturing';
+        if (current === 'manufacturing') return 'contracting';
+        return 'hospitality';
+      });
     }, 8000);
     return () => clearInterval(timer);
   }, []);
 
-  // Ensure active video is playing smoothly
+  // Ensure active video is playing
   useEffect(() => {
-    const activeVideo = videoRefs.current[activeSectorIndex];
+    const activeVideo = videoRefs.current[selectedSector];
     if (activeVideo) {
       activeVideo.muted = true;
-      activeVideo.currentTime = 0;
       activeVideo.play().catch(() => {});
     }
-  }, [activeSectorIndex]);
+  }, [selectedSector]);
 
-  const activeSector = SECTORS_VIDEO_DATA[activeSectorIndex];
+  const activeSectorConfig = SECTORS_HERO_VIDEOS.find(s => s.id === selectedSector) || SECTORS_HERO_VIDEOS[0];
 
   return (
-    <section className="relative min-h-[92vh] flex flex-col justify-between pt-32 pb-12 overflow-hidden bg-[#08090C]">
+    <section className="relative min-h-[94vh] flex flex-col justify-center items-center pt-32 pb-16 overflow-hidden bg-[#08090C] text-center">
       
-      {/* Dynamic Sector Video Backdrops with Opacity Crossfade */}
+      {/* 1. Cinematic Ambient Dynamic Video Backdrop Layer */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-        {SECTORS_VIDEO_DATA.map((sector, index) => {
-          const isActive = index === activeSectorIndex;
+        
+        {SECTORS_HERO_VIDEOS.map((item) => {
+          const isActive = item.id === selectedSector;
           return (
-            <div
-              key={sector.id}
-              className={`absolute inset-0 w-full h-full transition-opacity duration-1000 ease-in-out ${
-                isActive ? 'opacity-100' : 'opacity-0'
+            <div 
+              key={item.id}
+              className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+                isActive ? 'opacity-55' : 'opacity-0 pointer-events-none'
               }`}
             >
               <video
-                ref={(el) => { videoRefs.current[index] = el; }}
+                ref={(el) => { videoRefs.current[item.id] = el; }}
+                src={item.video}
+                poster={item.poster}
                 autoPlay
                 loop
                 muted
                 playsInline
                 preload="auto"
-                poster={sector.poster}
-                className="absolute inset-0 w-full h-full object-cover scale-105"
-              >
-                <source src={sector.video} type="video/mp4" />
-              </video>
-              <div className={`absolute inset-0 bg-gradient-to-b ${sector.gradientOverlay}`} />
+                className="absolute inset-0 w-full h-full object-cover object-center scale-105"
+              />
             </div>
           );
         })}
-        
-        {/* Subtle grid pattern overlay */}
-        <div className="absolute inset-0 bg-dot-matrix opacity-25" />
+
+        {/* Cinematic Vignette and readability protection */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#08090C] via-[#08090C]/60 to-[#08090C]/80"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(8,9,12,0.85)_100%)]"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.05)_1px,transparent_1px)] [background-size:32px_32px]"></div>
+
+        {/* Dynamic color glow based on selected sector */}
+        <div 
+          className={`absolute -top-40 left-1/2 -translate-x-1/2 w-[700px] h-[700px] rounded-full blur-[160px] pointer-events-none transition-colors duration-1000 ${
+            activeSectorConfig.glowColor
+          }`}
+        ></div>
       </div>
 
-      {/* Blueprint Location Tag */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-        <div className="flex items-center justify-between text-[11px] font-mono text-zinc-500 tracking-wider">
-          <span className="hidden sm:inline-block">
-            {lang === 'ar' ? 'المقر الرئيسي · نجران، المملكة العربية السعودية' : 'HEADQUARTERS · NAJRAN, SAUDI ARABIA'}
-          </span>
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/5 border border-white/10 text-blue-400 font-bold">
-            <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse"></span>
+      {/* Main Content Container */}
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex flex-col items-center">
+        
+        {/* Subtle pill badge */}
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold bg-black/80 border border-white/15 text-zinc-300 mb-8 backdrop-blur-md shadow-glow-card">
+          <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
+          <span className="font-bold text-white">{dict.home.hero.eyebrow}</span>
+          <span className="text-zinc-500">•</span>
+          <span className="text-zinc-300 font-normal">
             {dict.home.hero.kicker}
           </span>
         </div>
-      </div>
 
-      {/* Hero Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full my-auto py-10">
-        <div className="max-w-4xl mx-auto text-center space-y-6">
-          
-          {/* Eyebrow badge */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide uppercase bg-brand-surface/90 border border-white/15 text-blue-300 shadow-glow-card backdrop-blur-md">
-            <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
-            <span>{dict.home.hero.eyebrow}</span>
-          </div>
+        {/* Monumental Headline */}
+        <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-[1.12] mb-6 max-w-5xl mx-auto drop-shadow-lg">
+          {dict.home.hero.title}
+        </h1>
 
-          {/* H1 Main Heading */}
-          <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-[1.15] text-balance">
-            {dict.home.hero.title}
-          </h1>
+        {/* Subtitle */}
+        <p className="text-base sm:text-lg md:text-xl text-zinc-200 max-w-2xl mx-auto mb-10 leading-relaxed font-normal drop-shadow-md">
+          {dict.home.hero.body}
+        </p>
 
-          {/* Subheading */}
-          <p className="text-base sm:text-lg md:text-xl text-zinc-300 max-w-2xl mx-auto leading-relaxed font-normal text-balance">
-            {dict.home.hero.body}
-          </p>
+        {/* Interactive Sector Switcher Dock */}
+        <div className="inline-flex flex-wrap items-center justify-center gap-2.5 p-2 rounded-2xl bg-black/85 border border-white/20 backdrop-blur-2xl mb-10 shadow-2xl max-w-full">
+          {/* SwissBlue Button */}
+          <button
+            onClick={() => setSelectedSector('hospitality')}
+            className={`relative overflow-hidden flex items-center gap-2 px-4 sm:px-5 py-2.5 sm:py-3 rounded-xl text-xs font-bold transition-all duration-200 ${
+              selectedSector === 'hospitality'
+                ? 'bg-[#1A476A] text-white shadow-glow-blue border border-sky-400/80 ring-1 ring-sky-400/40'
+                : 'text-zinc-400 hover:text-white hover:bg-white/5 border border-transparent'
+            }`}
+          >
+            <Building2 className="w-4 h-4 text-sky-400 shrink-0" />
+            <span>{dict.nav.hospitality} (SwissBlue)</span>
+            <span className="text-[10px] bg-sky-500/25 px-2 py-0.5 rounded-full text-sky-200 font-mono">
+              6 {lang === 'ar' ? 'منشآت' : 'Properties'}
+            </span>
+          </button>
 
-          {/* Interactive Sector Switcher Pills */}
-          <div className="pt-3 pb-2 flex flex-wrap items-center justify-center gap-2.5 sm:gap-3">
-            {SECTORS_VIDEO_DATA.map((sec, idx) => {
-              const isCurrent = idx === activeSectorIndex;
-              return (
-                <button
-                  key={sec.id}
-                  onClick={() => setActiveSectorIndex(idx)}
-                  className={`group relative px-3.5 sm:px-4 py-2 rounded-xl text-xs font-bold border transition-all duration-300 flex items-center gap-2 backdrop-blur-md ${
-                    isCurrent 
-                      ? sec.activeBtn 
-                      : 'border-white/10 bg-black/40 text-zinc-400 hover:text-white hover:bg-white/5'
-                  }`}
-                >
-                  {sec.id === 'hospitality' && <Building2 className="w-3.5 h-3.5 text-sky-400" />}
-                  {sec.id === 'manufacturing' && <Factory className="w-3.5 h-3.5 text-emerald-400" />}
-                  {sec.id === 'contracting' && <HardHat className="w-3.5 h-3.5 text-amber-400" />}
-                  <span>{lang === 'ar' ? sec.nameAr : sec.nameEn}</span>
-                  <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded ${
-                    isCurrent ? 'bg-white/20 text-white' : 'bg-white/5 text-zinc-500'
-                  }`}>
-                    {sec.subEn}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
+          {/* GreenWood Button */}
+          <button
+            onClick={() => setSelectedSector('manufacturing')}
+            className={`relative overflow-hidden flex items-center gap-2 px-4 sm:px-5 py-2.5 sm:py-3 rounded-xl text-xs font-bold transition-all duration-200 ${
+              selectedSector === 'manufacturing'
+                ? 'bg-[#0B5C3D] text-white shadow-glow-emerald border border-emerald-400/80 ring-1 ring-emerald-400/40'
+                : 'text-zinc-400 hover:text-white hover:bg-white/5 border border-transparent'
+            }`}
+          >
+            <Factory className="w-4 h-4 text-emerald-400 shrink-0" />
+            <span>{dict.nav.manufacturing} (GreenWood)</span>
+            <span className="text-[10px] bg-emerald-500/25 px-2 py-0.5 rounded-full text-emerald-200 font-mono">
+              3 {lang === 'ar' ? 'مصانع' : 'Factories'}
+            </span>
+          </button>
 
-          {/* CTA Action Buttons */}
-          <div className="flex flex-wrap items-center justify-center gap-3.5 pt-2">
-            <Link
-              href="/about"
-              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl text-sm font-bold text-white bg-blue-600 hover:bg-blue-500 shadow-glow-blue hover:scale-[1.02] active:scale-[0.98] transition-all"
-            >
-              <Compass className="w-4 h-4" />
-              <span>{dict.home.hero.primaryCta}</span>
-            </Link>
-
-            <a
-              href="#sectors"
-              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl text-sm font-bold text-zinc-200 hover:text-white bg-brand-surface/80 hover:bg-brand-surface border border-white/15 hover:border-white/25 backdrop-blur-md hover:scale-[1.02] active:scale-[0.98] transition-all"
-            >
-              <span>{dict.home.hero.secondaryCta}</span>
-              <ArrowRight className="w-4 h-4 rtl:rotate-180" />
-            </a>
-          </div>
-
+          {/* Contracting Button */}
+          <button
+            onClick={() => setSelectedSector('contracting')}
+            className={`relative overflow-hidden flex items-center gap-2 px-4 sm:px-5 py-2.5 sm:py-3 rounded-xl text-xs font-bold transition-all duration-200 ${
+              selectedSector === 'contracting'
+                ? 'bg-[#8A7340] text-white shadow-glow-gold border border-amber-400/80 ring-1 ring-amber-400/40'
+                : 'text-zinc-400 hover:text-white hover:bg-white/5 border border-transparent'
+            }`}
+          >
+            <HardHat className="w-4 h-4 text-amber-400 shrink-0" />
+            <span>{dict.nav.contracting} (Projects)</span>
+            <span className="text-[10px] bg-amber-500/25 px-2 py-0.5 rounded-full text-amber-200 font-mono">
+              {lang === 'ar' ? 'تنفيذ شامل' : 'Turnkey'}
+            </span>
+          </button>
         </div>
-      </div>
 
-      {/* 4-Metric Statistics Bar */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-4">
-        <div className="glass-card rounded-3xl p-5 sm:p-6 border border-white/15 shadow-2xl backdrop-blur-xl bg-brand-surface/80">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 divide-y sm:divide-y-0 sm:divide-x rtl:sm:divide-x-reverse divide-white/10">
+        {/* Dual Action CTAs */}
+        <div className="flex flex-wrap items-center justify-center gap-4 mb-12">
+          <Link 
+            href="/about" 
+            className="inline-flex items-center gap-2.5 px-8 py-3.5 rounded-xl font-bold text-xs text-white bg-blue-600 hover:bg-blue-500 shadow-glow-blue transition-all transform hover:-translate-y-0.5"
+          >
+            <Compass className="w-4 h-4" />
+            <span>{dict.home.hero.primaryCta}</span>
+          </Link>
+
+          <a 
+            href="#sectors" 
+            className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl font-bold text-xs text-zinc-200 bg-brand-surface/90 hover:bg-brand-card border border-white/20 transition-all"
+          >
+            <span>{dict.home.hero.secondaryCta}</span>
+            <ArrowRight className="w-4 h-4 rtl:rotate-180 text-zinc-400" />
+          </a>
+        </div>
+
+        {/* 4-Column Statistics Bar — Clean Custom Separators (Zero Stray Lines) */}
+        <div className="max-w-5xl mx-auto mb-6 w-full">
+          <div className="glass-card rounded-3xl p-6 sm:p-8 shadow-glow-card relative overflow-hidden border border-white/15 bg-brand-surface/85 backdrop-blur-xl">
             
-            {/* Stat 1: 6 Hospitality Properties */}
-            <div className="text-center px-2 pt-3 sm:pt-0">
-              <div className="text-2xl sm:text-4xl font-extrabold text-white font-mono tracking-tight text-glow">
-                <AnimatedCounter target={6} />
-              </div>
-              <p className="text-xs text-zinc-400 mt-1 font-medium">
-                {dict.home.metrics.stat1_text}
-              </p>
-            </div>
+            {/* Ambient inner glow */}
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-transparent to-amber-500/5 pointer-events-none"></div>
 
-            {/* Stat 2: 3 Specialized Factories */}
-            <div className="text-center px-2 pt-3 sm:pt-0">
-              <div className="text-2xl sm:text-4xl font-extrabold text-emerald-400 font-mono tracking-tight">
-                <AnimatedCounter target={3} />
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-y-6 gap-x-0 relative">
+              
+              {/* Metric 1: Hospitality (No Left Border) */}
+              <div className="flex flex-col items-center text-center px-4">
+                <div className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-sky-400 mb-1 font-mono">
+                  <AnimatedCounter target={6} />
+                </div>
+                <div className="text-xs font-medium text-zinc-300 leading-snug">
+                  {dict.home.metrics.stat1_text}
+                </div>
               </div>
-              <p className="text-xs text-zinc-400 mt-1 font-medium">
-                {dict.home.metrics.stat2_text}
-              </p>
-            </div>
 
-            {/* Stat 3: 80+ Specialized Team */}
-            <div className="text-center px-2 pt-3 sm:pt-0">
-              <div className="text-2xl sm:text-4xl font-extrabold text-amber-400 font-mono tracking-tight">
-                <AnimatedCounter target={80} suffix="+" />
+              {/* Metric 2: Factories (Clean Separator) */}
+              <div className="flex flex-col items-center text-center px-4 border-s border-white/10">
+                <div className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-emerald-400 mb-1 font-mono">
+                  <AnimatedCounter target={3} />
+                </div>
+                <div className="text-xs font-medium text-zinc-300 leading-snug">
+                  {dict.home.metrics.stat2_text}
+                </div>
               </div>
-              <p className="text-xs text-zinc-400 mt-1 font-medium">
-                {dict.home.metrics.stat3_text}
-              </p>
-            </div>
 
-            {/* Stat 4: 3 Strategic Business Sectors */}
-            <div className="text-center px-2 pt-3 sm:pt-0">
-              <div className="text-2xl sm:text-4xl font-extrabold text-sky-400 font-mono tracking-tight">
-                <AnimatedCounter target={3} />
+              {/* Metric 3: Employees (Clean Separator on Desktop & Tablet) */}
+              <div className="flex flex-col items-center text-center px-4 md:border-s border-white/10">
+                <div className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-amber-400 mb-1 font-mono">
+                  <AnimatedCounter target={80} suffix="+" />
+                </div>
+                <div className="text-xs font-medium text-zinc-300 leading-snug">
+                  {dict.home.metrics.stat3_text}
+                </div>
               </div>
-              <p className="text-xs text-zinc-400 mt-1 font-medium">
-                {dict.home.metrics.stat4_text}
-              </p>
+
+              {/* Metric 4: Sectors (Clean Separator) */}
+              <div className="flex flex-col items-center text-center px-4 border-s border-white/10">
+                <div className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-zinc-100 mb-1 font-mono">
+                  <AnimatedCounter target={3} />
+                </div>
+                <div className="text-xs font-medium text-zinc-300 leading-snug">
+                  {dict.home.metrics.stat4_text}
+                </div>
+              </div>
+
             </div>
 
           </div>
         </div>
-      </div>
 
+        {/* Scroll Cue Indicator */}
+        <div className="inline-flex flex-col items-center gap-1 text-[11px] text-zinc-400 opacity-70 hover:opacity-100 transition-opacity">
+          <span>{lang === 'ar' ? 'استكشف المنظومة القابضة' : 'Scroll to explore'}</span>
+          <ChevronDown className="w-4 h-4 animate-bounce text-blue-400" />
+        </div>
+
+      </div>
     </section>
   );
 }

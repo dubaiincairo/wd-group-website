@@ -3,32 +3,31 @@
 import React, { useEffect, useState, useRef } from 'react';
 
 interface CounterProps {
-  value: string; // e.g. "6", "3", "80+", "54%" or Arabic "٦", "٣", "+٨٠", "٥٤٪"
+  value?: string;
+  target?: number;
+  suffix?: string;
+  prefix?: string;
   duration?: number;
 }
 
-export default function AnimatedCounter({ value, duration = 1800 }: CounterProps) {
-  const [displayValue, setDisplayValue] = useState('0');
+export default function AnimatedCounter({ 
+  value, 
+  target, 
+  suffix = '', 
+  prefix = '', 
+  duration = 1800 
+}: CounterProps) {
+  const targetNum = target !== undefined ? target : (value ? parseInt(value.replace(/[^0-9]/g, ''), 10) || 0 : 0);
+  const explicitSuffix = suffix || (value && value.includes('+') ? '+' : (value && value.includes('%') ? '%' : ''));
+  const explicitPrefix = prefix || (value && value.startsWith('+') ? '+' : '');
+
+  const [displayValue, setDisplayValue] = useState(targetNum.toString());
   const [hasAnimated, setHasAnimated] = useState(false);
   const elementRef = useRef<HTMLSpanElement>(null);
 
-  // Extract number and affixes (works for Arabic and Western digits)
-  const isArabic = /[٠-٩]/.test(value);
-  const arabicDigits = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
-  
-  const toWestern = (str: string) => 
-    str.replace(/[٠-٩]/g, d => arabicDigits.indexOf(d).toString());
-
-  const toArabic = (num: number) => 
-    num.toString().replace(/[0-9]/g, d => arabicDigits[parseInt(d, 10)]);
-
-  const normalized = toWestern(value);
-  const match = normalized.match(/(\d+)/);
-  const targetNumber = match ? parseInt(match[0], 10) : 0;
-  const prefix = value.startsWith('+') ? '+' : (value.startsWith('٪') ? '٪' : '');
-  const suffix = value.endsWith('+') ? '+' : (value.endsWith('٪') ? '٪' : (value.endsWith('%') ? '%' : ''));
-
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting && !hasAnimated) {
@@ -38,17 +37,15 @@ export default function AnimatedCounter({ value, duration = 1800 }: CounterProps
           const step = (timestamp: number) => {
             if (!startTimestamp) startTimestamp = timestamp;
             const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-            // Ease out cubic
             const easeOut = 1 - Math.pow(1 - progress, 3);
-            const currentNum = Math.floor(easeOut * targetNumber);
+            const currentNum = Math.floor(easeOut * targetNum);
 
-            const formattedNum = isArabic ? toArabic(currentNum) : currentNum.toString();
-            setDisplayValue(prefix + formattedNum + suffix);
+            setDisplayValue(currentNum.toString());
 
             if (progress < 1) {
               requestAnimationFrame(step);
             } else {
-              setDisplayValue(value);
+              setDisplayValue(targetNum.toString());
             }
           };
 
@@ -63,7 +60,11 @@ export default function AnimatedCounter({ value, duration = 1800 }: CounterProps
     }
 
     return () => observer.disconnect();
-  }, [value, duration, targetNumber, hasAnimated, isArabic, prefix, suffix]);
+  }, [targetNum, duration, hasAnimated]);
 
-  return <span ref={elementRef}>{hasAnimated ? displayValue : value}</span>;
+  return (
+    <span ref={elementRef}>
+      {explicitPrefix}{hasAnimated ? displayValue : targetNum.toString()}{explicitSuffix}
+    </span>
+  );
 }

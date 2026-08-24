@@ -2,9 +2,14 @@
 
 import React from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { useLanguage } from '@/context/LanguageContext';
-import { Building2, Factory, HardHat, ArrowRight, ExternalLink, Sparkles, CheckCircle2 } from 'lucide-react';
+import { Building2, Factory, HardHat, ArrowRight, Sparkles, CheckCircle2 } from 'lucide-react';
+
+const SECTOR_PHOTOS = {
+  hospitality: 'https://cdn.sanity.io/images/uoj8zwj3/production/00b20cc6cb3d8c613964965da5556e8396305950-2400x1792.jpg',
+  manufacturing: 'https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=1200&q=80',
+  contracting: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80',
+};
 
 export default function SectorsHub() {
   const { lang, dict } = useLanguage();
@@ -46,14 +51,13 @@ export default function SectorsHub() {
 
             <div>
               {/* Card Photo Header */}
-              <div className="relative h-44 w-full rounded-2xl overflow-hidden mb-6 border border-white/10 group-hover:border-sky-500/40 transition-colors">
-                <Image
-                  src="/images/hospitality-hero.jpg"
+              <div className="relative h-48 w-full rounded-2xl overflow-hidden mb-6 border border-white/10 group-hover:border-sky-500/40 transition-colors bg-zinc-900">
+                <img
+                  src={SECTOR_PHOTOS.hospitality}
                   alt="SwissBlue Hospitality"
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-700"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 block"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0F1117] via-transparent to-black/20" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0F1117] via-transparent to-black/20 pointer-events-none" />
                 <span className="absolute bottom-3 left-3 rtl:left-auto rtl:right-3 px-2.5 py-1 rounded-lg text-xs font-mono font-bold bg-[#1A476A]/90 text-sky-200 backdrop-blur-md border border-sky-400/30">
                   {dict.home.sectors.hospitality.proof}
                 </span>
@@ -118,14 +122,13 @@ export default function SectorsHub() {
 
             <div>
               {/* Card Photo Header */}
-              <div className="relative h-44 w-full rounded-2xl overflow-hidden mb-6 border border-white/10 group-hover:border-emerald-500/40 transition-colors">
-                <Image
-                  src="/images/manufacturing-hero.jpg"
+              <div className="relative h-48 w-full rounded-2xl overflow-hidden mb-6 border border-white/10 group-hover:border-emerald-500/40 transition-colors bg-zinc-900">
+                <img
+                  src={SECTOR_PHOTOS.manufacturing}
                   alt="GreenWood Manufacturing"
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-700"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 block"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0F1117] via-transparent to-black/20" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0F1117] via-transparent to-black/20 pointer-events-none" />
                 <span className="absolute bottom-3 left-3 rtl:left-auto rtl:right-3 px-2.5 py-1 rounded-lg text-xs font-mono font-bold bg-[#0B5C3D]/90 text-emerald-200 backdrop-blur-md border border-emerald-400/30">
                   {dict.home.sectors.manufacturing.proof}
                 </span>
@@ -190,14 +193,13 @@ export default function SectorsHub() {
 
             <div>
               {/* Card Photo Header */}
-              <div className="relative h-44 w-full rounded-2xl overflow-hidden mb-6 border border-white/10 group-hover:border-amber-500/40 transition-colors">
-                <Image
-                  src="/images/contracting-hero.jpg"
+              <div className="relative h-48 w-full rounded-2xl overflow-hidden mb-6 border border-white/10 group-hover:border-amber-500/40 transition-colors bg-zinc-900">
+                <img
+                  src={SECTOR_PHOTOS.contracting}
                   alt="WD Contracting & Projects"
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-700"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 block"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0F1117] via-transparent to-black/20" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0F1117] via-transparent to-black/20 pointer-events-none" />
                 <span className="absolute bottom-3 left-3 rtl:left-auto rtl:right-3 px-2.5 py-1 rounded-lg text-xs font-mono font-bold bg-[#8A7340]/90 text-amber-200 backdrop-blur-md border border-amber-400/30">
                   {dict.home.sectors.contracting.proof}
                 </span>
@@ -226,17 +228,17 @@ export default function SectorsHub() {
                 {dict.home.sectors.contracting.desc}
               </p>
 
-              {/* Services List */}
+              {/* Capabilities List */}
               <div className="space-y-1.5 mb-6 text-xs text-zinc-400 border-t border-white/5 pt-4">
                 {[
-                  lang === 'ar' ? 'المقاولات المتكاملة والمباني' : 'Turnkey General Contracting',
-                  lang === 'ar' ? 'التنسيق المعماري والتصميم الداخلي' : 'Architectural & Interior Coordination',
-                  lang === 'ar' ? 'إدارة المشروعات والإشراف الميداني' : 'Project Management & Supervision',
-                  lang === 'ar' ? 'التجهيز الداخلي والأعمال الخشبية' : 'Interior Fit-Out & Joinery',
-                ].map((serv, idx) => (
+                  lang === 'ar' ? 'التشطيبات المعمارية الفاخرة' : 'Turnkey Architectural Fit-Out',
+                  lang === 'ar' ? 'الأعمال الكهروميكانيكية (MEP)' : 'MEP Infrastructure Engineering',
+                  lang === 'ar' ? 'تجهيز الفنادق والمنشآت التجارية' : 'Commercial & Hotel Fit-Out',
+                  lang === 'ar' ? 'إشراف هندسي وضمان الجودة' : 'QA/QC Engineering Supervision',
+                ].map((cap, idx) => (
                   <div key={idx} className="flex items-center gap-2">
                     <CheckCircle2 className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                    <span className="text-[11px] text-zinc-300">{serv}</span>
+                    <span className="text-[11px] text-zinc-300">{cap}</span>
                   </div>
                 ))}
               </div>

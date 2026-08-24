@@ -9,6 +9,8 @@ export default function ContactCTA() {
   const { lang, dict } = useLanguage();
   const [modalOpen, setModalOpen] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     name: '',
     company: '',
@@ -19,9 +21,31 @@ export default function ContactCTA() {
     message: '',
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setLoading(true);
+    setErrorMessage(null);
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || (lang === 'ar' ? 'حدث خطأ أثناء إرسال الرسالة' : 'Failed to submit inquiry'));
+      }
+
+      setSubmitted(true);
+    } catch (err: any) {
+      console.error('ContactCTA form error:', err);
+      setErrorMessage(err.message || (lang === 'ar' ? 'فشل الإرسال، يرجى المحاولة لاحقاً' : 'Submission failed. Please try again.'));
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -136,6 +160,13 @@ export default function ContactCTA() {
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-3.5 text-xs">
+                  {errorMessage && (
+                    <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-rose-500"></span>
+                      <span>{errorMessage}</span>
+                    </div>
+                  )}
+
                   <div>
                     <label className="block text-zinc-300 font-semibold mb-1">
                       {dict.forms.fullName} *
@@ -215,9 +246,13 @@ export default function ContactCTA() {
                   <div className="pt-2">
                     <button
                       type="submit"
-                      className="w-full py-3 rounded-xl font-bold text-xs bg-blue-600 hover:bg-blue-500 text-white shadow-glow-blue transition-all"
+                      disabled={loading}
+                      className="w-full py-3 rounded-xl font-bold text-xs bg-blue-600 hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed text-white shadow-glow-blue transition-all flex items-center justify-center gap-2"
                     >
-                      {dict.forms.placeholders.name ? dict.common.submitInquiry : 'Submit'}
+                      {loading ? (
+                        <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      ) : null}
+                      <span>{loading ? (lang === 'ar' ? 'جارٍ الإرسال…' : 'Submitting…') : (dict.forms.placeholders.name ? dict.common.submitInquiry : 'Submit')}</span>
                     </button>
                   </div>
                 </form>
