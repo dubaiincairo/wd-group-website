@@ -60,7 +60,7 @@ export default function WireframeBlock({
 
       {/* Footer Meta Description */}
       <div className="mt-4 pt-3 border-t border-zinc-800/80 flex items-center justify-between text-xs text-zinc-500 font-mono relative z-10">
-        <span>// {description}</span>
+        <span>{`// ${description}`}</span>
         <span className="text-zinc-600">WIREFRAME STAGE</span>
       </div>
 
