@@ -1,266 +1,260 @@
 'use client';
 
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import Link from 'next/link';
 import { useLanguage } from '@/context/LanguageContext';
-import { 
-  MessageSquare, 
-  Send, 
-  CheckCircle2, 
-  X, 
-  Mail, 
-  Phone,
-  ArrowRight,
-  Building2,
-  Factory,
-  HardHat
-} from 'lucide-react';
+import { Mail, Phone, MapPin, Send, CheckCircle2, MessageSquare, ArrowRight, X, ArrowUpRight } from 'lucide-react';
 
 export default function ContactCTA() {
   const { lang, dict } = useLanguage();
   const [modalOpen, setModalOpen] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     name: '',
+    company: '',
     email: '',
     phone: '',
-    sector: 'hospitality',
+    sector: 'general',
+    subject: '',
     message: '',
   });
 
-  const openSectorInquiry = (sectorKey: string) => {
-    setFormData((prev) => ({ ...prev, sector: sectorKey }));
-    setSubmitted(false);
-    setModalOpen(true);
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setLoading(true);
+    setErrorMessage(null);
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || (lang === 'ar' ? 'حدث خطأ أثناء إرسال الرسالة' : 'Failed to submit inquiry'));
+      }
+
+      setSubmitted(true);
+    } catch (err: any) {
+      console.error('ContactCTA form error:', err);
+      setErrorMessage(err.message || (lang === 'ar' ? 'فشل الإرسال، يرجى المحاولة لاحقاً' : 'Submission failed. Please try again.'));
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <section id="contact" className="py-24 sm:py-32 bg-brand-dark text-white border-t border-brand-border relative overflow-hidden">
+    <section id="contact" className="py-24 bg-brand-dark text-white relative overflow-hidden">
       
-      {/* Background Glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-blue-600/15 blur-[140px] rounded-full pointer-events-none"></div>
+      {/* Background glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-blue-600/10 blur-[150px] pointer-events-none" />
 
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
-        {/* Tag */}
-        <motion.div 
-          initial={{ opacity: 0, y: 15 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide uppercase bg-brand-surface border border-brand-border text-blue-400 mb-6 shadow-glow-card"
-        >
-          <MessageSquare className="w-3.5 h-3.5" />
-          <span>{dict.contact_cta.tag}</span>
-        </motion.div>
-
-        {/* Title */}
-        <motion.h2 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white mb-5 leading-tight"
-        >
-          {dict.contact_cta.title}
-        </motion.h2>
-
-        {/* Subtitle */}
-        <motion.p 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className="text-base sm:text-lg text-brand-muted max-w-2xl mx-auto mb-10 leading-relaxed font-normal"
-        >
-          {dict.contact_cta.subtitle}
-        </motion.p>
-
-        {/* 3 Fast-Action Direct Sector Inquiry Buttons */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 max-w-3xl mx-auto mb-10">
+        {/* Main CTA Card */}
+        <div className="glass-card rounded-3xl p-8 sm:p-14 border border-blue-500/30 shadow-2xl relative overflow-hidden bg-brand-surface/90">
           
-          <button
-            onClick={() => openSectorInquiry('hospitality')}
-            className="p-4 rounded-2xl bg-brand-surface/80 hover:bg-[#1A476A]/30 border border-white/10 hover:border-sky-400/60 transition-all flex items-center justify-between group text-start"
-          >
-            <div className="flex items-center gap-2.5">
-              <Building2 className="w-4 h-4 text-sky-400" />
-              <span className="text-xs font-bold text-white">
-                {lang === 'ar' ? 'طلب شراكة فندقية' : 'Hotel Partnership'}
-              </span>
+          <div className="max-w-3xl mx-auto text-center space-y-6">
+            
+            {/* Tag */}
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide uppercase bg-blue-500/10 border border-blue-500/30 text-blue-400">
+              <MessageSquare className="w-3.5 h-3.5" />
+              <span>{dict.home.partnership.label}</span>
             </div>
-            <ArrowRight className="w-3.5 h-3.5 text-zinc-500 group-hover:text-sky-400 rtl:rotate-180 transition-colors" />
-          </button>
 
-          <button
-            onClick={() => openSectorInquiry('manufacturing')}
-            className="p-4 rounded-2xl bg-brand-surface/80 hover:bg-[#0B5C3D]/30 border border-white/10 hover:border-emerald-400/60 transition-all flex items-center justify-between group text-start"
-          >
-            <div className="flex items-center gap-2.5">
-              <Factory className="w-4 h-4 text-emerald-400" />
-              <span className="text-xs font-bold text-white">
-                {lang === 'ar' ? 'توريد أثاث ومصانع' : 'Furniture Supply B2B'}
-              </span>
+            {/* Heading */}
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white leading-tight">
+              {dict.home.partnership.heading}
+            </h2>
+
+            {/* Subheading */}
+            <p className="text-sm sm:text-base text-zinc-300 leading-relaxed max-w-2xl mx-auto">
+              {dict.home.partnership.body}
+            </p>
+
+            {/* Buttons */}
+            <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
+              <button
+                onClick={() => setModalOpen(true)}
+                className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl text-sm font-bold text-white bg-blue-600 hover:bg-blue-500 shadow-glow-blue hover:scale-[1.02] active:scale-[0.98] transition-all"
+              >
+                <Send className="w-4 h-4" />
+                <span>{dict.home.partnership.primaryCta}</span>
+              </button>
+
+              <Link
+                href="/careers"
+                className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl text-sm font-bold text-zinc-200 hover:text-white bg-white/5 hover:bg-white/10 border border-white/15 hover:scale-[1.02] active:scale-[0.98] transition-all"
+              >
+                <span>{dict.home.partnership.secondaryCta}</span>
+                <ArrowRight className="w-4 h-4 rtl:rotate-180" />
+              </Link>
             </div>
-            <ArrowRight className="w-3.5 h-3.5 text-zinc-500 group-hover:text-emerald-400 rtl:rotate-180 transition-colors" />
-          </button>
 
-          <button
-            onClick={() => openSectorInquiry('contracting')}
-            className="p-4 rounded-2xl bg-brand-surface/80 hover:bg-[#8A7340]/30 border border-white/10 hover:border-amber-400/60 transition-all flex items-center justify-between group text-start"
-          >
-            <div className="flex items-center gap-2.5">
-              <HardHat className="w-4 h-4 text-amber-400" />
-              <span className="text-xs font-bold text-white">
-                {lang === 'ar' ? 'مناقصات مقاولات وديكور' : 'Fit-out Contracting RFP'}
-              </span>
+          </div>
+
+          {/* Quick Coordinates Footer */}
+          <div className="mt-12 pt-8 border-t border-white/10 grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs text-zinc-400 text-center sm:text-left rtl:sm:text-right">
+            <div className="flex items-center justify-center sm:justify-start gap-2">
+              <MapPin className="w-4 h-4 text-blue-400 shrink-0" />
+              <span>{dict.footer.location_text}</span>
             </div>
-            <ArrowRight className="w-3.5 h-3.5 text-zinc-500 group-hover:text-amber-400 rtl:rotate-180 transition-colors" />
-          </button>
+            <div className="flex items-center justify-center sm:justify-start gap-2">
+              <Mail className="w-4 h-4 text-blue-400 shrink-0" />
+              <a href="mailto:info@wdgroup.sa" className="hover:text-white" dir="ltr">info@wdgroup.sa</a>
+            </div>
+            <div className="flex items-center justify-center sm:justify-start gap-2">
+              <Phone className="w-4 h-4 text-blue-400 shrink-0" />
+              <a href="tel:+966505725070" className="hover:text-white" dir="ltr">+966 50 572 5070</a>
+            </div>
+          </div>
 
-        </div>
-
-        {/* Contact Info Footer Strip */}
-        <div className="pt-8 border-t border-brand-border/60 flex flex-wrap items-center justify-center gap-6 text-xs text-zinc-400 font-medium">
-          <a href="mailto:info@wdgroup.sa" className="flex items-center gap-1.5 hover:text-blue-400 transition-colors">
-            <Mail className="w-3.5 h-3.5 text-zinc-500" />
-            <span>info@wdgroup.sa</span>
-          </a>
-          <span className="text-zinc-600">•</span>
-          <a href="tel:+966123456789" className="flex items-center gap-1.5 hover:text-blue-400 transition-colors font-mono">
-            <Phone className="w-3.5 h-3.5 text-zinc-500" />
-            <span>+966 12 345 6789</span>
-          </a>
         </div>
 
       </div>
 
-      {/* Interactive Contact Modal */}
+      {/* Inquiry Form Modal */}
       {modalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md animate-in fade-in duration-200">
-          <div className="bg-brand-surface text-white rounded-3xl p-6 sm:p-8 max-w-lg w-full border border-brand-slate shadow-2xl relative">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
+          <div className="bg-[#0F1117] border border-white/15 rounded-3xl p-6 sm:p-8 max-w-lg w-full shadow-2xl relative max-h-[90vh] overflow-y-auto">
             
-            <button 
-              onClick={() => setModalOpen(false)}
-              className="absolute top-5 right-5 rtl:right-auto rtl:left-5 p-2 rounded-xl bg-brand-card hover:bg-zinc-800 text-zinc-400 hover:text-white transition-colors"
+            <button
+              onClick={() => { setModalOpen(false); setSubmitted(false); }}
+              className="absolute top-5 right-5 rtl:right-auto rtl:left-5 text-zinc-400 hover:text-white p-1 rounded-lg hover:bg-white/10 transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
 
             {submitted ? (
-              <div className="text-center py-8">
-                <div className="w-14 h-14 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center justify-center mx-auto mb-4">
+              <div className="text-center py-10 space-y-4">
+                <div className="w-14 h-14 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center justify-center mx-auto">
                   <CheckCircle2 className="w-8 h-8" />
                 </div>
-                <h3 className="text-xl font-bold text-white mb-2">
-                  {lang === 'ar' ? 'تم الإرسال بنجاح' : 'Inquiry Received'}
+                <h3 className="text-xl font-bold text-white">
+                  {lang === 'ar' ? 'تم استلام استفسارك بنجاح' : 'Inquiry Submitted'}
                 </h3>
-                <p className="text-xs text-zinc-300 mb-6">
-                  {dict.contact_cta.form_success}
+                <p className="text-xs text-zinc-400 leading-relaxed max-w-sm mx-auto">
+                  {dict.forms.messages.success}
                 </p>
                 <button
-                  onClick={() => setModalOpen(false)}
-                  className="px-6 py-2.5 rounded-xl bg-blue-600 text-white font-bold text-xs"
+                  onClick={() => { setModalOpen(false); setSubmitted(false); }}
+                  className="px-6 py-2.5 rounded-xl text-xs font-bold bg-blue-600 text-white"
                 >
-                  {dict.contact_cta.close}
+                  {lang === 'ar' ? 'إغلاق' : 'Close'}
                 </button>
               </div>
             ) : (
               <div>
-                <h3 className="text-xl font-bold text-white mb-1">
-                  {dict.contact_cta.form_title}
-                </h3>
-                <p className="text-xs text-zinc-400 mb-6">
-                  {dict.contact_cta.subtitle}
-                </p>
+                <div className="mb-6">
+                  <h3 className="text-xl font-bold text-white">
+                    {dict.contact.form.heading}
+                  </h3>
+                  <p className="text-xs text-zinc-400 mt-1">
+                    {dict.contact.form.body}
+                  </p>
+                </div>
 
-                <form onSubmit={handleSubmit} className="space-y-4 text-start">
+                <form onSubmit={handleSubmit} className="space-y-3.5 text-xs">
+                  {errorMessage && (
+                    <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-rose-500"></span>
+                      <span>{errorMessage}</span>
+                    </div>
+                  )}
+
                   <div>
-                    <label className="block text-[11px] font-bold uppercase tracking-wider text-zinc-400 mb-1">
-                      {dict.contact_cta.form_sector}
+                    <label className="block text-zinc-300 font-semibold mb-1">
+                      {dict.forms.fullName} *
                     </label>
-                    <select
-                      value={formData.sector}
-                      onChange={(e) => setFormData({ ...formData, sector: e.target.value })}
+                    <input
+                      type="text"
                       required
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-brand-card border border-brand-slate text-white text-xs focus:outline-none focus:border-blue-500"
-                    >
-                      <option value="hospitality">{dict.contact_cta.opt_hosp}</option>
-                      <option value="manufacturing">{dict.contact_cta.opt_mfg}</option>
-                      <option value="contracting">{dict.contact_cta.opt_contr}</option>
-                      <option value="careers">{dict.contact_cta.opt_careers}</option>
-                      <option value="general">{dict.contact_cta.opt_general}</option>
-                    </select>
+                      placeholder={dict.forms.placeholders.name}
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-zinc-600 focus:outline-none focus:border-blue-500"
+                    />
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-[11px] font-bold uppercase tracking-wider text-zinc-400 mb-1">
-                        {dict.contact_cta.form_name}
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        placeholder="John Doe"
-                        value={formData.name}
-                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-brand-card border border-brand-slate text-white text-xs focus:outline-none focus:border-blue-500"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[11px] font-bold uppercase tracking-wider text-zinc-400 mb-1">
-                        {dict.contact_cta.form_email}
+                      <label className="block text-zinc-300 font-semibold mb-1">
+                        {dict.forms.email} *
                       </label>
                       <input
                         type="email"
                         required
-                        placeholder="name@company.com"
+                        placeholder={dict.forms.placeholders.email}
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-brand-card border border-brand-slate text-white text-xs focus:outline-none focus:border-blue-500"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-zinc-600 focus:outline-none focus:border-blue-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-zinc-300 font-semibold mb-1">
+                        {dict.forms.phone} *
+                      </label>
+                      <input
+                        type="tel"
+                        required
+                        placeholder={dict.forms.placeholders.phone}
+                        value={formData.phone}
+                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-zinc-600 focus:outline-none focus:border-blue-500"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-bold uppercase tracking-wider text-zinc-400 mb-1">
-                      {dict.contact_cta.form_phone}
+                    <label className="block text-zinc-300 font-semibold mb-1">
+                      {dict.forms.sector} *
                     </label>
-                    <input
-                      type="tel"
-                      required
-                      placeholder="+966 50 000 0000"
-                      value={formData.phone}
-                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-brand-card border border-brand-slate text-white text-xs focus:outline-none focus:border-blue-500"
-                    />
+                    <select
+                      value={formData.sector}
+                      onChange={(e) => setFormData({ ...formData, sector: e.target.value })}
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-[#1A1D27] border border-white/10 text-white focus:outline-none focus:border-blue-500"
+                    >
+                      <option value="general">{dict.forms.options.general}</option>
+                      <option value="hospitality">{dict.forms.options.hospitality}</option>
+                      <option value="manufacturing">{dict.forms.options.manufacturing}</option>
+                      <option value="contracting">{dict.forms.options.contracting}</option>
+                      <option value="partnership">{dict.forms.options.partnership}</option>
+                      <option value="tender">{dict.forms.options.tender}</option>
+                      <option value="careers">{dict.forms.options.careers}</option>
+                    </select>
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-bold uppercase tracking-wider text-zinc-400 mb-1">
-                      {dict.contact_cta.form_message}
+                    <label className="block text-zinc-300 font-semibold mb-1">
+                      {dict.forms.message} *
                     </label>
                     <textarea
-                      rows={3}
                       required
-                      placeholder={lang === 'ar' ? 'اكتب تفاصيل طلبكم...' : 'Type your inquiry here...'}
+                      rows={3}
+                      placeholder={dict.forms.placeholders.message}
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-brand-card border border-brand-slate text-white text-xs focus:outline-none focus:border-blue-500 resize-none"
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-zinc-600 focus:outline-none focus:border-blue-500 resize-none"
                     ></textarea>
                   </div>
 
-                  <button
-                    type="submit"
-                    className="w-full py-3.5 rounded-xl font-bold text-xs text-white bg-blue-600 hover:bg-blue-500 transition-all flex items-center justify-center gap-2 shadow-glow-blue"
-                  >
-                    <span>{dict.contact_cta.form_submit}</span>
-                    <Send className="w-3.5 h-3.5 rtl:rotate-180" />
-                  </button>
+                  <div className="pt-2">
+                    <button
+                      type="submit"
+                      disabled={loading}
+                      className="w-full py-3 rounded-xl font-bold text-xs bg-blue-600 hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed text-white shadow-glow-blue transition-all flex items-center justify-center gap-2"
+                    >
+                      {loading ? (
+                        <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      ) : null}
+                      <span>{loading ? (lang === 'ar' ? 'جارٍ الإرسال…' : 'Submitting…') : (dict.forms.placeholders.name ? dict.common.submitInquiry : 'Submit')}</span>
+                    </button>
+                  </div>
                 </form>
               </div>
             )}
@@ -268,6 +262,7 @@ export default function ContactCTA() {
           </div>
         </div>
       )}
+
     </section>
   );
 }
