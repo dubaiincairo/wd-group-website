@@ -17,6 +17,8 @@ import {
 } from 'lucide-react';
 import type { JobListing } from '@/lib/types/database';
 
+const PILLAR_ICONS = [GraduationCap, TrendingUp, Users, CheckCircle2];
+
 export default function CareersPage() {
   const { lang, dict } = useLanguage();
   const [activeFilter, setActiveFilter] = useState(0);
@@ -38,8 +40,6 @@ export default function CareersPage() {
     jobId: '',
     jobTitle: '',
   });
-
-  const PILLAR_ICONS = [GraduationCap, TrendingUp, Users, CheckCircle2];
 
   useEffect(() => {
     async function loadJobs() {
