@@ -111,7 +111,7 @@ export async function fetchPublishedJobs(): Promise<JobListing[]> {
       {
         method: 'GET',
         headers,
-        next: { revalidate: 60 },
+        cache: 'no-store',
       }
     );
 
