@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useLanguage } from '@/context/LanguageContext';
-import { Mail, Phone, MapPin, Send, CheckCircle2, MessageSquare, ArrowRight, X, ArrowUpRight } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, CheckCircle2, MessageSquare, ArrowRight, X } from 'lucide-react';
 
 export default function ContactCTA() {
   const { lang, dict } = useLanguage();
