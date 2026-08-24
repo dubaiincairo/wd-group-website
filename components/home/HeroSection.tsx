@@ -9,9 +9,7 @@ import {
   HardHat, 
   ArrowRight, 
   Compass, 
-  ChevronDown,
-  Sparkles,
-  Play
+  ChevronDown
 } from 'lucide-react';
 import AnimatedCounter from './AnimatedCounter';
 
@@ -19,15 +17,15 @@ const SECTORS_LIST: ('hospitality' | 'manufacturing' | 'contracting')[] = ['hosp
 
 const SECTOR_MEDIA = {
   hospitality: {
-    video: 'https://cdn.coverr.co/videos/coverr-hotel-room-with-a-view-4691/1080p.mp4',
+    video: '/videos/hospitality.mp4',
     poster: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1600&q=85',
   },
   manufacturing: {
-    video: 'https://cdn.coverr.co/videos/coverr-carpenter-working-in-his-workshop-5349/1080p.mp4',
+    video: '/videos/manufacturing.mp4',
     poster: 'https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=1600&q=85',
   },
   contracting: {
-    video: 'https://cdn.coverr.co/videos/coverr-modern-architecture-building-4433/1080p.mp4',
+    video: '/videos/contracting.mp4',
     poster: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=85',
   },
 };
@@ -36,6 +34,21 @@ export default function HeroSection() {
   const { lang, dict } = useLanguage();
   const [selectedSector, setSelectedSector] = useState<'hospitality' | 'manufacturing' | 'contracting'>('hospitality');
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+
+  // References to video elements for reliable autoplay
+  const hospRef = useRef<HTMLVideoElement>(null);
+  const mfgRef = useRef<HTMLVideoElement>(null);
+  const contrRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    // Ensure all videos are muted and playing
+    [hospRef, mfgRef, contrRef].forEach(ref => {
+      if (ref.current) {
+        ref.current.muted = true;
+        ref.current.play().catch(() => {});
+      }
+    });
+  }, []);
 
   // Auto-cycle through sectors every 7 seconds unless user manually interacts
   useEffect(() => {
@@ -63,12 +76,14 @@ export default function HeroSection() {
         {/* Hospitality Video Layer */}
         <div className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${selectedSector === 'hospitality' ? 'opacity-100' : 'opacity-0'}`}>
           <video
+            ref={hospRef}
             autoPlay
             loop
             muted
             playsInline
+            preload="auto"
             poster={SECTOR_MEDIA.hospitality.poster}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover scale-105"
           >
             <source src={SECTOR_MEDIA.hospitality.video} type="video/mp4" />
           </video>
@@ -77,12 +92,14 @@ export default function HeroSection() {
         {/* Manufacturing Video Layer */}
         <div className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${selectedSector === 'manufacturing' ? 'opacity-100' : 'opacity-0'}`}>
           <video
+            ref={mfgRef}
             autoPlay
             loop
             muted
             playsInline
+            preload="auto"
             poster={SECTOR_MEDIA.manufacturing.poster}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover scale-105"
           >
             <source src={SECTOR_MEDIA.manufacturing.video} type="video/mp4" />
           </video>
@@ -91,25 +108,27 @@ export default function HeroSection() {
         {/* Contracting Video Layer */}
         <div className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${selectedSector === 'contracting' ? 'opacity-100' : 'opacity-0'}`}>
           <video
+            ref={contrRef}
             autoPlay
             loop
             muted
             playsInline
+            preload="auto"
             poster={SECTOR_MEDIA.contracting.poster}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover scale-105"
           >
             <source src={SECTOR_MEDIA.contracting.video} type="video/mp4" />
           </video>
         </div>
 
-        {/* Architectural Vignettes & Grid Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/80 to-black/95"></div>
-        <div className="absolute inset-0 bg-gradient-to-t from-brand-dark via-transparent to-black/85"></div>
-        <div className="absolute inset-0 bg-blueprint-grid opacity-60"></div>
+        {/* Architectural Vignettes & Grid Overlay - Tuned for Clear Video Visibility & Contrast */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/55 to-black/85"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-brand-dark via-black/40 to-black/70"></div>
+        <div className="absolute inset-0 bg-blueprint-grid opacity-35"></div>
       </div>
 
       {/* Blueprint Top Coordinates Watermark */}
-      <div className="absolute top-24 left-8 rtl:left-auto rtl:right-8 z-10 hidden xl:flex items-center gap-2 text-[10px] font-mono text-zinc-500 tracking-wider">
+      <div className="absolute top-24 left-8 rtl:left-auto rtl:right-8 z-10 hidden xl:flex items-center gap-2 text-[10px] font-mono text-zinc-400 tracking-wider">
         <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-ping"></span>
         <span>LAT 21.5433° N · LON 39.1728° E // JEDDAH HQ</span>
       </div>
@@ -117,7 +136,7 @@ export default function HeroSection() {
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 w-full text-center">
         
         {/* Shimmer Announcement Badge */}
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold bg-brand-surface/90 border border-white/20 text-zinc-300 backdrop-blur-xl mb-8 shadow-glow-card shimmer-badge">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold bg-brand-surface/90 border border-white/20 text-zinc-200 backdrop-blur-xl mb-8 shadow-glow-card shimmer-badge">
           <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
           <span className="font-bold text-white">{dict.hero.badge}</span>
           <span className="text-zinc-500">•</span>
@@ -127,7 +146,7 @@ export default function HeroSection() {
         </div>
 
         {/* Monumental Headline */}
-        <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white leading-[1.08] mb-6 max-w-5xl mx-auto">
+        <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white leading-[1.08] mb-6 max-w-5xl mx-auto drop-shadow-md">
           <span className="block">{dict.hero.title_line1}</span>
           <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-sky-300 to-indigo-300 drop-shadow-sm">
             {dict.hero.title_line2}
@@ -136,7 +155,7 @@ export default function HeroSection() {
         </h1>
 
         {/* Subtitle */}
-        <p className="text-base sm:text-lg md:text-xl text-zinc-300 max-w-2xl mx-auto mb-10 leading-relaxed font-normal">
+        <p className="text-base sm:text-lg md:text-xl text-zinc-200 max-w-2xl mx-auto mb-10 leading-relaxed font-normal drop-shadow-sm">
           {dict.hero.description}
         </p>
 
