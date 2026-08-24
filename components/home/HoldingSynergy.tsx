@@ -2,116 +2,110 @@
 
 import React from 'react';
 import { useLanguage } from '@/context/LanguageContext';
-import { 
-  Workflow, 
-  Factory, 
-  HardHat, 
-  Building2, 
-  ArrowRight,
-  Sparkles
-} from 'lucide-react';
+import { Factory, HardHat, Building2, Workflow, ArrowRight, ShieldCheck, Zap } from 'lucide-react';
 
 export default function HoldingSynergy() {
-  const { lang } = useLanguage();
+  const { lang, dict } = useLanguage();
+
+  const STEPS = [
+    {
+      step: '01',
+      title: dict.home.synergy.step1_title,
+      text: dict.home.synergy.step1_text,
+      icon: Factory,
+      color: 'text-emerald-400',
+      badgeBg: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30',
+      cardBorder: 'hover:border-emerald-500/40',
+    },
+    {
+      step: '02',
+      title: dict.home.synergy.step2_title,
+      text: dict.home.synergy.step2_text,
+      icon: HardHat,
+      color: 'text-amber-400',
+      badgeBg: 'bg-amber-500/10 text-amber-400 border-amber-500/30',
+      cardBorder: 'hover:border-amber-500/40',
+    },
+    {
+      step: '03',
+      title: dict.home.synergy.step3_title,
+      text: dict.home.synergy.step3_text,
+      icon: Building2,
+      color: 'text-sky-400',
+      badgeBg: 'bg-sky-500/10 text-sky-400 border-sky-500/30',
+      cardBorder: 'hover:border-sky-500/40',
+    },
+  ];
 
   return (
-    <section className="py-24 bg-brand-dark relative overflow-hidden border-t border-brand-border">
+    <section className="py-24 bg-[#08090C] text-white relative overflow-hidden">
       
-      {/* Background Blueprint Grid & Glow */}
-      <div className="absolute inset-0 bg-blueprint-grid opacity-30 pointer-events-none"></div>
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[250px] bg-blue-600/10 blur-[130px] rounded-full pointer-events-none"></div>
+      {/* Subtle blueprint grid */}
+      <div className="absolute inset-0 bg-blueprint-grid opacity-30 pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
-        {/* Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide uppercase bg-brand-surface border border-brand-border text-blue-400 mb-3 shadow-2xs">
+        {/* Section Header */}
+        <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide uppercase bg-brand-surface border border-brand-border text-blue-400 shadow-glow-card">
             <Workflow className="w-3.5 h-3.5" />
-            <span>{lang === 'ar' ? 'سلسلة القيمة المتكاملة' : 'Integrated Value Chain'}</span>
+            <span>{dict.home.synergy.label}</span>
           </div>
 
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-white mb-3 leading-snug">
-            {lang === 'ar' 
-              ? 'تكامل استراتيجي يُحكِم السيطرة على دورة التطوير' 
-              : 'Strategic Synergy Across the Development Lifecycle'}
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white leading-tight">
+            {dict.home.synergy.heading}
           </h2>
 
-          <p className="text-xs sm:text-sm text-zinc-400 max-w-2xl mx-auto">
-            {lang === 'ar'
-              ? 'نموذج عمل قابض فريد يربط التصنيع الصناعي بمقاولات الديكور والتشطيب، وصولاً إلى الإدارة الفندقية المتميزة.'
-              : 'A self-sustaining holding ecosystem linking precision manufacturing, interior contracting, and premier hotel operations.'}
+          <p className="text-sm sm:text-base text-zinc-400 leading-relaxed max-w-2xl mx-auto">
+            {dict.home.synergy.intro}
           </p>
         </div>
 
-        {/* 3-Stage Synergy Flow with Architectural Connecting Guide */}
-        <div className="relative max-w-5xl mx-auto">
+        {/* 3 Steps Pipeline Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative">
           
-          {/* Architectural Connecting Guide Line (Desktop) */}
-          <div className="hidden md:block absolute top-1/2 left-12 right-12 h-0.5 bg-gradient-to-r from-emerald-500/40 via-amber-500/40 to-sky-500/40 -translate-y-1/2 pointer-events-none z-0"></div>
+          {STEPS.map((item, idx) => {
+            const Icon = item.icon;
+            return (
+              <div
+                key={item.step}
+                className={`glass-card rounded-3xl p-7 border border-white/10 ${item.cardBorder} transition-all group relative overflow-hidden flex flex-col justify-between`}
+              >
+                {/* Blueprint Crosshairs */}
+                <div className="absolute top-2 left-2 text-zinc-700 font-mono text-[9px] select-none">+</div>
+                <div className="absolute top-2 right-2 text-zinc-700 font-mono text-[9px] select-none">+</div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10">
-            
-            {/* Stage 1: Manufacturing */}
-            <div className="glass-card rounded-2xl p-6 border border-emerald-500/30 shadow-glow-emerald relative group bg-brand-surface/90">
-              <div className="flex items-center justify-between mb-4">
-                <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center border border-emerald-500/30">
-                  <Factory className="w-5 h-5" />
+                <div>
+                  {/* Step Badge */}
+                  <div className="flex items-center justify-between mb-6">
+                    <span className={`text-xs font-mono font-bold px-2.5 py-1 rounded-md border ${item.badgeBg}`}>
+                      STEP // {item.step}
+                    </span>
+                    <div className={`w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center ${item.color} group-hover:scale-110 transition-transform`}>
+                      <Icon className="w-5 h-5" />
+                    </div>
+                  </div>
+
+                  {/* Title */}
+                  <h3 className="text-xl font-bold text-white mb-3 group-hover:text-blue-300 transition-colors">
+                    {item.title}
+                  </h3>
+
+                  {/* Description */}
+                  <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
+                    {item.text}
+                  </p>
                 </div>
-                <span className="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                  01 // {lang === 'ar' ? 'التصنيع' : 'MANUFACTURE'}
-                </span>
-              </div>
-              <h3 className="text-base font-bold text-white mb-1">
-                {lang === 'ar' ? 'تصنيع الأثاث والديكور' : 'Furniture & Decor Manufacturing'}
-              </h3>
-              <p className="text-xs text-zinc-400 leading-relaxed">
-                {lang === 'ar' 
-                  ? '٣ مصانع متخصصة للأخشاب والألومنيوم تُنتج بأعلى المعايير الهندسية.' 
-                  : '3 dedicated factories supplying custom wood, metal, and architectural decor.'}
-              </p>
-            </div>
 
-            {/* Stage 2: Contracting & Fit-out */}
-            <div className="glass-card rounded-2xl p-6 border border-amber-500/30 shadow-glow-gold relative group bg-brand-surface/90">
-              <div className="flex items-center justify-between mb-4">
-                <div className="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center border border-amber-500/30">
-                  <HardHat className="w-5 h-5" />
+                {/* Footer Blueprint Line */}
+                <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between text-[11px] font-mono text-zinc-500">
+                  <span>INTEGRATED SYNERGY</span>
+                  <span className="text-zinc-600">0{idx + 1} / 03</span>
                 </div>
-                <span className="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
-                  02 // {lang === 'ar' ? 'التنفيذ' : 'FIT-OUT'}
-                </span>
-              </div>
-              <h3 className="text-base font-bold text-white mb-1">
-                {lang === 'ar' ? 'مقاولات وتنفيذ الديكور' : 'Interior Fit-out Contracting'}
-              </h3>
-              <p className="text-xs text-zinc-400 leading-relaxed">
-                {lang === 'ar' 
-                  ? 'إدارة مشروعات التشطيب والتأثيث المتكامل من المخطط حتى التسليم.' 
-                  : 'Turnkey execution managing full interior construction from blueprint to handover.'}
-              </p>
-            </div>
 
-            {/* Stage 3: Hospitality Operations */}
-            <div className="glass-card rounded-2xl p-6 border border-sky-500/30 shadow-glow-blue relative group bg-brand-surface/90">
-              <div className="flex items-center justify-between mb-4">
-                <div className="w-10 h-10 rounded-xl bg-sky-500/10 text-sky-400 flex items-center justify-center border border-sky-500/30">
-                  <Building2 className="w-5 h-5" />
-                </div>
-                <span className="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/30">
-                  03 // {lang === 'ar' ? 'التشغيل' : 'OPERATE'}
-                </span>
               </div>
-              <h3 className="text-base font-bold text-white mb-1">
-                {lang === 'ar' ? 'إدارة وتشغيل الفنادق' : 'Hospitality Asset Management'}
-              </h3>
-              <p className="text-xs text-zinc-400 leading-relaxed">
-                {lang === 'ar' 
-                  ? '٦ منشآت فندقية راقية بالمملكة وتونس تُحقق أعلى معدلات الإشغال.' 
-                  : 'Operating 6 luxury hospitality properties across KSA and Tunisia.'}
-              </p>
-            </div>
-
-          </div>
+            );
+          })}
 
         </div>
 

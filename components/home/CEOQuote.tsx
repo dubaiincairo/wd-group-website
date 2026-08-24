@@ -1,66 +1,75 @@
 'use client';
 
 import React from 'react';
-import { motion } from 'framer-motion';
+import Image from 'next/image';
 import { useLanguage } from '@/context/LanguageContext';
-import { Quote, ShieldCheck } from 'lucide-react';
+import { Quote, Sparkles, ShieldCheck } from 'lucide-react';
 
 export default function CEOQuote() {
   const { lang, dict } = useLanguage();
 
   return (
-    <section className="py-24 sm:py-32 bg-brand-darker text-white relative overflow-hidden border-t border-brand-border">
+    <section className="py-24 bg-[#08090C] text-white relative overflow-hidden">
       
-      {/* Radiant Executive Spotlight */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-blue-600/15 blur-[140px] rounded-full pointer-events-none animate-pulse-slow"></div>
+      {/* Background radial glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-blue-600/5 blur-[140px] pointer-events-none" />
 
-      <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        
-        {/* Quote Icon with Glow */}
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.8 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="w-16 h-16 rounded-2xl bg-brand-surface border border-white/10 text-blue-400 flex items-center justify-center mx-auto mb-10 shadow-glow-blue"
-        >
-          <Quote className="w-8 h-8" />
-        </motion.div>
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="glass-card rounded-3xl p-8 sm:p-14 border border-white/10 shadow-2xl relative overflow-hidden bg-brand-surface/90">
+          
+          {/* Blueprint Crosshairs */}
+          <div className="absolute top-3 left-3 text-zinc-700 font-mono text-[10px] select-none">+</div>
+          <div className="absolute top-3 right-3 text-zinc-700 font-mono text-[10px] select-none">+</div>
+          <div className="absolute bottom-3 left-3 text-zinc-700 font-mono text-[10px] select-none">+</div>
+          <div className="absolute bottom-3 right-3 text-zinc-700 font-mono text-[10px] select-none">+</div>
 
-        {/* The Approved Quote */}
-        <motion.blockquote 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7, delay: 0.1 }}
-          className="text-xl sm:text-2xl md:text-3xl font-medium text-zinc-100 leading-relaxed max-w-3xl mx-auto mb-12 tracking-tight"
-        >
-          &ldquo;{dict.ceo.quote}&rdquo;
-        </motion.blockquote>
+          <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12">
+            
+            {/* CEO Avatar / Monogram */}
+            <div className="shrink-0 relative">
+              <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-full bg-gradient-to-br from-blue-600/30 via-brand-surface to-brand-border p-1 shadow-glow-blue border border-blue-500/30 flex items-center justify-center">
+                <div className="w-full h-full rounded-full bg-brand-surface flex flex-col items-center justify-center text-center p-3">
+                  <span className="text-xl sm:text-2xl font-extrabold text-blue-400 font-mono">WD</span>
+                  <span className="text-[9px] font-mono text-zinc-400 uppercase tracking-widest mt-0.5">LEADERSHIP</span>
+                </div>
+              </div>
+              <div className="absolute -bottom-2 -right-2 w-8 h-8 rounded-full bg-blue-600 border-2 border-brand-surface flex items-center justify-center text-white">
+                <ShieldCheck className="w-4 h-4" />
+              </div>
+            </div>
 
-        {/* CEO Identity & Governance Credentials */}
-        <motion.div 
-          initial={{ opacity: 0, y: 15 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7, delay: 0.2 }}
-          className="inline-flex flex-col items-center"
-        >
-          <div className="w-14 h-1 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 mb-4 shadow-glow-blue"></div>
-          <div className="flex items-center gap-2">
-            <h4 className="text-lg font-bold text-white tracking-tight">
-              {dict.ceo.name}
-            </h4>
-            <span className="inline-flex items-center gap-1 text-[10px] font-mono bg-blue-500/20 text-blue-300 border border-blue-500/40 px-2 py-0.5 rounded-full">
-              <ShieldCheck className="w-3 h-3 text-blue-400" />
-              <span>LEADERSHIP</span>
-            </span>
+            {/* Quote Body */}
+            <div className="space-y-6 text-center md:text-left rtl:md:text-right">
+              
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-bold text-blue-400 bg-blue-500/10 border border-blue-500/20">
+                <Quote className="w-3.5 h-3.5" />
+                <span>{dict.home.ceo.label}</span>
+              </div>
+
+              <blockquote className="text-lg sm:text-xl md:text-2xl text-zinc-100 font-medium leading-relaxed">
+                {dict.home.ceo.quote}
+              </blockquote>
+
+              <div className="pt-2 border-t border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div>
+                  <div className="text-base font-bold text-white">
+                    {dict.home.ceo.name}
+                  </div>
+                  <div className="text-xs text-blue-400 font-semibold mt-0.5">
+                    {dict.home.ceo.title}
+                  </div>
+                </div>
+
+                <div className="text-[11px] font-mono text-zinc-500">
+                  {lang === 'ar' ? 'مجموعة دبليو دي للأعمال' : 'WD Group for Business'}
+                </div>
+              </div>
+
+            </div>
+
           </div>
-          <p className="text-xs sm:text-sm text-zinc-400 mt-1 font-medium">
-            {dict.ceo.title}
-          </p>
-        </motion.div>
 
+        </div>
       </div>
     </section>
   );
