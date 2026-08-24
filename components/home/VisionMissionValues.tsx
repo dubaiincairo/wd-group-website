@@ -17,10 +17,11 @@ export default function VisionMissionValues() {
   return (
     <section id="about" className="py-24 sm:py-32 bg-brand-dark text-white border-t border-brand-border relative overflow-hidden">
       
-      {/* Background ambient lighting */}
+      {/* Blueprint Grid & Lighting */}
+      <div className="absolute inset-0 bg-blueprint-grid opacity-30 pointer-events-none"></div>
       <div className="absolute top-1/3 right-1/4 w-96 h-96 bg-blue-600/10 rounded-full blur-[140px] pointer-events-none"></div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-20">
@@ -38,7 +39,8 @@ export default function VisionMissionValues() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           
           {/* VISION CARD */}
-          <div className="glass-card rounded-3xl p-8 flex flex-col justify-between shadow-xs group hover:border-blue-500/40 hover:shadow-glow-blue transition-all duration-300">
+          <div className="glass-card rounded-3xl p-8 flex flex-col justify-between shadow-xs group hover:border-blue-500/40 hover:shadow-glow-blue transition-all duration-300 relative">
+            <div className="absolute top-3 right-3 text-zinc-600 font-mono text-[10px]">+</div>
             <div>
               <div className="w-14 h-14 rounded-2xl bg-blue-500/10 text-blue-400 border border-blue-500/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                 <Eye className="w-7 h-7" />
@@ -57,7 +59,8 @@ export default function VisionMissionValues() {
           </div>
 
           {/* MISSION CARD */}
-          <div className="glass-card rounded-3xl p-8 flex flex-col justify-between shadow-xs group hover:border-emerald-500/40 hover:shadow-glow-emerald transition-all duration-300">
+          <div className="glass-card rounded-3xl p-8 flex flex-col justify-between shadow-xs group hover:border-emerald-500/40 hover:shadow-glow-emerald transition-all duration-300 relative">
+            <div className="absolute top-3 right-3 text-zinc-600 font-mono text-[10px]">+</div>
             <div>
               <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                 <Target className="w-7 h-7" />
@@ -76,7 +79,8 @@ export default function VisionMissionValues() {
           </div>
 
           {/* VALUES CARD */}
-          <div className="glass-card rounded-3xl p-8 flex flex-col justify-between shadow-xs group hover:border-amber-500/40 hover:shadow-glow-gold transition-all duration-300">
+          <div className="glass-card rounded-3xl p-8 flex flex-col justify-between shadow-xs group hover:border-amber-500/40 hover:shadow-glow-gold transition-all duration-300 relative">
+            <div className="absolute top-3 right-3 text-zinc-600 font-mono text-[10px]">+</div>
             <div>
               <div className="w-14 h-14 rounded-2xl bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                 <Award className="w-7 h-7" />

@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import { motion } from 'framer-motion';
 import { useLanguage } from '@/context/LanguageContext';
 import { 
   Workflow, 
@@ -9,29 +8,29 @@ import {
   HardHat, 
   Building2, 
   ArrowRight,
-  Sparkles,
-  CheckCircle2
+  Sparkles
 } from 'lucide-react';
 
 export default function HoldingSynergy() {
-  const { lang, dict } = useLanguage();
+  const { lang } = useLanguage();
 
   return (
-    <section className="py-20 bg-brand-dark relative overflow-hidden border-t border-brand-border">
+    <section className="py-24 bg-brand-dark relative overflow-hidden border-t border-brand-border">
       
-      {/* Subtle Background Glow */}
+      {/* Background Blueprint Grid & Glow */}
+      <div className="absolute inset-0 bg-blueprint-grid opacity-30 pointer-events-none"></div>
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[250px] bg-blue-600/10 blur-[130px] rounded-full pointer-events-none"></div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Header */}
-        <div className="text-center max-w-3xl mx-auto mb-14">
+        <div className="text-center max-w-3xl mx-auto mb-16">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide uppercase bg-brand-surface border border-brand-border text-blue-400 mb-3 shadow-2xs">
             <Workflow className="w-3.5 h-3.5" />
             <span>{lang === 'ar' ? 'سلسلة القيمة المتكاملة' : 'Integrated Value Chain'}</span>
           </div>
 
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-white mb-3">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-white mb-3 leading-snug">
             {lang === 'ar' 
               ? 'تكامل استراتيجي يُحكِم السيطرة على دورة التطوير' 
               : 'Strategic Synergy Across the Development Lifecycle'}
@@ -44,67 +43,74 @@ export default function HoldingSynergy() {
           </p>
         </div>
 
-        {/* 3-Stage Synergy Flow */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative max-w-5xl mx-auto">
+        {/* 3-Stage Synergy Flow with Architectural Connecting Guide */}
+        <div className="relative max-w-5xl mx-auto">
           
-          {/* Stage 1: Manufacturing */}
-          <div className="glass-card rounded-2xl p-6 border border-emerald-500/30 shadow-glow-emerald relative group">
-            <div className="flex items-center justify-between mb-4">
-              <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center border border-emerald-500/30">
-                <Factory className="w-5 h-5" />
-              </div>
-              <span className="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                01 // {lang === 'ar' ? 'التصنيع' : 'MANUFACTURE'}
-              </span>
-            </div>
-            <h3 className="text-base font-bold text-white mb-1">
-              {lang === 'ar' ? 'تصنيع الأثاث والديكور' : 'Furniture & Decor Manufacturing'}
-            </h3>
-            <p className="text-xs text-zinc-400 leading-relaxed">
-              {lang === 'ar' 
-                ? '٣ مصانع متخصصة للأخشاب والألومنيوم تُنتج بأعلى المعايير الهندسية.' 
-                : '3 dedicated factories supplying custom wood, metal, and architectural decor.'}
-            </p>
-          </div>
+          {/* Architectural Connecting Guide Line (Desktop) */}
+          <div className="hidden md:block absolute top-1/2 left-12 right-12 h-0.5 bg-gradient-to-r from-emerald-500/40 via-amber-500/40 to-sky-500/40 -translate-y-1/2 pointer-events-none z-0"></div>
 
-          {/* Stage 2: Contracting & Fit-out */}
-          <div className="glass-card rounded-2xl p-6 border border-amber-500/30 shadow-glow-gold relative group">
-            <div className="flex items-center justify-between mb-4">
-              <div className="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center border border-amber-500/30">
-                <HardHat className="w-5 h-5" />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10">
+            
+            {/* Stage 1: Manufacturing */}
+            <div className="glass-card rounded-2xl p-6 border border-emerald-500/30 shadow-glow-emerald relative group bg-brand-surface/90">
+              <div className="flex items-center justify-between mb-4">
+                <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center border border-emerald-500/30">
+                  <Factory className="w-5 h-5" />
+                </div>
+                <span className="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                  01 // {lang === 'ar' ? 'التصنيع' : 'MANUFACTURE'}
+                </span>
               </div>
-              <span className="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
-                02 // {lang === 'ar' ? 'التنفيذ' : 'FIT-OUT'}
-              </span>
+              <h3 className="text-base font-bold text-white mb-1">
+                {lang === 'ar' ? 'تصنيع الأثاث والديكور' : 'Furniture & Decor Manufacturing'}
+              </h3>
+              <p className="text-xs text-zinc-400 leading-relaxed">
+                {lang === 'ar' 
+                  ? '٣ مصانع متخصصة للأخشاب والألومنيوم تُنتج بأعلى المعايير الهندسية.' 
+                  : '3 dedicated factories supplying custom wood, metal, and architectural decor.'}
+              </p>
             </div>
-            <h3 className="text-base font-bold text-white mb-1">
-              {lang === 'ar' ? 'مقاولات وتنفيذ الديكور' : 'Interior Fit-out Contracting'}
-            </h3>
-            <p className="text-xs text-zinc-400 leading-relaxed">
-              {lang === 'ar' 
-                ? 'إدارة مشروعات التشطيب والتأثيث المتكامل من المخطط حتى التسليم.' 
-                : 'Turnkey execution managing full interior construction from blueprint to handover.'}
-            </p>
-          </div>
 
-          {/* Stage 3: Hospitality Operations */}
-          <div className="glass-card rounded-2xl p-6 border border-sky-500/30 shadow-glow-blue relative group">
-            <div className="flex items-center justify-between mb-4">
-              <div className="w-10 h-10 rounded-xl bg-sky-500/10 text-sky-400 flex items-center justify-center border border-sky-500/30">
-                <Building2 className="w-5 h-5" />
+            {/* Stage 2: Contracting & Fit-out */}
+            <div className="glass-card rounded-2xl p-6 border border-amber-500/30 shadow-glow-gold relative group bg-brand-surface/90">
+              <div className="flex items-center justify-between mb-4">
+                <div className="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center border border-amber-500/30">
+                  <HardHat className="w-5 h-5" />
+                </div>
+                <span className="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                  02 // {lang === 'ar' ? 'التنفيذ' : 'FIT-OUT'}
+                </span>
               </div>
-              <span className="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/30">
-                03 // {lang === 'ar' ? 'التشغيل' : 'OPERATE'}
-              </span>
+              <h3 className="text-base font-bold text-white mb-1">
+                {lang === 'ar' ? 'مقاولات وتنفيذ الديكور' : 'Interior Fit-out Contracting'}
+              </h3>
+              <p className="text-xs text-zinc-400 leading-relaxed">
+                {lang === 'ar' 
+                  ? 'إدارة مشروعات التشطيب والتأثيث المتكامل من المخطط حتى التسليم.' 
+                  : 'Turnkey execution managing full interior construction from blueprint to handover.'}
+              </p>
             </div>
-            <h3 className="text-base font-bold text-white mb-1">
-              {lang === 'ar' ? 'إدارة وتشغيل الفنادق' : 'Hospitality Asset Management'}
-            </h3>
-            <p className="text-xs text-zinc-400 leading-relaxed">
-              {lang === 'ar' 
-                ? '٦ منشآت فندقية راقية بالمملكة وتونس تُحقق أعلى معدلات الإشغال.' 
-                : 'Operating 6 luxury hospitality properties across KSA and Tunisia.'}
-            </p>
+
+            {/* Stage 3: Hospitality Operations */}
+            <div className="glass-card rounded-2xl p-6 border border-sky-500/30 shadow-glow-blue relative group bg-brand-surface/90">
+              <div className="flex items-center justify-between mb-4">
+                <div className="w-10 h-10 rounded-xl bg-sky-500/10 text-sky-400 flex items-center justify-center border border-sky-500/30">
+                  <Building2 className="w-5 h-5" />
+                </div>
+                <span className="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/30">
+                  03 // {lang === 'ar' ? 'التشغيل' : 'OPERATE'}
+                </span>
+              </div>
+              <h3 className="text-base font-bold text-white mb-1">
+                {lang === 'ar' ? 'إدارة وتشغيل الفنادق' : 'Hospitality Asset Management'}
+              </h3>
+              <p className="text-xs text-zinc-400 leading-relaxed">
+                {lang === 'ar' 
+                  ? '٦ منشآت فندقية راقية بالمملكة وتونس تُحقق أعلى معدلات الإشغال.' 
+                  : 'Operating 6 luxury hospitality properties across KSA and Tunisia.'}
+              </p>
+            </div>
+
           </div>
 
         </div>

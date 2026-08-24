@@ -10,7 +10,8 @@ import {
   ExternalLink, 
   Check, 
   ArrowRight,
-  Layers
+  Layers,
+  Compass
 } from 'lucide-react';
 
 const SECTOR_CARD_PHOTOS = {
@@ -25,11 +26,12 @@ export default function SectorsHub() {
   return (
     <section id="sectors" className="py-24 sm:py-32 bg-brand-surface relative overflow-hidden border-t border-brand-border">
       
-      {/* Background Glows */}
+      {/* Background Blueprint Grid & Glows */}
+      <div className="absolute inset-0 bg-blueprint-grid opacity-40 pointer-events-none"></div>
       <div className="absolute top-1/2 left-0 w-96 h-96 bg-blue-600/10 rounded-full blur-[140px] pointer-events-none"></div>
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-emerald-600/10 rounded-full blur-[140px] pointer-events-none"></div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-20">
@@ -47,14 +49,19 @@ export default function SectorsHub() {
           </p>
         </div>
 
-        {/* 3 Core Sector Cards with Photographic Headers */}
+        {/* 3 Core Sector Cards with Architectural Corner Crosshairs & Photographic Headers */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           
           {/* SECTOR 1: HOSPITALITY (SwissBlue) */}
           <div 
             id="hospitality" 
-            className="glass-card rounded-3xl overflow-hidden flex flex-col justify-between group hover:shadow-glow-blue border border-white/10 hover:border-sky-500/50 transition-all duration-300"
+            className="glass-card rounded-3xl overflow-hidden flex flex-col justify-between group hover:shadow-glow-blue border border-white/10 hover:border-sky-500/50 transition-all duration-300 relative"
           >
+            {/* Blueprint Corner Accents */}
+            <div className="absolute top-2.5 right-2.5 z-20 text-zinc-500 font-mono text-[9px] bg-black/60 px-2 py-0.5 rounded-md backdrop-blur-xs border border-white/10">
+              SEC // 01
+            </div>
+
             <div>
               {/* Photo Header */}
               <div className="relative h-56 overflow-hidden">
@@ -118,8 +125,13 @@ export default function SectorsHub() {
           {/* SECTOR 2: MANUFACTURING & FURNITURE (GreenWood) */}
           <div 
             id="manufacturing" 
-            className="glass-card rounded-3xl overflow-hidden flex flex-col justify-between group hover:shadow-glow-emerald border border-white/10 hover:border-emerald-500/50 transition-all duration-300"
+            className="glass-card rounded-3xl overflow-hidden flex flex-col justify-between group hover:shadow-glow-emerald border border-white/10 hover:border-emerald-500/50 transition-all duration-300 relative"
           >
+            {/* Blueprint Corner Accents */}
+            <div className="absolute top-2.5 right-2.5 z-20 text-zinc-500 font-mono text-[9px] bg-black/60 px-2 py-0.5 rounded-md backdrop-blur-xs border border-white/10">
+              SEC // 02
+            </div>
+
             <div>
               {/* Photo Header */}
               <div className="relative h-56 overflow-hidden">
@@ -181,8 +193,13 @@ export default function SectorsHub() {
           {/* SECTOR 3: CONTRACTING (Engineering Excellence) */}
           <div 
             id="contracting" 
-            className="glass-card rounded-3xl overflow-hidden flex flex-col justify-between group hover:shadow-glow-gold border border-white/10 hover:border-amber-500/50 transition-all duration-300"
+            className="glass-card rounded-3xl overflow-hidden flex flex-col justify-between group hover:shadow-glow-gold border border-white/10 hover:border-amber-500/50 transition-all duration-300 relative"
           >
+            {/* Blueprint Corner Accents */}
+            <div className="absolute top-2.5 right-2.5 z-20 text-zinc-500 font-mono text-[9px] bg-black/60 px-2 py-0.5 rounded-md backdrop-blur-xs border border-white/10">
+              SEC // 03
+            </div>
+
             <div>
               {/* Photo Header */}
               <div className="relative h-56 overflow-hidden">

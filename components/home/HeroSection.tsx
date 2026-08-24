@@ -1,8 +1,7 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
 import { useLanguage } from '@/context/LanguageContext';
 import { 
   Building2, 
@@ -10,18 +9,35 @@ import {
   HardHat, 
   ArrowRight, 
   Compass, 
-  ChevronDown
+  ChevronDown,
+  Sparkles,
+  Play
 } from 'lucide-react';
 import AnimatedCounter from './AnimatedCounter';
 
 const SECTORS_LIST: ('hospitality' | 'manufacturing' | 'contracting')[] = ['hospitality', 'manufacturing', 'contracting'];
+
+const SECTOR_MEDIA = {
+  hospitality: {
+    video: 'https://cdn.coverr.co/videos/coverr-hotel-room-with-a-view-4691/1080p.mp4',
+    poster: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1600&q=85',
+  },
+  manufacturing: {
+    video: 'https://cdn.coverr.co/videos/coverr-carpenter-working-in-his-workshop-5349/1080p.mp4',
+    poster: 'https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=1600&q=85',
+  },
+  contracting: {
+    video: 'https://cdn.coverr.co/videos/coverr-modern-architecture-building-4433/1080p.mp4',
+    poster: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=85',
+  },
+};
 
 export default function HeroSection() {
   const { lang, dict } = useLanguage();
   const [selectedSector, setSelectedSector] = useState<'hospitality' | 'manufacturing' | 'contracting'>('hospitality');
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
-  // Auto-cycle through sectors every 6 seconds unless manually interacted
+  // Auto-cycle through sectors every 7 seconds unless user manually interacts
   useEffect(() => {
     if (!isAutoPlaying) return;
     const interval = setInterval(() => {
@@ -29,7 +45,7 @@ export default function HeroSection() {
         const nextIdx = (SECTORS_LIST.indexOf(prev) + 1) % SECTORS_LIST.length;
         return SECTORS_LIST[nextIdx];
       });
-    }, 6000);
+    }, 7000);
     return () => clearInterval(interval);
   }, [isAutoPlaying]);
 
@@ -39,36 +55,63 @@ export default function HeroSection() {
   };
 
   return (
-    <section className="relative min-h-[92vh] flex flex-col justify-center pt-28 pb-16 sm:pt-36 sm:pb-24 overflow-hidden bg-brand-dark">
+    <section className="relative min-h-[96vh] flex flex-col justify-center pt-28 pb-16 sm:pt-36 sm:pb-24 overflow-hidden bg-brand-dark">
       
-      {/* 1. Pre-rendered GPU-Accelerated Dynamic Backdrops (Sub-16ms INP - Zero React Re-render Lag) */}
+      {/* 1. Dynamic Video Ambient Backdrops with High-Res Photographic Fallbacks (Sub-16ms INP) */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-        {/* Hospitality Image */}
-        <div 
-          className={`absolute inset-0 bg-cover bg-center transition-opacity duration-700 ease-in-out ${
-            selectedSector === 'hospitality' ? 'opacity-100' : 'opacity-0'
-          }`}
-          style={{ backgroundImage: `url('https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1600&q=85')` }}
-        />
-        {/* Manufacturing Image */}
-        <div 
-          className={`absolute inset-0 bg-cover bg-center transition-opacity duration-700 ease-in-out ${
-            selectedSector === 'manufacturing' ? 'opacity-100' : 'opacity-0'
-          }`}
-          style={{ backgroundImage: `url('https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=1600&q=85')` }}
-        />
-        {/* Contracting Image */}
-        <div 
-          className={`absolute inset-0 bg-cover bg-center transition-opacity duration-700 ease-in-out ${
-            selectedSector === 'contracting' ? 'opacity-100' : 'opacity-0'
-          }`}
-          style={{ backgroundImage: `url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=85')` }}
-        />
+        
+        {/* Hospitality Video Layer */}
+        <div className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${selectedSector === 'hospitality' ? 'opacity-100' : 'opacity-0'}`}>
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            poster={SECTOR_MEDIA.hospitality.poster}
+            className="w-full h-full object-cover"
+          >
+            <source src={SECTOR_MEDIA.hospitality.video} type="video/mp4" />
+          </video>
+        </div>
 
-        {/* Luxury Vignettes */}
+        {/* Manufacturing Video Layer */}
+        <div className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${selectedSector === 'manufacturing' ? 'opacity-100' : 'opacity-0'}`}>
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            poster={SECTOR_MEDIA.manufacturing.poster}
+            className="w-full h-full object-cover"
+          >
+            <source src={SECTOR_MEDIA.manufacturing.video} type="video/mp4" />
+          </video>
+        </div>
+
+        {/* Contracting Video Layer */}
+        <div className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${selectedSector === 'contracting' ? 'opacity-100' : 'opacity-0'}`}>
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            poster={SECTOR_MEDIA.contracting.poster}
+            className="w-full h-full object-cover"
+          >
+            <source src={SECTOR_MEDIA.contracting.video} type="video/mp4" />
+          </video>
+        </div>
+
+        {/* Architectural Vignettes & Grid Overlay */}
         <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/80 to-black/95"></div>
-        <div className="absolute inset-0 bg-gradient-to-t from-brand-dark via-transparent to-black/80"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.04)_1px,transparent_1px)] [background-size:32px_32px]"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-brand-dark via-transparent to-black/85"></div>
+        <div className="absolute inset-0 bg-blueprint-grid opacity-60"></div>
+      </div>
+
+      {/* Blueprint Top Coordinates Watermark */}
+      <div className="absolute top-24 left-8 rtl:left-auto rtl:right-8 z-10 hidden xl:flex items-center gap-2 text-[10px] font-mono text-zinc-500 tracking-wider">
+        <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-ping"></span>
+        <span>LAT 21.5433° N · LON 39.1728° E // JEDDAH HQ</span>
       </div>
 
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 w-full text-center">
@@ -167,8 +210,15 @@ export default function HeroSection() {
           </Link>
         </div>
 
-        {/* 3. Section 2: Animated 4-Column Statistics Bar (Fluid Responsive Grid - No Cutoffs) */}
-        <div className="max-w-5xl mx-auto mb-10 w-full">
+        {/* 3. Section 2: Animated 4-Column Statistics Bar with Blueprint Corner Crosshairs */}
+        <div className="max-w-5xl mx-auto mb-10 w-full relative">
+          
+          {/* Blueprint Corner Crosshairs */}
+          <div className="absolute -top-2.5 -left-2.5 text-zinc-600 font-mono text-xs select-none pointer-events-none">+</div>
+          <div className="absolute -top-2.5 -right-2.5 text-zinc-600 font-mono text-xs select-none pointer-events-none">+</div>
+          <div className="absolute -bottom-2.5 -left-2.5 text-zinc-600 font-mono text-xs select-none pointer-events-none">+</div>
+          <div className="absolute -bottom-2.5 -right-2.5 text-zinc-600 font-mono text-xs select-none pointer-events-none">+</div>
+
           <div className="glass-card rounded-3xl p-6 sm:p-8 shadow-glow-card divide-y md:divide-y-0 md:divide-x rtl:md:divide-x-reverse divide-white/10 grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-0 relative overflow-hidden border border-white/15">
             
             {/* Ambient inner glow */}
