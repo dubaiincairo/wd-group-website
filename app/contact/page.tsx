@@ -9,11 +9,8 @@ import {
   MapPin, 
   CheckCircle2, 
   Send, 
-  ShieldCheck,
-  Building,
-  UploadCloud,
-  FileCheck,
-  Globe
+  ShieldCheck, 
+  UploadCloud 
 } from 'lucide-react';
 
 export default function ContactPage() {

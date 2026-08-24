@@ -7,15 +7,13 @@ import {
   CheckCircle2, 
   ArrowRight, 
   Send, 
-  Sparkles,
-  Briefcase,
-  GraduationCap,
-  TrendingUp,
-  FileText,
-  UploadCloud,
-  Clock,
-  ChevronDown,
-  ChevronUp
+  Briefcase, 
+  GraduationCap, 
+  TrendingUp, 
+  UploadCloud, 
+  Clock, 
+  ChevronDown, 
+  ChevronUp 
 } from 'lucide-react';
 import type { JobListing } from '@/lib/types/database';
 
