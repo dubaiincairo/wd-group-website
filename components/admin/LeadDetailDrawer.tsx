@@ -12,7 +12,8 @@ import {
   ExternalLink,
   Tag,
   Clock,
-  UserCheck
+  UserCheck,
+  ChevronDown
 } from 'lucide-react';
 import type { CRMInquiry, CRMInquiryStatus } from '@/lib/admin/types';
 
@@ -143,18 +144,21 @@ export default function LeadDetailDrawer({
                 <p className="text-[11px] text-zinc-500">Update the current state of this business inquiry</p>
               </div>
 
-              <select
-                value={inquiry.status}
-                onChange={handleStatusChange}
-                disabled={updatingStatus}
-                className="bg-[#08090C] border border-white/20 text-white text-xs font-bold rounded-xl px-3.5 py-2 focus:outline-none focus:border-blue-500 cursor-pointer"
-              >
-                <option value="new">New Lead</option>
-                <option value="contacted">Contacted</option>
-                <option value="in_review">In Review / Proposal</option>
-                <option value="won">Won / Deal Closed</option>
-                <option value="closed">Archived / Closed</option>
-              </select>
+              <div className="relative shrink-0">
+                <select
+                  value={inquiry.status}
+                  onChange={handleStatusChange}
+                  disabled={updatingStatus}
+                  className="appearance-none bg-[#08090C] border border-white/20 text-white text-xs font-bold rounded-xl pl-3.5 pr-9 py-2 focus:outline-none focus:border-blue-500 cursor-pointer"
+                >
+                  <option value="new">New Lead</option>
+                  <option value="contacted">Contacted</option>
+                  <option value="in_review">In Review / Proposal</option>
+                  <option value="won">Won / Deal Closed</option>
+                  <option value="closed">Archived / Closed</option>
+                </select>
+                <ChevronDown className="w-4 h-4 text-zinc-400 pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2" />
+              </div>
             </div>
 
             {/* Lead Metadata Grid */}

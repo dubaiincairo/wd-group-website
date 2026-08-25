@@ -356,7 +356,7 @@ export default function AdminDashboardPage() {
                         </td>
 
                         <td className="py-3.5 px-3">
-                          <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border ${
+                          <span className={`text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full border whitespace-nowrap shrink-0 inline-flex items-center ${
                             inq.status === 'new'
                               ? 'bg-sky-500/20 text-sky-300 border-sky-500/40'
                               : inq.status === 'contacted'
@@ -461,7 +461,7 @@ export default function AdminDashboardPage() {
                         </td>
 
                         <td className="py-3.5 px-3">
-                          <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border ${
+                          <span className={`text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full border whitespace-nowrap shrink-0 inline-flex items-center ${
                             app.status === 'new'
                               ? 'bg-sky-500/20 text-sky-300 border-sky-500/40'
                               : app.status === 'shortlisted'

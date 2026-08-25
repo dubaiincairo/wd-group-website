@@ -461,16 +461,19 @@ export default function CareersPage() {
                   <label className="block text-zinc-300 font-semibold mb-1">
                     {lang === 'ar' ? 'القطاع المفضل *' : 'Preferred Sector *'}
                   </label>
-                  <select
-                    value={formData.sector}
-                    onChange={(e) => setFormData({ ...formData, sector: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#1A1D27] border border-white/10 text-white focus:outline-none focus:border-blue-500"
-                  >
-                    <option value="hospitality">{dict.forms.options.hospitality}</option>
-                    <option value="manufacturing">{dict.forms.options.manufacturing}</option>
-                    <option value="contracting">{dict.forms.options.contracting}</option>
-                    <option value="corporate">{lang === 'ar' ? 'الإدارة المؤسسية والمالية' : 'Corporate & Finance'}</option>
-                  </select>
+                  <div className="relative">
+                    <select
+                      value={formData.sector}
+                      onChange={(e) => setFormData({ ...formData, sector: e.target.value })}
+                      className="w-full appearance-none px-3.5 pr-10 rtl:pr-3.5 rtl:pl-10 py-2.5 rounded-xl bg-[#1A1D27] border border-white/10 text-white focus:outline-none focus:border-blue-500 cursor-pointer"
+                    >
+                      <option value="hospitality">{dict.forms.options.hospitality}</option>
+                      <option value="manufacturing">{dict.forms.options.manufacturing}</option>
+                      <option value="contracting">{dict.forms.options.contracting}</option>
+                      <option value="corporate">{lang === 'ar' ? 'الإدارة المؤسسية والمالية' : 'Corporate & Finance'}</option>
+                    </select>
+                    <ChevronDown className="w-4 h-4 text-zinc-400 pointer-events-none absolute right-3 rtl:right-auto rtl:left-3 top-1/2 -translate-y-1/2" />
+                  </div>
                 </div>
                 <div>
                   <label className="block text-zinc-300 font-semibold mb-1">

@@ -10,7 +10,8 @@ import {
   CheckCircle2, 
   Send, 
   ShieldCheck, 
-  UploadCloud 
+  UploadCloud,
+  ChevronDown
 } from 'lucide-react';
 
 export default function ContactPage() {
@@ -248,20 +249,23 @@ export default function ContactPage() {
                   <label className="block text-zinc-300 font-semibold mb-1">
                     {dict.forms.sector} *
                   </label>
-                  <select
-                    value={formData.sector}
-                    onChange={(e) => setFormData({ ...formData, sector: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#1A1D27] border border-white/10 text-white focus:outline-none focus:border-blue-500"
-                  >
-                    <option value="general">{dict.forms.options.general}</option>
-                    <option value="hospitality">{dict.forms.options.hospitality}</option>
-                    <option value="manufacturing">{dict.forms.options.manufacturing}</option>
-                    <option value="contracting">{dict.forms.options.contracting}</option>
-                    <option value="partnership">{dict.forms.options.partnership}</option>
-                    <option value="tender">{dict.forms.options.tender}</option>
-                    <option value="careers">{dict.forms.options.careers}</option>
-                    <option value="media">{dict.forms.options.media}</option>
-                  </select>
+                  <div className="relative">
+                    <select
+                      value={formData.sector}
+                      onChange={(e) => setFormData({ ...formData, sector: e.target.value })}
+                      className="w-full appearance-none px-3.5 pr-10 rtl:pr-3.5 rtl:pl-10 py-2.5 rounded-xl bg-[#1A1D27] border border-white/10 text-white focus:outline-none focus:border-blue-500 cursor-pointer"
+                    >
+                      <option value="general">{dict.forms.options.general}</option>
+                      <option value="hospitality">{dict.forms.options.hospitality}</option>
+                      <option value="manufacturing">{dict.forms.options.manufacturing}</option>
+                      <option value="contracting">{dict.forms.options.contracting}</option>
+                      <option value="partnership">{dict.forms.options.partnership}</option>
+                      <option value="tender">{dict.forms.options.tender}</option>
+                      <option value="careers">{dict.forms.options.careers}</option>
+                      <option value="media">{dict.forms.options.media}</option>
+                    </select>
+                    <ChevronDown className="w-4 h-4 text-zinc-400 pointer-events-none absolute right-3 rtl:right-auto rtl:left-3 top-1/2 -translate-y-1/2" />
+                  </div>
                 </div>
                 <div>
                   <label className="block text-zinc-300 font-semibold mb-1">

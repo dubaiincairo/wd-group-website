@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Globe, Save, RefreshCw, Sparkles, Share2 } from 'lucide-react';
 import BilingualInput from '@/components/admin/BilingualInput';
+import MediaFieldUploader from '@/components/admin/MediaFieldUploader';
 import { useToast } from '@/components/admin/ToastProvider';
 import type { SiteContentPayload } from '@/lib/admin/types';
 
@@ -114,16 +115,14 @@ export default function SEOAdminPage() {
               onChangeAr={(v) => setContent({ ...content, seo: { ...seo, global_description_ar: v } })}
             />
 
-            <div className="space-y-1.5">
-              <label className="text-xs font-bold text-zinc-300">Open Graph Social Image URL (og:image)</label>
-              <input
-                type="url"
-                value={seo.og_image_url || ''}
-                onChange={(e) => setContent({ ...content, seo: { ...seo, og_image_url: e.target.value } })}
-                placeholder="https://.../og-preview.jpg"
-                className="w-full bg-[#08090C] border border-white/15 rounded-xl px-4 py-2.5 text-xs text-white placeholder:text-zinc-600 focus:outline-none focus:border-blue-500 font-mono"
-              />
-            </div>
+            <MediaFieldUploader
+              label="Open Graph Social Preview Image (og:image)"
+              description="Preview banner displayed when sharing website links across WhatsApp, LinkedIn, Twitter, and Facebook (recommended 1200x630px)"
+              bucket="photos"
+              accept="image"
+              value={seo.og_image_url || ''}
+              onChange={(url) => setContent({ ...content, seo: { ...seo, og_image_url: url } })}
+            />
 
             <div className="space-y-1.5">
               <label className="text-xs font-bold text-zinc-300">Canonical Base URL</label>

@@ -195,8 +195,8 @@ export default function JobOpeningsAdminPage() {
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border ${
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className={`text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full border whitespace-nowrap shrink-0 inline-flex items-center ${
                         job.published 
                           ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40' 
                           : 'bg-zinc-500/20 text-zinc-400 border-zinc-500/40'
@@ -204,7 +204,7 @@ export default function JobOpeningsAdminPage() {
                         {job.published ? 'LIVE ON SITE' : 'DRAFT / ARCHIVED'}
                       </span>
                       {job.experience && (
-                        <span className="text-[10px] font-mono text-zinc-400 bg-white/5 border border-white/10 px-2 py-0.5 rounded-full">
+                        <span className="text-[10px] font-mono text-zinc-400 bg-white/5 border border-white/10 px-2.5 py-0.5 rounded-full whitespace-nowrap shrink-0 inline-flex items-center">
                           {job.experience}
                         </span>
                       )}

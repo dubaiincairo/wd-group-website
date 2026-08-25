@@ -12,7 +12,8 @@ import {
   Layers,
   Cpu,
   Boxes,
-  ShieldCheck
+  ShieldCheck,
+  ChevronDown
 } from 'lucide-react';
 
 export default function ManufacturingPage() {
@@ -267,16 +268,19 @@ export default function ManufacturingPage() {
                   <label className="block text-zinc-300 font-semibold mb-1">
                     {lang === 'ar' ? 'فئة المنتجات المطلوبة *' : 'Product Category *'}
                   </label>
-                  <select
-                    value={formData.productCategory}
-                    onChange={(e) => setFormData({ ...formData, productCategory: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#1A1D27] border border-white/10 text-white focus:outline-none focus:border-emerald-500"
-                  >
-                    <option value="woodwork">{lang === 'ar' ? 'نجارة وأثاث خشبي مخصص' : 'Custom Woodwork & Joinery'}</option>
-                    <option value="aluminum">{lang === 'ar' ? 'ألومنيوم ومعادن معمارية' : 'Architectural Aluminum & Metal'}</option>
-                    <option value="contract_furniture">{lang === 'ar' ? 'أثاث فنادق ومشاريع وتنجيد' : 'Hotel FF&E & Contract Furniture'}</option>
-                    <option value="turnkey_package">{lang === 'ar' ? 'حزمة توريد وتصنيع متكاملة' : 'Turnkey Manufacturing Package'}</option>
-                  </select>
+                  <div className="relative">
+                    <select
+                      value={formData.productCategory}
+                      onChange={(e) => setFormData({ ...formData, productCategory: e.target.value })}
+                      className="w-full appearance-none px-3.5 pr-10 rtl:pr-3.5 rtl:pl-10 py-2.5 rounded-xl bg-[#1A1D27] border border-white/10 text-white focus:outline-none focus:border-emerald-500 cursor-pointer"
+                    >
+                      <option value="woodwork">{lang === 'ar' ? 'نجارة وأثاث خشبي مخصص' : 'Custom Woodwork & Joinery'}</option>
+                      <option value="aluminum">{lang === 'ar' ? 'ألومنيوم ومعادن معمارية' : 'Architectural Aluminum & Metal'}</option>
+                      <option value="contract_furniture">{lang === 'ar' ? 'أثاث فنادق ومشاريع وتنجيد' : 'Hotel FF&E & Contract Furniture'}</option>
+                      <option value="turnkey_package">{lang === 'ar' ? 'حزمة توريد وتصنيع متكاملة' : 'Turnkey Manufacturing Package'}</option>
+                    </select>
+                    <ChevronDown className="w-4 h-4 text-zinc-400 pointer-events-none absolute right-3 rtl:right-auto rtl:left-3 top-1/2 -translate-y-1/2" />
+                  </div>
                 </div>
                 <div>
                   <label className="block text-zinc-300 font-semibold mb-1">

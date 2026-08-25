@@ -14,7 +14,8 @@ import {
   Star,
   FileText,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  ChevronDown
 } from 'lucide-react';
 import CandidateDrawer from '@/components/admin/CandidateDrawer';
 import { useToast } from '@/components/admin/ToastProvider';
@@ -182,38 +183,44 @@ export default function TalentPoolATSPage() {
         </div>
 
         {/* Sector Filter */}
-        <select
-          value={sectorFilter}
-          onChange={(e) => {
-            setSectorFilter(e.target.value);
-            setPage(0);
-          }}
-          className="bg-[#08090C] border border-white/15 text-white text-xs font-semibold rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-blue-500 cursor-pointer"
-        >
-          <option value="all">All Sectors</option>
-          <option value="hospitality">Hospitality</option>
-          <option value="manufacturing">Manufacturing</option>
-          <option value="contracting">Contracting</option>
-          <option value="corporate">Corporate Services</option>
-        </select>
+        <div className="relative">
+          <select
+            value={sectorFilter}
+            onChange={(e) => {
+              setSectorFilter(e.target.value);
+              setPage(0);
+            }}
+            className="w-full appearance-none bg-[#08090C] border border-white/15 text-white text-xs font-semibold rounded-xl pl-3.5 pr-9 py-2.5 focus:outline-none focus:border-blue-500 cursor-pointer"
+          >
+            <option value="all">All Sectors</option>
+            <option value="hospitality">Hospitality</option>
+            <option value="manufacturing">Manufacturing</option>
+            <option value="contracting">Contracting</option>
+            <option value="corporate">Corporate Services</option>
+          </select>
+          <ChevronDown className="w-4 h-4 text-zinc-400 pointer-events-none absolute right-3 top-1/2 -translate-y-1/2" />
+        </div>
 
         {/* Status Filter */}
-        <select
-          value={statusFilter}
-          onChange={(e) => {
-            setStatusFilter(e.target.value);
-            setPage(0);
-          }}
-          className="bg-[#08090C] border border-white/15 text-white text-xs font-semibold rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-blue-500 cursor-pointer"
-        >
-          <option value="all">All ATS Stages</option>
-          <option value="new">New Applications</option>
-          <option value="reviewing">Under Review</option>
-          <option value="shortlisted">Shortlisted</option>
-          <option value="interview">Interview Scheduled</option>
-          <option value="hired">Hired</option>
-          <option value="rejected">Rejected</option>
-        </select>
+        <div className="relative">
+          <select
+            value={statusFilter}
+            onChange={(e) => {
+              setStatusFilter(e.target.value);
+              setPage(0);
+            }}
+            className="w-full appearance-none bg-[#08090C] border border-white/15 text-white text-xs font-semibold rounded-xl pl-3.5 pr-9 py-2.5 focus:outline-none focus:border-blue-500 cursor-pointer"
+          >
+            <option value="all">All ATS Stages</option>
+            <option value="new">New Applications</option>
+            <option value="reviewing">Under Review</option>
+            <option value="shortlisted">Shortlisted</option>
+            <option value="interview">Interview Scheduled</option>
+            <option value="hired">Hired</option>
+            <option value="rejected">Rejected</option>
+          </select>
+          <ChevronDown className="w-4 h-4 text-zinc-400 pointer-events-none absolute right-3 top-1/2 -translate-y-1/2" />
+        </div>
 
       </div>
 
@@ -279,7 +286,7 @@ export default function TalentPoolATSPage() {
                     </td>
 
                     <td className="py-4 px-4">
-                      <span className={`text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full border ${
+                      <span className={`text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full border whitespace-nowrap shrink-0 inline-flex items-center ${
                         app.status === 'new'
                           ? 'bg-sky-500/20 text-sky-300 border-sky-500/40'
                           : app.status === 'shortlisted'

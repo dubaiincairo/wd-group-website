@@ -40,12 +40,12 @@ export default function StatCard({
           )}
         </div>
 
-        <div className="flex flex-col items-end gap-2">
-          <div className={`w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center ${iconColor} group-hover:scale-105 transition-transform`}>
+        <div className="flex flex-col items-end gap-2 shrink-0">
+          <div className={`w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center ${iconColor} group-hover:scale-105 transition-transform shrink-0`}>
             <Icon className="w-6 h-6" />
           </div>
           {badge && (
-            <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border ${badgeColor}`}>
+            <span className={`text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full border whitespace-nowrap shrink-0 inline-flex items-center ${badgeColor}`}>
               {badge}
             </span>
           )}

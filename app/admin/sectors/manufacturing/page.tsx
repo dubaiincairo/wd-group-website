@@ -136,76 +136,99 @@ export default function ManufacturingSectorAdminPage() {
         </div>
       </div>
 
-      {/* Factories Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {/* Factories List (Full-Width Horizontal Cards) */}
+      <div className="space-y-6">
         {factories.map((fact, idx) => (
           <div 
             key={fact.id}
-            className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 space-y-4 shadow-xl relative group"
+            className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 sm:p-8 space-y-6 shadow-xl relative group hover:border-emerald-500/30 transition-colors"
           >
-            <div className="flex items-center justify-between border-b border-white/10 pb-3">
-              <span className="text-xs font-mono font-bold text-emerald-400">
-                FACTORY 0{idx + 1}
-              </span>
+            {/* Card Top Header */}
+            <div className="flex items-center justify-between border-b border-white/10 pb-4">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center font-mono font-bold text-xs shrink-0">
+                  0{idx + 1}
+                </div>
+                <div>
+                  <span className="text-sm sm:text-base font-bold text-white block">
+                    {fact.title_en || `Production Facility 0${idx + 1}`}
+                  </span>
+                  <span className="text-xs text-zinc-400 font-arabic block -mt-0.5">
+                    {fact.title_ar || `المصنع 0${idx + 1}`}
+                  </span>
+                </div>
+              </div>
+
               <button
                 type="button"
                 onClick={() => setDeletingId(fact.id)}
-                className="text-zinc-500 hover:text-rose-400 transition-colors p-1"
+                className="text-zinc-500 hover:text-rose-400 transition-colors p-2 rounded-xl hover:bg-white/5 flex items-center gap-1.5 text-xs"
                 aria-label="Delete factory"
               >
                 <Trash2 className="w-4 h-4" />
+                <span className="hidden sm:inline">Remove</span>
               </button>
             </div>
 
-            <BilingualInput
-              label="Factory Title & Scope"
-              valueEn={fact.title_en}
-              valueAr={fact.title_ar}
-              onChangeEn={(v) => {
-                const next = [...factories];
-                next[idx].title_en = v;
-                setContent({ ...content, manufacturing: { ...content.manufacturing, factories: next } });
-              }}
-              onChangeAr={(v) => {
-                const next = [...factories];
-                next[idx].title_ar = v;
-                setContent({ ...content, manufacturing: { ...content.manufacturing, factories: next } });
-              }}
-            />
+            {/* Form Fields: 2-Column Responsive Layout */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+              <div className="lg:col-span-6 space-y-4">
+                <BilingualInput
+                  label="Factory Title & Scope"
+                  description="Facility title and primary production line"
+                  valueEn={fact.title_en}
+                  valueAr={fact.title_ar}
+                  onChangeEn={(v) => {
+                    const next = [...factories];
+                    next[idx].title_en = v;
+                    setContent({ ...content, manufacturing: { ...content.manufacturing, factories: next } });
+                  }}
+                  onChangeAr={(v) => {
+                    const next = [...factories];
+                    next[idx].title_ar = v;
+                    setContent({ ...content, manufacturing: { ...content.manufacturing, factories: next } });
+                  }}
+                />
 
-            <BilingualInput
-              label="Production Capabilities"
-              isTextarea
-              rows={3}
-              valueEn={fact.desc_en}
-              valueAr={fact.desc_ar}
-              onChangeEn={(v) => {
-                const next = [...factories];
-                next[idx].desc_en = v;
-                setContent({ ...content, manufacturing: { ...content.manufacturing, factories: next } });
-              }}
-              onChangeAr={(v) => {
-                const next = [...factories];
-                next[idx].desc_ar = v;
-                setContent({ ...content, manufacturing: { ...content.manufacturing, factories: next } });
-              }}
-            />
+                <BilingualInput
+                  label="Location & Industrial Zone"
+                  description="Geographical hub (e.g. Riyadh Industrial City, Najran)"
+                  valueEn={fact.location_en}
+                  valueAr={fact.location_ar}
+                  onChangeEn={(v) => {
+                    const next = [...factories];
+                    next[idx].location_en = v;
+                    setContent({ ...content, manufacturing: { ...content.manufacturing, factories: next } });
+                  }}
+                  onChangeAr={(v) => {
+                    const next = [...factories];
+                    next[idx].location_ar = v;
+                    setContent({ ...content, manufacturing: { ...content.manufacturing, factories: next } });
+                  }}
+                />
+              </div>
 
-            <BilingualInput
-              label="Location"
-              valueEn={fact.location_en}
-              valueAr={fact.location_ar}
-              onChangeEn={(v) => {
-                const next = [...factories];
-                next[idx].location_en = v;
-                setContent({ ...content, manufacturing: { ...content.manufacturing, factories: next } });
-              }}
-              onChangeAr={(v) => {
-                const next = [...factories];
-                next[idx].location_ar = v;
-                setContent({ ...content, manufacturing: { ...content.manufacturing, factories: next } });
-              }}
-            />
+              <div className="lg:col-span-6">
+                <BilingualInput
+                  label="Production Capabilities & Machinery Scope"
+                  description="Detailed specifications of joinery, CNC cutting, finishing, or metal fabrication"
+                  isTextarea
+                  rows={5}
+                  valueEn={fact.desc_en}
+                  valueAr={fact.desc_ar}
+                  onChangeEn={(v) => {
+                    const next = [...factories];
+                    next[idx].desc_en = v;
+                    setContent({ ...content, manufacturing: { ...content.manufacturing, factories: next } });
+                  }}
+                  onChangeAr={(v) => {
+                    const next = [...factories];
+                    next[idx].desc_ar = v;
+                    setContent({ ...content, manufacturing: { ...content.manufacturing, factories: next } });
+                  }}
+                />
+              </div>
+            </div>
           </div>
         ))}
       </div>

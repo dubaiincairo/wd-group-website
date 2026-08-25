@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import AdminSidebar from './AdminSidebar';
 import AdminHeader from './AdminHeader';
@@ -66,8 +67,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   if (loading) {
     return (
       <div className="min-h-screen bg-[#08090C] flex flex-col items-center justify-center space-y-4">
-        <div className="w-12 h-12 rounded-2xl bg-blue-600 flex items-center justify-center font-extrabold text-white text-base animate-pulse shadow-glow-blue">
-          WD
+        <div className="relative h-12 w-44 animate-pulse">
+          <Image 
+            src="/brand/wd-group-logo-white.png" 
+            alt="WD Group" 
+            fill 
+            className="object-contain"
+            priority
+          />
         </div>
         <p className="text-xs font-mono text-zinc-400">Loading secure admin environment…</p>
       </div>

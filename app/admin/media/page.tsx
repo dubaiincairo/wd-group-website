@@ -13,7 +13,8 @@ import {
   RefreshCw, 
   Search,
   Filter,
-  Plus
+  Plus,
+  ChevronDown
 } from 'lucide-react';
 import MediaUploader from '@/components/admin/MediaUploader';
 import ConfirmationModal from '@/components/admin/ConfirmationModal';
@@ -133,16 +134,19 @@ export default function MediaLibraryAdminPage() {
           />
         </div>
 
-        <select
-          value={bucketFilter}
-          onChange={(e) => setBucketFilter(e.target.value)}
-          className="bg-[#08090C] border border-white/15 text-white text-xs font-semibold rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-blue-500 cursor-pointer"
-        >
-          <option value="all">All Storage Buckets</option>
-          <option value="photos">Photos & Images (photos)</option>
-          <option value="videos">Cinematic Videos (videos)</option>
-          <option value="assets">PDFs & Documents (assets)</option>
-        </select>
+        <div className="relative">
+          <select
+            value={bucketFilter}
+            onChange={(e) => setBucketFilter(e.target.value)}
+            className="w-full appearance-none bg-[#08090C] border border-white/15 text-white text-xs font-semibold rounded-xl pl-3.5 pr-9 py-2.5 focus:outline-none focus:border-blue-500 cursor-pointer"
+          >
+            <option value="all">All Storage Buckets</option>
+            <option value="photos">Photos & Images (photos)</option>
+            <option value="videos">Cinematic Videos (videos)</option>
+            <option value="assets">PDFs & Documents (assets)</option>
+          </select>
+          <ChevronDown className="w-4 h-4 text-zinc-400 pointer-events-none absolute right-3 top-1/2 -translate-y-1/2" />
+        </div>
       </div>
 
       {/* Media Grid */}

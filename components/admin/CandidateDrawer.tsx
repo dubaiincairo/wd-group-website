@@ -13,7 +13,8 @@ import {
   MessageSquare,
   Star,
   Send,
-  UserCheck
+  UserCheck,
+  ChevronDown
 } from 'lucide-react';
 import type { JobApplicationRecord, JobApplicationStatus } from '@/lib/admin/types';
 
@@ -195,19 +196,22 @@ export default function CandidateDrawer({
                 <p className="text-[11px] text-zinc-500">Move applicant through evaluation stages</p>
               </div>
 
-              <select
-                value={application.status}
-                onChange={handleStageChange}
-                disabled={updatingStage}
-                className="bg-[#08090C] border border-white/20 text-white text-xs font-bold rounded-xl px-3.5 py-2 focus:outline-none focus:border-blue-500 cursor-pointer"
-              >
-                <option value="new">New Application</option>
-                <option value="reviewing">Under Review</option>
-                <option value="shortlisted">Shortlisted</option>
-                <option value="interview">Interview Scheduled</option>
-                <option value="hired">Hired</option>
-                <option value="rejected">Rejected</option>
-              </select>
+              <div className="relative shrink-0">
+                <select
+                  value={application.status}
+                  onChange={handleStageChange}
+                  disabled={updatingStage}
+                  className="appearance-none bg-[#08090C] border border-white/20 text-white text-xs font-bold rounded-xl pl-3.5 pr-9 py-2 focus:outline-none focus:border-blue-500 cursor-pointer"
+                >
+                  <option value="new">New Application</option>
+                  <option value="reviewing">Under Review</option>
+                  <option value="shortlisted">Shortlisted</option>
+                  <option value="interview">Interview Scheduled</option>
+                  <option value="hired">Hired</option>
+                  <option value="rejected">Rejected</option>
+                </select>
+                <ChevronDown className="w-4 h-4 text-zinc-400 pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2" />
+              </div>
             </div>
 
             {/* Candidate Metadata Grid */}

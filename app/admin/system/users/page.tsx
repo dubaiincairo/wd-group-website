@@ -12,7 +12,8 @@ import {
   X,
   Lock,
   Mail,
-  User
+  User,
+  ChevronDown
 } from 'lucide-react';
 import ConfirmationModal from '@/components/admin/ConfirmationModal';
 import { useToast } from '@/components/admin/ToastProvider';
@@ -296,18 +297,21 @@ export default function StaffUsersAdminPage() {
 
               <div className="space-y-1.5">
                 <label className="text-xs font-bold text-zinc-300">Role & Access Level</label>
-                <select
-                  value={editingUser.role || 'editor'}
-                  onChange={(e) => setEditingUser({ ...editingUser, role: e.target.value as AdminRole })}
-                  className="w-full bg-[#08090C] border border-white/15 text-white text-xs font-semibold rounded-xl px-4 py-2.5 focus:outline-none focus:border-blue-500 cursor-pointer"
-                >
-                  <option value="owner">Owner (Full System Access)</option>
-                  <option value="admin">Administrator (Operations & Staff)</option>
-                  <option value="editor">Content Editor (CMS & Media)</option>
-                  <option value="crm">CRM Specialist (Leads & Inquiries)</option>
-                  <option value="hr">HR / Recruiter (Careers & ATS)</option>
-                  <option value="viewer">Viewer / Auditor (Read Only)</option>
-                </select>
+                <div className="relative">
+                  <select
+                    value={editingUser.role || 'editor'}
+                    onChange={(e) => setEditingUser({ ...editingUser, role: e.target.value as AdminRole })}
+                    className="w-full appearance-none bg-[#08090C] border border-white/15 text-white text-xs font-semibold rounded-xl pl-4 pr-10 py-2.5 focus:outline-none focus:border-blue-500 cursor-pointer"
+                  >
+                    <option value="owner">Owner (Full System Access)</option>
+                    <option value="admin">Administrator (Operations & Staff)</option>
+                    <option value="editor">Content Editor (CMS & Media)</option>
+                    <option value="crm">CRM Specialist (Leads & Inquiries)</option>
+                    <option value="hr">HR / Recruiter (Careers & ATS)</option>
+                    <option value="viewer">Viewer / Auditor (Read Only)</option>
+                  </select>
+                  <ChevronDown className="w-4 h-4 text-zinc-400 pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2" />
+                </div>
               </div>
 
               <div className="flex justify-end gap-3 pt-3 border-t border-white/10">

@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { 
   LayoutDashboard, 
@@ -209,15 +210,21 @@ export default function AdminSidebar({
       
       {/* Brand Header */}
       <div className="p-5 border-b border-white/10 flex items-center justify-between">
-        <Link href="/admin" className="flex items-center gap-3 group">
-          <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-white font-extrabold text-sm shadow-glow-blue tracking-tight">
-            WD
+        <Link href="/admin" className="flex items-center gap-3.5 group">
+          <div className="relative h-9 w-28 shrink-0 transition-transform group-hover:scale-105">
+            <Image 
+              src="/brand/wd-group-logo-white.png" 
+              alt="WD Group" 
+              fill 
+              className="object-contain"
+              priority
+            />
           </div>
-          <div>
-            <span className="text-xs font-mono font-extrabold uppercase tracking-widest text-blue-400 block">
-              OPERATIONS CMS
+          <div className="border-l border-white/10 pl-2.5 rtl:border-l-0 rtl:border-r rtl:pl-0 rtl:pr-2.5">
+            <span className="text-[10px] font-mono font-extrabold uppercase tracking-widest text-blue-400 block">
+              OPERATIONS
             </span>
-            <span className="text-sm font-bold text-white block -mt-0.5">
+            <span className="text-[11px] font-bold text-white block -mt-0.5">
               مجموعة دبليو دي
             </span>
           </div>
@@ -257,13 +264,13 @@ export default function AdminSidebar({
                         : 'text-zinc-400 hover:text-zinc-100 hover:bg-white/5 border border-transparent'
                     }`}
                   >
-                    <div className="flex items-center gap-2.5">
-                      <Icon className={`w-4 h-4 transition-colors ${isActive ? 'text-blue-400' : 'text-zinc-500 group-hover:text-zinc-300'}`} />
-                      <span>{item.label}</span>
+                    <div className="flex items-center gap-2.5 min-w-0 pr-2">
+                      <Icon className={`w-4 h-4 shrink-0 transition-colors ${isActive ? 'text-blue-400' : 'text-zinc-500 group-hover:text-zinc-300'}`} />
+                      <span className="truncate">{item.label}</span>
                     </div>
 
                     {item.badge && (
-                      <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border ${item.badgeColor || 'bg-white/10 text-zinc-300 border-white/10'}`}>
+                      <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border whitespace-nowrap shrink-0 inline-flex items-center ${item.badgeColor || 'bg-white/10 text-zinc-300 border-white/10'}`}>
                         {item.badge}
                       </span>
                     )}

@@ -70,7 +70,7 @@ export default function BilingualInput({
                 : 'text-zinc-400 hover:text-white'
             }`}
           >
-            <span>العربية</span>
+            <span>Arabic</span>
             <span className={`w-1.5 h-1.5 rounded-full ${isArComplete ? 'bg-emerald-400' : 'bg-amber-400'}`} />
           </button>
           <button
@@ -93,7 +93,7 @@ export default function BilingualInput({
         {(activeTab === 'both' || activeTab === 'ar') && (
           <div className="space-y-1">
             <div className="flex items-center justify-between text-[11px] font-mono text-zinc-400">
-              <span className="font-bold text-sky-400">العربية (RTL)</span>
+              <span className="font-bold text-sky-400">Arabic (RTL)</span>
               <span>{valueAr?.length || 0} chars</span>
             </div>
             {isTextarea ? (

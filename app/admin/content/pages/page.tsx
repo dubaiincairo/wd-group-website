@@ -116,8 +116,8 @@ export default function PagesContentEditor() {
       {/* Page Tabs */}
       <div className="flex flex-wrap items-center gap-2 p-1.5 rounded-2xl bg-[#0F1117] border border-white/10">
         {[
-          { id: 'home', label: 'Homepage (/)', icon: Home },
-          { id: 'about', label: 'About Us (/about)', icon: Compass },
+          { id: 'home', label: 'Home', icon: Home },
+          { id: 'about', label: 'About Us', icon: Compass },
           { id: 'hospitality', label: 'SwissBlue Hospitality', icon: Building2 },
           { id: 'manufacturing', label: 'GreenWood Manufacturing', icon: Factory },
           { id: 'contracting', label: 'Contracting & Fit-Out', icon: HardHat },

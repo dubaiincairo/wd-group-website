@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useId } from 'react';
 import { UploadCloud, Image as ImageIcon, Video, FileText, CheckCircle2, AlertCircle, X } from 'lucide-react';
 import { useToast } from './ToastProvider';
 
@@ -16,6 +16,7 @@ export default function MediaUploader({
   onClose,
 }: MediaUploaderProps) {
   const { showToast } = useToast();
+  const modalInputId = useId();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -150,15 +151,16 @@ export default function MediaUploader({
         </div>
 
         {/* Drag and drop / file selector box */}
-        <div
-          onClick={() => fileInputRef.current?.click()}
-          className="border-2 border-dashed border-white/20 hover:border-blue-500/50 rounded-2xl p-6 text-center cursor-pointer transition-colors bg-black/20 hover:bg-black/40"
+        <label
+          htmlFor={modalInputId}
+          className="border-2 border-dashed border-white/20 hover:border-blue-500/50 rounded-2xl p-6 text-center cursor-pointer transition-colors bg-black/20 hover:bg-black/40 block"
         >
           <input
+            id={modalInputId}
             ref={fileInputRef}
             type="file"
             onChange={handleFileChange}
-            className="hidden"
+            className="sr-only"
             accept={
               selectedBucket === 'videos'
                 ? 'video/mp4,video/webm'
@@ -192,7 +194,7 @@ export default function MediaUploader({
               <p className="text-[11px] text-zinc-500">Supports JPG, PNG, WEBP, MP4, PDF up to 50MB</p>
             </div>
           )}
-        </div>
+        </label>
 
         {/* Arabic Alt Text */}
         <div className="space-y-1">

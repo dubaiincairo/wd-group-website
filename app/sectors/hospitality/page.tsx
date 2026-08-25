@@ -15,7 +15,8 @@ import {
   ShieldCheck,
   Calendar,
   Layers,
-  FileUp
+  FileUp,
+  ChevronDown
 } from 'lucide-react';
 
 const PROPERTY_IMAGES = [
@@ -265,16 +266,19 @@ export default function HospitalityPage() {
                   <label className="block text-zinc-300 font-semibold mb-1">
                     {lang === 'ar' ? 'نوع المنشأة *' : 'Property Type *'}
                   </label>
-                  <select
-                    value={formData.propertyType}
-                    onChange={(e) => setFormData({ ...formData, propertyType: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#1A1D27] border border-white/10 text-white focus:outline-none focus:border-sky-500"
-                  >
-                    <option value="hotel">{lang === 'ar' ? 'فندق كامل الخدمات' : 'Full-Service Hotel'}</option>
-                    <option value="apartments">{lang === 'ar' ? 'شقق فندقية مخدومة' : 'Serviced Apartments'}</option>
-                    <option value="boutique">{lang === 'ar' ? 'فندق بوتيك' : 'Boutique Hotel'}</option>
-                    <option value="development">{lang === 'ar' ? 'مشروع قيد التطوير' : 'New Development'}</option>
-                  </select>
+                  <div className="relative">
+                    <select
+                      value={formData.propertyType}
+                      onChange={(e) => setFormData({ ...formData, propertyType: e.target.value })}
+                      className="w-full appearance-none px-3.5 pr-10 rtl:pr-3.5 rtl:pl-10 py-2.5 rounded-xl bg-[#1A1D27] border border-white/10 text-white focus:outline-none focus:border-sky-500 cursor-pointer"
+                    >
+                      <option value="hotel">{lang === 'ar' ? 'فندق كامل الخدمات' : 'Full-Service Hotel'}</option>
+                      <option value="apartments">{lang === 'ar' ? 'شقق فندقية مخدومة' : 'Serviced Apartments'}</option>
+                      <option value="boutique">{lang === 'ar' ? 'فندق بوتيك' : 'Boutique Hotel'}</option>
+                      <option value="development">{lang === 'ar' ? 'مشروع قيد التطوير' : 'New Development'}</option>
+                    </select>
+                    <ChevronDown className="w-4 h-4 text-zinc-400 pointer-events-none absolute right-3 rtl:right-auto rtl:left-3 top-1/2 -translate-y-1/2" />
+                  </div>
                 </div>
                 <div>
                   <label className="block text-zinc-300 font-semibold mb-1">

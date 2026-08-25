@@ -14,7 +14,8 @@ import {
   AlertCircle,
   ExternalLink,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  ChevronDown
 } from 'lucide-react';
 import LeadDetailDrawer from '@/components/admin/LeadDetailDrawer';
 import { useToast } from '@/components/admin/ToastProvider';
@@ -180,39 +181,45 @@ export default function CRMInquiriesPage() {
         </div>
 
         {/* Sector Filter */}
-        <select
-          value={sectorFilter}
-          onChange={(e) => {
-            setSectorFilter(e.target.value);
-            setPage(0);
-          }}
-          className="bg-[#08090C] border border-white/15 text-white text-xs font-semibold rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-blue-500 cursor-pointer"
-        >
-          <option value="all">All Sectors & Types</option>
-          <option value="general">General Inquiry</option>
-          <option value="hospitality">SwissBlue Hospitality</option>
-          <option value="manufacturing">GreenWood Manufacturing</option>
-          <option value="contracting">Contracting & Fit-Out</option>
-          <option value="partnership">Strategic Partnership</option>
-          <option value="tender">Tender / RFP</option>
-        </select>
+        <div className="relative">
+          <select
+            value={sectorFilter}
+            onChange={(e) => {
+              setSectorFilter(e.target.value);
+              setPage(0);
+            }}
+            className="w-full appearance-none bg-[#08090C] border border-white/15 text-white text-xs font-semibold rounded-xl pl-3.5 pr-9 py-2.5 focus:outline-none focus:border-blue-500 cursor-pointer"
+          >
+            <option value="all">All Sectors & Types</option>
+            <option value="general">General Inquiry</option>
+            <option value="hospitality">SwissBlue Hospitality</option>
+            <option value="manufacturing">GreenWood Manufacturing</option>
+            <option value="contracting">Contracting & Fit-Out</option>
+            <option value="partnership">Strategic Partnership</option>
+            <option value="tender">Tender / RFP</option>
+          </select>
+          <ChevronDown className="w-4 h-4 text-zinc-400 pointer-events-none absolute right-3 top-1/2 -translate-y-1/2" />
+        </div>
 
         {/* Status Filter */}
-        <select
-          value={statusFilter}
-          onChange={(e) => {
-            setStatusFilter(e.target.value);
-            setPage(0);
-          }}
-          className="bg-[#08090C] border border-white/15 text-white text-xs font-semibold rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-blue-500 cursor-pointer"
-        >
-          <option value="all">All Pipeline Stages</option>
-          <option value="new">New Leads</option>
-          <option value="contacted">Contacted</option>
-          <option value="in_review">In Review / Proposal</option>
-          <option value="won">Won / Closed Deal</option>
-          <option value="closed">Archived</option>
-        </select>
+        <div className="relative">
+          <select
+            value={statusFilter}
+            onChange={(e) => {
+              setStatusFilter(e.target.value);
+              setPage(0);
+            }}
+            className="w-full appearance-none bg-[#08090C] border border-white/15 text-white text-xs font-semibold rounded-xl pl-3.5 pr-9 py-2.5 focus:outline-none focus:border-blue-500 cursor-pointer"
+          >
+            <option value="all">All Pipeline Stages</option>
+            <option value="new">New Leads</option>
+            <option value="contacted">Contacted</option>
+            <option value="in_review">In Review / Proposal</option>
+            <option value="won">Won / Closed Deal</option>
+            <option value="closed">Archived</option>
+          </select>
+          <ChevronDown className="w-4 h-4 text-zinc-400 pointer-events-none absolute right-3 top-1/2 -translate-y-1/2" />
+        </div>
 
       </div>
 
@@ -269,7 +276,7 @@ export default function CRMInquiriesPage() {
                     </td>
 
                     <td className="py-4 px-4">
-                      <span className={`text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full border ${
+                      <span className={`text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full border whitespace-nowrap shrink-0 inline-flex items-center ${
                         inq.status === 'new'
                           ? 'bg-sky-500/20 text-sky-300 border-sky-500/40'
                           : inq.status === 'contacted'

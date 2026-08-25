@@ -3,6 +3,7 @@
 import React, { useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { 
   Lock, 
   Mail, 
@@ -166,8 +167,14 @@ export default function AdminLoginPage() {
         
         {/* Brand & Portal Header */}
         <div className="text-center space-y-3">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-3xl bg-gradient-to-tr from-blue-600 to-indigo-600 shadow-[0_0_30px_rgba(37,99,235,0.4)] mb-2">
-            <span className="font-extrabold text-2xl tracking-tight text-white font-mono">WD</span>
+          <div className="relative h-14 w-52 mx-auto mb-2 transition-transform hover:scale-105">
+            <Image 
+              src="/brand/wd-group-logo-white.png" 
+              alt="WD Group" 
+              fill 
+              className="object-contain drop-shadow-[0_0_25px_rgba(37,99,235,0.45)]"
+              priority
+            />
           </div>
 
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">

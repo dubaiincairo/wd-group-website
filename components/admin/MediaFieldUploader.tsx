@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useId } from 'react';
 import { 
   UploadCloud, 
   Image as ImageIcon, 
@@ -32,6 +32,7 @@ export default function MediaFieldUploader({
   accept = 'image',
   bucket = 'photos',
 }: MediaFieldUploaderProps) {
+  const inputId = useId();
   const { showToast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
@@ -191,23 +192,24 @@ export default function MediaFieldUploader({
         {/* Upload Controls */}
         <div className="sm:col-span-8 space-y-2">
           
-          {/* Drag & Drop Upload Zone */}
-          <div
+          {/* Drag & Drop Upload Zone (Native Label + File Input) */}
+          <label
+            htmlFor={inputId}
             onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
             onDragLeave={() => setDragOver(false)}
             onDrop={handleDrop}
-            onClick={() => fileInputRef.current?.click()}
-            className={`cursor-pointer border border-dashed rounded-xl p-3 text-center transition-all ${
+            className={`cursor-pointer border border-dashed rounded-xl px-4 py-2.5 block text-center transition-all ${
               dragOver
                 ? 'border-blue-400 bg-blue-500/10'
                 : 'border-white/15 bg-white/5 hover:bg-white/10 hover:border-white/30'
             }`}
           >
             <input
+              id={inputId}
               ref={fileInputRef}
               type="file"
               accept={accept === 'video' ? 'video/mp4,video/webm' : 'image/*'}
-              className="hidden"
+              className="sr-only"
               onChange={(e) => {
                 if (e.target.files?.[0]) handleFileUpload(e.target.files[0]);
               }}
@@ -215,19 +217,21 @@ export default function MediaFieldUploader({
 
             {uploading ? (
               <div className="flex items-center justify-center gap-2 text-xs text-blue-400 font-mono">
-                <RefreshCw className="w-4 h-4 animate-spin" />
+                <RefreshCw className="w-3.5 h-3.5 animate-spin shrink-0" />
                 <span>Uploading to Cloud Storage…</span>
               </div>
             ) : (
-              <div className="flex items-center justify-center gap-2 text-xs text-zinc-300">
-                <UploadCloud className="w-4 h-4 text-blue-400" />
-                <span className="font-semibold">
-                  Click to Upload {accept === 'video' ? 'Video (MP4)' : 'Photo'}
+              <div className="flex items-center justify-center gap-2 text-xs text-zinc-300 whitespace-nowrap overflow-hidden">
+                <UploadCloud className="w-4 h-4 text-blue-400 shrink-0" />
+                <span className="font-semibold text-white">
+                  Upload {accept === 'video' ? 'Video' : 'Photo'}
                 </span>
-                <span className="text-[10px] text-zinc-500">(or drag & drop)</span>
+                <span className="text-[11px] text-zinc-500 font-normal">
+                  (or drag & drop)
+                </span>
               </div>
             )}
-          </div>
+          </label>
 
           {/* Direct URL Input */}
           <div className="flex items-center gap-2">

@@ -13,7 +13,8 @@ import {
   FileCheck,
   ShieldCheck,
   Compass,
-  Building
+  Building,
+  ChevronDown
 } from 'lucide-react';
 
 export default function ContractingPage() {
@@ -238,16 +239,19 @@ export default function ContractingPage() {
                   <label className="block text-zinc-300 font-semibold mb-1">
                     {lang === 'ar' ? 'نوع المشروع *' : 'Project Type *'}
                   </label>
-                  <select
-                    value={formData.projectType}
-                    onChange={(e) => setFormData({ ...formData, projectType: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#1A1D27] border border-white/10 text-white focus:outline-none focus:border-amber-500"
-                  >
-                    <option value="commercial">{lang === 'ar' ? 'تجاري ومكاتب' : 'Commercial & Office'}</option>
-                    <option value="hospitality">{lang === 'ar' ? 'فندقي وضيافة' : 'Hospitality Fit-Out'}</option>
-                    <option value="residential">{lang === 'ar' ? 'سكني ومجمعات' : 'Residential Compound'}</option>
-                    <option value="turnkey">{lang === 'ar' ? 'مقاولات متكاملة تسليم مفتاح' : 'Turnkey General Fit-out'}</option>
-                  </select>
+                  <div className="relative">
+                    <select
+                      value={formData.projectType}
+                      onChange={(e) => setFormData({ ...formData, projectType: e.target.value })}
+                      className="w-full appearance-none px-3.5 pr-10 rtl:pr-3.5 rtl:pl-10 py-2.5 rounded-xl bg-[#1A1D27] border border-white/10 text-white focus:outline-none focus:border-amber-500 cursor-pointer"
+                    >
+                      <option value="commercial">{lang === 'ar' ? 'تجاري ومكاتب' : 'Commercial & Office'}</option>
+                      <option value="hospitality">{lang === 'ar' ? 'فندقي وضيافة' : 'Hospitality Fit-Out'}</option>
+                      <option value="residential">{lang === 'ar' ? 'سكني ومجمعات' : 'Residential Compound'}</option>
+                      <option value="turnkey">{lang === 'ar' ? 'مقاولات متكاملة تسليم مفتاح' : 'Turnkey General Fit-out'}</option>
+                    </select>
+                    <ChevronDown className="w-4 h-4 text-zinc-400 pointer-events-none absolute right-3 rtl:right-auto rtl:left-3 top-1/2 -translate-y-1/2" />
+                  </div>
                 </div>
                 <div>
                   <label className="block text-zinc-300 font-semibold mb-1">
