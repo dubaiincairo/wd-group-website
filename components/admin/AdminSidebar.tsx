@@ -222,10 +222,10 @@ export default function AdminSidebar({
           </div>
           <div className="border-l border-white/10 pl-2.5 rtl:border-l-0 rtl:border-r rtl:pl-0 rtl:pr-2.5">
             <span className="text-[10px] font-mono font-extrabold uppercase tracking-widest text-blue-400 block">
-              OPERATIONS
+              WD GROUP
             </span>
-            <span className="text-[11px] font-bold text-white block -mt-0.5">
-              مجموعة دبليو دي
+            <span className="text-[11px] font-bold text-white block -mt-0.5 whitespace-nowrap">
+              Admin Console
             </span>
           </div>
         </Link>
