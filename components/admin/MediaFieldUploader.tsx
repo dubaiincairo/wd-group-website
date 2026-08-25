@@ -159,19 +159,18 @@ export default function MediaFieldUploader({
                 src={value}
                 alt={label}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=800&q=80';
-                }}
               />
             )
           ) : (
-            <div className="text-center p-3 text-zinc-500">
-              {accept === 'video' ? (
-                <VideoIcon className="w-6 h-6 mx-auto mb-1 opacity-50" />
-              ) : (
-                <ImageIcon className="w-6 h-6 mx-auto mb-1 opacity-50" />
-              )}
-              <span className="text-[10px]">No media selected</span>
+            <div className="flex flex-col items-center justify-center p-3 text-center gap-1.5 select-none">
+              <div className="w-8 h-8 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400">
+                {accept === 'video' ? (
+                  <VideoIcon className="w-4 h-4 text-zinc-400" />
+                ) : (
+                  <ImageIcon className="w-4 h-4 text-zinc-400" />
+                )}
+              </div>
+              <span className="text-[10px] font-medium text-zinc-500">No {accept === 'video' ? 'video' : 'photo'} selected</span>
             </div>
           )}
 

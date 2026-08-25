@@ -13,7 +13,6 @@ export default function SEOAdminPage() {
   const [content, setContent] = useState<SiteContentPayload | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [ogImageError, setOgImageError] = useState(false);
 
   useEffect(() => {
     async function load() {
@@ -180,12 +179,11 @@ export default function SEOAdminPage() {
 
               <div className="bg-black/50 border border-white/15 rounded-2xl overflow-hidden shadow-lg">
                 <div className="aspect-video bg-[#08090C] overflow-hidden relative flex items-center justify-center">
-                  {seo.og_image_url && !ogImageError ? (
+                  {seo.og_image_url ? (
                     <img 
                       src={seo.og_image_url} 
-                      alt="Social Card" 
+                      alt="Social Card Preview" 
                       className="w-full h-full object-cover" 
-                      onError={() => setOgImageError(true)}
                     />
                   ) : (
                     <div className="w-full h-full bg-gradient-to-br from-[#0c1222] via-[#090d18] to-[#040508] relative flex flex-col items-center justify-center p-6 text-center border border-white/5 overflow-hidden">
