@@ -30,7 +30,7 @@ export default function BilingualInput({
   placeholderAr = 'النص العربي…',
   required = false,
 }: BilingualInputProps) {
-  const [activeTab, setActiveTab] = useState<'both' | 'en' | 'ar'>('both');
+  const [activeTab, setActiveTab] = useState<'both' | 'en' | 'ar'>('en');
 
   const isEnComplete = Boolean(valueEn?.trim());
   const isArComplete = Boolean(valueAr?.trim());
@@ -48,23 +48,24 @@ export default function BilingualInput({
           )}
         </div>
 
-        {/* Locale tabs */}
+        {/* Locale tabs (English is default) */}
         <div className="flex items-center gap-1 bg-black/40 border border-white/10 rounded-xl p-0.5">
           <button
             type="button"
-            onClick={() => setActiveTab('both')}
-            className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all ${
-              activeTab === 'both'
+            onClick={() => setActiveTab('en')}
+            className={`px-2.5 py-1 rounded-lg text-[11px] font-bold flex items-center gap-1 transition-all cursor-pointer ${
+              activeTab === 'en'
                 ? 'bg-blue-600 text-white shadow-sm'
                 : 'text-zinc-400 hover:text-white'
             }`}
           >
-            Side-by-Side
+            <span>English</span>
+            <span className={`w-1.5 h-1.5 rounded-full ${isEnComplete ? 'bg-emerald-400' : 'bg-amber-400'}`} />
           </button>
           <button
             type="button"
             onClick={() => setActiveTab('ar')}
-            className={`px-2.5 py-1 rounded-lg text-[11px] font-bold flex items-center gap-1 transition-all ${
+            className={`px-2.5 py-1 rounded-lg text-[11px] font-bold flex items-center gap-1 transition-all cursor-pointer ${
               activeTab === 'ar'
                 ? 'bg-blue-600 text-white shadow-sm'
                 : 'text-zinc-400 hover:text-white'
@@ -75,15 +76,14 @@ export default function BilingualInput({
           </button>
           <button
             type="button"
-            onClick={() => setActiveTab('en')}
-            className={`px-2.5 py-1 rounded-lg text-[11px] font-bold flex items-center gap-1 transition-all ${
-              activeTab === 'en'
+            onClick={() => setActiveTab('both')}
+            className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
+              activeTab === 'both'
                 ? 'bg-blue-600 text-white shadow-sm'
                 : 'text-zinc-400 hover:text-white'
             }`}
           >
-            <span>English</span>
-            <span className={`w-1.5 h-1.5 rounded-full ${isEnComplete ? 'bg-emerald-400' : 'bg-amber-400'}`} />
+            Side-by-Side
           </button>
         </div>
       </div>
