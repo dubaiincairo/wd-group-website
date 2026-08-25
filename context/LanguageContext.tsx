@@ -108,16 +108,27 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
       },
       about: {
         ...baseDict.about,
+        hero: {
+          ...baseDict.about.hero,
+          eyebrow: (isAr ? c.about?.hero_eyebrow_ar : c.about?.hero_eyebrow_en) || baseDict.about.hero.eyebrow,
+          title: (isAr ? c.about?.hero_title_ar : c.about?.hero_title_en) || baseDict.about.hero.title,
+          body: (isAr ? c.about?.hero_body_ar : c.about?.hero_body_en) || baseDict.about.hero.body,
+        },
         story: {
           ...baseDict.about.story,
           heading: (isAr ? c.about?.story_heading_ar : c.about?.story_heading_en) || baseDict.about.story.heading,
           body: (isAr ? c.about?.story_body_ar : c.about?.story_body_en) || baseDict.about.story.body,
+        },
+        governance: {
+          ...baseDict.about.governance,
+          statement: (isAr ? c.about?.governance_statement_ar : c.about?.governance_statement_en) || baseDict.about.governance.statement,
         },
       },
       hospitality: {
         ...baseDict.hospitality,
         hero: {
           ...baseDict.hospitality.hero,
+          eyebrow: (isAr ? c.hospitality?.hero_eyebrow_ar : c.hospitality?.hero_eyebrow_en) || baseDict.hospitality.hero.eyebrow,
           title: (isAr ? c.hospitality?.hero_title_ar : c.hospitality?.hero_title_en) || baseDict.hospitality.hero.title,
           body: (isAr ? c.hospitality?.hero_body_ar : c.hospitality?.hero_body_en) || baseDict.hospitality.hero.body,
         },
@@ -136,6 +147,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
         ...baseDict.manufacturing,
         hero: {
           ...baseDict.manufacturing.hero,
+          eyebrow: (isAr ? c.manufacturing?.hero_eyebrow_ar : c.manufacturing?.hero_eyebrow_en) || baseDict.manufacturing.hero.eyebrow,
           title: (isAr ? c.manufacturing?.hero_title_ar : c.manufacturing?.hero_title_en) || baseDict.manufacturing.hero.title,
           body: (isAr ? c.manufacturing?.hero_body_ar : c.manufacturing?.hero_body_en) || baseDict.manufacturing.hero.body,
         },
@@ -153,6 +165,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
         ...baseDict.contracting,
         hero: {
           ...baseDict.contracting.hero,
+          eyebrow: (isAr ? c.contracting?.hero_eyebrow_ar : c.contracting?.hero_eyebrow_en) || baseDict.contracting.hero.eyebrow,
           title: (isAr ? c.contracting?.hero_title_ar : c.contracting?.hero_title_en) || baseDict.contracting.hero.title,
           body: (isAr ? c.contracting?.hero_body_ar : c.contracting?.hero_body_en) || baseDict.contracting.hero.body,
         },
@@ -164,6 +177,33 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
                 desc: (isAr ? s.desc_ar : s.desc_en) || s.desc_en,
               }))
             : baseDict.contracting.services.list,
+        },
+      },
+      careers: {
+        ...baseDict.careers,
+        hero: {
+          ...baseDict.careers.hero,
+          eyebrow: (isAr ? c.careers?.hero_eyebrow_ar : c.careers?.hero_eyebrow_en) || baseDict.careers.hero.eyebrow,
+          title: (isAr ? c.careers?.hero_title_ar : c.careers?.hero_title_en) || baseDict.careers.hero.title,
+          body: (isAr ? c.careers?.hero_body_ar : c.careers?.hero_body_en) || baseDict.careers.hero.body,
+          proof: (isAr ? c.careers?.hero_proof_ar : c.careers?.hero_proof_en) || baseDict.careers.hero.proof,
+        },
+      },
+      contact: {
+        ...baseDict.contact,
+        hero: {
+          ...baseDict.contact.hero,
+          eyebrow: (isAr ? c.contact?.hero_eyebrow_ar : c.contact?.hero_eyebrow_en) || baseDict.contact.hero.eyebrow,
+          title: (isAr ? c.contact?.hero_title_ar : c.contact?.hero_title_en) || baseDict.contact.hero.title,
+          body: (isAr ? c.contact?.hero_body_ar : c.contact?.hero_body_en) || baseDict.contact.hero.body,
+        },
+        cards: {
+          ...baseDict.contact.cards,
+          hq_address: (isAr ? (c.settings?.headquarters_ar || c.contact?.hq_address_ar) : (c.settings?.headquarters_en || c.contact?.hq_address_en)) || baseDict.contact.cards.hq_address,
+          general_email: c.settings?.general_email || c.contact?.general_email || baseDict.contact.cards.general_email,
+          secondary_email: c.settings?.secondary_email || c.contact?.secondary_email || baseDict.contact.cards.secondary_email,
+          primary_phone: c.settings?.primary_phone || c.contact?.primary_phone || baseDict.contact.cards.primary_phone,
+          secondary_phone: c.settings?.secondary_phone || c.contact?.secondary_phone || baseDict.contact.cards.secondary_phone,
         },
       },
     };

@@ -7,20 +7,21 @@ import {
   Edit3, 
   Save, 
   RotateCcw, 
-  Globe, 
   CheckCircle2, 
-  Sparkles, 
-  ChevronUp, 
   ChevronDown, 
-  X, 
-  Sliders, 
-  Eye, 
+  ChevronUp,
   ExternalLink,
-  Layers,
+  MapPin,
+  Mail,
+  Phone,
   Building2,
   Factory,
   HardHat,
-  MessageSquare
+  Briefcase,
+  Home,
+  Info,
+  Layers,
+  Sparkles
 } from 'lucide-react';
 
 export default function LiveEditorDock() {
@@ -31,16 +32,36 @@ export default function LiveEditorDock() {
   const [saving, setSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'hero' | 'metrics' | 'synergy' | 'identity' | 'ceo' | 'sectors'>('hero');
   const [localEdits, setLocalEdits] = useState<any>(null);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+
+  // Derive current page from pathname
+  const getCurrentPageKey = (path: string): 'home' | 'about' | 'hospitality' | 'manufacturing' | 'contracting' | 'careers' | 'contact' => {
+    if (!path || path === '/') return 'home';
+    if (path.startsWith('/about')) return 'about';
+    if (path.startsWith('/sectors/hospitality')) return 'hospitality';
+    if (path.startsWith('/sectors/manufacturing')) return 'manufacturing';
+    if (path.startsWith('/sectors/contracting')) return 'contracting';
+    if (path.startsWith('/careers')) return 'careers';
+    if (path.startsWith('/contact')) return 'contact';
+    return 'home';
+  };
+
+  const [selectedPage, setSelectedPage] = useState<'home' | 'about' | 'hospitality' | 'manufacturing' | 'contracting' | 'careers' | 'contact'>('home');
+
+  // Sync selectedPage whenever pathname changes
+  useEffect(() => {
+    if (pathname) {
+      setSelectedPage(getCurrentPageKey(pathname));
+    }
+  }, [pathname]);
 
   // Suppress completely on admin routes
   if (pathname?.startsWith('/admin')) {
     return null;
   }
 
-  // Initialize editable fields from current dynamic content or dictionary
+  // Initialize editable fields from API / dynamicContent
   useEffect(() => {
     async function initEditorContent() {
       try {
@@ -100,30 +121,90 @@ export default function LiveEditorDock() {
             title_ar: dict.home.ceo.title,
           },
         },
+        about: {
+          hero_eyebrow_en: dict.about.hero.eyebrow,
+          hero_eyebrow_ar: dict.about.hero.eyebrow,
+          hero_title_en: dict.about.hero.title,
+          hero_title_ar: dict.about.hero.title,
+          hero_body_en: dict.about.hero.body,
+          hero_body_ar: dict.about.hero.body,
+          story_heading_en: dict.about.story.heading,
+          story_heading_ar: dict.about.story.heading,
+          story_body_en: dict.about.story.body,
+          story_body_ar: dict.about.story.body,
+          governance_statement_en: dict.about.governance.statement,
+          governance_statement_ar: dict.about.governance.statement,
+        },
+        hospitality: {
+          hero_eyebrow_en: dict.hospitality.hero.eyebrow,
+          hero_eyebrow_ar: dict.hospitality.hero.eyebrow,
+          hero_title_en: dict.hospitality.hero.title,
+          hero_title_ar: dict.hospitality.hero.title,
+          hero_body_en: dict.hospitality.hero.body,
+          hero_body_ar: dict.hospitality.hero.body,
+        },
+        manufacturing: {
+          hero_eyebrow_en: dict.manufacturing.hero.eyebrow,
+          hero_eyebrow_ar: dict.manufacturing.hero.eyebrow,
+          hero_title_en: dict.manufacturing.hero.title,
+          hero_title_ar: dict.manufacturing.hero.title,
+          hero_body_en: dict.manufacturing.hero.body,
+          hero_body_ar: dict.manufacturing.hero.body,
+        },
+        contracting: {
+          hero_eyebrow_en: dict.contracting.hero.eyebrow,
+          hero_eyebrow_ar: dict.contracting.hero.eyebrow,
+          hero_title_en: dict.contracting.hero.title,
+          hero_title_ar: dict.contracting.hero.title,
+          hero_body_en: dict.contracting.hero.body,
+          hero_body_ar: dict.contracting.hero.body,
+        },
+        careers: {
+          hero_eyebrow_en: dict.careers.hero.eyebrow,
+          hero_eyebrow_ar: dict.careers.hero.eyebrow,
+          hero_title_en: dict.careers.hero.title,
+          hero_title_ar: dict.careers.hero.title,
+          hero_body_en: dict.careers.hero.body,
+          hero_body_ar: dict.careers.hero.body,
+          hero_proof_en: dict.careers.hero.proof,
+          hero_proof_ar: dict.careers.hero.proof,
+        },
+        contact: {
+          hero_eyebrow_en: dict.contact.hero.eyebrow,
+          hero_eyebrow_ar: dict.contact.hero.eyebrow,
+          hero_title_en: dict.contact.hero.title,
+          hero_title_ar: dict.contact.hero.title,
+          hero_body_en: dict.contact.hero.body,
+          hero_body_ar: dict.contact.hero.body,
+          hq_address_en: dict.contact.cards.hq_address,
+          hq_address_ar: dict.contact.cards.hq_address,
+          general_email: dict.contact.cards.general_email,
+          secondary_email: dict.contact.cards.secondary_email,
+          primary_phone: dict.contact.cards.primary_phone,
+          secondary_phone: dict.contact.cards.secondary_phone,
+        },
       });
     }
 
     initEditorContent();
   }, []);
 
-  // Update a nested field and reflect immediately in LanguageContext
-  const handleFieldChange = (section: string, subSection: string, field: string, value: string) => {
+  // Update a field and reflect immediately in LanguageContext
+  const updateField = (pathArray: string[], value: string) => {
     setLocalEdits((prev: any) => {
-      const updated = {
-        ...prev,
-        [section]: {
-          ...(prev?.[section] || {}),
-          [subSection]: {
-            ...(prev?.[section]?.[subSection] || {}),
-            [field]: value,
-          },
-        },
-      };
+      const copy = JSON.parse(JSON.stringify(prev || {}));
+      let cur = copy;
+      for (let i = 0; i < pathArray.length - 1; i++) {
+        const key = pathArray[i];
+        if (!cur[key]) cur[key] = {};
+        cur = cur[key];
+      }
+      cur[pathArray[pathArray.length - 1]] = value;
 
       // Instantly push to dynamicContent so all components on the page re-render live
-      setDynamicContent(updated);
+      setDynamicContent(copy);
       setHasUnsavedChanges(true);
-      return updated;
+      return copy;
     });
   };
 
@@ -177,6 +258,16 @@ export default function LiveEditorDock() {
 
   if (!localEdits) return null;
 
+  const PAGE_OPTIONS = [
+    { id: 'home', label: lang === 'ar' ? 'الرئيسية (/)' : 'Homepage (/)', icon: Home },
+    { id: 'about', label: lang === 'ar' ? 'من نحن (/about)' : 'About Us (/about)', icon: Info },
+    { id: 'hospitality', label: lang === 'ar' ? 'قطاع الضيافة' : 'Hospitality', icon: Building2 },
+    { id: 'manufacturing', label: lang === 'ar' ? 'قطاع التصنيع' : 'Manufacturing', icon: Factory },
+    { id: 'contracting', label: lang === 'ar' ? 'قطاع المقاولات' : 'Contracting', icon: HardHat },
+    { id: 'careers', label: lang === 'ar' ? 'الوظائف (/careers)' : 'Careers (/careers)', icon: Briefcase },
+    { id: 'contact', label: lang === 'ar' ? 'تواصل معنا (/contact)' : 'Contact Us (/contact)', icon: Mail },
+  ];
+
   return (
     <div className="fixed bottom-5 inset-x-0 z-50 pointer-events-none flex justify-center px-4">
       
@@ -193,7 +284,7 @@ export default function LiveEditorDock() {
           </span>
           <Edit3 className="w-4 h-4 text-blue-400 group-hover:rotate-12 transition-transform" />
           <span className="text-xs font-bold tracking-wide">
-            {lang === 'ar' ? 'محرر النصوص المباشر' : 'Live Visual Editor'}
+            {lang === 'ar' ? `محرر الصفحة: ${pathname || '/'}` : `Live Editor: ${pathname || '/'}`}
           </span>
           {hasUnsavedChanges && (
             <span className="text-[10px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full border border-amber-500/30 font-mono font-bold">
@@ -203,7 +294,7 @@ export default function LiveEditorDock() {
         </button>
       ) : (
         /* Full Floating Editor HUD */
-        <div className="pointer-events-auto w-full max-w-4xl bg-[#0F1117]/95 border border-white/20 rounded-3xl p-4 sm:p-5 shadow-2xl backdrop-blur-2xl text-white space-y-4 animate-in slide-in-from-bottom-5 duration-200">
+        <div className="pointer-events-auto w-full max-w-4xl bg-[#0F1117]/95 border border-white/20 rounded-3xl p-4 sm:p-5 shadow-2xl backdrop-blur-2xl text-white space-y-3.5 animate-in slide-in-from-bottom-5 duration-200">
           
           {/* Header Action Bar */}
           <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-white/10">
@@ -215,14 +306,14 @@ export default function LiveEditorDock() {
               <div>
                 <div className="flex items-center gap-2">
                   <h4 className="text-xs sm:text-sm font-bold text-white">
-                    {lang === 'ar' ? 'محرر النصوص المباشر (CMS)' : 'Live On-Page Visual Editor'}
+                    {lang === 'ar' ? 'محرر النصوص المباشر' : 'Live On-Page Visual Editor'}
                   </h4>
                   <span className="text-[9px] font-mono font-bold px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30">
-                    REALTIME PREVIEW
+                    MATCHING URL: {pathname || '/'}
                   </span>
                 </div>
                 <p className="text-[11px] text-zinc-400">
-                  {lang === 'ar' ? 'عدّل أي نص لتجربته فوراً على الصفحة ومزامنته مع لوحة التحكم' : 'Type to preview instantly on the live webpage and sync with Admin CMS'}
+                  {lang === 'ar' ? 'التعديلات تنعكس مباشرة أثناء الكتابة وتُحفظ في لوحة التحكم' : 'Type to preview changes live and sync directly with the Admin Panel'}
                 </p>
               </div>
             </div>
@@ -288,7 +379,7 @@ export default function LiveEditorDock() {
             <div className="p-2.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs flex items-center justify-between animate-in fade-in">
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                <span>{lang === 'ar' ? 'تم حفظ التعديلات بنجاح وتحديث لوحة التحكم والموقع مباشرة!' : 'Changes saved! Text updated live on the website and synced with the Admin Panel.'}</span>
+                <span>{lang === 'ar' ? 'تم حفظ التعديلات وتحديث لوحة التحكم والموقع مباشرة!' : 'Changes saved! Text updated live and synced with Admin Panel.'}</span>
               </div>
               <a
                 href="/admin/content/pages"
@@ -309,39 +400,38 @@ export default function LiveEditorDock() {
             </div>
           )}
 
-          {/* Section Tabs */}
+          {/* Active Page Navigation Tabs */}
           <div className="flex flex-wrap items-center gap-1.5 border-b border-white/5 pb-2">
-            {[
-              { id: 'hero', label: lang === 'ar' ? 'الهيدر والشعار (Hero)' : 'Hero & Slogans' },
-              { id: 'metrics', label: lang === 'ar' ? 'أرقام المجموعة (Metrics)' : 'Metrics & Counters' },
-              { id: 'synergy', label: lang === 'ar' ? 'سلسلة القيمة (Synergy)' : 'Holding Synergy' },
-              { id: 'ceo', label: lang === 'ar' ? 'كلمة القيادة (CEO Quote)' : 'CEO & Leadership' },
-            ].map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id as any)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                  activeTab === tab.id
-                    ? 'bg-blue-600/30 text-blue-300 border border-blue-500/40'
-                    : 'text-zinc-400 hover:text-white hover:bg-white/5 border border-transparent'
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))}
+            {PAGE_OPTIONS.map((page) => {
+              const Icon = page.icon;
+              const isSelected = selectedPage === page.id;
+              return (
+                <button
+                  key={page.id}
+                  onClick={() => setSelectedPage(page.id as any)}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                    isSelected
+                      ? 'bg-blue-600 text-white shadow-sm ring-1 ring-blue-400/50'
+                      : 'text-zinc-400 hover:text-white hover:bg-white/5 border border-transparent'
+                  }`}
+                >
+                  <Icon className="w-3.5 h-3.5" />
+                  <span>{page.label}</span>
+                </button>
+              );
+            })}
           </div>
 
-          {/* Live Editable Fields Form Container */}
-          <div className="max-h-60 overflow-y-auto pr-1 space-y-3 text-xs">
+          {/* Live Editable Fields Container */}
+          <div className="max-h-64 overflow-y-auto pr-1 space-y-3.5 text-xs">
             
-            {/* TAB 1: HERO & SLOGANS */}
-            {activeTab === 'hero' && (
+            {/* ══════════ PAGE 1: HOMEPAGE (/) ══════════ */}
+            {selectedPage === 'home' && (
               <div className="space-y-3">
-                
                 {/* 3-Line Headline Section */}
                 <div className="p-3 rounded-2xl bg-white/5 border border-white/10 space-y-2.5">
                   <div className="text-[11px] font-mono font-bold text-blue-400 uppercase">
-                    // Main 3-Line Slogan Headline
+                    // Homepage 3-Line Slogan Headline
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -350,8 +440,8 @@ export default function LiveEditorDock() {
                       <input
                         type="text"
                         value={localEdits.home?.hero?.title_line1_en || ''}
-                        onChange={(e) => handleFieldChange('home', 'hero', 'title_line1_en', e.target.value)}
-                        className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white focus:outline-none focus:border-blue-500"
+                        onChange={(e) => updateField(['home', 'hero', 'title_line1_en'], e.target.value)}
+                        className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"
                         placeholder="Solid Vision."
                       />
                     </div>
@@ -361,8 +451,8 @@ export default function LiveEditorDock() {
                         type="text"
                         dir="rtl"
                         value={localEdits.home?.hero?.title_line1_ar || ''}
-                        onChange={(e) => handleFieldChange('home', 'hero', 'title_line1_ar', e.target.value)}
-                        className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white focus:outline-none focus:border-blue-500"
+                        onChange={(e) => updateField(['home', 'hero', 'title_line1_ar'], e.target.value)}
+                        className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"
                         placeholder="رؤية راسخة."
                       />
                     </div>
@@ -374,8 +464,8 @@ export default function LiveEditorDock() {
                       <input
                         type="text"
                         value={localEdits.home?.hero?.title_line2_en || ''}
-                        onChange={(e) => handleFieldChange('home', 'hero', 'title_line2_en', e.target.value)}
-                        className="w-full px-3 py-2 rounded-xl bg-sky-950/40 border border-sky-500/40 text-sky-200 focus:outline-none focus:border-sky-400"
+                        onChange={(e) => updateField(['home', 'hero', 'title_line2_en'], e.target.value)}
+                        className="w-full px-3 py-2 rounded-xl bg-sky-950/40 border border-sky-500/40 text-sky-200"
                         placeholder="Diverse Sectors."
                       />
                     </div>
@@ -385,8 +475,8 @@ export default function LiveEditorDock() {
                         type="text"
                         dir="rtl"
                         value={localEdits.home?.hero?.title_line2_ar || ''}
-                        onChange={(e) => handleFieldChange('home', 'hero', 'title_line2_ar', e.target.value)}
-                        className="w-full px-3 py-2 rounded-xl bg-sky-950/40 border border-sky-500/40 text-sky-200 focus:outline-none focus:border-sky-400"
+                        onChange={(e) => updateField(['home', 'hero', 'title_line2_ar'], e.target.value)}
+                        className="w-full px-3 py-2 rounded-xl bg-sky-950/40 border border-sky-500/40 text-sky-200"
                         placeholder="قطاعات متعددة."
                       />
                     </div>
@@ -398,8 +488,8 @@ export default function LiveEditorDock() {
                       <input
                         type="text"
                         value={localEdits.home?.hero?.title_line3_en || ''}
-                        onChange={(e) => handleFieldChange('home', 'hero', 'title_line3_en', e.target.value)}
-                        className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white focus:outline-none focus:border-blue-500"
+                        onChange={(e) => updateField(['home', 'hero', 'title_line3_en'], e.target.value)}
+                        className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"
                         placeholder="Promising Future."
                       />
                     </div>
@@ -409,8 +499,8 @@ export default function LiveEditorDock() {
                         type="text"
                         dir="rtl"
                         value={localEdits.home?.hero?.title_line3_ar || ''}
-                        onChange={(e) => handleFieldChange('home', 'hero', 'title_line3_ar', e.target.value)}
-                        className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white focus:outline-none focus:border-blue-500"
+                        onChange={(e) => updateField(['home', 'hero', 'title_line3_ar'], e.target.value)}
+                        className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"
                         placeholder="مستقبل واعد."
                       />
                     </div>
@@ -424,8 +514,8 @@ export default function LiveEditorDock() {
                     <textarea
                       rows={2}
                       value={localEdits.home?.hero?.body_en || ''}
-                      onChange={(e) => handleFieldChange('home', 'hero', 'body_en', e.target.value)}
-                      className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white focus:outline-none focus:border-blue-500 resize-none"
+                      onChange={(e) => updateField(['home', 'hero', 'body_en'], e.target.value)}
+                      className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white resize-none"
                     />
                   </div>
                   <div>
@@ -434,172 +524,7 @@ export default function LiveEditorDock() {
                       rows={2}
                       dir="rtl"
                       value={localEdits.home?.hero?.body_ar || ''}
-                      onChange={(e) => handleFieldChange('home', 'hero', 'body_ar', e.target.value)}
-                      className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white focus:outline-none focus:border-blue-500 resize-none"
-                    />
-                  </div>
-                </div>
-
-              </div>
-            )}
-
-            {/* TAB 2: METRICS & COUNTERS */}
-            {activeTab === 'metrics' && (
-              <div className="space-y-3">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div className="p-3 rounded-2xl bg-white/5 border border-white/10 space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-mono text-sky-400">Metric 1 (Hospitality)</span>
-                      <input
-                        type="text"
-                        value={localEdits.home?.metrics?.stat1_num || '6'}
-                        onChange={(e) => handleFieldChange('home', 'metrics', 'stat1_num', e.target.value)}
-                        className="w-14 text-center px-2 py-1 rounded-lg bg-black/50 border border-sky-400/40 text-sky-300 font-mono font-bold text-xs"
-                      />
-                    </div>
-                    <input
-                      type="text"
-                      value={localEdits.home?.metrics?.stat1_text_en || ''}
-                      onChange={(e) => handleFieldChange('home', 'metrics', 'stat1_text_en', e.target.value)}
-                      placeholder="Label in English"
-                      className="w-full px-2.5 py-1.5 rounded-lg bg-black/40 border border-white/10 text-xs"
-                    />
-                    <input
-                      type="text"
-                      dir="rtl"
-                      value={localEdits.home?.metrics?.stat1_text_ar || ''}
-                      onChange={(e) => handleFieldChange('home', 'metrics', 'stat1_text_ar', e.target.value)}
-                      placeholder="الوصف بالعربية"
-                      className="w-full px-2.5 py-1.5 rounded-lg bg-black/40 border border-white/10 text-xs"
-                    />
-                  </div>
-
-                  <div className="p-3 rounded-2xl bg-white/5 border border-white/10 space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-mono text-emerald-400">Metric 2 (Manufacturing)</span>
-                      <input
-                        type="text"
-                        value={localEdits.home?.metrics?.stat2_num || '3'}
-                        onChange={(e) => handleFieldChange('home', 'metrics', 'stat2_num', e.target.value)}
-                        className="w-14 text-center px-2 py-1 rounded-lg bg-black/50 border border-emerald-400/40 text-emerald-300 font-mono font-bold text-xs"
-                      />
-                    </div>
-                    <input
-                      type="text"
-                      value={localEdits.home?.metrics?.stat2_text_en || ''}
-                      onChange={(e) => handleFieldChange('home', 'metrics', 'stat2_text_en', e.target.value)}
-                      placeholder="Label in English"
-                      className="w-full px-2.5 py-1.5 rounded-lg bg-black/40 border border-white/10 text-xs"
-                    />
-                    <input
-                      type="text"
-                      dir="rtl"
-                      value={localEdits.home?.metrics?.stat2_text_ar || ''}
-                      onChange={(e) => handleFieldChange('home', 'metrics', 'stat2_text_ar', e.target.value)}
-                      placeholder="الوصف بالعربية"
-                      className="w-full px-2.5 py-1.5 rounded-lg bg-black/40 border border-white/10 text-xs"
-                    />
-                  </div>
-
-                  <div className="p-3 rounded-2xl bg-white/5 border border-white/10 space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-mono text-amber-400">Metric 3 (Professionals)</span>
-                      <input
-                        type="text"
-                        value={localEdits.home?.metrics?.stat3_num || '80+'}
-                        onChange={(e) => handleFieldChange('home', 'metrics', 'stat3_num', e.target.value)}
-                        className="w-14 text-center px-2 py-1 rounded-lg bg-black/50 border border-amber-400/40 text-amber-300 font-mono font-bold text-xs"
-                      />
-                    </div>
-                    <input
-                      type="text"
-                      value={localEdits.home?.metrics?.stat3_text_en || ''}
-                      onChange={(e) => handleFieldChange('home', 'metrics', 'stat3_text_en', e.target.value)}
-                      placeholder="Label in English"
-                      className="w-full px-2.5 py-1.5 rounded-lg bg-black/40 border border-white/10 text-xs"
-                    />
-                    <input
-                      type="text"
-                      dir="rtl"
-                      value={localEdits.home?.metrics?.stat3_text_ar || ''}
-                      onChange={(e) => handleFieldChange('home', 'metrics', 'stat3_text_ar', e.target.value)}
-                      placeholder="الوصف بالعربية"
-                      className="w-full px-2.5 py-1.5 rounded-lg bg-black/40 border border-white/10 text-xs"
-                    />
-                  </div>
-
-                  <div className="p-3 rounded-2xl bg-white/5 border border-white/10 space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-mono text-blue-400">Metric 4 (Sectors)</span>
-                      <input
-                        type="text"
-                        value={localEdits.home?.metrics?.stat4_num || '3'}
-                        onChange={(e) => handleFieldChange('home', 'metrics', 'stat4_num', e.target.value)}
-                        className="w-14 text-center px-2 py-1 rounded-lg bg-black/50 border border-blue-400/40 text-blue-300 font-mono font-bold text-xs"
-                      />
-                    </div>
-                    <input
-                      type="text"
-                      value={localEdits.home?.metrics?.stat4_text_en || ''}
-                      onChange={(e) => handleFieldChange('home', 'metrics', 'stat4_text_en', e.target.value)}
-                      placeholder="Label in English"
-                      className="w-full px-2.5 py-1.5 rounded-lg bg-black/40 border border-white/10 text-xs"
-                    />
-                    <input
-                      type="text"
-                      dir="rtl"
-                      value={localEdits.home?.metrics?.stat4_text_ar || ''}
-                      onChange={(e) => handleFieldChange('home', 'metrics', 'stat4_text_ar', e.target.value)}
-                      placeholder="الوصف بالعربية"
-                      className="w-full px-2.5 py-1.5 rounded-lg bg-black/40 border border-white/10 text-xs"
-                    />
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* TAB 3: HOLDING SYNERGY */}
-            {activeTab === 'synergy' && (
-              <div className="space-y-3">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                  <div>
-                    <label className="block text-[11px] text-zinc-400 mb-1">Synergy Heading (English)</label>
-                    <input
-                      type="text"
-                      value={localEdits.home?.synergy?.heading_en || ''}
-                      onChange={(e) => handleFieldChange('home', 'synergy', 'heading_en', e.target.value)}
-                      className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-[11px] text-zinc-400 mb-1">Synergy Heading (Arabic)</label>
-                    <input
-                      type="text"
-                      dir="rtl"
-                      value={localEdits.home?.synergy?.heading_ar || ''}
-                      onChange={(e) => handleFieldChange('home', 'synergy', 'heading_ar', e.target.value)}
-                      className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                  <div>
-                    <label className="block text-[11px] text-zinc-400 mb-1">Synergy Intro (English)</label>
-                    <textarea
-                      rows={2}
-                      value={localEdits.home?.synergy?.intro_en || ''}
-                      onChange={(e) => handleFieldChange('home', 'synergy', 'intro_en', e.target.value)}
-                      className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white resize-none"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-[11px] text-zinc-400 mb-1">Synergy Intro (Arabic)</label>
-                    <textarea
-                      rows={2}
-                      dir="rtl"
-                      value={localEdits.home?.synergy?.intro_ar || ''}
-                      onChange={(e) => handleFieldChange('home', 'synergy', 'intro_ar', e.target.value)}
+                      onChange={(e) => updateField(['home', 'hero', 'body_ar'], e.target.value)}
                       className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white resize-none"
                     />
                   </div>
@@ -607,50 +532,420 @@ export default function LiveEditorDock() {
               </div>
             )}
 
-            {/* TAB 4: CEO QUOTE */}
-            {activeTab === 'ceo' && (
+            {/* ══════════ PAGE 2: CONTACT US (/contact) ══════════ */}
+            {selectedPage === 'contact' && (
               <div className="space-y-3">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                  <div>
-                    <label className="block text-[11px] text-zinc-400 mb-1">CEO Quote (English)</label>
-                    <textarea
-                      rows={3}
-                      value={localEdits.home?.ceo?.quote_en || ''}
-                      onChange={(e) => handleFieldChange('home', 'ceo', 'quote_en', e.target.value)}
-                      className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white resize-none"
-                    />
+                {/* Contact Hero */}
+                <div className="p-3 rounded-2xl bg-white/5 border border-white/10 space-y-2.5">
+                  <div className="text-[11px] font-mono font-bold text-blue-400 uppercase">
+                    // Contact Us Header & Tagline
                   </div>
-                  <div>
-                    <label className="block text-[11px] text-zinc-400 mb-1">CEO Quote (Arabic)</label>
-                    <textarea
-                      rows={3}
-                      dir="rtl"
-                      value={localEdits.home?.ceo?.quote_ar || ''}
-                      onChange={(e) => handleFieldChange('home', 'ceo', 'quote_ar', e.target.value)}
-                      className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white resize-none"
-                    />
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <div>
+                      <label className="block text-[11px] text-zinc-400 mb-1">Hero Eyebrow (English)</label>
+                      <input
+                        type="text"
+                        value={localEdits.contact?.hero_eyebrow_en || ''}
+                        onChange={(e) => updateField(['contact', 'hero_eyebrow_en'], e.target.value)}
+                        className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"
+                        placeholder="CONTACT WD GROUP"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] text-zinc-400 mb-1">Hero Eyebrow (Arabic)</label>
+                      <input
+                        type="text"
+                        dir="rtl"
+                        value={localEdits.contact?.hero_eyebrow_ar || ''}
+                        onChange={(e) => updateField(['contact', 'hero_eyebrow_ar'], e.target.value)}
+                        className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"
+                        placeholder="تواصل مع مجموعة دبليو دي"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <div>
+                      <label className="block text-[11px] text-zinc-400 mb-1">Main Headline (English)</label>
+                      <input
+                        type="text"
+                        value={localEdits.contact?.hero_title_en || ''}
+                        onChange={(e) => updateField(['contact', 'hero_title_en'], e.target.value)}
+                        className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white font-bold"
+                        placeholder="Let's Start the Right Conversation"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] text-zinc-400 mb-1">Main Headline (Arabic)</label>
+                      <input
+                        type="text"
+                        dir="rtl"
+                        value={localEdits.contact?.hero_title_ar || ''}
+                        onChange={(e) => updateField(['contact', 'hero_title_ar'], e.target.value)}
+                        className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white font-bold"
+                        placeholder="لنبدأ الحوار المناسب"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <div>
+                      <label className="block text-[11px] text-zinc-400 mb-1">Subtitle Description (English)</label>
+                      <textarea
+                        rows={2}
+                        value={localEdits.contact?.hero_body_en || ''}
+                        onChange={(e) => updateField(['contact', 'hero_body_en'], e.target.value)}
+                        className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white resize-none"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] text-zinc-400 mb-1">Subtitle Description (Arabic)</label>
+                      <textarea
+                        rows={2}
+                        dir="rtl"
+                        value={localEdits.contact?.hero_body_ar || ''}
+                        onChange={(e) => updateField(['contact', 'hero_body_ar'], e.target.value)}
+                        className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white resize-none"
+                      />
+                    </div>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                  <div>
-                    <label className="block text-[11px] text-zinc-400 mb-1">Leader Name (English)</label>
-                    <input
-                      type="text"
-                      value={localEdits.home?.ceo?.name_en || ''}
-                      onChange={(e) => handleFieldChange('home', 'ceo', 'name_en', e.target.value)}
-                      className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"
-                    />
+                {/* Contact Coordinates */}
+                <div className="p-3 rounded-2xl bg-white/5 border border-white/10 space-y-2.5">
+                  <div className="text-[11px] font-mono font-bold text-sky-400 uppercase">
+                    // Official Contact Coordinates & Headquarters
                   </div>
-                  <div>
-                    <label className="block text-[11px] text-zinc-400 mb-1">Leader Name (Arabic)</label>
-                    <input
-                      type="text"
-                      dir="rtl"
-                      value={localEdits.home?.ceo?.name_ar || ''}
-                      onChange={(e) => handleFieldChange('home', 'ceo', 'name_ar', e.target.value)}
-                      className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"
-                    />
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <div>
+                      <label className="block text-[11px] text-zinc-400 mb-1">Headquarters Address (English)</label>
+                      <input
+                        type="text"
+                        value={localEdits.settings?.headquarters_en || localEdits.contact?.hq_address_en || ''}
+                        onChange={(e) => {
+                          updateField(['settings', 'headquarters_en'], e.target.value);
+                          updateField(['contact', 'hq_address_en'], e.target.value);
+                        }}
+                        className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] text-zinc-400 mb-1">Headquarters Address (Arabic)</label>
+                      <input
+                        type="text"
+                        dir="rtl"
+                        value={localEdits.settings?.headquarters_ar || localEdits.contact?.hq_address_ar || ''}
+                        onChange={(e) => {
+                          updateField(['settings', 'headquarters_ar'], e.target.value);
+                          updateField(['contact', 'hq_address_ar'], e.target.value);
+                        }}
+                        className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <div>
+                      <label className="block text-[11px] text-zinc-400 mb-1">General Email</label>
+                      <input
+                        type="text"
+                        value={localEdits.settings?.general_email || localEdits.contact?.general_email || ''}
+                        onChange={(e) => {
+                          updateField(['settings', 'general_email'], e.target.value);
+                          updateField(['contact', 'general_email'], e.target.value);
+                        }}
+                        className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white font-mono"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] text-zinc-400 mb-1">Primary Phone</label>
+                      <input
+                        type="text"
+                        value={localEdits.settings?.primary_phone || localEdits.contact?.primary_phone || ''}
+                        onChange={(e) => {
+                          updateField(['settings', 'primary_phone'], e.target.value);
+                          updateField(['contact', 'primary_phone'], e.target.value);
+                        }}
+                        className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white font-mono"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* ══════════ PAGE 3: ABOUT US (/about) ══════════ */}
+            {selectedPage === 'about' && (
+              <div className="space-y-3">
+                <div className="p-3 rounded-2xl bg-white/5 border border-white/10 space-y-2.5">
+                  <div className="text-[11px] font-mono font-bold text-blue-400 uppercase">
+                    // About Us Hero & Story
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <div>
+                      <label className="block text-[11px] text-zinc-400 mb-1">Headline (English)</label>
+                      <input
+                        type="text"
+                        value={localEdits.about?.hero_title_en || ''}
+                        onChange={(e) => updateField(['about', 'hero_title_en'], e.target.value)}
+                        className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white font-bold"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] text-zinc-400 mb-1">Headline (Arabic)</label>
+                      <input
+                        type="text"
+                        dir="rtl"
+                        value={localEdits.about?.hero_title_ar || ''}
+                        onChange={(e) => updateField(['about', 'hero_title_ar'], e.target.value)}
+                        className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white font-bold"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <div>
+                      <label className="block text-[11px] text-zinc-400 mb-1">Story Narrative (English)</label>
+                      <textarea
+                        rows={3}
+                        value={localEdits.about?.story_body_en || ''}
+                        onChange={(e) => updateField(['about', 'story_body_en'], e.target.value)}
+                        className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white resize-none"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] text-zinc-400 mb-1">Story Narrative (Arabic)</label>
+                      <textarea
+                        rows={3}
+                        dir="rtl"
+                        value={localEdits.about?.story_body_ar || ''}
+                        onChange={(e) => updateField(['about', 'story_body_ar'], e.target.value)}
+                        className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white resize-none"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* ══════════ PAGE 4: HOSPITALITY ══════════ */}
+            {selectedPage === 'hospitality' && (
+              <div className="space-y-3">
+                <div className="p-3 rounded-2xl bg-white/5 border border-white/10 space-y-2.5">
+                  <div className="text-[11px] font-mono font-bold text-sky-400 uppercase">
+                    // SwissBlue Hospitality Hero
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <div>
+                      <label className="block text-[11px] text-zinc-400 mb-1">Headline (English)</label>
+                      <input
+                        type="text"
+                        value={localEdits.hospitality?.hero_title_en || ''}
+                        onChange={(e) => updateField(['hospitality', 'hero_title_en'], e.target.value)}
+                        className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white font-bold"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] text-zinc-400 mb-1">Headline (Arabic)</label>
+                      <input
+                        type="text"
+                        dir="rtl"
+                        value={localEdits.hospitality?.hero_title_ar || ''}
+                        onChange={(e) => updateField(['hospitality', 'hero_title_ar'], e.target.value)}
+                        className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white font-bold"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <div>
+                      <label className="block text-[11px] text-zinc-400 mb-1">Description (English)</label>
+                      <textarea
+                        rows={2}
+                        value={localEdits.hospitality?.hero_body_en || ''}
+                        onChange={(e) => updateField(['hospitality', 'hero_body_en'], e.target.value)}
+                        className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white resize-none"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] text-zinc-400 mb-1">Description (Arabic)</label>
+                      <textarea
+                        rows={2}
+                        dir="rtl"
+                        value={localEdits.hospitality?.hero_body_ar || ''}
+                        onChange={(e) => updateField(['hospitality', 'hero_body_ar'], e.target.value)}
+                        className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white resize-none"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* ══════════ PAGE 5: MANUFACTURING ══════════ */}
+            {selectedPage === 'manufacturing' && (
+              <div className="space-y-3">
+                <div className="p-3 rounded-2xl bg-white/5 border border-white/10 space-y-2.5">
+                  <div className="text-[11px] font-mono font-bold text-emerald-400 uppercase">
+                    // GreenWood Manufacturing Hero
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <div>
+                      <label className="block text-[11px] text-zinc-400 mb-1">Headline (English)</label>
+                      <input
+                        type="text"
+                        value={localEdits.manufacturing?.hero_title_en || ''}
+                        onChange={(e) => updateField(['manufacturing', 'hero_title_en'], e.target.value)}
+                        className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white font-bold"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] text-zinc-400 mb-1">Headline (Arabic)</label>
+                      <input
+                        type="text"
+                        dir="rtl"
+                        value={localEdits.manufacturing?.hero_title_ar || ''}
+                        onChange={(e) => updateField(['manufacturing', 'hero_title_ar'], e.target.value)}
+                        className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white font-bold"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <div>
+                      <label className="block text-[11px] text-zinc-400 mb-1">Description (English)</label>
+                      <textarea
+                        rows={2}
+                        value={localEdits.manufacturing?.hero_body_en || ''}
+                        onChange={(e) => updateField(['manufacturing', 'hero_body_en'], e.target.value)}
+                        className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white resize-none"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] text-zinc-400 mb-1">Description (Arabic)</label>
+                      <textarea
+                        rows={2}
+                        dir="rtl"
+                        value={localEdits.manufacturing?.hero_body_ar || ''}
+                        onChange={(e) => updateField(['manufacturing', 'hero_body_ar'], e.target.value)}
+                        className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white resize-none"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* ══════════ PAGE 6: CONTRACTING ══════════ */}
+            {selectedPage === 'contracting' && (
+              <div className="space-y-3">
+                <div className="p-3 rounded-2xl bg-white/5 border border-white/10 space-y-2.5">
+                  <div className="text-[11px] font-mono font-bold text-amber-400 uppercase">
+                    // Contracting & Fit-Out Hero
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <div>
+                      <label className="block text-[11px] text-zinc-400 mb-1">Headline (English)</label>
+                      <input
+                        type="text"
+                        value={localEdits.contracting?.hero_title_en || ''}
+                        onChange={(e) => updateField(['contracting', 'hero_title_en'], e.target.value)}
+                        className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white font-bold"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] text-zinc-400 mb-1">Headline (Arabic)</label>
+                      <input
+                        type="text"
+                        dir="rtl"
+                        value={localEdits.contracting?.hero_title_ar || ''}
+                        onChange={(e) => updateField(['contracting', 'hero_title_ar'], e.target.value)}
+                        className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white font-bold"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <div>
+                      <label className="block text-[11px] text-zinc-400 mb-1">Description (English)</label>
+                      <textarea
+                        rows={2}
+                        value={localEdits.contracting?.hero_body_en || ''}
+                        onChange={(e) => updateField(['contracting', 'hero_body_en'], e.target.value)}
+                        className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white resize-none"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] text-zinc-400 mb-1">Description (Arabic)</label>
+                      <textarea
+                        rows={2}
+                        dir="rtl"
+                        value={localEdits.contracting?.hero_body_ar || ''}
+                        onChange={(e) => updateField(['contracting', 'hero_body_ar'], e.target.value)}
+                        className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white resize-none"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* ══════════ PAGE 7: CAREERS (/careers) ══════════ */}
+            {selectedPage === 'careers' && (
+              <div className="space-y-3">
+                <div className="p-3 rounded-2xl bg-white/5 border border-white/10 space-y-2.5">
+                  <div className="text-[11px] font-mono font-bold text-blue-400 uppercase">
+                    // Careers Hero & Culture
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <div>
+                      <label className="block text-[11px] text-zinc-400 mb-1">Headline (English)</label>
+                      <input
+                        type="text"
+                        value={localEdits.careers?.hero_title_en || ''}
+                        onChange={(e) => updateField(['careers', 'hero_title_en'], e.target.value)}
+                        className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white font-bold"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] text-zinc-400 mb-1">Headline (Arabic)</label>
+                      <input
+                        type="text"
+                        dir="rtl"
+                        value={localEdits.careers?.hero_title_ar || ''}
+                        onChange={(e) => updateField(['careers', 'hero_title_ar'], e.target.value)}
+                        className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white font-bold"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <div>
+                      <label className="block text-[11px] text-zinc-400 mb-1">Description (English)</label>
+                      <textarea
+                        rows={2}
+                        value={localEdits.careers?.hero_body_en || ''}
+                        onChange={(e) => updateField(['careers', 'hero_body_en'], e.target.value)}
+                        className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white resize-none"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] text-zinc-400 mb-1">Description (Arabic)</label>
+                      <textarea
+                        rows={2}
+                        dir="rtl"
+                        value={localEdits.careers?.hero_body_ar || ''}
+                        onChange={(e) => updateField(['careers', 'hero_body_ar'], e.target.value)}
+                        className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white resize-none"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
