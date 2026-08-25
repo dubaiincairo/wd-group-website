@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WD Group — Vision, Mission & Values Layout Concepts</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Cairo:wght@400;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'Cairo', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+            ar: ['Cairo', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              dark: '#08090C',
+              surface: '#0F1117',
+              card: '#141721',
+              border: 'rgba(255, 255, 255, 0.08)',
+              accent: '#3B82F6',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #060709;
+      color: #F3F4F6;
+      font-family: 'Plus Jakarta Sans', 'Cairo', sans-serif;
+    }
+    .glow-blue {
+      box-shadow: 0 0 35px -5px rgba(59, 130, 246, 0.25);
+    }
+    .glow-cyan {
+      box-shadow: 0 0 35px -5px rgba(6, 182, 212, 0.25);
+    }
+    .glow-emerald {
+      box-shadow: 0 0 35px -5px rgba(16, 185, 129, 0.25);
+    }
+    .glow-amber {
+      box-shadow: 0 0 35px -5px rgba(245, 158, 11, 0.25);
+    }
+  </style>
+</head>
+<body class="min-h-screen p-4 sm:p-8 space-y-16">
+
+  <!-- Sticky Top Header & Switcher -->
+  <header class="max-w-6xl mx-auto bg-brand-surface/90 backdrop-blur-xl border border-white/10 p-5 rounded-3xl sticky top-4 z-50 flex flex-wrap items-center justify-between gap-4 shadow-2xl">
+    <div class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center font-black text-white text-xs font-mono">
+        WD
+      </div>
+      <div>
+        <h1 class="text-sm font-extrabold text-white">Structure Concepts Showcase</h1>
+        <p class="text-[11px] text-zinc-400">Vision, Mission & Core Values — 4 Compact Architectural Layouts</p>
+      </div>
+    </div>
+
+    <!-- Quick Jump Buttons & Lang Toggle -->
+    <div class="flex items-center gap-2 flex-wrap">
+      <a href="#concept-1" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-xs font-bold text-zinc-300 transition-colors">1. Executive Split</a>
+      <a href="#concept-2" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-xs font-bold text-zinc-300 transition-colors">2. 3-Horizon Trio</a>
+      <a href="#concept-3" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-xs font-bold text-zinc-300 transition-colors">3. Modular Bento</a>
+      <a href="#concept-4" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-xs font-bold text-zinc-300 transition-colors">4. Linear Pipeline</a>
+      <button onclick="toggleLanguage()" id="langBtn" class="px-3.5 py-1.5 rounded-xl bg-blue-600 text-white text-xs font-bold hover:bg-blue-500 transition-colors flex items-center gap-1.5">
+        <i data-lucide="languages" class="w-3.5 h-3.5"></i>
+        <span>العربية</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Showcase Container -->
+  <main class="max-w-6xl mx-auto space-y-24">
+
+    <!-- ══════════════════════════════════════════════════════════════════ -->
+    <!-- CONCEPT 1: THE EXECUTIVE SPLIT -->
+    <!-- ══════════════════════════════════════════════════════════════════ -->
+    <section id="concept-1" class="space-y-6 pt-4 border-t border-white/10">
+      <div class="flex items-center justify-between">
+        <div>
+          <span class="text-xs font-mono font-bold text-blue-400 uppercase tracking-wider">OPTION 01</span>
+          <h2 class="text-2xl font-extrabold text-white">The Executive Split (Asymmetric Impact)</h2>
+          <p class="text-xs text-zinc-400">Maintains compact vertical height with a prominent lead statement on the left, paired with 3 structured focus cards on the right.</p>
+        </div>
+        <span class="px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs font-bold">Recommended</span>
+      </div>
+
+      <!-- Preview Card Wrapper -->
+      <div class="p-6 sm:p-10 rounded-3xl bg-brand-dark border border-white/10 shadow-2xl relative overflow-hidden">
+        
+        <!-- Tab Bar -->
+        <div class="flex justify-center mb-8">
+          <div class="inline-flex p-1.5 rounded-2xl bg-brand-surface border border-white/10">
+            <button onclick="setTab('c1', 'values')" id="c1-btn-values" class="tab-btn px-6 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 bg-blue-600 text-white shadow-glow-blue">
+              <i data-lucide="shield-check" class="w-4 h-4"></i>
+              <span class="txt-values-title">Core Values</span>
+            </button>
+            <button onclick="setTab('c1', 'vision')" id="c1-btn-vision" class="tab-btn px-6 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 text-zinc-400 hover:text-white">
+              <i data-lucide="compass" class="w-4 h-4"></i>
+              <span class="txt-vision-title">Vision</span>
+            </button>
+            <button onclick="setTab('c1', 'mission')" id="c1-btn-mission" class="tab-btn px-6 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 text-zinc-400 hover:text-white">
+              <i data-lucide="target" class="w-4 h-4"></i>
+              <span class="txt-mission-title">Mission</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- C1 Panels -->
+        <!-- Values (2x2 Compact) -->
+        <div id="c1-panel-values" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="p-5 rounded-2xl bg-brand-surface border border-white/10 flex items-start gap-3.5">
+            <div class="w-9 h-9 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center shrink-0 mt-0.5"><i data-lucide="award" class="w-4 h-4"></i></div>
+            <div>
+              <h4 class="text-sm font-bold text-white mb-1 txt-val1-title">Quality & Excellence</h4>
+              <p class="text-xs text-zinc-400 leading-relaxed txt-val1-desc">Highest standards across all processes and deliverables.</p>
+            </div>
+          </div>
+          <div class="p-5 rounded-2xl bg-brand-surface border border-white/10 flex items-start gap-3.5">
+            <div class="w-9 h-9 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center shrink-0 mt-0.5"><i data-lucide="lightbulb" class="w-4 h-4"></i></div>
+            <div>
+              <h4 class="text-sm font-bold text-white mb-1 txt-val2-title">Continuous Innovation</h4>
+              <p class="text-xs text-zinc-400 leading-relaxed txt-val2-desc">Evolving techniques, manufacturing, and hospitality solutions.</p>
+            </div>
+          </div>
+          <div class="p-5 rounded-2xl bg-brand-surface border border-white/10 flex items-start gap-3.5">
+            <div class="w-9 h-9 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center shrink-0 mt-0.5"><i data-lucide="scale" class="w-4 h-4"></i></div>
+            <div>
+              <h4 class="text-sm font-bold text-white mb-1 txt-val3-title">Integrity & Transparency</h4>
+              <p class="text-xs text-zinc-400 leading-relaxed txt-val3-desc">Total credibility and clarity in every agreement and interaction.</p>
+            </div>
+          </div>
+          <div class="p-5 rounded-2xl bg-brand-surface border border-white/10 flex items-start gap-3.5">
+            <div class="w-9 h-9 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center shrink-0 mt-0.5"><i data-lucide="users" class="w-4 h-4"></i></div>
+            <div>
+              <h4 class="text-sm font-bold text-white mb-1 txt-val4-title">National & Social Responsibility</h4>
+              <p class="text-xs text-zinc-400 leading-relaxed txt-val4-desc">Supporting Saudi talent, community progress, and sustainability.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Vision (Executive Split) -->
+        <div id="c1-panel-vision" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+          <div class="lg:col-span-5 p-7 rounded-2xl bg-gradient-to-br from-blue-950/40 via-brand-surface to-brand-surface border border-blue-500/30 flex flex-col justify-between space-y-4">
+            <div class="flex items-center gap-2 text-xs font-mono font-bold text-blue-400 uppercase">
+              <i data-lucide="compass" class="w-4 h-4"></i>
+              <span>Vision Horizon</span>
+            </div>
+            <p class="text-base sm:text-lg font-bold text-white leading-relaxed">
+              &ldquo;To be a leading Saudi business group contributing to a diversified and sustainable national economy, aligned with Saudi Vision 2030.&rdquo;
+            </p>
+            <div class="text-[11px] font-mono text-zinc-400 flex items-center gap-2 pt-2 border-t border-white/10">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span>Vision 2030 Strategic Horizon</span>
+            </div>
+          </div>
+          <div class="lg:col-span-7 space-y-2.5 flex flex-col justify-between">
+            <div class="p-3.5 rounded-xl bg-brand-surface border border-white/10 flex items-center gap-3">
+              <div class="w-7 h-7 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center shrink-0"><i data-lucide="layers" class="w-3.5 h-3.5"></i></div>
+              <div>
+                <h5 class="text-xs font-bold text-white">Integrated Multi-Sector Synergy</h5>
+                <p class="text-[11px] text-zinc-400">Hospitality, precision manufacturing, and contracting in unified harmony.</p>
+              </div>
+            </div>
+            <div class="p-3.5 rounded-xl bg-brand-surface border border-white/10 flex items-center gap-3">
+              <div class="w-7 h-7 rounded-lg bg-cyan-500/10 text-cyan-400 flex items-center justify-center shrink-0"><i data-lucide="globe" class="w-3.5 h-3.5"></i></div>
+              <div>
+                <h5 class="text-xs font-bold text-white">Regional & Global Presence</h5>
+                <p class="text-[11px] text-zinc-400">Expanding Saudi market leadership and international competitiveness.</p>
+              </div>
+            </div>
+            <div class="p-3.5 rounded-xl bg-brand-surface border border-white/10 flex items-center gap-3">
+              <div class="w-7 h-7 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center shrink-0"><i data-lucide="trending-up" class="w-3.5 h-3.5"></i></div>
+              <div>
+                <h5 class="text-xs font-bold text-white">Enduring Generational Value</h5>
+                <p class="text-[11px] text-zinc-400">Institutional resilience, governance, and long-term capital stewardship.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mission (Executive Split) -->
+        <div id="c1-panel-mission" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+          <div class="lg:col-span-5 p-7 rounded-2xl bg-gradient-to-br from-indigo-950/40 via-brand-surface to-brand-surface border border-indigo-500/30 flex flex-col justify-between space-y-4">
+            <div class="flex items-center gap-2 text-xs font-mono font-bold text-indigo-400 uppercase">
+              <i data-lucide="target" class="w-4 h-4"></i>
+              <span>Core Mission</span>
+            </div>
+            <p class="text-base sm:text-lg font-bold text-white leading-relaxed">
+              &ldquo;To deliver high-quality products and services across hospitality, manufacturing, and contracting, supported by modern technology and qualified talent.&rdquo;
+            </p>
+            <div class="text-[11px] font-mono text-zinc-400 flex items-center gap-2 pt-2 border-t border-white/10">
+              <span class="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
+              <span>Execution Discipline & Impact</span>
+            </div>
+          </div>
+          <div class="lg:col-span-7 space-y-2.5 flex flex-col justify-between">
+            <div class="p-3.5 rounded-xl bg-brand-surface border border-white/10 flex items-center gap-3">
+              <div class="w-7 h-7 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center shrink-0"><i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i></div>
+              <div>
+                <h5 class="text-xs font-bold text-white">Execution Rigor & Quality</h5>
+                <p class="text-[11px] text-zinc-400">Strict quality control across hotel assets and manufacturing lines.</p>
+              </div>
+            </div>
+            <div class="p-3.5 rounded-xl bg-brand-surface border border-white/10 flex items-center gap-3">
+              <div class="w-7 h-7 rounded-lg bg-purple-500/10 text-purple-400 flex items-center justify-center shrink-0"><i data-lucide="cpu" class="w-3.5 h-3.5"></i></div>
+              <div>
+                <h5 class="text-xs font-bold text-white">Advanced Industrial Technology</h5>
+                <p class="text-[11px] text-zinc-400">Modern machinery and digital workflows empowering specialized factories.</p>
+              </div>
+            </div>
+            <div class="p-3.5 rounded-xl bg-brand-surface border border-white/10 flex items-center gap-3">
+              <div class="w-7 h-7 rounded-lg bg-pink-500/10 text-pink-400 flex items-center justify-center shrink-0"><i data-lucide="handshake" class="w-3.5 h-3.5"></i></div>
+              <div>
+                <h5 class="text-xs font-bold text-white">Trusted Client Partnerships</h5>
+                <p class="text-[11px] text-zinc-400">Lasting value for government and private enterprise partners.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ══════════════════════════════════════════════════════════════════ -->
+    <!-- CONCEPT 2: THE 3-HORIZON TRIO -->
+    <!-- ══════════════════════════════════════════════════════════════════ -->
+    <section id="concept-2" class="space-y-6 pt-4 border-t border-white/10">
+      <div class="flex items-center justify-between">
+        <div>
+          <span class="text-xs font-mono font-bold text-cyan-400 uppercase tracking-wider">OPTION 02</span>
+          <h2 class="text-2xl font-extrabold text-white">The 3-Horizon Trio (Symmetric 3-Column Deck)</h2>
+          <p class="text-xs text-zinc-400">Values are a 4-card grid, while Vision and Mission unfold into 3 distinct vertical strategic columns with numeric accent badges.</p>
+        </div>
+      </div>
+
+      <!-- Preview Card Wrapper -->
+      <div class="p-6 sm:p-10 rounded-3xl bg-brand-dark border border-white/10 shadow-2xl relative overflow-hidden">
+        
+        <!-- Tab Bar -->
+        <div class="flex justify-center mb-8">
+          <div class="inline-flex p-1.5 rounded-2xl bg-brand-surface border border-white/10">
+            <button onclick="setTab('c2', 'values')" id="c2-btn-values" class="tab-btn px-6 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 bg-blue-600 text-white shadow-glow-blue">
+              <i data-lucide="shield-check" class="w-4 h-4"></i>
+              <span class="txt-values-title">Core Values</span>
+            </button>
+            <button onclick="setTab('c2', 'vision')" id="c2-btn-vision" class="tab-btn px-6 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 text-zinc-400 hover:text-white">
+              <i data-lucide="compass" class="w-4 h-4"></i>
+              <span class="txt-vision-title">Vision</span>
+            </button>
+            <button onclick="setTab('c2', 'mission')" id="c2-btn-mission" class="tab-btn px-6 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 text-zinc-400 hover:text-white">
+              <i data-lucide="target" class="w-4 h-4"></i>
+              <span class="txt-mission-title">Mission</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- C2 Panels -->
+        <!-- Values (2x2 Compact) -->
+        <div id="c2-panel-values" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="p-5 rounded-2xl bg-brand-surface border border-white/10 flex items-start gap-3.5">
+            <div class="w-9 h-9 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center shrink-0 mt-0.5"><i data-lucide="award" class="w-4 h-4"></i></div>
+            <div>
+              <h4 class="text-sm font-bold text-white mb-1 txt-val1-title">Quality & Excellence</h4>
+              <p class="text-xs text-zinc-400 leading-relaxed txt-val1-desc">Highest standards across all processes and deliverables.</p>
+            </div>
+          </div>
+          <div class="p-5 rounded-2xl bg-brand-surface border border-white/10 flex items-start gap-3.5">
+            <div class="w-9 h-9 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center shrink-0 mt-0.5"><i data-lucide="lightbulb" class="w-4 h-4"></i></div>
+            <div>
+              <h4 class="text-sm font-bold text-white mb-1 txt-val2-title">Continuous Innovation</h4>
+              <p class="text-xs text-zinc-400 leading-relaxed txt-val2-desc">Evolving techniques, manufacturing, and hospitality solutions.</p>
+            </div>
+          </div>
+          <div class="p-5 rounded-2xl bg-brand-surface border border-white/10 flex items-start gap-3.5">
+            <div class="w-9 h-9 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center shrink-0 mt-0.5"><i data-lucide="scale" class="w-4 h-4"></i></div>
+            <div>
+              <h4 class="text-sm font-bold text-white mb-1 txt-val3-title">Integrity & Transparency</h4>
+              <p class="text-xs text-zinc-400 leading-relaxed txt-val3-desc">Total credibility and clarity in every agreement and interaction.</p>
+            </div>
+          </div>
+          <div class="p-5 rounded-2xl bg-brand-surface border border-white/10 flex items-start gap-3.5">
+            <div class="w-9 h-9 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center shrink-0 mt-0.5"><i data-lucide="users" class="w-4 h-4"></i></div>
+            <div>
+              <h4 class="text-sm font-bold text-white mb-1 txt-val4-title">National & Social Responsibility</h4>
+              <p class="text-xs text-zinc-400 leading-relaxed txt-val4-desc">Supporting Saudi talent, community progress, and sustainability.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Vision (3-Column Horizon Deck) -->
+        <div id="c2-panel-vision" class="hidden space-y-4">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="p-6 rounded-2xl bg-brand-surface border-t-2 border-t-blue-500 border border-white/10 space-y-3">
+              <div class="flex items-center justify-between">
+                <div class="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center"><i data-lucide="compass" class="w-4 h-4"></i></div>
+                <span class="text-[10px] font-mono font-bold text-blue-400">PILLAR 01</span>
+              </div>
+              <h4 class="text-sm font-bold text-white">National Diversification</h4>
+              <p class="text-xs text-zinc-400 leading-relaxed">Pioneering a sustainable private sector footprint aligned with Saudi Vision 2030 goals.</p>
+            </div>
+            <div class="p-6 rounded-2xl bg-brand-surface border-t-2 border-t-cyan-500 border border-white/10 space-y-3">
+              <div class="flex items-center justify-between">
+                <div class="w-8 h-8 rounded-lg bg-cyan-500/10 text-cyan-400 flex items-center justify-center"><i data-lucide="globe" class="w-4 h-4"></i></div>
+                <span class="text-[10px] font-mono font-bold text-cyan-400">PILLAR 02</span>
+              </div>
+              <h4 class="text-sm font-bold text-white">Regional & Global Reach</h4>
+              <p class="text-xs text-zinc-400 leading-relaxed">Expanding Saudi craftsmanship and operational standards across regional frontiers.</p>
+            </div>
+            <div class="p-6 rounded-2xl bg-brand-surface border-t-2 border-t-indigo-500 border border-white/10 space-y-3">
+              <div class="flex items-center justify-between">
+                <div class="w-8 h-8 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center"><i data-lucide="layers" class="w-4 h-4"></i></div>
+                <span class="text-[10px] font-mono font-bold text-indigo-400">PILLAR 03</span>
+              </div>
+              <h4 class="text-sm font-bold text-white">Multi-Sector Synergy</h4>
+              <p class="text-xs text-zinc-400 leading-relaxed">Connecting production hubs, contracting, and hospitality in synchronized growth.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mission (3-Column Horizon Deck) -->
+        <div id="c2-panel-mission" class="hidden space-y-4">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="p-6 rounded-2xl bg-brand-surface border-t-2 border-t-emerald-500 border border-white/10 space-y-3">
+              <div class="flex items-center justify-between">
+                <div class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center"><i data-lucide="check-circle-2" class="w-4 h-4"></i></div>
+                <span class="text-[10px] font-mono font-bold text-emerald-400">PILLAR 01</span>
+              </div>
+              <h4 class="text-sm font-bold text-white">Standard of Excellence</h4>
+              <p class="text-xs text-zinc-400 leading-relaxed">Delivering first-tier quality in hospitality, precision manufacturing, and fit-out.</p>
+            </div>
+            <div class="p-6 rounded-2xl bg-brand-surface border-t-2 border-t-amber-500 border border-white/10 space-y-3">
+              <div class="flex items-center justify-between">
+                <div class="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center"><i data-lucide="cpu" class="w-4 h-4"></i></div>
+                <span class="text-[10px] font-mono font-bold text-amber-400">PILLAR 02</span>
+              </div>
+              <h4 class="text-sm font-bold text-white">Industrial Technology</h4>
+              <p class="text-xs text-zinc-400 leading-relaxed">Equipping 3 specialized factories with state-of-the-art automation & workflows.</p>
+            </div>
+            <div class="p-6 rounded-2xl bg-brand-surface border-t-2 border-t-purple-500 border border-white/10 space-y-3">
+              <div class="flex items-center justify-between">
+                <div class="w-8 h-8 rounded-lg bg-purple-500/10 text-purple-400 flex items-center justify-center"><i data-lucide="users" class="w-4 h-4"></i></div>
+                <span class="text-[10px] font-mono font-bold text-purple-400">PILLAR 03</span>
+              </div>
+              <h4 class="text-sm font-bold text-white">Saudi Talent Development</h4>
+              <p class="text-xs text-zinc-400 leading-relaxed">Empowering local engineering minds and operations leaders to deliver lasting value.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ══════════════════════════════════════════════════════════════════ -->
+    <!-- CONCEPT 3: THE MODULAR BENTO -->
+    <!-- ══════════════════════════════════════════════════════════════════ -->
+    <section id="concept-3" class="space-y-6 pt-4 border-t border-white/10">
+      <div class="flex items-center justify-between">
+        <div>
+          <span class="text-xs font-mono font-bold text-emerald-400 uppercase tracking-wider">OPTION 03</span>
+          <h2 class="text-2xl font-extrabold text-white">The Modular Bento (Structured Grid Badges)</h2>
+          <p class="text-xs text-zinc-400">Modern bento layout featuring a lead hero statement tile flanked by 2 interactive metric badges.</p>
+        </div>
+      </div>
+
+      <!-- Preview Card Wrapper -->
+      <div class="p-6 sm:p-10 rounded-3xl bg-brand-dark border border-white/10 shadow-2xl relative overflow-hidden">
+        
+        <!-- Tab Bar -->
+        <div class="flex justify-center mb-8">
+          <div class="inline-flex p-1.5 rounded-2xl bg-brand-surface border border-white/10">
+            <button onclick="setTab('c3', 'values')" id="c3-btn-values" class="tab-btn px-6 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 bg-blue-600 text-white shadow-glow-blue">
+              <i data-lucide="shield-check" class="w-4 h-4"></i>
+              <span class="txt-values-title">Core Values</span>
+            </button>
+            <button onclick="setTab('c3', 'vision')" id="c3-btn-vision" class="tab-btn px-6 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 text-zinc-400 hover:text-white">
+              <i data-lucide="compass" class="w-4 h-4"></i>
+              <span class="txt-vision-title">Vision</span>
+            </button>
+            <button onclick="setTab('c3', 'mission')" id="c3-btn-mission" class="tab-btn px-6 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 text-zinc-400 hover:text-white">
+              <i data-lucide="target" class="w-4 h-4"></i>
+              <span class="txt-mission-title">Mission</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- C3 Panels -->
+        <!-- Values (2x2 Compact) -->
+        <div id="c3-panel-values" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="p-5 rounded-2xl bg-brand-surface border border-white/10 flex items-start gap-3.5">
+            <div class="w-9 h-9 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center shrink-0 mt-0.5"><i data-lucide="award" class="w-4 h-4"></i></div>
+            <div>
+              <h4 class="text-sm font-bold text-white mb-1 txt-val1-title">Quality & Excellence</h4>
+              <p class="text-xs text-zinc-400 leading-relaxed txt-val1-desc">Highest standards across all processes and deliverables.</p>
+            </div>
+          </div>
+          <div class="p-5 rounded-2xl bg-brand-surface border border-white/10 flex items-start gap-3.5">
+            <div class="w-9 h-9 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center shrink-0 mt-0.5"><i data-lucide="lightbulb" class="w-4 h-4"></i></div>
+            <div>
+              <h4 class="text-sm font-bold text-white mb-1 txt-val2-title">Continuous Innovation</h4>
+              <p class="text-xs text-zinc-400 leading-relaxed txt-val2-desc">Evolving techniques, manufacturing, and hospitality solutions.</p>
+            </div>
+          </div>
+          <div class="p-5 rounded-2xl bg-brand-surface border border-white/10 flex items-start gap-3.5">
+            <div class="w-9 h-9 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center shrink-0 mt-0.5"><i data-lucide="scale" class="w-4 h-4"></i></div>
+            <div>
+              <h4 class="text-sm font-bold text-white mb-1 txt-val3-title">Integrity & Transparency</h4>
+              <p class="text-xs text-zinc-400 leading-relaxed txt-val3-desc">Total credibility and clarity in every agreement and interaction.</p>
+            </div>
+          </div>
+          <div class="p-5 rounded-2xl bg-brand-surface border border-white/10 flex items-start gap-3.5">
+            <div class="w-9 h-9 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center shrink-0 mt-0.5"><i data-lucide="users" class="w-4 h-4"></i></div>
+            <div>
+              <h4 class="text-sm font-bold text-white mb-1 txt-val4-title">National & Social Responsibility</h4>
+              <p class="text-xs text-zinc-400 leading-relaxed txt-val4-desc">Supporting Saudi talent, community progress, and sustainability.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Vision (Bento) -->
+        <div id="c3-panel-vision" class="hidden grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="md:col-span-2 p-6 rounded-2xl bg-brand-surface border border-blue-500/30 flex flex-col justify-between space-y-3">
+            <span class="text-xs font-mono text-blue-400 font-bold uppercase">Vision Strategic Direction</span>
+            <p class="text-sm sm:text-base font-bold text-white leading-relaxed">
+              &ldquo;To be a leading Saudi business group contributing to a diversified and sustainable national economy, while expanding our presence through quality and innovation.&rdquo;
+            </p>
+            <div class="flex items-center gap-3 text-xs text-zinc-400 font-mono">
+              <span class="px-2.5 py-1 rounded-md bg-blue-500/10 text-blue-400 border border-blue-500/20">Saudi Vision 2030</span>
+              <span>• Sustainable Growth</span>
+            </div>
+          </div>
+          <div class="space-y-4">
+            <div class="p-4 rounded-xl bg-[#141721] border border-white/10 flex items-center gap-3">
+              <div class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center shrink-0"><i data-lucide="sparkles" class="w-4 h-4"></i></div>
+              <div>
+                <span class="text-xs font-bold text-white block">National Alignment</span>
+                <span class="text-[10px] text-zinc-400">Diversification & Local Content</span>
+              </div>
+            </div>
+            <div class="p-4 rounded-xl bg-[#141721] border border-white/10 flex items-center gap-3">
+              <div class="w-8 h-8 rounded-lg bg-cyan-500/10 text-cyan-400 flex items-center justify-center shrink-0"><i data-lucide="globe" class="w-4 h-4"></i></div>
+              <div>
+                <span class="text-xs font-bold text-white block">Regional Expansion</span>
+                <span class="text-[10px] text-zinc-400">GCC & International Footprint</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mission (Bento) -->
+        <div id="c3-panel-mission" class="hidden grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="md:col-span-2 p-6 rounded-2xl bg-brand-surface border border-indigo-500/30 flex flex-col justify-between space-y-3">
+            <span class="text-xs font-mono text-indigo-400 font-bold uppercase">Mission Operational Mandate</span>
+            <p class="text-sm sm:text-base font-bold text-white leading-relaxed">
+              &ldquo;To deliver high-quality products and services across hospitality, manufacturing, and contracting, supported by qualified talent and modern technology.&rdquo;
+            </p>
+            <div class="flex items-center gap-3 text-xs text-zinc-400 font-mono">
+              <span class="px-2.5 py-1 rounded-md bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">Turnkey Precision</span>
+              <span>• Customer Value</span>
+            </div>
+          </div>
+          <div class="space-y-4">
+            <div class="p-4 rounded-xl bg-[#141721] border border-white/10 flex items-center gap-3">
+              <div class="w-8 h-8 rounded-lg bg-purple-500/10 text-purple-400 flex items-center justify-center shrink-0"><i data-lucide="cpu" class="w-4 h-4"></i></div>
+              <div>
+                <span class="text-xs font-bold text-white block">Industrial Modernity</span>
+                <span class="text-[10px] text-zinc-400">Advanced Facilities & Automation</span>
+              </div>
+            </div>
+            <div class="p-4 rounded-xl bg-[#141721] border border-white/10 flex items-center gap-3">
+              <div class="w-8 h-8 rounded-lg bg-pink-500/10 text-pink-400 flex items-center justify-center shrink-0"><i data-lucide="handshake" class="w-4 h-4"></i></div>
+              <div>
+                <span class="text-xs font-bold text-white block">Institutional Trust</span>
+                <span class="text-[10px] text-zinc-400">Reliable Client Handover</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ══════════════════════════════════════════════════════════════════ -->
+    <!-- CONCEPT 4: THE STRATEGIC PIPELINE -->
+    <!-- ══════════════════════════════════════════════════════════════════ -->
+    <section id="concept-4" class="space-y-6 pt-4 border-t border-white/10">
+      <div class="flex items-center justify-between">
+        <div>
+          <span class="text-xs font-mono font-bold text-amber-400 uppercase tracking-wider">OPTION 04</span>
+          <h2 class="text-2xl font-extrabold text-white">The Strategic Pipeline (Horizontal Milestone Track)</h2>
+          <p class="text-xs text-zinc-400">Presents Vision and Mission as a 3-stage strategic continuum connecting inputs, execution, and enduring outcomes.</p>
+        </div>
+      </div>
+
+      <!-- Preview Card Wrapper -->
+      <div class="p-6 sm:p-10 rounded-3xl bg-brand-dark border border-white/10 shadow-2xl relative overflow-hidden">
+        
+        <!-- Tab Bar -->
+        <div class="flex justify-center mb-8">
+          <div class="inline-flex p-1.5 rounded-2xl bg-brand-surface border border-white/10">
+            <button onclick="setTab('c4', 'values')" id="c4-btn-values" class="tab-btn px-6 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 bg-blue-600 text-white shadow-glow-blue">
+              <i data-lucide="shield-check" class="w-4 h-4"></i>
+              <span class="txt-values-title">Core Values</span>
+            </button>
+            <button onclick="setTab('c4', 'vision')" id="c4-btn-vision" class="tab-btn px-6 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 text-zinc-400 hover:text-white">
+              <i data-lucide="compass" class="w-4 h-4"></i>
+              <span class="txt-vision-title">Vision</span>
+            </button>
+            <button onclick="setTab('c4', 'mission')" id="c4-btn-mission" class="tab-btn px-6 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 text-zinc-400 hover:text-white">
+              <i data-lucide="target" class="w-4 h-4"></i>
+              <span class="txt-mission-title">Mission</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- C4 Panels -->
+        <!-- Values (2x2 Compact) -->
+        <div id="c4-panel-values" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="p-5 rounded-2xl bg-brand-surface border border-white/10 flex items-start gap-3.5">
+            <div class="w-9 h-9 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center shrink-0 mt-0.5"><i data-lucide="award" class="w-4 h-4"></i></div>
+            <div>
+              <h4 class="text-sm font-bold text-white mb-1 txt-val1-title">Quality & Excellence</h4>
+              <p class="text-xs text-zinc-400 leading-relaxed txt-val1-desc">Highest standards across all processes and deliverables.</p>
+            </div>
+          </div>
+          <div class="p-5 rounded-2xl bg-brand-surface border border-white/10 flex items-start gap-3.5">
+            <div class="w-9 h-9 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center shrink-0 mt-0.5"><i data-lucide="lightbulb" class="w-4 h-4"></i></div>
+            <div>
+              <h4 class="text-sm font-bold text-white mb-1 txt-val2-title">Continuous Innovation</h4>
+              <p class="text-xs text-zinc-400 leading-relaxed txt-val2-desc">Evolving techniques, manufacturing, and hospitality solutions.</p>
+            </div>
+          </div>
+          <div class="p-5 rounded-2xl bg-brand-surface border border-white/10 flex items-start gap-3.5">
+            <div class="w-9 h-9 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center shrink-0 mt-0.5"><i data-lucide="scale" class="w-4 h-4"></i></div>
+            <div>
+              <h4 class="text-sm font-bold text-white mb-1 txt-val3-title">Integrity & Transparency</h4>
+              <p class="text-xs text-zinc-400 leading-relaxed txt-val3-desc">Total credibility and clarity in every agreement and interaction.</p>
+            </div>
+          </div>
+          <div class="p-5 rounded-2xl bg-brand-surface border border-white/10 flex items-start gap-3.5">
+            <div class="w-9 h-9 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center shrink-0 mt-0.5"><i data-lucide="users" class="w-4 h-4"></i></div>
+            <div>
+              <h4 class="text-sm font-bold text-white mb-1 txt-val4-title">National & Social Responsibility</h4>
+              <p class="text-xs text-zinc-400 leading-relaxed txt-val4-desc">Supporting Saudi talent, community progress, and sustainability.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Vision (Horizontal Milestone Track) -->
+        <div id="c4-panel-vision" class="hidden space-y-4">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 relative">
+            <div class="p-5 rounded-2xl bg-brand-surface border border-white/10 relative">
+              <span class="w-6 h-6 rounded-full bg-blue-600 text-white text-[11px] font-mono font-bold flex items-center justify-center mb-3">1</span>
+              <h4 class="text-sm font-bold text-white mb-1">Foundational Ecosystem</h4>
+              <p class="text-xs text-zinc-400 leading-relaxed">Integrated synergy across hospitality assets, contracting, and 3 specialized factories.</p>
+            </div>
+            <div class="p-5 rounded-2xl bg-brand-surface border border-white/10 relative">
+              <span class="w-6 h-6 rounded-full bg-cyan-600 text-white text-[11px] font-mono font-bold flex items-center justify-center mb-3">2</span>
+              <h4 class="text-sm font-bold text-white mb-1">Saudi Vision 2030</h4>
+              <p class="text-xs text-zinc-400 leading-relaxed">Driving national localization, tourism infrastructure, and private sector dynamism.</p>
+            </div>
+            <div class="p-5 rounded-2xl bg-brand-surface border border-white/10 relative">
+              <span class="w-6 h-6 rounded-full bg-emerald-600 text-white text-[11px] font-mono font-bold flex items-center justify-center mb-3">3</span>
+              <h4 class="text-sm font-bold text-white mb-1">Generational Impact</h4>
+              <p class="text-xs text-zinc-400 leading-relaxed">Expanding regional presence through enduring institutional governance and trust.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mission (Horizontal Milestone Track) -->
+        <div id="c4-panel-mission" class="hidden space-y-4">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 relative">
+            <div class="p-5 rounded-2xl bg-brand-surface border border-white/10 relative">
+              <span class="w-6 h-6 rounded-full bg-indigo-600 text-white text-[11px] font-mono font-bold flex items-center justify-center mb-3">A</span>
+              <h4 class="text-sm font-bold text-white mb-1">Capabilities & Talent</h4>
+              <p class="text-xs text-zinc-400 leading-relaxed">Empowering specialized Saudi talent with modern production technology and tools.</p>
+            </div>
+            <div class="p-5 rounded-2xl bg-brand-surface border border-white/10 relative">
+              <span class="w-6 h-6 rounded-full bg-purple-600 text-white text-[11px] font-mono font-bold flex items-center justify-center mb-3">B</span>
+              <h4 class="text-sm font-bold text-white mb-1">Flawless Execution</h4>
+              <p class="text-xs text-zinc-400 leading-relaxed">Delivering uncompromised quality in hotel stays, joinery, and interior fit-out projects.</p>
+            </div>
+            <div class="p-5 rounded-2xl bg-brand-surface border border-white/10 relative">
+              <span class="w-6 h-6 rounded-full bg-pink-600 text-white text-[11px] font-mono font-bold flex items-center justify-center mb-3">C</span>
+              <h4 class="text-sm font-bold text-white mb-1">Sustainable Partner Value</h4>
+              <p class="text-xs text-zinc-400 leading-relaxed">Building long-term, dependable institutional relationships across the Kingdom.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="text-center text-xs text-zinc-500 py-10">
+    WD Group Design System • Interactive Concept Selector
+  </footer>
+
+  <!-- Script for Tabs & Language -->
+  <script>
+    lucide.createIcons();
+
+    function setTab(concept, tab) {
+      const tabs = ['values', 'vision', 'mission'];
+      tabs.forEach(t => {
+        const btn = document.getElementById(`${concept}-btn-${t}`);
+        const panel = document.getElementById(`${concept}-panel-${t}`);
+        
+        if (t === tab) {
+          btn.className = 'tab-btn px-6 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 bg-blue-600 text-white shadow-glow-blue cursor-pointer';
+          panel.classList.remove('hidden');
+        } else {
+          btn.className = 'tab-btn px-6 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 text-zinc-400 hover:text-white cursor-pointer';
+          panel.classList.add('hidden');
+        }
+      });
+      lucide.createIcons();
+    }
+
+    let isArabic = false;
+    function toggleLanguage() {
+      isArabic = !isArabic;
+      const html = document.documentElement;
+      const langBtn = document.getElementById('langBtn');
+
+      if (isArabic) {
+        html.setAttribute('dir', 'rtl');
+        html.setAttribute('lang', 'ar');
+        langBtn.innerHTML = '<i data-lucide="languages" class="w-3.5 h-3.5"></i><span>English</span>';
+        
+        document.querySelectorAll('.txt-values-title').forEach(el => el.textContent = 'القيم المؤسسية');
+        document.querySelectorAll('.txt-vision-title').forEach(el => el.textContent = 'الرؤية');
+        document.querySelectorAll('.txt-mission-title').forEach(el => el.textContent = 'الرسالة');
+        
+        document.querySelectorAll('.txt-val1-title').forEach(el => el.textContent = 'الجودة والتميز');
+        document.querySelectorAll('.txt-val1-desc').forEach(el => el.textContent = 'تطبيق أعلى معايير الجودة في جميع العمليات والمنتجات.');
+        document.querySelectorAll('.txt-val2-title').forEach(el => el.textContent = 'الابتكار المستمر');
+        document.querySelectorAll('.txt-val2-desc').forEach(el => el.textContent = 'تطوير مستمر لأساليب العمل وحلول التصنيع والضيافة.');
+        document.querySelectorAll('.txt-val3-title').forEach(el => el.textContent = 'الأمانة والشفافية');
+        document.querySelectorAll('.txt-val3-desc').forEach(el => el.textContent = 'المصداقية والوضوح التام في كافة تعاملاتنا وتعاقداتنا.');
+        document.querySelectorAll('.txt-val4-title').forEach(el => el.textContent = 'المسؤولية الوطنية والمجتمعية');
+        document.querySelectorAll('.txt-val4-desc').forEach(el => el.textContent = 'المساهمة في تنمية المجتمع ودعم الكوادر الوطنية.');
+      } else {
+        html.setAttribute('dir', 'ltr');
+        html.setAttribute('lang', 'en');
+        langBtn.innerHTML = '<i data-lucide="languages" class="w-3.5 h-3.5"></i><span>العربية</span>';
+        
+        document.querySelectorAll('.txt-values-title').forEach(el => el.textContent = 'Core Values');
+        document.querySelectorAll('.txt-vision-title').forEach(el => el.textContent = 'Vision');
+        document.querySelectorAll('.txt-mission-title').forEach(el => el.textContent = 'Mission');
+
+        document.querySelectorAll('.txt-val1-title').forEach(el => el.textContent = 'Quality & Excellence');
+        document.querySelectorAll('.txt-val1-desc').forEach(el => el.textContent = 'Highest standards across all processes and deliverables.');
+        document.querySelectorAll('.txt-val2-title').forEach(el => el.textContent = 'Continuous Innovation');
+        document.querySelectorAll('.txt-val2-desc').forEach(el => el.textContent = 'Evolving techniques, manufacturing, and hospitality solutions.');
+        document.querySelectorAll('.txt-val3-title').forEach(el => el.textContent = 'Integrity & Transparency');
+        document.querySelectorAll('.txt-val3-desc').forEach(el => el.textContent = 'Total credibility and clarity in every agreement and interaction.');
+        document.querySelectorAll('.txt-val4-title').forEach(el => el.textContent = 'National & Social Responsibility');
+        document.querySelectorAll('.txt-val4-desc').forEach(el => el.textContent = 'Supporting Saudi talent, community progress, and sustainability.');
+      }
+      lucide.createIcons();
+    }
+  </script>
+</body>
+</html>
