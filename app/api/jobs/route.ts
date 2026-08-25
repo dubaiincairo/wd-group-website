@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { fetchPublishedJobs } from '@/lib/supabase';
 
-export const revalidate = 60; // Revalidate cache every 60 seconds
+export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {

@@ -9,11 +9,8 @@ import {
   MapPin, 
   CheckCircle2, 
   Send, 
-  ShieldCheck,
-  Building,
-  UploadCloud,
-  FileCheck,
-  Globe
+  ShieldCheck, 
+  UploadCloud 
 } from 'lucide-react';
 
 export default function ContactPage() {
@@ -339,7 +336,7 @@ export default function ContactPage() {
         <section className="glass-card rounded-3xl p-8 border border-white/10 bg-brand-surface/80">
           <div className="flex items-center gap-2 text-xs font-mono font-bold text-blue-400 uppercase tracking-wider mb-4">
             <ShieldCheck className="w-4 h-4" />
-            <span>// {lang === 'ar' ? 'البيانات الرسمية والنظامية' : 'OFFICIAL CORPORATE IDENTITY'}</span>
+            <span>{lang === 'ar' ? '// البيانات الرسمية والنظامية' : '// OFFICIAL CORPORATE IDENTITY'}</span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs font-mono text-zinc-300">

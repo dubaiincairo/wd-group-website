@@ -7,17 +7,17 @@ import {
   CheckCircle2, 
   ArrowRight, 
   Send, 
-  Sparkles,
-  Briefcase,
-  GraduationCap,
-  TrendingUp,
-  FileText,
-  UploadCloud,
-  Clock,
-  ChevronDown,
-  ChevronUp
+  Briefcase, 
+  GraduationCap, 
+  TrendingUp, 
+  UploadCloud, 
+  Clock, 
+  ChevronDown, 
+  ChevronUp 
 } from 'lucide-react';
 import type { JobListing } from '@/lib/types/database';
+
+const PILLAR_ICONS = [GraduationCap, TrendingUp, Users, CheckCircle2];
 
 export default function CareersPage() {
   const { lang, dict } = useLanguage();
@@ -40,8 +40,6 @@ export default function CareersPage() {
     jobId: '',
     jobTitle: '',
   });
-
-  const PILLAR_ICONS = [GraduationCap, TrendingUp, Users, CheckCircle2];
 
   useEffect(() => {
     async function loadJobs() {
@@ -164,7 +162,7 @@ export default function CareersPage() {
         <section className="space-y-8">
           <div className="text-center max-w-2xl mx-auto space-y-2">
             <div className="text-xs font-mono font-bold text-blue-400 uppercase tracking-wider">
-              // {lang === 'ar' ? 'بيئة العمل والتطوير' : 'VALUE PROPOSITION'}
+              {lang === 'ar' ? '// بيئة العمل والتطوير' : '// VALUE PROPOSITION'}
             </div>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
               {dict.careers.pillars.heading}
@@ -200,7 +198,7 @@ export default function CareersPage() {
         <section id="positions" className="glass-card rounded-3xl p-8 sm:p-12 border border-white/10 space-y-8 bg-brand-surface/80">
           <div className="max-w-2xl space-y-2">
             <div className="text-xs font-mono font-bold text-blue-400 uppercase tracking-wider">
-              // {lang === 'ar' ? 'الوظائف المتاحة' : 'OPPORTUNITIES'}
+              {lang === 'ar' ? '// الوظائف المتاحة' : '// OPPORTUNITIES'}
             </div>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
               {dict.careers.jobs.heading}
