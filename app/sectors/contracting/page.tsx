@@ -105,7 +105,7 @@ export default function ContractingPage() {
         <section className="space-y-8">
           <div className="text-center max-w-2xl mx-auto space-y-2">
             <div className="text-xs font-mono font-bold text-amber-400 uppercase tracking-wider">
-              // {lang === 'ar' ? 'الخدمات الهندسية' : 'CORE SERVICES'}
+              {lang === 'ar' ? 'الخدمات الهندسية' : 'CORE SERVICES'}
             </div>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
               {dict.contracting.services.heading}
@@ -155,7 +155,7 @@ export default function ContractingPage() {
         <section id="lifecycle" className="glass-card rounded-3xl p-8 sm:p-12 border border-white/10 space-y-8 bg-brand-surface/80">
           <div className="max-w-2xl space-y-2">
             <div className="text-xs font-mono font-bold text-amber-400 uppercase tracking-wider">
-              // {lang === 'ar' ? 'منهجية العمل' : 'PROJECT LIFECYCLE'}
+              {lang === 'ar' ? 'منهجية العمل' : 'PROJECT LIFECYCLE'}
             </div>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
               {dict.contracting.lifecycle.heading}

@@ -145,7 +145,7 @@ export default function ManufacturingSectorAdminPage() {
           >
             <div className="flex items-center justify-between border-b border-white/10 pb-3">
               <span className="text-xs font-mono font-bold text-emerald-400">
-                FACTORY // 0{idx + 1}
+                FACTORY 0{idx + 1}
               </span>
               <button
                 type="button"

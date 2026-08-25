@@ -108,7 +108,7 @@ export default function ManufacturingPage() {
         <section className="space-y-8">
           <div className="text-center max-w-2xl mx-auto space-y-2">
             <div className="text-xs font-mono font-bold text-emerald-400 uppercase tracking-wider">
-              // {lang === 'ar' ? 'المراكز الصناعية' : 'PRODUCTION HUBS'}
+              {lang === 'ar' ? 'المراكز الصناعية' : 'PRODUCTION HUBS'}
             </div>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
               {dict.manufacturing.factories.heading}
@@ -137,7 +137,7 @@ export default function ManufacturingPage() {
 
                   <div className="flex items-center justify-between mb-4">
                     <span className="text-xs font-mono font-bold px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
-                      FACTORY // 0{idx + 1}
+                      FACTORY 0{idx + 1}
                     </span>
                     <div className="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 group-hover:scale-110 transition-transform">
                       <Factory className="w-5 h-5" />
@@ -166,7 +166,7 @@ export default function ManufacturingPage() {
         <section id="capabilities" className="glass-card rounded-3xl p-8 sm:p-12 border border-white/10 space-y-8 bg-brand-surface/80">
           <div className="max-w-2xl space-y-2">
             <div className="text-xs font-mono font-bold text-emerald-400 uppercase tracking-wider">
-              // {lang === 'ar' ? 'القدرات والتقنيات' : 'AUTOMATION & WORKFLOW'}
+              {lang === 'ar' ? 'القدرات والتقنيات' : 'AUTOMATION & WORKFLOW'}
             </div>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
               {dict.manufacturing.capabilities.heading}
@@ -192,7 +192,7 @@ export default function ManufacturingPage() {
         <section className="glass-card rounded-3xl p-8 sm:p-12 border border-white/10 space-y-6 bg-brand-surface/80">
           <div className="max-w-2xl space-y-2">
             <div className="text-xs font-mono font-bold text-emerald-400 uppercase tracking-wider">
-              // {lang === 'ar' ? 'القطاعات المستفيدة' : 'CLIENTS & SECTORS'}
+              {lang === 'ar' ? 'القطاعات المستفيدة' : 'CLIENTS & SECTORS'}
             </div>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
               {dict.manufacturing.sectorsServed.heading}

@@ -79,7 +79,7 @@ export default function HoldingSynergy() {
                   {/* Step Badge */}
                   <div className="flex items-center justify-between mb-6">
                     <span className={`text-xs font-mono font-bold px-2.5 py-1 rounded-md border ${item.badgeBg}`}>
-                      STEP // {item.step}
+                      STEP {item.step}
                     </span>
                     <div className={`w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center ${item.color} group-hover:scale-110 transition-transform`}>
                       <Icon className="w-5 h-5" />

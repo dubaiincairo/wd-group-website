@@ -144,7 +144,7 @@ export default function SEOAdminPage() {
           {/* Google Search Snippet Preview */}
           <div className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 space-y-4 shadow-xl">
             <h3 className="text-xs font-mono font-bold text-blue-400 uppercase tracking-wider">
-              // GOOGLE SEARCH PREVIEW
+              GOOGLE SEARCH PREVIEW
             </h3>
 
             {/* Arabic Preview */}
@@ -174,7 +174,7 @@ export default function SEOAdminPage() {
           <div className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 space-y-4 shadow-xl">
             <h3 className="text-xs font-mono font-bold text-sky-400 uppercase tracking-wider flex items-center gap-2">
               <Share2 className="w-4 h-4" />
-              <span>// SOCIAL CARD PREVIEW</span>
+              <span>SOCIAL CARD PREVIEW</span>
             </h3>
 
             <div className="bg-black/50 border border-white/15 rounded-2xl overflow-hidden shadow-lg">

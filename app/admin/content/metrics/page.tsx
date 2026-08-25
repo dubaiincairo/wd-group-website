@@ -96,7 +96,7 @@ export default function MetricsEditorPage() {
         {/* Metric 1 */}
         <div className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 space-y-4">
           <div className="flex items-center justify-between border-b border-white/10 pb-3">
-            <span className="text-xs font-mono font-bold text-sky-400">METRIC // 01 (HOSPITALITY)</span>
+            <span className="text-xs font-mono font-bold text-sky-400">METRIC 01 (HOSPITALITY)</span>
           </div>
 
           <div className="space-y-1.5">
@@ -121,7 +121,7 @@ export default function MetricsEditorPage() {
         {/* Metric 2 */}
         <div className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 space-y-4">
           <div className="flex items-center justify-between border-b border-white/10 pb-3">
-            <span className="text-xs font-mono font-bold text-emerald-400">METRIC // 02 (FACTORIES)</span>
+            <span className="text-xs font-mono font-bold text-emerald-400">METRIC 02 (FACTORIES)</span>
           </div>
 
           <div className="space-y-1.5">
@@ -146,7 +146,7 @@ export default function MetricsEditorPage() {
         {/* Metric 3 */}
         <div className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 space-y-4">
           <div className="flex items-center justify-between border-b border-white/10 pb-3">
-            <span className="text-xs font-mono font-bold text-purple-400">METRIC // 03 (TALENT)</span>
+            <span className="text-xs font-mono font-bold text-purple-400">METRIC 03 (TALENT)</span>
           </div>
 
           <div className="space-y-1.5">
@@ -171,7 +171,7 @@ export default function MetricsEditorPage() {
         {/* Metric 4 */}
         <div className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 space-y-4">
           <div className="flex items-center justify-between border-b border-white/10 pb-3">
-            <span className="text-xs font-mono font-bold text-amber-400">METRIC // 04 (SECTORS)</span>
+            <span className="text-xs font-mono font-bold text-amber-400">METRIC 04 (SECTORS)</span>
           </div>
 
           <div className="space-y-1.5">

@@ -65,7 +65,7 @@ export default function AboutPage() {
         <section className="glass-card rounded-3xl p-8 sm:p-12 border border-white/10 relative overflow-hidden bg-brand-surface/80">
           <div className="max-w-3xl space-y-4">
             <div className="text-xs font-mono font-bold text-blue-400 uppercase tracking-wider">
-              // {lang === 'ar' ? 'مسيرة المجموعة' : 'GROUP HERITAGE'}
+              {lang === 'ar' ? 'مسيرة المجموعة' : 'GROUP HERITAGE'}
             </div>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
               {dict.about.story.heading}
@@ -107,7 +107,7 @@ export default function AboutPage() {
         <section className="space-y-8">
           <div className="text-center max-w-2xl mx-auto space-y-2">
             <div className="text-xs font-mono font-bold text-blue-400 uppercase tracking-wider">
-              // {lang === 'ar' ? 'مواكبة الرؤية الوطنية' : 'NATIONAL ALIGNMENT'}
+              {lang === 'ar' ? 'مواكبة الرؤية الوطنية' : 'NATIONAL ALIGNMENT'}
             </div>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
               {dict.about.vision2030.heading}
@@ -119,7 +119,7 @@ export default function AboutPage() {
               <div key={idx} className="glass-card rounded-3xl p-7 border border-white/10 hover:border-blue-500/50 hover:shadow-glow-blue transition-all space-y-4 bg-brand-surface/80 group">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-mono font-bold text-blue-400 bg-blue-500/10 px-2.5 py-1 rounded-md border border-blue-500/20">
-                    PILLAR // 0{idx + 1}
+                    PILLAR 0{idx + 1}
                   </span>
                   <div className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-blue-400 group-hover:scale-110 transition-transform">
                     {idx === 0 ? <Award className="w-4 h-4" /> : idx === 1 ? <Users className="w-4 h-4" /> : <ShieldCheck className="w-4 h-4" />}
@@ -140,7 +140,7 @@ export default function AboutPage() {
         <section className="glass-card rounded-3xl p-8 sm:p-12 border border-white/10 space-y-8 bg-brand-surface/80">
           <div className="max-w-2xl space-y-2">
             <div className="text-xs font-mono font-bold text-blue-400 uppercase tracking-wider">
-              // {lang === 'ar' ? 'الانتشار الوطني' : 'NATIONAL REACH'}
+              {lang === 'ar' ? 'الانتشار الوطني' : 'NATIONAL REACH'}
             </div>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
               {dict.about.footprint.heading}

@@ -96,7 +96,7 @@ export default function GlobalSettingsAdminPage() {
         <div className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 space-y-4 shadow-xl">
           <h3 className="text-xs font-mono font-bold text-blue-400 uppercase tracking-wider border-b border-white/10 pb-3 flex items-center gap-2">
             <Building className="w-4 h-4" />
-            <span>// LEGAL IDENTITY & CREDENTIALS</span>
+            <span>LEGAL IDENTITY & CREDENTIALS</span>
           </h3>
 
           <div className="space-y-1.5">
@@ -134,7 +134,7 @@ export default function GlobalSettingsAdminPage() {
         <div className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 space-y-4 shadow-xl">
           <h3 className="text-xs font-mono font-bold text-emerald-400 uppercase tracking-wider border-b border-white/10 pb-3 flex items-center gap-2">
             <Phone className="w-4 h-4" />
-            <span>// OFFICIAL COMMUNICATION CHANNELS</span>
+            <span>OFFICIAL COMMUNICATION CHANNELS</span>
           </h3>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">

@@ -150,7 +150,7 @@ export default function PagesContentEditor() {
           <div className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 space-y-5">
             <div className="flex items-center justify-between border-b border-white/10 pb-3">
               <span className="text-xs font-mono font-bold text-blue-400 uppercase tracking-wider">
-                // 01. CINEMATIC HERO SECTION HEADLINES
+                01. CINEMATIC HERO SECTION HEADLINES
               </span>
             </div>
 
@@ -205,7 +205,7 @@ export default function PagesContentEditor() {
             <div className="flex items-center justify-between border-b border-white/10 pb-3">
               <span className="text-xs font-mono font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
                 <Video className="w-4 h-4" />
-                <span>// 02. HERO BACKGROUND VIDEOS & POSTERS</span>
+                <span>02. HERO BACKGROUND VIDEOS & POSTERS</span>
               </span>
             </div>
 
@@ -241,7 +241,7 @@ export default function PagesContentEditor() {
             <div className="flex items-center justify-between border-b border-white/10 pb-3">
               <span className="text-xs font-mono font-bold text-sky-400 uppercase tracking-wider flex items-center gap-1.5">
                 <ImageIcon className="w-4 h-4" />
-                <span>// 03. STRATEGIC SECTORS PHOTO CARDS</span>
+                <span>03. STRATEGIC SECTORS PHOTO CARDS</span>
               </span>
             </div>
 
@@ -273,7 +273,7 @@ export default function PagesContentEditor() {
           <div className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 space-y-5">
             <div className="flex items-center justify-between border-b border-white/10 pb-3">
               <span className="text-xs font-mono font-bold text-emerald-400 uppercase tracking-wider">
-                // 04. INTEGRATED VALUE CHAIN SYNERGY
+                04. INTEGRATED VALUE CHAIN SYNERGY
               </span>
             </div>
 
@@ -306,7 +306,7 @@ export default function PagesContentEditor() {
           <div className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 space-y-5">
             <div className="flex items-center justify-between border-b border-white/10 pb-3">
               <span className="text-xs font-mono font-bold text-blue-400 uppercase tracking-wider">
-                // ABOUT US HERO IMAGE & STORY
+                ABOUT US HERO IMAGE & STORY
               </span>
             </div>
 
@@ -356,7 +356,7 @@ export default function PagesContentEditor() {
           <div className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 space-y-5">
             <div className="flex items-center justify-between border-b border-white/10 pb-3">
               <span className="text-xs font-mono font-bold text-sky-400 uppercase tracking-wider">
-                // SWISSBLUE HOSPITALITY HERO & PHOTOS
+                SWISSBLUE HOSPITALITY HERO & PHOTOS
               </span>
             </div>
 
@@ -389,7 +389,7 @@ export default function PagesContentEditor() {
           {/* Properties Photo List */}
           <div className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 space-y-5">
             <span className="text-xs font-mono font-bold text-sky-400 uppercase tracking-wider">
-              // HOSPITALITY PROPERTIES PHOTOS & DETAILS
+              HOSPITALITY PROPERTIES PHOTOS & DETAILS
             </span>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -425,7 +425,7 @@ export default function PagesContentEditor() {
           <div className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 space-y-5">
             <div className="flex items-center justify-between border-b border-white/10 pb-3">
               <span className="text-xs font-mono font-bold text-emerald-400 uppercase tracking-wider">
-                // GREENWOOD MANUFACTURING HERO & ASSETS
+                GREENWOOD MANUFACTURING HERO & ASSETS
               </span>
             </div>
 
@@ -458,7 +458,7 @@ export default function PagesContentEditor() {
           {/* Factories List */}
           <div className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 space-y-5">
             <span className="text-xs font-mono font-bold text-emerald-400 uppercase tracking-wider">
-              // 3 SPECIALIZED FACTORIES PHOTOS
+              3 SPECIALIZED FACTORIES PHOTOS
             </span>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -491,7 +491,7 @@ export default function PagesContentEditor() {
           <div className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 space-y-5">
             <div className="flex items-center justify-between border-b border-white/10 pb-3">
               <span className="text-xs font-mono font-bold text-amber-400 uppercase tracking-wider">
-                // CONTRACTING & FIT-OUT HERO & PROJECT MEDIA
+                CONTRACTING & FIT-OUT HERO & PROJECT MEDIA
               </span>
             </div>
 
@@ -524,7 +524,7 @@ export default function PagesContentEditor() {
           {/* Contracting Services / Showcase Photos */}
           <div className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 space-y-5">
             <span className="text-xs font-mono font-bold text-amber-400 uppercase tracking-wider">
-              // CONTRACTING & FIT-OUT SERVICES SHOWCASE PHOTOS
+              CONTRACTING & FIT-OUT SERVICES SHOWCASE PHOTOS
             </span>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

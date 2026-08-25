@@ -75,7 +75,7 @@ function LoginForm() {
       
       <div className="flex items-center justify-between border-b border-white/10 pb-4">
         <span className="text-xs font-mono font-bold uppercase tracking-wider text-blue-400">
-          // STAFF ACCESS
+          STAFF ACCESS
         </span>
         <div className="flex items-center gap-1.5 text-[11px] text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-0.5 rounded-full">
           <ShieldCheck className="w-3.5 h-3.5" />

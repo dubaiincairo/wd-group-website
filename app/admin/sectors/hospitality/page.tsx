@@ -157,7 +157,7 @@ export default function HospitalitySectorAdminPage() {
           >
             <div className="flex items-center justify-between border-b border-white/10 pb-3">
               <span className="text-xs font-mono font-bold text-sky-400">
-                PROPERTY // 0{idx + 1}
+                PROPERTY 0{idx + 1}
               </span>
               <button
                 type="button"

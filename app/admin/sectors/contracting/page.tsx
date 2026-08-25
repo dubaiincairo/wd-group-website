@@ -143,7 +143,7 @@ export default function ContractingSectorAdminPage() {
           >
             <div className="flex items-center justify-between border-b border-white/10 pb-3">
               <span className="text-xs font-mono font-bold text-amber-400">
-                SERVICE // 0{idx + 1}
+                SERVICE 0{idx + 1}
               </span>
               <button
                 type="button"

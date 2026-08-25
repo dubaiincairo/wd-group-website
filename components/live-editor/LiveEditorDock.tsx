@@ -463,7 +463,7 @@ export default function LiveEditorDock() {
                 {/* 3-Line Headline Section */}
                 <div className="p-3 rounded-2xl bg-white/5 border border-white/10 space-y-2.5">
                   <div className="text-[11px] font-mono font-bold text-blue-400 uppercase">
-                    // Homepage 3-Line Slogan Headline
+                    Homepage 3-Line Slogan Headline
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -565,7 +565,7 @@ export default function LiveEditorDock() {
                 {/* Homepage Media Uploaders */}
                 <div className="p-3 rounded-2xl bg-white/5 border border-white/10 space-y-3">
                   <div className="text-[11px] font-mono font-bold text-amber-400 uppercase">
-                    // Hero Background Videos & Sector Photos
+                    Hero Background Videos & Sector Photos
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <MediaFieldUploader
@@ -615,7 +615,7 @@ export default function LiveEditorDock() {
                 {/* Contact Hero */}
                 <div className="p-3 rounded-2xl bg-white/5 border border-white/10 space-y-2.5">
                   <div className="text-[11px] font-mono font-bold text-blue-400 uppercase">
-                    // Contact Us Header & Tagline
+                    Contact Us Header & Tagline
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -692,7 +692,7 @@ export default function LiveEditorDock() {
                 {/* Headquarters and Contact Details */}
                 <div className="p-3 rounded-2xl bg-white/5 border border-white/10 space-y-2.5">
                   <div className="text-[11px] font-mono font-bold text-emerald-400 uppercase">
-                    // Headquarters & Direct Communications
+                    Headquarters & Direct Communications
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -774,7 +774,7 @@ export default function LiveEditorDock() {
               <div className="space-y-3">
                 <div className="p-3 rounded-2xl bg-white/5 border border-white/10 space-y-2.5">
                   <div className="text-[11px] font-mono font-bold text-blue-400 uppercase">
-                    // About Us Page Headlines
+                    About Us Page Headlines
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -829,7 +829,7 @@ export default function LiveEditorDock() {
               <div className="space-y-3">
                 <div className="p-3 rounded-2xl bg-white/5 border border-white/10 space-y-2.5">
                   <div className="text-[11px] font-mono font-bold text-sky-400 uppercase">
-                    // SwissBlue Hospitality Content
+                    SwissBlue Hospitality Content
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -884,7 +884,7 @@ export default function LiveEditorDock() {
               <div className="space-y-3">
                 <div className="p-3 rounded-2xl bg-white/5 border border-white/10 space-y-2.5">
                   <div className="text-[11px] font-mono font-bold text-emerald-400 uppercase">
-                    // GreenWood Manufacturing Content
+                    GreenWood Manufacturing Content
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -939,7 +939,7 @@ export default function LiveEditorDock() {
               <div className="space-y-3">
                 <div className="p-3 rounded-2xl bg-white/5 border border-white/10 space-y-2.5">
                   <div className="text-[11px] font-mono font-bold text-amber-400 uppercase">
-                    // Contracting & Fit-Out Content
+                    Contracting & Fit-Out Content
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -994,7 +994,7 @@ export default function LiveEditorDock() {
               <div className="space-y-3">
                 <div className="p-3 rounded-2xl bg-white/5 border border-white/10 space-y-2.5">
                   <div className="text-[11px] font-mono font-bold text-purple-400 uppercase">
-                    // Careers Content
+                    Careers Content
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">

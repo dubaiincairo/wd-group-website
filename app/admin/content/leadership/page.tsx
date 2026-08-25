@@ -95,7 +95,7 @@ export default function LeadershipEditorPage() {
       <div className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 space-y-5">
         <div className="flex items-center gap-2 text-xs font-mono font-bold text-blue-400 uppercase tracking-wider border-b border-white/10 pb-3">
           <Quote className="w-4 h-4" />
-          <span>// CHIEF EXECUTIVE OFFICER STATEMENT</span>
+          <span>CHIEF EXECUTIVE OFFICER STATEMENT</span>
         </div>
 
         <BilingualInput
@@ -131,7 +131,7 @@ export default function LeadershipEditorPage() {
       <div className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 space-y-5">
         <div className="flex items-center gap-2 text-xs font-mono font-bold text-emerald-400 uppercase tracking-wider border-b border-white/10 pb-3">
           <Award className="w-4 h-4" />
-          <span>// CORPORATE VISION & MISSION</span>
+          <span>CORPORATE VISION & MISSION</span>
         </div>
 
         <BilingualInput

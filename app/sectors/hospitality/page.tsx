@@ -124,7 +124,7 @@ export default function HospitalityPage() {
         <section id="portfolio" className="space-y-8">
           <div className="text-center max-w-2xl mx-auto space-y-2">
             <div className="text-xs font-mono font-bold text-sky-400 uppercase tracking-wider">
-              // {dict.hospitality.portfolio.label}
+              {dict.hospitality.portfolio.label}
             </div>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
               {dict.hospitality.portfolio.heading}
@@ -181,7 +181,7 @@ export default function HospitalityPage() {
         <section className="glass-card rounded-3xl p-8 sm:p-12 border border-white/10 space-y-8 bg-brand-surface/80">
           <div className="max-w-2xl space-y-2">
             <div className="text-xs font-mono font-bold text-sky-400 uppercase tracking-wider">
-              // {lang === 'ar' ? 'خدمات إدارة الأصول' : 'OPERATOR SERVICES'}
+              {lang === 'ar' ? 'خدمات إدارة الأصول' : 'OPERATOR SERVICES'}
             </div>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
               {dict.hospitality.services.heading}

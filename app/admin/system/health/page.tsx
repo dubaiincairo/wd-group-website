@@ -112,7 +112,7 @@ export default function SystemHealthAdminPage() {
       {/* Diagnostics Report Details */}
       <div className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 space-y-5 shadow-xl">
         <h3 className="text-xs font-mono font-bold text-blue-400 uppercase tracking-wider border-b border-white/10 pb-3">
-          // INFRASTRUCTURE DIAGNOSTIC SUMMARY
+          INFRASTRUCTURE DIAGNOSTIC SUMMARY
         </h3>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

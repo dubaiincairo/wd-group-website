@@ -505,7 +505,7 @@ export default function AdminDashboardPage() {
           {/* Quick CMS Navigation Hub */}
           <div className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 space-y-4 shadow-xl">
             <h3 className="text-sm font-extrabold text-white uppercase tracking-wider font-mono text-blue-400">
-              // SECTOR MANAGERS
+              SECTOR MANAGERS
             </h3>
 
             <div className="space-y-2.5">

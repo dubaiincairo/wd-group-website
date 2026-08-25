@@ -79,7 +79,7 @@ export default function VisionMissionValues() {
             <div className="glass-card rounded-3xl p-8 sm:p-12 border border-blue-500/30 shadow-2xl relative overflow-hidden bg-brand-surface/80">
               <div className="flex items-center gap-3 text-blue-400 font-mono text-xs font-bold uppercase tracking-wider mb-6">
                 <Compass className="w-4 h-4" />
-                <span>// {dict.home.identity.vision_title}</span>
+                <span>{dict.home.identity.vision_title}</span>
               </div>
               <p className="text-lg sm:text-2xl text-zinc-100 leading-relaxed font-medium">
                 &ldquo;{dict.home.identity.vision_desc}&rdquo;
@@ -92,7 +92,7 @@ export default function VisionMissionValues() {
             <div className="glass-card rounded-3xl p-8 sm:p-12 border border-blue-500/30 shadow-2xl relative overflow-hidden bg-brand-surface/80">
               <div className="flex items-center gap-3 text-blue-400 font-mono text-xs font-bold uppercase tracking-wider mb-6">
                 <Target className="w-4 h-4" />
-                <span>// {dict.home.identity.mission_title}</span>
+                <span>{dict.home.identity.mission_title}</span>
               </div>
               <p className="text-lg sm:text-2xl text-zinc-100 leading-relaxed font-medium">
                 &ldquo;{dict.home.identity.mission_desc}&rdquo;
