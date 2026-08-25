@@ -9,7 +9,10 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const code = searchParams.get('code');
   const error = searchParams.get('error');
-  const origin = req.headers.get('origin') || process.env.NEXT_PUBLIC_APP_URL || 'https://wdgroup.sa';
+  
+  const host = req.headers.get('x-forwarded-host') || req.headers.get('host');
+  const proto = req.headers.get('x-forwarded-proto') || 'https';
+  const origin = host ? `${proto}://${host}` : (req.nextUrl.origin || process.env.NEXT_PUBLIC_APP_URL || 'https://wdgroup.sa');
 
   if (error || !code) {
     return NextResponse.redirect(

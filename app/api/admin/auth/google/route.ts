@@ -3,13 +3,14 @@ import { NextRequest, NextResponse } from 'next/server';
 export const dynamic = 'force-dynamic';
 
 export async function GET(req: NextRequest) {
-  const origin = req.headers.get('origin') || process.env.NEXT_PUBLIC_APP_URL || 'https://wdgroup.sa';
+  const host = req.headers.get('x-forwarded-host') || req.headers.get('host');
+  const proto = req.headers.get('x-forwarded-proto') || 'https';
+  const origin = host ? `${proto}://${host}` : (req.nextUrl.origin || process.env.NEXT_PUBLIC_APP_URL || 'https://wdgroup.sa');
   const clientId = process.env.GOOGLE_CLIENT_ID;
 
   if (!clientId) {
-    // If Google Client ID is not yet provided in environment variables, redirect with explanation
     return NextResponse.redirect(
-      `${origin}/admin/login?info=${encodeURIComponent('Google Workspace OAuth requires GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET environment variables. You can add them in Vercel settings.')}`
+      `${origin}/admin/login?info=${encodeURIComponent('Google Workspace OAuth requires GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET.')}`
     );
   }
 

@@ -4,10 +4,15 @@ import type { NextRequest } from 'next/server';
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Only run on /admin routes
+  // Only run on /admin UI routes
   if (pathname.startsWith('/admin')) {
-    // Allow login and static assets
-    if (pathname === '/admin/login' || pathname.startsWith('/admin/login/')) {
+    // Allow public login and password recovery pages
+    if (
+      pathname === '/admin/login' ||
+      pathname.startsWith('/admin/login/') ||
+      pathname === '/admin/reset-password' ||
+      pathname.startsWith('/admin/reset-password/')
+    ) {
       return NextResponse.next();
     }
 
@@ -23,8 +28,8 @@ export function middleware(request: NextRequest) {
 
   // Handle protected API routes
   if (pathname.startsWith('/api/admin')) {
-    // Login endpoint is public
-    if (pathname === '/api/admin/auth/login') {
+    // All auth routes under /api/admin/auth/ are public
+    if (pathname.startsWith('/api/admin/auth')) {
       return NextResponse.next();
     }
 
