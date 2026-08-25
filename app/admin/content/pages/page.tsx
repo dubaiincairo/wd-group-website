@@ -94,7 +94,7 @@ export default function PagesContentEditor() {
             Pages & Sections Editor
           </h1>
           <p className="text-xs sm:text-sm text-zinc-400 mt-1">
-            Manage public website copy simultaneously across Arabic (RTL) and English (LTR).
+            Manage page headlines, subtitles, and call-to-action buttons across Arabic & English.
           </p>
         </div>
 
@@ -240,8 +240,8 @@ export default function PagesContentEditor() {
               label="Story Heading"
               valueEn={content.about.story_heading_en}
               valueAr={content.about.story_heading_ar}
-              onChangeEn={(v) => setContent({ ...content, about: { ...content.about, story_heading_en: v } } })}
-              onChangeAr={(v) => setContent({ ...content, about: { ...content.about, story_heading_ar: v } } })}
+              onChangeEn={(v) => setContent({ ...content, about: { ...content.about, story_heading_en: v } })}
+              onChangeAr={(v) => setContent({ ...content, about: { ...content.about, story_heading_ar: v } })}
             />
 
             <BilingualInput
@@ -250,8 +250,8 @@ export default function PagesContentEditor() {
               rows={4}
               valueEn={content.about.story_body_en}
               valueAr={content.about.story_body_ar}
-              onChangeEn={(v) => setContent({ ...content, about: { ...content.about, story_body_en: v } } })}
-              onChangeAr={(v) => setContent({ ...content, about: { ...content.about, story_body_ar: v } } })}
+              onChangeEn={(v) => setContent({ ...content, about: { ...content.about, story_body_en: v } })}
+              onChangeAr={(v) => setContent({ ...content, about: { ...content.about, story_body_ar: v } })}
             />
 
             <BilingualInput
@@ -260,8 +260,8 @@ export default function PagesContentEditor() {
               rows={4}
               valueEn={content.about.governance_statement_en}
               valueAr={content.about.governance_statement_ar}
-              onChangeEn={(v) => setContent({ ...content, about: { ...content.about, governance_statement_en: v } } })}
-              onChangeAr={(v) => setContent({ ...content, about: { ...content.about, governance_statement_ar: v } } })}
+              onChangeEn={(v) => setContent({ ...content, about: { ...content.about, governance_statement_en: v } })}
+              onChangeAr={(v) => setContent({ ...content, about: { ...content.about, governance_statement_ar: v } })}
             />
           </div>
         </div>
@@ -281,8 +281,8 @@ export default function PagesContentEditor() {
               label="Hospitality Page Title"
               valueEn={content.hospitality.hero_title_en}
               valueAr={content.hospitality.hero_title_ar}
-              onChangeEn={(v) => setContent({ ...content, hospitality: { ...content.hospitality, hero_title_en: v } } })}
-              onChangeAr={(v) => setContent({ ...content, hospitality: { ...content.hospitality, hero_title_ar: v } } })}
+              onChangeEn={(v) => setContent({ ...content, hospitality: { ...content.hospitality, hero_title_en: v } })}
+              onChangeAr={(v) => setContent({ ...content, hospitality: { ...content.hospitality, hero_title_ar: v } })}
             />
 
             <BilingualInput
@@ -291,8 +291,8 @@ export default function PagesContentEditor() {
               rows={3}
               valueEn={content.hospitality.hero_body_en}
               valueAr={content.hospitality.hero_body_ar}
-              onChangeEn={(v) => setContent({ ...content, hospitality: { ...content.hospitality, hero_body_en: v } } })}
-              onChangeAr={(v) => setContent({ ...content, hospitality: { ...content.hospitality, hero_body_ar: v } } })}
+              onChangeEn={(v) => setContent({ ...content, hospitality: { ...content.hospitality, hero_body_en: v } })}
+              onChangeAr={(v) => setContent({ ...content, hospitality: { ...content.hospitality, hero_body_ar: v } })}
             />
           </div>
         </div>
@@ -312,8 +312,8 @@ export default function PagesContentEditor() {
               label="Manufacturing Page Title"
               valueEn={content.manufacturing.hero_title_en}
               valueAr={content.manufacturing.hero_title_ar}
-              onChangeEn={(v) => setContent({ ...content, manufacturing: { ...content.manufacturing, hero_title_en: v } } })}
-              onChangeAr={(v) => setContent({ ...content, manufacturing: { ...content.manufacturing, hero_title_ar: v } } })}
+              onChangeEn={(v) => setContent({ ...content, manufacturing: { ...content.manufacturing, hero_title_en: v } })}
+              onChangeAr={(v) => setContent({ ...content, manufacturing: { ...content.manufacturing, hero_title_ar: v } })}
             />
 
             <BilingualInput
@@ -322,8 +322,8 @@ export default function PagesContentEditor() {
               rows={3}
               valueEn={content.manufacturing.hero_body_en}
               valueAr={content.manufacturing.hero_body_ar}
-              onChangeEn={(v) => setContent({ ...content, manufacturing: { ...content.manufacturing, hero_body_en: v } } })}
-              onChangeAr={(v) => setContent({ ...content, manufacturing: { ...content.manufacturing, hero_body_ar: v } } })}
+              onChangeEn={(v) => setContent({ ...content, manufacturing: { ...content.manufacturing, hero_body_en: v } })}
+              onChangeAr={(v) => setContent({ ...content, manufacturing: { ...content.manufacturing, hero_body_ar: v } })}
             />
           </div>
         </div>
@@ -343,8 +343,8 @@ export default function PagesContentEditor() {
               label="Contracting Page Title"
               valueEn={content.contracting.hero_title_en}
               valueAr={content.contracting.hero_title_ar}
-              onChangeEn={(v) => setContent({ ...content, contracting: { ...content.contracting, hero_title_en: v } } })}
-              onChangeAr={(v) => setContent({ ...content, contracting: { ...content.contracting, hero_title_ar: v } } })}
+              onChangeEn={(v) => setContent({ ...content, contracting: { ...content.contracting, hero_title_en: v } })}
+              onChangeAr={(v) => setContent({ ...content, contracting: { ...content.contracting, hero_title_ar: v } })}
             />
 
             <BilingualInput
@@ -353,8 +353,8 @@ export default function PagesContentEditor() {
               rows={3}
               valueEn={content.contracting.hero_body_en}
               valueAr={content.contracting.hero_body_ar}
-              onChangeEn={(v) => setContent({ ...content, contracting: { ...content.contracting, hero_body_en: v } } })}
-              onChangeAr={(v) => setContent({ ...content, contracting: { ...content.contracting, hero_body_ar: v } } })}
+              onChangeEn={(v) => setContent({ ...content, contracting: { ...content.contracting, hero_body_en: v } })}
+              onChangeAr={(v) => setContent({ ...content, contracting: { ...content.contracting, hero_body_ar: v } })}
             />
           </div>
         </div>
