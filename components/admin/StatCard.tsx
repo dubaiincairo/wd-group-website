@@ -27,16 +27,16 @@ export default function StatCard({
 }: StatCardProps) {
   const content = (
     <div className="relative overflow-hidden bg-[#0F1117]/90 hover:bg-[#141721] border border-white/10 hover:border-white/20 rounded-3xl p-6 transition-all duration-200 group shadow-lg">
-      <div className="flex items-start justify-between">
-        <div className="space-y-2">
-          <p className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">
+      <div className="flex items-start justify-between gap-4">
+        <div className="space-y-2 min-w-0 flex-1 pr-2">
+          <p className="text-xs font-semibold text-zinc-400 uppercase tracking-wider leading-snug">
             {title}
           </p>
           <div className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
             {value}
           </div>
           {subtitle && (
-            <p className="text-xs text-zinc-500 font-medium">{subtitle}</p>
+            <p className="text-xs text-zinc-500 font-medium line-clamp-1">{subtitle}</p>
           )}
         </div>
 

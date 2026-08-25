@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { submitContactInquiry } from '@/lib/supabase';
+import { sendContactConfirmationEmail, sendContactAdminNotificationEmail } from '@/lib/email/brevo';
 
 export async function POST(req: NextRequest) {
   try {
@@ -38,6 +39,30 @@ export async function POST(req: NextRequest) {
       subject,
       message,
     });
+
+    // Send transactional emails via Brevo
+    try {
+      await Promise.allSettled([
+        sendContactConfirmationEmail({
+          toName: contactName,
+          toEmail: email,
+          sector,
+          subject,
+          message,
+        }),
+        sendContactAdminNotificationEmail({
+          fullName: contactName,
+          email,
+          phone,
+          company,
+          sector,
+          subject,
+          message,
+        }),
+      ]);
+    } catch (emailErr) {
+      console.error('Brevo email sending notice:', emailErr);
+    }
 
     return NextResponse.json({
       success: true,

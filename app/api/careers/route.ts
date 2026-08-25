@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { submitJobApplication } from '@/lib/supabase';
+import { sendJobApplicationConfirmationEmail, sendJobApplicationAdminNotificationEmail } from '@/lib/email/brevo';
 
 export async function POST(req: NextRequest) {
   try {
@@ -39,6 +40,30 @@ export async function POST(req: NextRequest) {
       jobId,
       jobTitle,
     });
+
+    // Send transactional emails via Brevo
+    try {
+      await Promise.allSettled([
+        sendJobApplicationConfirmationEmail({
+          candidateName: fullName,
+          candidateEmail: email,
+          jobTitle,
+        }),
+        sendJobApplicationAdminNotificationEmail({
+          candidateName: fullName,
+          email,
+          phone,
+          city,
+          sector,
+          jobTitle,
+          linkedinUrl: linkedin,
+          resumeUrl,
+          coverNote,
+        }),
+      ]);
+    } catch (emailErr) {
+      console.error('Brevo email sending notice (careers):', emailErr);
+    }
 
     return NextResponse.json({
       success: true,

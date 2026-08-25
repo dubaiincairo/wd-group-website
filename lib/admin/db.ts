@@ -437,3 +437,128 @@ export async function getAuditLogs(limit: number = 50): Promise<AuditLogEntry[]>
   if (!res.ok) return [];
   return res.json();
 }
+
+/**
+ * Get Admin User by Email
+ */
+export async function getAdminUserByEmail(email: string): Promise<AdminUser | null> {
+  try {
+    const trimmed = email.trim().toLowerCase();
+    const res = await fetch(`${supabaseUrl}/rest/v1/wdgroup_admin_users?email=eq.${encodeURIComponent(trimmed)}&select=*`, {
+      headers: defaultHeaders,
+      cache: 'no-store',
+    });
+    if (!res.ok) return null;
+    const rows = await res.json();
+    return rows[0] || null;
+  } catch (err) {
+    console.error('Error fetching admin user by email:', err);
+    return null;
+  }
+}
+
+/**
+ * Store password reset token
+ */
+export async function createPasswordResetToken(email: string, tokenHash: string, expiresAt: Date): Promise<boolean> {
+  const res = await fetch(`${supabaseUrl}/rest/v1/wdgroup_password_resets`, {
+    method: 'POST',
+    headers: {
+      ...defaultHeaders,
+      'Prefer': 'return=representation',
+    },
+    body: JSON.stringify({
+      email: email.trim().toLowerCase(),
+      token_hash: tokenHash,
+      expires_at: expiresAt.toISOString(),
+      used: false,
+    }),
+  });
+  return res.ok;
+}
+
+/**
+ * Verify and consume password reset token
+ */
+export async function verifyAndConsumePasswordResetToken(tokenHash: string, email?: string): Promise<{ success: boolean; email?: string; error?: string }> {
+  try {
+    const res = await fetch(
+      `${supabaseUrl}/rest/v1/wdgroup_password_resets?token_hash=eq.${encodeURIComponent(tokenHash)}&used=eq.false&select=*`,
+      {
+        headers: defaultHeaders,
+        cache: 'no-store',
+      }
+    );
+
+    if (!res.ok) {
+      return { success: false, error: 'Database query failed' };
+    }
+
+    const rows = await res.json();
+    if (!rows || rows.length === 0) {
+      return { success: false, error: 'Invalid or expired password reset link. Please request a new one.' };
+    }
+
+    const record = rows[0];
+    const isExpired = new Date(record.expires_at).getTime() < Date.now();
+    if (isExpired) {
+      return { success: false, error: 'This password reset link has expired. Please request a new one.' };
+    }
+
+    if (email && record.email.toLowerCase() !== email.trim().toLowerCase()) {
+      return { success: false, error: 'Security verification failed: email mismatch.' };
+    }
+
+    // Mark as used
+    await fetch(`${supabaseUrl}/rest/v1/wdgroup_password_resets?id=eq.${record.id}`, {
+      method: 'PATCH',
+      headers: defaultHeaders,
+      body: JSON.stringify({ used: true }),
+    });
+
+    return { success: true, email: record.email };
+  } catch (err: any) {
+    return { success: false, error: err?.message || 'Verification failed' };
+  }
+}
+
+/**
+ * Update Admin User Password Hash
+ */
+export async function updateAdminPasswordByEmail(email: string, passwordHash: string): Promise<{ success: boolean; user?: AdminUser }> {
+  try {
+    const trimmed = email.trim().toLowerCase();
+    const res = await fetch(`${supabaseUrl}/rest/v1/wdgroup_admin_users?email=eq.${encodeURIComponent(trimmed)}`, {
+      method: 'PATCH',
+      headers: {
+        ...defaultHeaders,
+        'Prefer': 'return=representation',
+      },
+      body: JSON.stringify({
+        password_hash: passwordHash,
+        updated_at: new Date().toISOString(),
+      }),
+    });
+
+    if (!res.ok) {
+      return { success: false };
+    }
+
+    const rows = await res.json();
+    const user = rows[0];
+
+    // Revoke old sessions
+    if (user?.id) {
+      await fetch(`${supabaseUrl}/rest/v1/wdgroup_admin_sessions?user_id=eq.${user.id}`, {
+        method: 'PATCH',
+        headers: defaultHeaders,
+        body: JSON.stringify({ is_revoked: true }),
+      });
+    }
+
+    return { success: true, user };
+  } catch (err) {
+    console.error('Error updating admin password:', err);
+    return { success: false };
+  }
+}

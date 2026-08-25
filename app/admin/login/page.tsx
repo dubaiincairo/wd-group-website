@@ -28,6 +28,13 @@ function LoginForm() {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
+  // Forgot Password State
+  const [isForgotPassword, setIsForgotPassword] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState('');
+  const [forgotLoading, setForgotLoading] = useState(false);
+  const [forgotSent, setForgotSent] = useState(false);
+  const [forgotMessage, setForgotMessage] = useState('');
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) {
@@ -70,6 +77,127 @@ function LoginForm() {
       setLoading(false);
     }
   };
+
+  const handleForgotPasswordSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!forgotEmail || !forgotEmail.includes('@')) {
+      setErrorMessage('Please provide a valid email address.');
+      return;
+    }
+
+    try {
+      setForgotLoading(true);
+      setErrorMessage(null);
+
+      const res = await fetch('/api/admin/auth/forgot-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: forgotEmail }),
+      });
+
+      const data = await res.json();
+      setForgotSent(true);
+      setForgotMessage(data.message || 'If an account exists, a reset link has been dispatched.');
+      showToast('Password reset instructions dispatched via email.', 'success');
+    } catch (err: any) {
+      setErrorMessage(err.message || 'Failed to dispatch reset link');
+    } finally {
+      setForgotLoading(false);
+    }
+  };
+
+  if (isForgotPassword) {
+    return (
+      <div className="bg-[#0F1117]/90 backdrop-blur-2xl border border-white/15 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6 animate-in fade-in zoom-in-95 duration-200">
+        <div className="flex items-center justify-between border-b border-white/10 pb-4">
+          <span className="text-xs font-mono font-bold uppercase tracking-wider text-blue-400">
+            ACCOUNT RECOVERY
+          </span>
+          <div className="flex items-center gap-1.5 text-[11px] text-sky-400 bg-sky-500/10 border border-sky-500/20 px-2.5 py-0.5 rounded-full">
+            <Mail className="w-3.5 h-3.5" />
+            <span>Brevo Secure Mail</span>
+          </div>
+        </div>
+
+        {forgotSent ? (
+          <div className="p-5 rounded-2xl bg-blue-500/10 border border-blue-500/30 text-center space-y-3">
+            <Mail className="w-8 h-8 text-blue-400 mx-auto" />
+            <h3 className="text-sm font-bold text-white">Reset Link Dispatched</h3>
+            <p className="text-xs text-zinc-300 leading-relaxed">
+              {forgotMessage}
+            </p>
+            <button
+              type="button"
+              onClick={() => {
+                setIsForgotPassword(false);
+                setForgotSent(false);
+              }}
+              className="mt-3 text-xs text-blue-400 hover:text-blue-300 font-bold underline cursor-pointer"
+            >
+              Return to Admin Sign In
+            </button>
+          </div>
+        ) : (
+          <form onSubmit={handleForgotPasswordSubmit} className="space-y-4">
+            <p className="text-xs text-zinc-400 leading-relaxed">
+              Enter your official administrator email below to receive a secure password reset link.
+            </p>
+
+            {errorMessage && (
+              <div className="p-3.5 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-center gap-2.5 animate-in fade-in">
+                <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
+                <span>{errorMessage}</span>
+              </div>
+            )}
+
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-zinc-300 block">
+                Administrator Email Address
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-500">
+                  <Mail className="w-4 h-4" />
+                </div>
+                <input
+                  type="email"
+                  required
+                  value={forgotEmail}
+                  onChange={(e) => setForgotEmail(e.target.value)}
+                  placeholder="admin@wdgroup.sa"
+                  className="w-full bg-[#08090C] border border-white/15 focus:border-blue-500 rounded-xl pl-10 pr-4 py-3 text-xs sm:text-sm text-white placeholder:text-zinc-600 focus:outline-none transition-colors"
+                />
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              disabled={forgotLoading}
+              className="w-full mt-2 py-3.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white text-xs sm:text-sm font-bold transition-all shadow-glow-blue flex items-center justify-center gap-2 group cursor-pointer"
+            >
+              {forgotLoading ? (
+                <>
+                  <RefreshCw className="w-4 h-4 animate-spin" />
+                  <span>Sending Reset Link…</span>
+                </>
+              ) : (
+                <span>Dispatch Password Reset Link</span>
+              )}
+            </button>
+
+            <div className="text-center pt-2">
+              <button
+                type="button"
+                onClick={() => setIsForgotPassword(false)}
+                className="text-xs text-zinc-400 hover:text-white transition-colors cursor-pointer"
+              >
+                Back to sign in
+              </button>
+            </div>
+          </form>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className="bg-[#0F1117]/90 backdrop-blur-2xl border border-white/15 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6">
@@ -114,9 +242,22 @@ function LoginForm() {
 
         {/* Password Field */}
         <div className="space-y-1.5">
-          <label className="text-xs font-bold text-zinc-300 block">
-            Security Password
-          </label>
+          <div className="flex items-center justify-between">
+            <label className="text-xs font-bold text-zinc-300 block">
+              Security Password
+            </label>
+            <button
+              type="button"
+              onClick={() => {
+                setIsForgotPassword(true);
+                setForgotEmail(email);
+                setErrorMessage(null);
+              }}
+              className="text-[11px] text-blue-400 hover:text-blue-300 font-medium transition-colors cursor-pointer"
+            >
+              Forgot password?
+            </button>
+          </div>
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-500">
               <Lock className="w-4 h-4" />
