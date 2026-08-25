@@ -55,7 +55,7 @@ export default function SectorsHub() {
                   className="object-cover group-hover:scale-105 transition-transform duration-700 block"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0F1117] via-transparent to-black/20 pointer-events-none" />
-                <span className="absolute bottom-3 left-3 rtl:left-auto rtl:right-3 px-2.5 py-1 rounded-lg text-xs font-mono font-bold bg-[#1A476A]/90 text-sky-200 backdrop-blur-md border border-sky-400/30">
+                <span className="absolute top-3 left-3 rtl:left-auto rtl:right-3 px-2.5 py-1 rounded-lg text-xs font-mono font-bold bg-[#1A476A]/90 text-sky-200 backdrop-blur-md border border-sky-400/30 shadow-lg">
                   {dict.home.sectors.hospitality.proof}
                 </span>
               </div>
@@ -122,7 +122,7 @@ export default function SectorsHub() {
                   className="object-cover group-hover:scale-105 transition-transform duration-700 block"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0F1117] via-transparent to-black/20 pointer-events-none" />
-                <span className="absolute bottom-3 left-3 rtl:left-auto rtl:right-3 px-2.5 py-1 rounded-lg text-xs font-mono font-bold bg-[#0B5C3D]/90 text-emerald-200 backdrop-blur-md border border-emerald-400/30">
+                <span className="absolute top-3 left-3 rtl:left-auto rtl:right-3 px-2.5 py-1 rounded-lg text-xs font-mono font-bold bg-[#0B5C3D]/90 text-emerald-200 backdrop-blur-md border border-emerald-400/30 shadow-lg">
                   {dict.home.sectors.manufacturing.proof}
                 </span>
               </div>
@@ -189,7 +189,7 @@ export default function SectorsHub() {
                   className="object-cover group-hover:scale-105 transition-transform duration-700 block"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0F1117] via-transparent to-black/20 pointer-events-none" />
-                <span className="absolute bottom-3 left-3 rtl:left-auto rtl:right-3 px-2.5 py-1 rounded-lg text-xs font-mono font-bold bg-[#8A7340]/90 text-amber-200 backdrop-blur-md border border-amber-400/30">
+                <span className="absolute top-3 left-3 rtl:left-auto rtl:right-3 px-2.5 py-1 rounded-lg text-xs font-mono font-bold bg-[#8A7340]/90 text-amber-200 backdrop-blur-md border border-amber-400/30 shadow-lg">
                   {dict.home.sectors.contracting.proof}
                 </span>
               </div>
