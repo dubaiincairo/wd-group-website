@@ -14,6 +14,10 @@ const SECTOR_PHOTOS = {
 
 export default function SectorsHub() {
   const { lang, dict } = useLanguage();
+  const mediaConfig = (dict.home as any)?.media || {};
+  const photoHospitality = mediaConfig.sector_photo_hospitality || SECTOR_PHOTOS.hospitality;
+  const photoManufacturing = mediaConfig.sector_photo_manufacturing || SECTOR_PHOTOS.manufacturing;
+  const photoContracting = mediaConfig.sector_photo_contracting || SECTOR_PHOTOS.contracting;
 
   return (
     <section id="sectors" className="py-24 bg-brand-dark text-white relative overflow-hidden bg-blueprint-grid">
@@ -48,7 +52,7 @@ export default function SectorsHub() {
               {/* Card Photo Header */}
               <div className="relative h-48 w-full rounded-2xl overflow-hidden mb-6 border border-white/10 group-hover:border-sky-500/40 transition-colors bg-zinc-900">
                 <Image
-                  src={SECTOR_PHOTOS.hospitality}
+                  src={photoHospitality}
                   alt="SwissBlue Hospitality"
                   fill
                   sizes="(min-width: 1024px) 33vw, 100vw"
@@ -111,7 +115,7 @@ export default function SectorsHub() {
               {/* Card Photo Header */}
               <div className="relative h-48 w-full rounded-2xl overflow-hidden mb-6 border border-white/10 group-hover:border-emerald-500/40 transition-colors bg-zinc-900">
                 <Image
-                  src={SECTOR_PHOTOS.manufacturing}
+                  src={photoManufacturing}
                   alt="GreenWood Manufacturing"
                   fill
                   sizes="(min-width: 1024px) 33vw, 100vw"
@@ -174,7 +178,7 @@ export default function SectorsHub() {
               {/* Card Photo Header */}
               <div className="relative h-48 w-full rounded-2xl overflow-hidden mb-6 border border-white/10 group-hover:border-amber-500/40 transition-colors bg-zinc-900">
                 <Image
-                  src={SECTOR_PHOTOS.contracting}
+                  src={photoContracting}
                   alt="WD Contracting & Projects"
                   fill
                   sizes="(min-width: 1024px) 33vw, 100vw"

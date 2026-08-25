@@ -116,6 +116,17 @@ export interface SiteContentPayload {
       secondary_cta_en: string;
       secondary_cta_ar: string;
     };
+    media?: {
+      hero_video_hospitality?: string;
+      hero_poster_hospitality?: string;
+      hero_video_manufacturing?: string;
+      hero_poster_manufacturing?: string;
+      hero_video_contracting?: string;
+      hero_poster_contracting?: string;
+      sector_photo_hospitality?: string;
+      sector_photo_manufacturing?: string;
+      sector_photo_contracting?: string;
+    };
     metrics: {
       stat1_num: string;
       stat1_text_en: string;
@@ -156,6 +167,7 @@ export interface SiteContentPayload {
     };
   };
   about: {
+    hero_image?: string;
     story_heading_en: string;
     story_heading_ar: string;
     story_body_en: string;
@@ -168,6 +180,8 @@ export interface SiteContentPayload {
     hero_title_ar: string;
     hero_body_en: string;
     hero_body_ar: string;
+    hero_image?: string;
+    hero_video?: string;
     properties: Array<{
       id: string;
       name_en: string;
@@ -186,6 +200,8 @@ export interface SiteContentPayload {
     hero_title_ar: string;
     hero_body_en: string;
     hero_body_ar: string;
+    hero_image?: string;
+    hero_video?: string;
     factories: Array<{
       id: string;
       title_en: string;
@@ -194,6 +210,7 @@ export interface SiteContentPayload {
       desc_ar: string;
       location_en: string;
       location_ar: string;
+      image_url?: string;
     }>;
   };
   contracting: {
@@ -201,13 +218,22 @@ export interface SiteContentPayload {
     hero_title_ar: string;
     hero_body_en: string;
     hero_body_ar: string;
+    hero_image?: string;
+    hero_video?: string;
     services: Array<{
       id: string;
       title_en: string;
       title_ar: string;
       desc_en: string;
       desc_ar: string;
+      image_url?: string;
     }>;
+  };
+  branding?: {
+    logo_dark?: string;
+    logo_light?: string;
+    favicon?: string;
+    corporate_profile_pdf?: string;
   };
   settings: {
     company_name_ar: string;

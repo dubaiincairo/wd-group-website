@@ -83,6 +83,10 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
           primaryCta: (isAr ? c.home?.hero?.primary_cta_ar : c.home?.hero?.primary_cta_en) || baseDict.home.hero.primaryCta,
           secondaryCta: (isAr ? c.home?.hero?.secondary_cta_ar : c.home?.hero?.secondary_cta_en) || baseDict.home.hero.secondaryCta,
         },
+        media: {
+          ...(baseDict.home as any).media,
+          ...(c.home?.media || {}),
+        },
         metrics: {
           ...baseDict.home.metrics,
           stat1_num: c.home?.metrics?.stat1_num || baseDict.home.metrics.stat1_num,
@@ -114,6 +118,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
           title: (isAr ? c.about?.hero_title_ar : c.about?.hero_title_en) || baseDict.about.hero.title,
           body: (isAr ? c.about?.hero_body_ar : c.about?.hero_body_en) || baseDict.about.hero.body,
         },
+        hero_image: c.about?.hero_image || (baseDict.about as any).hero_image,
         story: {
           ...baseDict.about.story,
           heading: (isAr ? c.about?.story_heading_ar : c.about?.story_heading_en) || baseDict.about.story.heading,
@@ -132,13 +137,16 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
           title: (isAr ? c.hospitality?.hero_title_ar : c.hospitality?.hero_title_en) || baseDict.hospitality.hero.title,
           body: (isAr ? c.hospitality?.hero_body_ar : c.hospitality?.hero_body_en) || baseDict.hospitality.hero.body,
         },
+        hero_image: c.hospitality?.hero_image || (baseDict.hospitality as any).hero_image,
+        hero_video: c.hospitality?.hero_video || (baseDict.hospitality as any).hero_video,
         portfolio: {
           ...baseDict.hospitality.portfolio,
           properties: Array.isArray(c.hospitality?.properties) && c.hospitality.properties.length > 0
-            ? c.hospitality.properties.map((p: any) => ({
+            ? c.hospitality.properties.map((p: any, idx: number) => ({
                 name: (isAr ? p.name_ar : p.name_en) || p.name_en,
                 city: (isAr ? p.city_ar : p.city_en) || p.city_en,
                 desc: (isAr ? p.desc_ar : p.desc_en) || p.desc_en,
+                image_url: p.image_url || (baseDict.hospitality.portfolio.properties[idx] as any)?.image_url,
               }))
             : baseDict.hospitality.portfolio.properties,
         },
@@ -151,12 +159,15 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
           title: (isAr ? c.manufacturing?.hero_title_ar : c.manufacturing?.hero_title_en) || baseDict.manufacturing.hero.title,
           body: (isAr ? c.manufacturing?.hero_body_ar : c.manufacturing?.hero_body_en) || baseDict.manufacturing.hero.body,
         },
+        hero_image: c.manufacturing?.hero_image || (baseDict.manufacturing as any).hero_image,
+        hero_video: c.manufacturing?.hero_video || (baseDict.manufacturing as any).hero_video,
         factories: {
           ...baseDict.manufacturing.factories,
           list: Array.isArray(c.manufacturing?.factories) && c.manufacturing.factories.length > 0
-            ? c.manufacturing.factories.map((f: any) => ({
+            ? c.manufacturing.factories.map((f: any, idx: number) => ({
                 title: (isAr ? f.title_ar : f.title_en) || f.title_en,
                 desc: (isAr ? f.desc_ar : f.desc_en) || f.desc_en,
+                image_url: f.image_url || (baseDict.manufacturing.factories.list[idx] as any)?.image_url,
               }))
             : baseDict.manufacturing.factories.list,
         },
@@ -169,15 +180,22 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
           title: (isAr ? c.contracting?.hero_title_ar : c.contracting?.hero_title_en) || baseDict.contracting.hero.title,
           body: (isAr ? c.contracting?.hero_body_ar : c.contracting?.hero_body_en) || baseDict.contracting.hero.body,
         },
+        hero_image: c.contracting?.hero_image || (baseDict.contracting as any).hero_image,
+        hero_video: c.contracting?.hero_video || (baseDict.contracting as any).hero_video,
         services: {
           ...baseDict.contracting.services,
           list: Array.isArray(c.contracting?.services) && c.contracting.services.length > 0
-            ? c.contracting.services.map((s: any) => ({
+            ? c.contracting.services.map((s: any, idx: number) => ({
                 title: (isAr ? s.title_ar : s.title_en) || s.title_en,
                 desc: (isAr ? s.desc_ar : s.desc_en) || s.desc_en,
+                image_url: s.image_url || (baseDict.contracting.services.list[idx] as any)?.image_url,
               }))
             : baseDict.contracting.services.list,
         },
+      },
+      branding: {
+        ...(baseDict as any).branding,
+        ...(c.branding || {}),
       },
       careers: {
         ...baseDict.careers,

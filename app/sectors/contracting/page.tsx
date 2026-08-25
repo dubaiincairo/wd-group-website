@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { useLanguage } from '@/context/LanguageContext';
 import { 
   HardHat, 
@@ -115,18 +116,35 @@ export default function ContractingPage() {
             {dict.contracting.services.list.map((serv, idx) => (
               <div
                 key={idx}
-                className="glass-card rounded-3xl p-7 border border-amber-500/20 hover:border-amber-400/60 hover:shadow-[0_0_35px_rgba(251,191,36,0.2)] transition-all flex items-start gap-4 bg-brand-surface/80 group"
+                className="glass-card rounded-3xl p-7 border border-amber-500/20 hover:border-amber-400/60 hover:shadow-[0_0_35px_rgba(251,191,36,0.2)] transition-all flex flex-col justify-between bg-brand-surface/80 group"
               >
-                <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0 mt-1 group-hover:scale-110 transition-transform">
-                  <CheckCircle2 className="w-5 h-5" />
-                </div>
                 <div>
-                  <h3 className="text-lg font-bold text-white mb-2 group-hover:text-amber-300 transition-colors">
-                    {serv.title}
-                  </h3>
-                  <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed">
-                    {serv.desc}
-                  </p>
+                  {(serv as any).image_url && (
+                    <div className="relative h-44 w-full rounded-2xl overflow-hidden mb-5 border border-white/10">
+                      <Image
+                        src={(serv as any).image_url}
+                        alt={serv.title}
+                        fill
+                        sizes="(min-width: 1024px) 50vw, 100vw"
+                        className="object-cover group-hover:scale-105 transition-transform duration-700"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#0F1117] via-transparent to-black/30" />
+                    </div>
+                  )}
+
+                  <div className="flex items-start gap-4">
+                    <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0 mt-1 group-hover:scale-110 transition-transform">
+                      <CheckCircle2 className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-bold text-white mb-2 group-hover:text-amber-300 transition-colors">
+                        {serv.title}
+                      </h3>
+                      <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed">
+                        {serv.desc}
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
             ))}

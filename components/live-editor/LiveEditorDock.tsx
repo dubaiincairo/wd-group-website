@@ -23,6 +23,7 @@ import {
   Layers,
   Sparkles
 } from 'lucide-react';
+import MediaFieldUploader from '@/components/admin/MediaFieldUploader';
 
 export default function LiveEditorDock() {
   const pathname = usePathname();
@@ -526,6 +527,51 @@ export default function LiveEditorDock() {
                       value={localEdits.home?.hero?.body_ar || ''}
                       onChange={(e) => updateField(['home', 'hero', 'body_ar'], e.target.value)}
                       className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white resize-none"
+                    />
+                  </div>
+                </div>
+
+                {/* Homepage Media Uploaders */}
+                <div className="p-3 rounded-2xl bg-white/5 border border-white/10 space-y-3">
+                  <div className="text-[11px] font-mono font-bold text-amber-400 uppercase">
+                    // Hero Background Videos & Sector Photos
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <MediaFieldUploader
+                      label="SwissBlue Video"
+                      accept="video"
+                      value={localEdits.home?.media?.hero_video_hospitality || '/videos/hospitality.mp4'}
+                      onChange={(url) => updateField(['home', 'media', 'hero_video_hospitality'], url)}
+                    />
+                    <MediaFieldUploader
+                      label="GreenWood Video"
+                      accept="video"
+                      value={localEdits.home?.media?.hero_video_manufacturing || '/videos/manufacturing.mp4'}
+                      onChange={(url) => updateField(['home', 'media', 'hero_video_manufacturing'], url)}
+                    />
+                    <MediaFieldUploader
+                      label="Contracting Video"
+                      accept="video"
+                      value={localEdits.home?.media?.hero_video_contracting || '/videos/contracting.mp4'}
+                      onChange={(url) => updateField(['home', 'media', 'hero_video_contracting'], url)}
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+                    <MediaFieldUploader
+                      label="Hospitality Photo"
+                      value={localEdits.home?.media?.sector_photo_hospitality || 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80'}
+                      onChange={(url) => updateField(['home', 'media', 'sector_photo_hospitality'], url)}
+                    />
+                    <MediaFieldUploader
+                      label="Manufacturing Photo"
+                      value={localEdits.home?.media?.sector_photo_manufacturing || 'https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=1200&q=80'}
+                      onChange={(url) => updateField(['home', 'media', 'sector_photo_manufacturing'], url)}
+                    />
+                    <MediaFieldUploader
+                      label="Contracting Photo"
+                      value={localEdits.home?.media?.sector_photo_contracting || 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80'}
+                      onChange={(url) => updateField(['home', 'media', 'sector_photo_contracting'], url)}
                     />
                   </div>
                 </div>

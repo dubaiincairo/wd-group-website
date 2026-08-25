@@ -43,6 +43,17 @@ export const translations = {
         primaryCta: "Discover Our Group",
         secondaryCta: "Explore Our Sectors",
       },
+      media: {
+        hero_video_hospitality: "/videos/hospitality.mp4",
+        hero_poster_hospitality: "https://cdn.sanity.io/images/uoj8zwj3/production/00b20cc6cb3d8c613964965da5556e8396305950-2400x1792.jpg",
+        hero_video_manufacturing: "/videos/manufacturing.mp4",
+        hero_poster_manufacturing: "https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=2400&q=85",
+        hero_video_contracting: "/videos/contracting.mp4",
+        hero_poster_contracting: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2400&q=85",
+        sector_photo_hospitality: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80",
+        sector_photo_manufacturing: "https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=1200&q=80",
+        sector_photo_contracting: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
+      },
       metrics: {
         stat1_num: "6",
         stat1_text: "Hospitality properties across Saudi Arabia",
@@ -122,6 +133,7 @@ export const translations = {
       }
     },
     about: {
+      hero_image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=2400&q=85",
       hero: {
         eyebrow: "About WD Group",
         title: "A Saudi Group Built for Sustainable Growth",
@@ -170,6 +182,8 @@ export const translations = {
       }
     },
     hospitality: {
+      hero_image: "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=2400&q=85",
+      hero_video: "",
       hero: {
         eyebrow: "SwissBlue Hospitality",
         title: "Comfortable Stays. Thoughtful Service.",
@@ -183,12 +197,12 @@ export const translations = {
         heading: "Six Properties Across Saudi Arabia",
         body: "Each property is positioned to provide practical comfort, convenient access, and reliable hospitality for its guests.",
         properties: [
-          { name: "SwissBlue Hotel Jeddah", city: "Jeddah", desc: "A full-service hotel with convenient access to Heraa International Mall and King Abdulaziz International Airport." },
-          { name: "SwissBlue Residence Jeddah East", city: "Jeddah", desc: "Premium serviced residences designed for comfortable short and extended stays in East Jeddah." },
-          { name: "SwissBlue Residence Jeddah West", city: "Jeddah", desc: "Serviced residences in West Jeddah with convenient access to King Road and the Corniche." },
-          { name: "SwissBlue Plaza Jazan", city: "Jazan", desc: "Modern hotel apartments offering practical comfort in Jazan city." },
-          { name: "Vinas Riyadh Serviced Apartments", city: "Riyadh", desc: "Serviced residential apartments for flexible stays in Riyadh." },
-          { name: "Tulip Rawda Riyadh Serviced Apartments", city: "Riyadh", desc: "Serviced suites located in Al Rawdah district, Riyadh." },
+          { name: "SwissBlue Hotel Jeddah", city: "Jeddah", desc: "A full-service hotel with convenient access to Heraa International Mall and King Abdulaziz International Airport.", image_url: "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80" },
+          { name: "SwissBlue Residence Jeddah East", city: "Jeddah", desc: "Premium serviced residences designed for comfortable short and extended stays in East Jeddah.", image_url: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80" },
+          { name: "SwissBlue Residence Jeddah West", city: "Jeddah", desc: "Serviced residences in West Jeddah with convenient access to King Road and the Corniche.", image_url: "https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=800&q=80" },
+          { name: "SwissBlue Plaza Jazan", city: "Jazan", desc: "Modern hotel apartments offering practical comfort in Jazan city.", image_url: "https://images.unsplash.com/photo-1564501049412-61c2a3083791?auto=format&fit=crop&w=800&q=80" },
+          { name: "Vinas Riyadh Serviced Apartments", city: "Riyadh", desc: "Serviced residential apartments for flexible stays in Riyadh.", image_url: "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=800&q=80" },
+          { name: "Tulip Rawda Riyadh Serviced Apartments", city: "Riyadh", desc: "Serviced suites located in Al Rawdah district, Riyadh.", image_url: "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=800&q=80" },
         ],
         viewProperty: "View Property",
       },
@@ -209,6 +223,8 @@ export const translations = {
       }
     },
     manufacturing: {
+      hero_image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=2400&q=85",
+      hero_video: "",
       hero: {
         eyebrow: "GreenWood Furniture & More",
         title: "Precision Manufacturing. Made for Every Space.",
@@ -220,9 +236,9 @@ export const translations = {
       factories: {
         heading: "Three Specialized Production Centers",
         list: [
-          { title: "Factory 1 — Custom Woodworking & Joinery", desc: "Custom furniture, cabinetry, doors, wall panels, decorative woodwork, and project-specific joinery." },
-          { title: "Factory 2 — Aluminum & Architectural Metal", desc: "Aluminum and architectural metal solutions prepared to meet project drawings and site requirements." },
-          { title: "Factory 3 — Contract Furniture & Upholstery", desc: "Furniture, curtains, sofas, headboards, and upholstered products for hospitality, commercial, and residential projects." },
+          { title: "Factory 1 — Custom Woodworking & Joinery", desc: "Custom furniture, cabinetry, doors, wall panels, decorative woodwork, and project-specific joinery.", image_url: "https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=800&q=80" },
+          { title: "Factory 2 — Aluminum & Architectural Metal", desc: "Aluminum and architectural metal solutions prepared to meet project drawings and site requirements.", image_url: "https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?auto=format&fit=crop&w=800&q=80" },
+          { title: "Factory 3 — Contract Furniture & Upholstery", desc: "Furniture, curtains, sofas, headboards, and upholstered products for hospitality, commercial, and residential projects.", image_url: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80" },
         ]
       },
       capabilities: {
@@ -254,6 +270,8 @@ export const translations = {
       }
     },
     contracting: {
+      hero_image: "https://images.unsplash.com/photo-1541888946425-d0fbb180c5f7?auto=format&fit=crop&w=2400&q=85",
+      hero_video: "",
       hero: {
         eyebrow: "Engineering Excellence",
         title: "From Blueprint to Handover",
@@ -264,10 +282,10 @@ export const translations = {
       services: {
         heading: "Integrated Fit-Out & Contracting Solutions",
         list: [
-          { title: "Turnkey Contracting", desc: "Coordinated delivery for commercial, residential, and hospitality spaces." },
-          { title: "Architectural & Interior Coordination", desc: "In-house design coordination connected to project and site requirements." },
-          { title: "Project Management", desc: "Planning, supplier coordination, site supervision, and progress follow-up." },
-          { title: "Interior Fit-Out", desc: "Execution of interior works, finishes, fixed furniture, and custom joinery installation." },
+          { title: "Turnkey Contracting", desc: "Coordinated delivery for commercial, residential, and hospitality spaces.", image_url: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80" },
+          { title: "Architectural & Interior Coordination", desc: "In-house design coordination connected to project and site requirements.", image_url: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=800&q=80" },
+          { title: "Project Management", desc: "Planning, supplier coordination, site supervision, and progress follow-up.", image_url: "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80" },
+          { title: "Interior Fit-Out", desc: "Execution of interior works, finishes, fixed furniture, and custom joinery installation.", image_url: "https://images.unsplash.com/photo-1541888946425-d0fbb180c5f7?auto=format&fit=crop&w=800&q=80" },
         ]
       },
       lifecycle: {
@@ -284,6 +302,12 @@ export const translations = {
         body: "Send your project brief, drawings, bill of quantities, and target schedule. Our team will review the scope and contact you.",
         cta: "Submit a Fit-Out RFP",
       }
+    },
+    branding: {
+      logo_dark: "/brand/wd-logo-white.svg",
+      logo_light: "/brand/wd-logo-dark.svg",
+      favicon: "/favicon.ico",
+      corporate_profile_pdf: "/corporate-profile.pdf",
     },
     careers: {
       hero: {
@@ -449,6 +473,17 @@ export const translations = {
         primaryCta: "تعرّف على المجموعة",
         secondaryCta: "استكشف قطاعاتنا",
       },
+      media: {
+        hero_video_hospitality: "/videos/hospitality.mp4",
+        hero_poster_hospitality: "https://cdn.sanity.io/images/uoj8zwj3/production/00b20cc6cb3d8c613964965da5556e8396305950-2400x1792.jpg",
+        hero_video_manufacturing: "/videos/manufacturing.mp4",
+        hero_poster_manufacturing: "https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=2400&q=85",
+        hero_video_contracting: "/videos/contracting.mp4",
+        hero_poster_contracting: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2400&q=85",
+        sector_photo_hospitality: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80",
+        sector_photo_manufacturing: "https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=1200&q=80",
+        sector_photo_contracting: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
+      },
       metrics: {
         stat1_num: "6",
         stat1_text: "منشآت ضيافة في المملكة العربية السعودية",
@@ -528,6 +563,7 @@ export const translations = {
       }
     },
     about: {
+      hero_image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=2400&q=85",
       hero: {
         eyebrow: "عن مجموعة دبليو دي",
         title: "مجموعة سعودية تنمو برؤية مستدامة",
@@ -576,6 +612,8 @@ export const translations = {
       }
     },
     hospitality: {
+      hero_image: "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=2400&q=85",
+      hero_video: "",
       hero: {
         eyebrow: "ضيافة SwissBlue",
         title: "إقامة مريحة وخدمة باهتمام",
@@ -589,12 +627,12 @@ export const translations = {
         heading: "6 منشآت في المملكة العربية السعودية",
         body: "صُممت كل منشأة لتقدم الراحة العملية وسهولة الوصول وخدمة ضيافة موثوقة لضيوفها.",
         properties: [
-          { name: "فندق سويس بلو جدة", city: "جدة", desc: "فندق متكامل الخدمات يتمتع بموقع يسهل الوصول منه إلى حراء الدولي مول ومطار الملك عبدالعزيز الدولي." },
-          { name: "سويس بلو ريزدنس جدة شرق", city: "جدة", desc: "وحدات سكنية مخدومة راقية صُممت للإقامات القصيرة والممتدة في شرق جدة." },
-          { name: "سويس بلو ريزدنس جدة غرب", city: "جدة", desc: "وحدات سكنية مخدومة في غرب جدة، بالقرب من طريق الملك والكورنيش." },
-          { name: "شقق سويس بلو بلازا الفندقية – جازان", city: "جازان", desc: "شقق فندقية حديثة توفر إقامة عملية ومريحة في مدينة جازان." },
-          { name: "شقق ڤيناس الرياض المخدومة", city: "الرياض", desc: "شقق سكنية مخدومة توفر خيارات إقامة مرنة في مدينة الرياض." },
-          { name: "شقق توليب الروضة الرياض المخدومة", city: "الرياض", desc: "أجنحة مخدومة تقع في حي الروضة بمدينة الرياض." },
+          { name: "فندق سويس بلو جدة", city: "جدة", desc: "فندق متكامل الخدمات يتمتع بموقع يسهل الوصول منه إلى حراء الدولي مول ومطار الملك عبدالعزيز الدولي.", image_url: "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80" },
+          { name: "سويس بلو ريزدنس جدة شرق", city: "جدة", desc: "وحدات سكنية مخدومة راقية صُممت للإقامات القصيرة والممتدة في شرق جدة.", image_url: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80" },
+          { name: "سويس بلو ريزدنس جدة غرب", city: "جدة", desc: "وحدات سكنية مخدومة في غرب جدة، بالقرب من طريق الملك والكورنيش.", image_url: "https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=800&q=80" },
+          { name: "شقق سويس بلو بلازا الفندقية – جازان", city: "جازان", desc: "شقق فندقية حديثة توفر إقامة عملية ومريحة في مدينة جازان.", image_url: "https://images.unsplash.com/photo-1564501049412-61c2a3083791?auto=format&fit=crop&w=800&q=80" },
+          { name: "شقق ڤيناس الرياض المخدومة", city: "الرياض", desc: "شقق سكنية مخدومة توفر خيارات إقامة مرنة في مدينة الرياض.", image_url: "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=800&q=80" },
+          { name: "شقق توليب الروضة الرياض المخدومة", city: "الرياض", desc: "أجنحة مخدومة تقع في حي الروضة بمدينة الرياض.", image_url: "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=800&q=80" },
         ],
         viewProperty: "عرض المنشأة",
       },
@@ -615,6 +653,8 @@ export const translations = {
       }
     },
     manufacturing: {
+      hero_image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=2400&q=85",
+      hero_video: "",
       hero: {
         eyebrow: "GreenWood للأثاث والديكور",
         title: "تصنيع دقيق لكل مساحة",
@@ -626,9 +666,9 @@ export const translations = {
       factories: {
         heading: "3 مراكز إنتاج متخصصة",
         list: [
-          { title: "المصنع 1 — النجارة والأعمال الخشبية المخصصة", desc: "أثاث حسب الطلب وخزائن وأبواب وكسوات جدارية وأعمال خشبية ديكورية ونجارة مخصصة للمشاريع." },
-          { title: "المصنع 2 — الألومنيوم والمعادن المعمارية", desc: "حلول الألومنيوم والمعادن المعمارية وفق مخططات المشروع ومتطلبات الموقع." },
-          { title: "المصنع 3 — أثاث المشروعات والمفروشات والتنجيد", desc: "أثاث وستائر وأرائك وألواح خلفية للأسرة ومنتجات منجدة للمشاريع الفندقية والتجارية والسكنية." },
+          { title: "المصنع 1 — النجارة والأعمال الخشبية المخصصة", desc: "أثاث حسب الطلب وخزائن وأبواب وكسوات جدارية وأعمال خشبية ديكورية ونجارة مخصصة للمشاريع.", image_url: "https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=800&q=80" },
+          { title: "المصنع 2 — الألومنيوم والمعادن المعمارية", desc: "حلول الألومنيوم والمعادن المعمارية وفق مخططات المشروع ومتطلبات الموقع.", image_url: "https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?auto=format&fit=crop&w=800&q=80" },
+          { title: "المصنع 3 — أثاث المشروعات والمفروشات والتنجيد", desc: "أثاث وستائر وأرائك وألواح خلفية للأسرة ومنتجات منجدة للمشاريع الفندقية والتجارية والسكنية.", image_url: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80" },
         ]
       },
       capabilities: {
@@ -660,6 +700,8 @@ export const translations = {
       }
     },
     contracting: {
+      hero_image: "https://images.unsplash.com/photo-1541888946425-d0fbb180c5f7?auto=format&fit=crop&w=2400&q=85",
+      hero_video: "",
       hero: {
         eyebrow: "تميز هندسي",
         title: "من المخطط إلى التسليم",
@@ -670,10 +712,10 @@ export const translations = {
       services: {
         heading: "حلول المقاولات والتجهيز الداخلي المتكاملة",
         list: [
-          { title: "المقاولات المتكاملة", desc: "تنفيذ منسق للمساحات التجارية والسكنية والفندقية." },
-          { title: "التنسيق المعماري والداخلي", desc: "تنسيق التصميم الداخلي والمعماري وفق متطلبات المشروع والموقع." },
-          { title: "إدارة المشاريع", desc: "التخطيط وتنسيق الموردين والإشراف الميداني ومتابعة التقدم." },
-          { title: "التجهيز الداخلي", desc: "تنفيذ الأعمال الداخلية والتشطيبات والأثاث الثابت وتركيب الأعمال الخشبية المخصصة." },
+          { title: "المقاولات المتكاملة", desc: "تنفيذ منسق للمساحات التجارية والسكنية والفندقية.", image_url: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80" },
+          { title: "التنسيق المعماري والداخلي", desc: "تنسيق التصميم الداخلي والمعماري وفق متطلبات المشروع والموقع.", image_url: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=800&q=80" },
+          { title: "إدارة المشاريع", desc: "التخطيط وتنسيق الموردين والإشراف الميداني ومتابعة التقدم.", image_url: "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80" },
+          { title: "التجهيز الداخلي", desc: "تنفيذ الأعمال الداخلية والتشطيبات والأثاث الثابت وتركيب الأعمال الخشبية المخصصة.", image_url: "https://images.unsplash.com/photo-1541888946425-d0fbb180c5f7?auto=format&fit=crop&w=800&q=80" },
         ]
       },
       lifecycle: {
@@ -690,6 +732,12 @@ export const translations = {
         body: "أرسل موجز المشروع والمخططات وجدول الكميات والبرنامج الزمني المستهدف، وسيراجع فريقنا النطاق ويتواصل معك.",
         cta: "أرسل طلب تجهيز داخلي",
       }
+    },
+    branding: {
+      logo_dark: "/brand/wd-logo-white.svg",
+      logo_light: "/brand/wd-logo-dark.svg",
+      favicon: "/favicon.ico",
+      corporate_profile_pdf: "/corporate-profile.pdf",
     },
     careers: {
       hero: {

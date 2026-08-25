@@ -143,7 +143,7 @@ export default function HospitalityPage() {
                 <div>
                   <div className="relative h-44 w-full rounded-2xl overflow-hidden mb-5 border border-white/10">
                     <Image
-                      src={PROPERTY_IMAGES[idx % PROPERTY_IMAGES.length]}
+                      src={(prop as any).image_url || PROPERTY_IMAGES[idx % PROPERTY_IMAGES.length]}
                       alt={prop.name}
                       fill
                       sizes="(min-width: 1024px) 33vw, 100vw"

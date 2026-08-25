@@ -122,6 +122,19 @@ export default function ManufacturingPage() {
                 className="glass-card rounded-3xl p-7 border border-emerald-500/20 hover:border-emerald-400/60 hover:shadow-[0_0_35px_rgba(52,211,153,0.2)] transition-all flex flex-col justify-between group bg-brand-surface/80"
               >
                 <div>
+                  {(fact as any).image_url && (
+                    <div className="relative h-44 w-full rounded-2xl overflow-hidden mb-5 border border-white/10">
+                      <Image
+                        src={(fact as any).image_url}
+                        alt={fact.title}
+                        fill
+                        sizes="(min-width: 1024px) 33vw, 100vw"
+                        className="object-cover group-hover:scale-105 transition-transform duration-700"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#0F1117] via-transparent to-black/30" />
+                    </div>
+                  )}
+
                   <div className="flex items-center justify-between mb-4">
                     <span className="text-xs font-mono font-bold px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
                       FACTORY // 0{idx + 1}

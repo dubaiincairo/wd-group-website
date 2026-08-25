@@ -25,6 +25,17 @@ function getDefaultContent() {
         secondary_cta_en: en.home.hero.secondaryCta,
         secondary_cta_ar: ar.home.hero.secondaryCta,
       },
+      media: {
+        hero_video_hospitality: '/videos/hospitality.mp4',
+        hero_poster_hospitality: 'https://cdn.sanity.io/images/uoj8zwj3/production/00b20cc6cb3d8c613964965da5556e8396305950-2400x1792.jpg',
+        hero_video_manufacturing: '/videos/manufacturing.mp4',
+        hero_poster_manufacturing: 'https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=2400&q=85',
+        hero_video_contracting: '/videos/contracting.mp4',
+        hero_poster_contracting: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2400&q=85',
+        sector_photo_hospitality: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1600&q=80',
+        sector_photo_manufacturing: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=1600&q=80',
+        sector_photo_contracting: 'https://images.unsplash.com/photo-1541888946425-d0fbb180c5f7?auto=format&fit=crop&w=1600&q=80',
+      },
       metrics: {
         stat1_num: en.home.metrics.stat1_num,
         stat1_text_en: en.home.metrics.stat1_text,
@@ -65,6 +76,7 @@ function getDefaultContent() {
       },
     },
     about: {
+      hero_image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=2400&q=85',
       story_heading_en: en.about.story.heading,
       story_heading_ar: ar.about.story.heading,
       story_body_en: en.about.story.body,
@@ -77,6 +89,7 @@ function getDefaultContent() {
       hero_title_ar: ar.hospitality.hero.title,
       hero_body_en: en.hospitality.hero.body,
       hero_body_ar: ar.hospitality.hero.body,
+      hero_image: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=2400&q=85',
       properties: en.hospitality.portfolio.properties.map((p, idx) => ({
         id: `prop_${idx + 1}`,
         name_en: p.name,
@@ -85,6 +98,14 @@ function getDefaultContent() {
         city_ar: ar.hospitality.portfolio.properties[idx]?.city || p.city,
         desc_en: p.desc,
         desc_ar: ar.hospitality.portfolio.properties[idx]?.desc || p.desc,
+        image_url: [
+          'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80',
+          'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80',
+          'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=800&q=80',
+          'https://images.unsplash.com/photo-1564501049412-61c2a3083791?auto=format&fit=crop&w=800&q=80',
+          'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=800&q=80',
+          'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=800&q=80',
+        ][idx % 6],
         review_url: '',
         website_url: 'https://new.swissbluehotels.com',
       })),
@@ -94,6 +115,7 @@ function getDefaultContent() {
       hero_title_ar: ar.manufacturing.hero.title,
       hero_body_en: en.manufacturing.hero.body,
       hero_body_ar: ar.manufacturing.hero.body,
+      hero_image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=2400&q=85',
       factories: en.manufacturing.factories.list.map((f, idx) => ({
         id: `factory_${idx + 1}`,
         title_en: f.title,
@@ -102,6 +124,11 @@ function getDefaultContent() {
         desc_ar: ar.manufacturing.factories.list[idx]?.desc || f.desc,
         location_en: 'Najran & Riyadh',
         location_ar: 'نجران والرياض',
+        image_url: [
+          'https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=800&q=80',
+          'https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?auto=format&fit=crop&w=800&q=80',
+          'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80',
+        ][idx % 3],
       })),
     },
     contracting: {
@@ -109,13 +136,25 @@ function getDefaultContent() {
       hero_title_ar: ar.contracting.hero.title,
       hero_body_en: en.contracting.hero.body,
       hero_body_ar: ar.contracting.hero.body,
+      hero_image: 'https://images.unsplash.com/photo-1541888946425-d0fbb180c5f7?auto=format&fit=crop&w=2400&q=85',
       services: en.contracting.services.list.map((s, idx) => ({
         id: `service_${idx + 1}`,
         title_en: s.title,
         title_ar: ar.contracting.services.list[idx]?.title || s.title,
         desc_en: s.desc,
         desc_ar: ar.contracting.services.list[idx]?.desc || s.desc,
+        image_url: [
+          'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80',
+          'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=800&q=80',
+          'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80',
+        ][idx % 3],
       })),
+    },
+    branding: {
+      logo_dark: '/brand/wd-logo-white.svg',
+      logo_light: '/brand/wd-logo-dark.svg',
+      favicon: '/favicon.ico',
+      corporate_profile_pdf: '/corporate-profile.pdf',
     },
     settings: {
       company_name_ar: 'شركة تصاميم الوطن المحدودة / مجموعة دبليو دي للأعمال',

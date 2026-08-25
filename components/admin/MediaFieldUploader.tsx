@@ -1,0 +1,248 @@
+'use client';
+
+import React, { useState, useRef } from 'react';
+import { 
+  UploadCloud, 
+  Image as ImageIcon, 
+  Video as VideoIcon, 
+  Trash2, 
+  CheckCircle2, 
+  RefreshCw, 
+  ExternalLink,
+  FolderOpen,
+  Eye,
+  AlertCircle
+} from 'lucide-react';
+import { useToast } from './ToastProvider';
+
+interface MediaFieldUploaderProps {
+  label: string;
+  description?: string;
+  value?: string;
+  onChange: (url: string) => void;
+  accept?: 'image' | 'video' | 'any';
+  bucket?: 'photos' | 'videos' | 'documents';
+}
+
+export default function MediaFieldUploader({
+  label,
+  description,
+  value = '',
+  onChange,
+  accept = 'image',
+  bucket = 'photos',
+}: MediaFieldUploaderProps) {
+  const { showToast } = useToast();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [uploading, setUploading] = useState(false);
+  const [dragOver, setDragOver] = useState(false);
+
+  const isVideo = accept === 'video' || (value && (value.endsWith('.mp4') || value.endsWith('.webm') || value.includes('/videos/')));
+
+  const handleFileUpload = async (file: File) => {
+    if (!file) return;
+
+    // File size limits (50MB)
+    if (file.size > 50 * 1024 * 1024) {
+      showToast('File exceeds 50MB limit', 'error');
+      return;
+    }
+
+    try {
+      setUploading(true);
+      const cleanFileName = `${Date.now()}_${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://fqkbgfdasfwnryekkgqz.supabase.co';
+      const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZxa2JnZmRhc2Z3bnJ5ZWtrZ3F6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc1OTAyMDYsImV4cCI6MjEwMzE2NjIwNn0.IRPdvlCIbeTtFNf8TMc353fT-tlLxYq0Mx3P2HHmM3Q';
+
+      const targetBucket = accept === 'video' ? 'videos' : bucket;
+
+      // 1. Upload to Supabase Storage
+      const res = await fetch(`${supabaseUrl}/storage/v1/object/${targetBucket}/${cleanFileName}`, {
+        method: 'POST',
+        headers: {
+          'apikey': supabaseAnonKey,
+          'Authorization': `Bearer ${supabaseAnonKey}`,
+          'Content-Type': file.type || (accept === 'video' ? 'video/mp4' : 'image/jpeg'),
+        },
+        body: file,
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.message || 'Storage upload failed');
+      }
+
+      const fileUrl = `${supabaseUrl}/storage/v1/object/public/${targetBucket}/${cleanFileName}`;
+
+      // 2. Register media in database
+      try {
+        await fetch('/api/admin/media', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            bucket_id: targetBucket,
+            file_name: cleanFileName,
+            file_url: fileUrl,
+            file_size: file.size,
+            mime_type: file.type,
+            alt_text_en: label,
+            tags: [accept, targetBucket],
+          }),
+        });
+      } catch (e) {
+        // Silently continue if audit/metadata logging fails
+      }
+
+      onChange(fileUrl);
+      showToast(`${accept === 'video' ? 'Video' : 'Photo'} uploaded successfully!`, 'success');
+    } catch (err: any) {
+      console.error('Upload error:', err);
+      showToast(err.message || 'Upload failed', 'error');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOver(false);
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      handleFileUpload(e.dataTransfer.files[0]);
+    }
+  };
+
+  return (
+    <div className="space-y-2 p-3.5 rounded-2xl bg-[#08090C] border border-white/10 hover:border-white/20 transition-all">
+      <div className="flex items-center justify-between">
+        <div>
+          <label className="text-xs font-bold text-white flex items-center gap-1.5">
+            {accept === 'video' ? (
+              <VideoIcon className="w-3.5 h-3.5 text-amber-400" />
+            ) : (
+              <ImageIcon className="w-3.5 h-3.5 text-blue-400" />
+            )}
+            <span>{label}</span>
+          </label>
+          {description && <p className="text-[10px] text-zinc-400 mt-0.5">{description}</p>}
+        </div>
+
+        {value && (
+          <button
+            type="button"
+            onClick={() => onChange('')}
+            className="text-[11px] text-rose-400 hover:text-rose-300 flex items-center gap-1 transition-colors"
+          >
+            <Trash2 className="w-3 h-3" />
+            <span>Remove</span>
+          </button>
+        )}
+      </div>
+
+      {/* Media Preview & Dropzone */}
+      <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center">
+        
+        {/* Preview Box */}
+        <div className="sm:col-span-4 h-28 rounded-xl bg-zinc-900 border border-white/10 overflow-hidden relative flex items-center justify-center group">
+          {value ? (
+            isVideo ? (
+              <video
+                src={value}
+                muted
+                autoPlay
+                loop
+                playsInline
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <img
+                src={value}
+                alt={label}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=800&q=80';
+                }}
+              />
+            )
+          ) : (
+            <div className="text-center p-3 text-zinc-500">
+              {accept === 'video' ? (
+                <VideoIcon className="w-6 h-6 mx-auto mb-1 opacity-50" />
+              ) : (
+                <ImageIcon className="w-6 h-6 mx-auto mb-1 opacity-50" />
+              )}
+              <span className="text-[10px]">No media selected</span>
+            </div>
+          )}
+
+          {/* Quick Overlay Link */}
+          {value && (
+            <a
+              href={value}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white text-xs gap-1 transition-opacity backdrop-blur-xs font-semibold"
+            >
+              <Eye className="w-3.5 h-3.5" />
+              <span>Preview</span>
+            </a>
+          )}
+        </div>
+
+        {/* Upload Controls */}
+        <div className="sm:col-span-8 space-y-2">
+          
+          {/* Drag & Drop Upload Zone */}
+          <div
+            onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+            onDragLeave={() => setDragOver(false)}
+            onDrop={handleDrop}
+            onClick={() => fileInputRef.current?.click()}
+            className={`cursor-pointer border border-dashed rounded-xl p-3 text-center transition-all ${
+              dragOver
+                ? 'border-blue-400 bg-blue-500/10'
+                : 'border-white/15 bg-white/5 hover:bg-white/10 hover:border-white/30'
+            }`}
+          >
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept={accept === 'video' ? 'video/mp4,video/webm' : 'image/*'}
+              className="hidden"
+              onChange={(e) => {
+                if (e.target.files?.[0]) handleFileUpload(e.target.files[0]);
+              }}
+            />
+
+            {uploading ? (
+              <div className="flex items-center justify-center gap-2 text-xs text-blue-400 font-mono">
+                <RefreshCw className="w-4 h-4 animate-spin" />
+                <span>Uploading to Cloud Storage…</span>
+              </div>
+            ) : (
+              <div className="flex items-center justify-center gap-2 text-xs text-zinc-300">
+                <UploadCloud className="w-4 h-4 text-blue-400" />
+                <span className="font-semibold">
+                  Click to Upload {accept === 'video' ? 'Video (MP4)' : 'Photo'}
+                </span>
+                <span className="text-[10px] text-zinc-500">(or drag & drop)</span>
+              </div>
+            )}
+          </div>
+
+          {/* Direct URL Input */}
+          <div className="flex items-center gap-2">
+            <input
+              type="text"
+              value={value}
+              onChange={(e) => onChange(e.target.value)}
+              placeholder="Or paste image/video URL…"
+              className="w-full px-3 py-1.5 rounded-lg bg-black/50 border border-white/10 text-white text-xs font-mono placeholder:text-zinc-600 focus:outline-none focus:border-blue-500"
+            />
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  );
+}

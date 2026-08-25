@@ -60,7 +60,33 @@ export default function HeroSection() {
     }
   }, [selectedSector]);
 
-  const activeSectorConfig = SECTORS_HERO_VIDEOS.find(s => s.id === selectedSector) || SECTORS_HERO_VIDEOS[0];
+  const mediaConfig = (dict.home as any)?.media || {};
+
+  const dynamicHeroVideos = [
+    {
+      id: 'hospitality',
+      video: mediaConfig.hero_video_hospitality || '/videos/hospitality.mp4',
+      poster: mediaConfig.hero_poster_hospitality || 'https://cdn.sanity.io/images/uoj8zwj3/production/00b20cc6cb3d8c613964965da5556e8396305950-2400x1792.jpg',
+      glowColor: 'bg-sky-500/25',
+      activeBtn: 'bg-[#1A476A] text-white shadow-glow-sky border border-sky-400/80 ring-1 ring-sky-400/40',
+    },
+    {
+      id: 'manufacturing',
+      video: mediaConfig.hero_video_manufacturing || '/videos/manufacturing.mp4',
+      poster: mediaConfig.hero_poster_manufacturing || 'https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=2400&q=85',
+      glowColor: 'bg-emerald-500/25',
+      activeBtn: 'bg-[#0B5C3D] text-white shadow-glow-emerald border border-emerald-400/80 ring-1 ring-emerald-400/40',
+    },
+    {
+      id: 'contracting',
+      video: mediaConfig.hero_video_contracting || '/videos/contracting.mp4',
+      poster: mediaConfig.hero_poster_contracting || 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2400&q=85',
+      glowColor: 'bg-amber-500/25',
+      activeBtn: 'bg-[#8A7340] text-white shadow-glow-gold border border-amber-400/80 ring-1 ring-amber-400/40',
+    },
+  ];
+
+  const activeSectorConfig = dynamicHeroVideos.find(s => s.id === selectedSector) || dynamicHeroVideos[0];
 
   return (
     <section className="relative min-h-[94vh] flex flex-col justify-center items-center pt-32 pb-16 overflow-hidden bg-[#08090C] text-center">
@@ -68,7 +94,7 @@ export default function HeroSection() {
       {/* 1. Cinematic Ambient Dynamic Video Backdrop Layer */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
         
-        {SECTORS_HERO_VIDEOS.map((item) => {
+        {dynamicHeroVideos.map((item) => {
           const isActive = item.id === selectedSector;
           return (
             <div 
