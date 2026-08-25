@@ -21,6 +21,8 @@ import {
 export default function HospitalityPage() {
   const { lang, dict } = useLanguage();
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     propertyName: '',
     propertyCity: '',
@@ -33,9 +35,36 @@ export default function HospitalityPage() {
     contactPhone: '',
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    try {
+      setLoading(true);
+      setErrorMessage(null);
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          fullName: formData.contactName,
+          email: formData.contactEmail,
+          phone: formData.contactPhone,
+          company: formData.propertyName,
+          sector: 'hospitality',
+          subject: `Hospitality Partnership RFP: ${formData.propertyName} (${formData.propertyCity})`,
+          message: `Property: ${formData.propertyName}\nCity: ${formData.propertyCity}\nType: ${formData.propertyType}\nRooms: ${formData.roomCount || 'N/A'}\nStage: ${formData.projectStage}\nRequired Service: ${formData.serviceRequired}`,
+        }),
+      });
+
+      if (!res.ok) {
+        const d = await res.json().catch(() => ({}));
+        throw new Error(d.error || 'Failed to submit RFP');
+      }
+
+      setSubmitted(true);
+    } catch (err: any) {
+      setErrorMessage(err.message || 'Submission failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -293,13 +322,20 @@ export default function HospitalityPage() {
                 </div>
               </div>
 
+              {errorMessage && (
+                <div className="p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs">
+                  {errorMessage}
+                </div>
+              )}
+
               <div className="pt-2">
                 <button
                   type="submit"
-                  className="w-full py-3.5 rounded-xl font-bold text-xs bg-sky-600 hover:bg-sky-500 text-white shadow-[0_0_20px_rgba(56,189,248,0.3)] transition-all flex items-center justify-center gap-2"
+                  disabled={loading}
+                  className="w-full py-3.5 rounded-xl font-bold text-xs bg-sky-600 hover:bg-sky-500 disabled:opacity-50 text-white shadow-[0_0_20px_rgba(56,189,248,0.3)] transition-all flex items-center justify-center gap-2"
                 >
                   <Send className="w-4 h-4" />
-                  <span>{dict.hospitality.rfp.cta}</span>
+                  <span>{loading ? (lang === 'ar' ? 'جارٍ الإرسال…' : 'Submitting…') : dict.hospitality.rfp.cta}</span>
                 </button>
               </div>
             </form>
