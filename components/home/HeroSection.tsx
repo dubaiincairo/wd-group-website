@@ -1,14 +1,11 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import Link from 'next/link';
 import { useLanguage } from '@/context/LanguageContext';
 import { 
   Building2, 
   Factory, 
   HardHat, 
-  ArrowRight, 
-  Compass, 
   ChevronDown
 } from 'lucide-react';
 import AnimatedCounter from './AnimatedCounter';
@@ -121,18 +118,26 @@ export default function HeroSection() {
           </span>
         </div>
 
-        {/* Monumental Headline */}
-        <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-[1.12] mb-6 max-w-5xl mx-auto drop-shadow-lg">
-          {dict.home.hero.title}
+        {/* Monumental 3-Line Headline */}
+        <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-[1.12] mb-6 max-w-5xl mx-auto drop-shadow-2xl text-center flex flex-col items-center">
+          <span className="block text-white">
+            {dict.home.hero.title_line1}
+          </span>
+          <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-sky-300 to-indigo-300 py-1 drop-shadow-[0_0_35px_rgba(56,189,248,0.35)]">
+            {dict.home.hero.title_line2}
+          </span>
+          <span className="block text-white">
+            {dict.home.hero.title_line3}
+          </span>
         </h1>
 
         {/* Subtitle */}
-        <p className="text-base sm:text-lg md:text-xl text-zinc-200 max-w-2xl mx-auto mb-10 leading-relaxed font-normal drop-shadow-md">
+        <p className="text-sm sm:text-base md:text-lg text-zinc-300 max-w-2xl mx-auto mb-8 leading-relaxed font-normal drop-shadow-md text-center">
           {dict.home.hero.body}
         </p>
 
         {/* Interactive Sector Switcher Dock */}
-        <div className="inline-flex flex-wrap items-center justify-center gap-2.5 p-2 rounded-2xl bg-black/85 border border-white/20 backdrop-blur-2xl mb-10 shadow-2xl max-w-full">
+        <div className="inline-flex flex-wrap items-center justify-center gap-2.5 p-2 rounded-2xl bg-black/85 border border-white/20 backdrop-blur-2xl mb-8 shadow-2xl max-w-full">
           {/* SwissBlue Button */}
           <button
             onClick={() => setSelectedSector('hospitality')}
@@ -180,25 +185,6 @@ export default function HeroSection() {
               {lang === 'ar' ? 'تنفيذ شامل' : 'Turnkey'}
             </span>
           </button>
-        </div>
-
-        {/* Dual Action CTAs */}
-        <div className="flex flex-wrap items-center justify-center gap-4 mb-12">
-          <Link 
-            href="/about" 
-            className="inline-flex items-center gap-2.5 px-8 py-3.5 rounded-xl font-bold text-xs text-white bg-blue-600 hover:bg-blue-500 shadow-glow-blue transition-all transform hover:-translate-y-0.5"
-          >
-            <Compass className="w-4 h-4" />
-            <span>{dict.home.hero.primaryCta}</span>
-          </Link>
-
-          <a 
-            href="#sectors" 
-            className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl font-bold text-xs text-zinc-200 bg-brand-surface/90 hover:bg-brand-card border border-white/20 transition-all"
-          >
-            <span>{dict.home.hero.secondaryCta}</span>
-            <ArrowRight className="w-4 h-4 rtl:rotate-180 text-zinc-400" />
-          </a>
         </div>
 
         {/* 4-Column Statistics Bar — Clean Custom Separators (Zero Stray Lines) */}
