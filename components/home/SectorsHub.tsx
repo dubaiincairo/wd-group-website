@@ -75,10 +75,6 @@ export default function SectorsHub() {
                 </div>
               </div>
 
-              <div className="text-xs font-mono text-sky-300/80 bg-sky-500/5 px-3 py-1.5 rounded-lg border border-sky-500/15 mb-4">
-                &ldquo;{dict.home.sectors.hospitality.slogan}&rdquo;
-              </div>
-
               <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed mb-6">
                 {dict.home.sectors.hospitality.desc}
               </p>
@@ -142,10 +138,6 @@ export default function SectorsHub() {
                 </div>
               </div>
 
-              <div className="text-xs font-mono text-emerald-300/80 bg-emerald-500/5 px-3 py-1.5 rounded-lg border border-emerald-500/15 mb-4">
-                &ldquo;{dict.home.sectors.manufacturing.slogan}&rdquo;
-              </div>
-
               <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed mb-6">
                 {dict.home.sectors.manufacturing.desc}
               </p>
@@ -207,10 +199,6 @@ export default function SectorsHub() {
                     {dict.home.sectors.contracting.eyebrow}
                   </p>
                 </div>
-              </div>
-
-              <div className="text-xs font-mono text-amber-300/80 bg-amber-500/5 px-3 py-1.5 rounded-lg border border-amber-500/15 mb-4">
-                &ldquo;{dict.home.sectors.contracting.slogan}&rdquo;
               </div>
 
               <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed mb-6">
