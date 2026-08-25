@@ -83,8 +83,25 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   return (
     <ToastProvider>
-      <div className="min-h-screen bg-[#08090C] text-white flex flex-col lg:flex-row font-sans selection:bg-blue-600 selection:text-white">
+      <div className="min-h-screen bg-[#08090C] text-white flex flex-col lg:flex-row font-sans selection:bg-blue-600 selection:text-white relative">
         
+        {/* Background Video Backdrop with Hero Section Overlay Style */}
+        <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="auto"
+            poster="https://cdn.sanity.io/images/uoj8zwj3/production/00b20cc6cb3d8c613964965da5556e8396305950-2400x1792.jpg"
+            className="absolute inset-0 w-full h-full object-cover scale-105"
+          >
+            <source src="/videos/hospitality.mp4" type="video/mp4" />
+          </video>
+          <div className="absolute inset-0 bg-gradient-to-b from-[#08090C]/90 via-[#08090C]/80 to-[#08090C]/95 backdrop-blur-[2px]" />
+          <div className="absolute inset-0 bg-dot-matrix opacity-25" />
+        </div>
+
         {/* Sidebar */}
         <AdminSidebar
           userRole={user?.role}
@@ -93,7 +110,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         />
 
         {/* Main Content Area */}
-        <div className="flex-1 flex flex-col min-w-0">
+        <div className="flex-1 flex flex-col min-w-0 relative z-10">
           <AdminHeader
             user={user}
             onOpenMobileSidebar={() => setMobileSidebarOpen(true)}

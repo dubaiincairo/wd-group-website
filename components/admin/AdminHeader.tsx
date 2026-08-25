@@ -65,7 +65,7 @@ export default function AdminHeader({ user, onOpenMobileSidebar }: AdminHeaderPr
         <div className="hidden sm:flex items-center gap-2 text-xs text-zinc-400">
           <span className="font-mono text-blue-400">WD GROUP</span>
           <span>/</span>
-          <span className="font-semibold text-white">Operations Platform</span>
+          <span className="font-semibold text-white">Admin Console</span>
         </div>
       </div>
 

@@ -2,8 +2,8 @@ import React from 'react';
 import AdminLayout from '@/components/admin/AdminLayout';
 
 export const metadata = {
-  title: 'WD Group Operations Platform & CMS',
-  description: 'Enterprise administration and CMS for WD Group (مجموعة دبليو دي للأعمال)',
+  title: 'WD Group Admin Console',
+  description: 'Enterprise administration and operations console for WD Group',
   robots: {
     index: false,
     follow: false,

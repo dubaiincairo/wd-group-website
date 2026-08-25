@@ -144,9 +144,9 @@ function LoginForm() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full mt-2 py-3.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white text-xs sm:text-sm font-bold transition-all shadow-glow-blue flex items-center justify-center gap-2 group"
+          className="w-full mt-2 py-3.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white text-xs sm:text-sm font-bold transition-all shadow-glow-blue flex items-center justify-center gap-2 group cursor-pointer"
         >
-          <span>{loading ? 'Authenticating…' : 'Sign In to Operations'}</span>
+          <span>{loading ? 'Authenticating…' : 'Sign In to Admin Console'}</span>
           <ArrowRight className="w-4 h-4 rtl:rotate-180 group-hover:translate-x-0.5 transition-transform" />
         </button>
       </form>
@@ -159,6 +159,23 @@ export default function AdminLoginPage() {
   return (
     <div className="min-h-screen bg-[#040507] text-white flex flex-col justify-center items-center p-4 sm:p-8 relative overflow-hidden">
       
+      {/* Background Video Backdrop with Hero Section Overlay Style */}
+      <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="auto"
+          poster="https://cdn.sanity.io/images/uoj8zwj3/production/00b20cc6cb3d8c613964965da5556e8396305950-2400x1792.jpg"
+          className="absolute inset-0 w-full h-full object-cover scale-105"
+        >
+          <source src="/videos/hospitality.mp4" type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-gradient-to-b from-[#08090C]/90 via-[#08090C]/80 to-[#08090C]/95 backdrop-blur-[2px]" />
+        <div className="absolute inset-0 bg-dot-matrix opacity-25" />
+      </div>
+
       {/* Ambient background glows */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-blue-600/15 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-10 right-10 w-72 h-72 bg-sky-500/10 rounded-full blur-3xl pointer-events-none" />
@@ -178,10 +195,10 @@ export default function AdminLoginPage() {
           </div>
 
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
-            Operations Platform
+            Admin Console
           </h1>
           <p className="text-xs sm:text-sm text-zinc-400 font-medium">
-            مجموعة دبليو دي للأعمال · شركة تصاميم الوطن المحدودة
+            WD Group Executive & Operations Management
           </p>
         </div>
 
