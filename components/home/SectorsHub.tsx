@@ -44,12 +44,6 @@ export default function SectorsHub() {
           
           {/* 1. Hospitality (SwissBlue) */}
           <div className="glass-card rounded-3xl p-7 flex flex-col justify-between border border-sky-500/20 hover:border-sky-400/60 hover:shadow-[0_0_35px_rgba(56,189,248,0.2)] transition-all group relative overflow-hidden">
-            
-            {/* Top Corner Blueprint Tag */}
-            <div className="absolute top-3 right-3 rtl:right-auto rtl:left-3 text-[10px] font-mono text-sky-400/80 border border-sky-500/30 px-2 py-0.5 rounded bg-sky-950/40 backdrop-blur-md">
-              SEC // 01
-            </div>
-
             <div>
               {/* Card Photo Header */}
               <div className="relative h-48 w-full rounded-2xl overflow-hidden mb-6 border border-white/10 group-hover:border-sky-500/40 transition-colors bg-zinc-900">
@@ -117,12 +111,6 @@ export default function SectorsHub() {
 
           {/* 2. Manufacturing & Furniture (GreenWood) */}
           <div className="glass-card rounded-3xl p-7 flex flex-col justify-between border border-emerald-500/20 hover:border-emerald-400/60 hover:shadow-[0_0_35px_rgba(52,211,153,0.2)] transition-all group relative overflow-hidden">
-            
-            {/* Top Corner Blueprint Tag */}
-            <div className="absolute top-3 right-3 rtl:right-auto rtl:left-3 text-[10px] font-mono text-emerald-400/80 border border-emerald-500/30 px-2 py-0.5 rounded bg-emerald-950/40 backdrop-blur-md">
-              SEC // 02
-            </div>
-
             <div>
               {/* Card Photo Header */}
               <div className="relative h-48 w-full rounded-2xl overflow-hidden mb-6 border border-white/10 group-hover:border-emerald-500/40 transition-colors bg-zinc-900">
@@ -190,12 +178,6 @@ export default function SectorsHub() {
 
           {/* 3. Contracting & Fit-Out (Projects) */}
           <div className="glass-card rounded-3xl p-7 flex flex-col justify-between border border-amber-500/20 hover:border-amber-400/60 hover:shadow-[0_0_35px_rgba(251,191,36,0.2)] transition-all group relative overflow-hidden">
-            
-            {/* Top Corner Blueprint Tag */}
-            <div className="absolute top-3 right-3 rtl:right-auto rtl:left-3 text-[10px] font-mono text-amber-400/80 border border-amber-500/30 px-2 py-0.5 rounded bg-amber-950/40 backdrop-blur-md">
-              SEC // 03
-            </div>
-
             <div>
               {/* Card Photo Header */}
               <div className="relative h-48 w-full rounded-2xl overflow-hidden mb-6 border border-white/10 group-hover:border-amber-500/40 transition-colors bg-zinc-900">
