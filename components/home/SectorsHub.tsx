@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useLanguage } from '@/context/LanguageContext';
 import { 
   Building2, 
@@ -10,8 +11,7 @@ import {
   ExternalLink, 
   Check, 
   ArrowRight,
-  Layers,
-  Compass
+  Layers
 } from 'lucide-react';
 
 const SECTOR_CARD_PHOTOS = {
@@ -21,7 +21,7 @@ const SECTOR_CARD_PHOTOS = {
 };
 
 export default function SectorsHub() {
-  const { lang, dict } = useLanguage();
+  const { dict } = useLanguage();
 
   return (
     <section id="sectors" className="py-24 sm:py-32 bg-brand-surface relative overflow-hidden border-t border-brand-border">
@@ -65,10 +65,12 @@ export default function SectorsHub() {
             <div>
               {/* Photo Header */}
               <div className="relative h-56 overflow-hidden">
-                <img 
+                <Image
                   src={SECTOR_CARD_PHOTOS.hospitality} 
                   alt="SwissBlue Hospitality"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+                  fill
+                  sizes="(min-width: 1024px) 33vw, 100vw"
+                  className="object-cover group-hover:scale-105 transition-transform duration-700"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-brand-card via-black/40 to-transparent"></div>
                 <div className="absolute top-4 left-4 rtl:left-auto rtl:right-4 flex items-center gap-2">
@@ -135,10 +137,12 @@ export default function SectorsHub() {
             <div>
               {/* Photo Header */}
               <div className="relative h-56 overflow-hidden">
-                <img 
+                <Image
                   src={SECTOR_CARD_PHOTOS.manufacturing} 
                   alt="GreenWood Manufacturing"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+                  fill
+                  sizes="(min-width: 1024px) 33vw, 100vw"
+                  className="object-cover group-hover:scale-105 transition-transform duration-700"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-brand-card via-black/40 to-transparent"></div>
                 <div className="absolute top-4 left-4 rtl:left-auto rtl:right-4 flex items-center gap-2">
@@ -203,10 +207,12 @@ export default function SectorsHub() {
             <div>
               {/* Photo Header */}
               <div className="relative h-56 overflow-hidden">
-                <img 
+                <Image
                   src={SECTOR_CARD_PHOTOS.contracting} 
                   alt="Contracting and Fit-outs"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+                  fill
+                  sizes="(min-width: 1024px) 33vw, 100vw"
+                  className="object-cover group-hover:scale-105 transition-transform duration-700"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-brand-card via-black/40 to-transparent"></div>
                 <div className="absolute top-4 left-4 rtl:left-auto rtl:right-4 flex items-center gap-2">

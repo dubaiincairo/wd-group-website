@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useLanguage } from '@/context/LanguageContext';
 import { 
@@ -34,21 +34,7 @@ export default function HeroSection() {
   const { lang, dict } = useLanguage();
   const [selectedSector, setSelectedSector] = useState<'hospitality' | 'manufacturing' | 'contracting'>('hospitality');
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-
-  // References to video elements for reliable autoplay
-  const hospRef = useRef<HTMLVideoElement>(null);
-  const mfgRef = useRef<HTMLVideoElement>(null);
-  const contrRef = useRef<HTMLVideoElement>(null);
-
-  useEffect(() => {
-    // Ensure all videos are muted and playing
-    [hospRef, mfgRef, contrRef].forEach(ref => {
-      if (ref.current) {
-        ref.current.muted = true;
-        ref.current.play().catch(() => {});
-      }
-    });
-  }, []);
+  const selectedMedia = SECTOR_MEDIA[selectedSector];
 
   // Auto-cycle through sectors every 7 seconds unless user manually interacts
   useEffect(() => {
@@ -73,53 +59,19 @@ export default function HeroSection() {
       {/* 1. Dynamic Video Ambient Backdrops with High-Res Photographic Fallbacks (Sub-16ms INP) */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
         
-        {/* Hospitality Video Layer */}
-        <div className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${selectedSector === 'hospitality' ? 'opacity-100' : 'opacity-0'}`}>
-          <video
-            ref={hospRef}
-            autoPlay
-            loop
-            muted
-            playsInline
-            preload="auto"
-            poster={SECTOR_MEDIA.hospitality.poster}
-            className="w-full h-full object-cover scale-105"
-          >
-            <source src={SECTOR_MEDIA.hospitality.video} type="video/mp4" />
-          </video>
-        </div>
-
-        {/* Manufacturing Video Layer */}
-        <div className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${selectedSector === 'manufacturing' ? 'opacity-100' : 'opacity-0'}`}>
-          <video
-            ref={mfgRef}
-            autoPlay
-            loop
-            muted
-            playsInline
-            preload="auto"
-            poster={SECTOR_MEDIA.manufacturing.poster}
-            className="w-full h-full object-cover scale-105"
-          >
-            <source src={SECTOR_MEDIA.manufacturing.video} type="video/mp4" />
-          </video>
-        </div>
-
-        {/* Contracting Video Layer */}
-        <div className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${selectedSector === 'contracting' ? 'opacity-100' : 'opacity-0'}`}>
-          <video
-            ref={contrRef}
-            autoPlay
-            loop
-            muted
-            playsInline
-            preload="auto"
-            poster={SECTOR_MEDIA.contracting.poster}
-            className="w-full h-full object-cover scale-105"
-          >
-            <source src={SECTOR_MEDIA.contracting.video} type="video/mp4" />
-          </video>
-        </div>
+        {/* Only the active video is mounted, preventing three simultaneous downloads and decoders. */}
+        <video
+          key={selectedSector}
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="metadata"
+          poster={selectedMedia.poster}
+          className="absolute inset-0 w-full h-full object-cover scale-105 animate-in fade-in duration-1000"
+        >
+          <source src={selectedMedia.video} type="video/mp4" />
+        </video>
 
         {/* Architectural Vignettes & Grid Overlay - Tuned for Clear Video Visibility & Contrast */}
         <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/55 to-black/85"></div>
@@ -163,6 +115,8 @@ export default function HeroSection() {
         <div className="inline-flex flex-wrap items-center justify-center gap-2.5 p-2 rounded-2xl bg-black/85 border border-white/20 backdrop-blur-2xl mb-12 shadow-2xl max-w-full">
           {/* SwissBlue Button */}
           <button
+            type="button"
+            aria-pressed={selectedSector === 'hospitality'}
             onClick={() => handleSelectSector('hospitality')}
             className={`relative overflow-hidden flex items-center gap-2 px-4 sm:px-5 py-2.5 sm:py-3 rounded-xl text-xs font-bold transition-all duration-200 ${
               selectedSector === 'hospitality'
@@ -179,6 +133,8 @@ export default function HeroSection() {
 
           {/* GreenWood Button */}
           <button
+            type="button"
+            aria-pressed={selectedSector === 'manufacturing'}
             onClick={() => handleSelectSector('manufacturing')}
             className={`relative overflow-hidden flex items-center gap-2 px-4 sm:px-5 py-2.5 sm:py-3 rounded-xl text-xs font-bold transition-all duration-200 ${
               selectedSector === 'manufacturing'
@@ -195,6 +151,8 @@ export default function HeroSection() {
 
           {/* Contracting Button */}
           <button
+            type="button"
+            aria-pressed={selectedSector === 'contracting'}
             onClick={() => handleSelectSector('contracting')}
             className={`relative overflow-hidden flex items-center gap-2 px-4 sm:px-5 py-2.5 sm:py-3 rounded-xl text-xs font-bold transition-all duration-200 ${
               selectedSector === 'contracting'

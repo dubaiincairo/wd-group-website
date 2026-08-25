@@ -1,4 +1,5 @@
 import type { ContactSubmission, JobApplication, JobListing } from './types/database';
+import { fetchWithTimeout } from './fetchWithTimeout';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://fqkbgfdasfwnryekkgqz.supabase.co';
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZxa2JnZmRhc2Z3bnJ5ZWtrZ3F6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc1OTAyMDYsImV4cCI6MjEwMzE2NjIwNn0.IRPdvlCIbeTtFNf8TMc353fT-tlLxYq0Mx3P2HHmM3Q';
@@ -31,7 +32,7 @@ export async function submitContactInquiry(data: {
     message: data.message.trim(),
   };
 
-  const res = await fetch(`${supabaseUrl}/rest/v1/contact_submissions`, {
+  const res = await fetchWithTimeout(`${supabaseUrl}/rest/v1/contact_submissions`, {
     method: 'POST',
     headers: {
       ...headers,
@@ -83,7 +84,7 @@ export async function submitJobApplication(data: {
     job_title: data.jobTitle || null,
   };
 
-  const res = await fetch(`${supabaseUrl}/rest/v1/job_applications`, {
+  const res = await fetchWithTimeout(`${supabaseUrl}/rest/v1/job_applications`, {
     method: 'POST',
     headers: {
       ...headers,
@@ -106,7 +107,7 @@ export async function submitJobApplication(data: {
  */
 export async function fetchPublishedJobs(): Promise<JobListing[]> {
   try {
-    const res = await fetch(
+    const res = await fetchWithTimeout(
       `${supabaseUrl}/rest/v1/job_listings?published=eq.true&order=sort_order.asc,created_at.desc`,
       {
         method: 'GET',

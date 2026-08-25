@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { useLanguage } from '@/context/LanguageContext';
 import WireframeBlock from '@/components/wireframe/WireframeBlock';
-import { ArrowLeft, ArrowRight, LayoutTemplate, Compass, ShieldCheck, Users, Globe2, Building } from 'lucide-react';
+import { ArrowRight, LayoutTemplate } from 'lucide-react';
 
 export default function AboutWireframe() {
   const { lang } = useLanguage();

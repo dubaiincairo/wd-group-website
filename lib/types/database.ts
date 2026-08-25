@@ -44,6 +44,6 @@ export interface JobListing {
 
 export interface WdgroupContent {
   id: string;
-  data: Record<string, any>;
+  data: Record<string, unknown>;
   updated_at?: string;
 }

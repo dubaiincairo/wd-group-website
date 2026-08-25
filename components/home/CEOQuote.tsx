@@ -6,7 +6,7 @@ import { useLanguage } from '@/context/LanguageContext';
 import { Quote, ShieldCheck } from 'lucide-react';
 
 export default function CEOQuote() {
-  const { lang, dict } = useLanguage();
+  const { dict } = useLanguage();
 
   return (
     <section className="py-24 sm:py-32 bg-brand-darker text-white relative overflow-hidden border-t border-brand-border">

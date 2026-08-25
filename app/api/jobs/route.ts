@@ -10,7 +10,7 @@ export async function GET() {
       success: true,
       jobs,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error fetching jobs:', error);
     return NextResponse.json(
       { error: 'Failed to fetch jobs', jobs: [] },

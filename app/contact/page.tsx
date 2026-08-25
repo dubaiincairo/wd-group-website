@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
+import { fetchWithTimeout } from '@/lib/fetchWithTimeout';
 import { 
   MessageSquare, 
   Mail, 
@@ -9,8 +10,7 @@ import {
   MapPin, 
   CheckCircle2, 
   Send, 
-  ShieldCheck, 
-  UploadCloud 
+  ShieldCheck
 } from 'lucide-react';
 
 export default function ContactPage() {
@@ -34,7 +34,7 @@ export default function ContactPage() {
     setErrorMessage(null);
 
     try {
-      const res = await fetch('/api/contact', {
+      const res = await fetchWithTimeout('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
@@ -47,9 +47,9 @@ export default function ContactPage() {
       }
 
       setSubmitted(true);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Contact form submission error:', err);
-      setErrorMessage(err.message || (lang === 'ar' ? 'فشل الإرسال، يرجى المحاولة لاحقاً' : 'Submission failed. Please try again.'));
+      setErrorMessage(err instanceof Error ? err.message : (lang === 'ar' ? 'فشل الإرسال، يرجى المحاولة لاحقاً' : 'Submission failed. Please try again.'));
     } finally {
       setLoading(false);
     }
@@ -290,16 +290,6 @@ export default function ContactPage() {
                   onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                   className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-blue-500 resize-none"
                 ></textarea>
-              </div>
-
-              <div className="p-4 rounded-xl bg-black/40 border border-dashed border-zinc-700 text-center">
-                <UploadCloud className="w-6 h-6 text-zinc-400 mx-auto mb-1" />
-                <span className="text-xs text-zinc-300 font-semibold block">
-                  {dict.forms.attachment}
-                </span>
-                <span className="text-[10px] text-zinc-500">
-                  {lang === 'ar' ? 'الحد الأقصى للملف: 10 ميجابايت (PDF, DOCX, XLSX, ZIP)' : 'Max file size: 10 MB (PDF, DOCX, XLSX, ZIP)'}
-                </span>
               </div>
 
               <div className="flex items-center gap-2 pt-1">

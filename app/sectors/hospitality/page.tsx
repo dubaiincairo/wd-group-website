@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { useLanguage } from '@/context/LanguageContext';
 import WireframeBlock from '@/components/wireframe/WireframeBlock';
-import { ArrowRight, LayoutTemplate, Building2, ExternalLink } from 'lucide-react';
+import { LayoutTemplate, Building2, ExternalLink } from 'lucide-react';
 
 export default function HospitalityWireframe() {
   const { lang } = useLanguage();

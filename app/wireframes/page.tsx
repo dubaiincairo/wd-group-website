@@ -4,7 +4,6 @@ import React from 'react';
 import Link from 'next/link';
 import { useLanguage } from '@/context/LanguageContext';
 import { 
-  LayoutTemplate, 
   Home, 
   Building2, 
   Factory, 
@@ -12,11 +11,7 @@ import {
   Users, 
   MessageSquare, 
   ArrowRight,
-  ExternalLink,
-  Layers,
-  Sparkles,
   Compass,
-  FileCode2,
   Workflow
 } from 'lucide-react';
 

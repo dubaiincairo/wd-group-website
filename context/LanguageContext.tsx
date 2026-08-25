@@ -1,63 +1,59 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { translations, Language } from '@/lib/translations';
+import React, { createContext, useContext, useEffect, useSyncExternalStore } from 'react';
+import { translations, Language, TranslationDictionary } from '@/lib/translations';
 
 interface LanguageContextType {
   lang: Language;
   dir: 'ltr' | 'rtl';
-  t: (path: string) => any;
   setLanguage: (lang: Language) => void;
   toggleLanguage: () => void;
-  dict: typeof translations.en;
+  dict: TranslationDictionary;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
+const LANGUAGE_STORAGE_KEY = 'wd_lang';
+const LANGUAGE_CHANGE_EVENT = 'wd-language-change';
+
+const getStoredLanguage = (): Language => {
+  if (typeof window === 'undefined') return 'en';
+  return localStorage.getItem(LANGUAGE_STORAGE_KEY) === 'ar' ? 'ar' : 'en';
+};
+
+const getServerLanguage = (): Language => 'en';
+
+const subscribeToLanguage = (onStoreChange: () => void) => {
+  window.addEventListener('storage', onStoreChange);
+  window.addEventListener(LANGUAGE_CHANGE_EVENT, onStoreChange);
+  return () => {
+    window.removeEventListener('storage', onStoreChange);
+    window.removeEventListener(LANGUAGE_CHANGE_EVENT, onStoreChange);
+  };
+};
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [lang, setLang] = useState<Language>('en');
-
-  useEffect(() => {
-    const saved = localStorage.getItem('wd_lang') as Language;
-    if (saved && (saved === 'en' || saved === 'ar')) {
-      setLang(saved);
-    }
-  }, []);
+  const lang = useSyncExternalStore<Language>(subscribeToLanguage, getStoredLanguage, getServerLanguage);
 
   const dir = lang === 'ar' ? 'rtl' : 'ltr';
 
   useEffect(() => {
     document.documentElement.lang = lang;
     document.documentElement.dir = dir;
-    localStorage.setItem('wd_lang', lang);
   }, [lang, dir]);
 
   const setLanguage = (newLang: Language) => {
-    setLang(newLang);
+    localStorage.setItem(LANGUAGE_STORAGE_KEY, newLang);
+    window.dispatchEvent(new Event(LANGUAGE_CHANGE_EVENT));
   };
 
   const toggleLanguage = () => {
-    setLang((prev) => (prev === 'en' ? 'ar' : 'en'));
+    setLanguage(lang === 'en' ? 'ar' : 'en');
   };
 
   const dict = translations[lang];
 
-  // Helper to access nested translation keys like 'nav.about'
-  const t = (path: string) => {
-    const keys = path.split('.');
-    let current: any = dict;
-    for (const key of keys) {
-      if (current && current[key] !== undefined) {
-        current = current[key];
-      } else {
-        return path;
-      }
-    }
-    return current;
-  };
-
   return (
-    <LanguageContext.Provider value={{ lang, dir, t, setLanguage, toggleLanguage, dict }}>
+    <LanguageContext.Provider value={{ lang, dir, setLanguage, toggleLanguage, dict }}>
       {children}
     </LanguageContext.Provider>
   );

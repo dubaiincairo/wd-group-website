@@ -64,17 +64,17 @@ export default function Footer() {
             </h4>
             <ul className="space-y-2.5 text-xs text-zinc-400">
               <li>
-                <Link href="#about" className="hover:text-white transition-colors">
+                <Link href="/about" className="hover:text-white transition-colors">
                   {dict.footer.about_us}
                 </Link>
               </li>
               <li>
-                <Link href="#careers" className="hover:text-white transition-colors">
+                <Link href="/careers" className="hover:text-white transition-colors">
                   {dict.footer.careers}
                 </Link>
               </li>
               <li>
-                <Link href="#contact" className="hover:text-white transition-colors">
+                <Link href="/contact" className="hover:text-white transition-colors">
                   {dict.footer.contact}
                 </Link>
               </li>
@@ -88,19 +88,19 @@ export default function Footer() {
             </h4>
             <ul className="space-y-2.5 text-xs text-zinc-400">
               <li>
-                <Link href="#hospitality" className="hover:text-sky-300 transition-colors flex items-center gap-1.5">
+                <Link href="/sectors/hospitality" className="hover:text-sky-300 transition-colors flex items-center gap-1.5">
                   <Building2 className="w-3.5 h-3.5 text-sky-400" />
                   <span>{dict.footer.hosp_title}</span>
                 </Link>
               </li>
               <li>
-                <Link href="#manufacturing" className="hover:text-emerald-300 transition-colors flex items-center gap-1.5">
+                <Link href="/sectors/manufacturing" className="hover:text-emerald-300 transition-colors flex items-center gap-1.5">
                   <Factory className="w-3.5 h-3.5 text-emerald-400" />
                   <span>{dict.footer.mfg_title}</span>
                 </Link>
               </li>
               <li>
-                <Link href="#contracting" className="hover:text-amber-300 transition-colors flex items-center gap-1.5">
+                <Link href="/sectors/contracting" className="hover:text-amber-300 transition-colors flex items-center gap-1.5">
                   <HardHat className="w-3.5 h-3.5 text-amber-400" />
                   <span>{dict.footer.contr_title}</span>
                 </Link>
@@ -127,7 +127,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link 
-                  href="#manufacturing" 
+                  href="/sectors/manufacturing"
                   className="text-emerald-400 hover:underline flex items-center gap-1 font-semibold"
                 >
                   <span>{dict.footer.greenwood}</span>
@@ -142,7 +142,7 @@ export default function Footer() {
               </li>
               <li className="flex items-center gap-1.5 text-zinc-300 font-mono">
                 <Phone className="w-3.5 h-3.5 text-blue-400 shrink-0" />
-                <a href={`tel:${dict.footer.phone.replace(/\\s/g, '')}`} className="hover:underline">
+                <a href={`tel:${dict.footer.phone.replace(/\s/g, '')}`} className="hover:underline">
                   {dict.footer.phone}
                 </a>
               </li>

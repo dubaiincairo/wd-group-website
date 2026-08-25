@@ -6,9 +6,7 @@ import {
   Workflow, 
   Factory, 
   HardHat, 
-  Building2, 
-  ArrowRight,
-  Sparkles
+  Building2
 } from 'lucide-react';
 
 export default function HoldingSynergy() {

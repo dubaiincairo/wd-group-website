@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useLanguage } from '@/context/LanguageContext';
+import { fetchWithTimeout } from '@/lib/fetchWithTimeout';
 import { Mail, Phone, MapPin, Send, CheckCircle2, MessageSquare, ArrowRight, X } from 'lucide-react';
 
 export default function ContactCTA() {
@@ -27,7 +28,7 @@ export default function ContactCTA() {
     setErrorMessage(null);
 
     try {
-      const res = await fetch('/api/contact', {
+      const res = await fetchWithTimeout('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
@@ -40,9 +41,9 @@ export default function ContactCTA() {
       }
 
       setSubmitted(true);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('ContactCTA form error:', err);
-      setErrorMessage(err.message || (lang === 'ar' ? 'فشل الإرسال، يرجى المحاولة لاحقاً' : 'Submission failed. Please try again.'));
+      setErrorMessage(err instanceof Error ? err.message : (lang === 'ar' ? 'فشل الإرسال، يرجى المحاولة لاحقاً' : 'Submission failed. Please try again.'));
     } finally {
       setLoading(false);
     }

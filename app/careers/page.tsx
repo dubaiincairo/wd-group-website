@@ -16,6 +16,7 @@ import {
   ChevronUp 
 } from 'lucide-react';
 import type { JobListing } from '@/lib/types/database';
+import { fetchWithTimeout } from '@/lib/fetchWithTimeout';
 
 const PILLAR_ICONS = [GraduationCap, TrendingUp, Users, CheckCircle2];
 
@@ -36,6 +37,7 @@ export default function CareersPage() {
     city: '',
     sector: 'hospitality',
     linkedin: '',
+    resumeUrl: '',
     coverNote: '',
     jobId: '',
     jobTitle: '',
@@ -45,7 +47,7 @@ export default function CareersPage() {
     async function loadJobs() {
       try {
         setLoadingJobs(true);
-        const res = await fetch('/api/jobs');
+        const res = await fetchWithTimeout('/api/jobs');
         if (res.ok) {
           const data = await res.json();
           if (data.jobs && Array.isArray(data.jobs)) {
@@ -79,7 +81,7 @@ export default function CareersPage() {
     setErrorMessage(null);
 
     try {
-      const res = await fetch('/api/careers', {
+      const res = await fetchWithTimeout('/api/careers', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
@@ -92,9 +94,9 @@ export default function CareersPage() {
       }
 
       setSubmitted(true);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Careers form submission error:', err);
-      setErrorMessage(err.message || (lang === 'ar' ? 'فشل الإرسال، يرجى المحاولة لاحقاً' : 'Submission failed. Please try again.'));
+      setErrorMessage(err instanceof Error ? err.message : (lang === 'ar' ? 'فشل الإرسال، يرجى المحاولة لاحقاً' : 'Submission failed. Please try again.'));
     } finally {
       setLoading(false);
     }
@@ -360,6 +362,7 @@ export default function CareersPage() {
                     city: '',
                     sector: 'hospitality',
                     linkedin: '',
+                    resumeUrl: '',
                     coverNote: '',
                     jobId: '',
                     jobTitle: '',
@@ -499,14 +502,21 @@ export default function CareersPage() {
                 ></textarea>
               </div>
 
-              <div className="p-4 rounded-xl bg-black/40 border border-dashed border-zinc-700 text-center">
-                <UploadCloud className="w-6 h-6 text-zinc-400 mx-auto mb-1" />
-                <span className="text-xs text-zinc-300 font-semibold block">
-                  {lang === 'ar' ? 'إرفاق السيرة الذاتية (PDF حتى 10 ميجابايت)' : 'Upload Resume / CV (PDF up to 10 MB)'}
-                </span>
-                <span className="text-[10px] text-zinc-500">
-                  {lang === 'ar' ? 'سيتم حفظ البيانات بسرية تامة ومراجعتها من قبل إدارة الموارد البشرية' : 'Stored securely and reviewed by WD Group HR'}
-                </span>
+              <div>
+                <label className="flex items-center gap-1.5 text-zinc-300 font-semibold mb-1">
+                  <UploadCloud className="w-4 h-4 text-zinc-400" />
+                  <span>{lang === 'ar' ? 'رابط السيرة الذاتية (اختياري)' : 'Resume / CV Link (Optional)'}</span>
+                </label>
+                <input
+                  type="url"
+                  placeholder="https://drive.google.com/..."
+                  value={formData.resumeUrl}
+                  onChange={(e) => setFormData({ ...formData, resumeUrl: e.target.value })}
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-blue-500"
+                />
+                <p className="mt-1.5 text-[10px] text-zinc-500">
+                  {lang === 'ar' ? 'استخدم رابطاً قابلاً للمشاركة لمراجعة السيرة الذاتية.' : 'Use a shareable link so our HR team can review the file.'}
+                </p>
               </div>
 
               <div className="pt-2">

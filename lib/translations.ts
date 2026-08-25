@@ -1,7 +1,6 @@
 export type Language = 'en' | 'ar';
 
-export const translations = {
-  en: {
+const en = {
     nav: {
       brand: "WD GROUP",
       holding: "WD Group for Business",
@@ -117,6 +116,107 @@ export const translations = {
       form_success: "Thank you for reaching out. Our team will contact you shortly.",
       close: "Close"
     },
+    home: {
+      partnership: {
+        label: "Let’s Build Together",
+        heading: "Ready to Start a Conversation?",
+        body: "Connect with WD Group for partnerships, project opportunities, hospitality enquiries, or careers across Saudi Arabia.",
+        primaryCta: "Send an Inquiry",
+        secondaryCta: "Explore Careers",
+      },
+    },
+    common: {
+      submitInquiry: "Submit Inquiry",
+    },
+    forms: {
+      fullName: "Full Name",
+      company: "Company",
+      email: "Email Address",
+      phone: "Phone Number",
+      sector: "Area of Interest",
+      subject: "Subject",
+      message: "Message",
+      attachment: "Attachment (optional)",
+      consent: "I agree that WD Group may use these details to respond to my inquiry.",
+      placeholders: {
+        name: "Your full name",
+        company: "Company name",
+        email: "name@company.com",
+        phone: "+966 50 000 0000",
+        subject: "How can we help?",
+        message: "Tell us about your inquiry or project…",
+      },
+      options: {
+        general: "General Inquiry",
+        hospitality: "Hospitality / SwissBlue",
+        manufacturing: "Manufacturing / GreenWood",
+        contracting: "Contracting & Fit-out",
+        partnership: "Business Partnership",
+        tender: "Tender / RFP",
+        careers: "Careers",
+        media: "Media",
+      },
+      messages: {
+        success: "Thank you. Your inquiry has been received and our team will contact you shortly.",
+        successApp: "Thank you. Your application has been received and will be reviewed by our HR team.",
+      },
+    },
+    contact: {
+      hero: {
+        eyebrow: "Contact WD Group",
+        title: "Let’s Create Lasting Value Together",
+        body: "Reach our team for corporate enquiries, partnerships, tenders, hospitality, manufacturing, contracting, and careers.",
+      },
+      cards: {
+        hq_title: "Saudi Headquarters",
+        hq_address: "Najran, Kingdom of Saudi Arabia",
+        general_title: "Email Channels",
+        general_email: "info@wdgroup.sa",
+        secondary_email: "projects@wdgroup.sa",
+        phone_title: "Direct Contact",
+        primary_phone: "+966 50 572 5070",
+        secondary_phone: "+966 53 397 9797",
+      },
+      form: {
+        heading: "Send an Inquiry",
+        body: "Choose the relevant sector and share the details. Our team will route your request to the right department.",
+        submit: "Submit Inquiry",
+      },
+      legal: {
+        entity: "WD Group for Business",
+        cr: "Commercial Registration: Available on request",
+        vat: "VAT Registration: Available on request",
+      },
+    },
+    careers: {
+      hero: {
+        eyebrow: "Careers at WD Group",
+        title: "Build the Future With Us",
+        body: "Join a multidisciplinary Saudi team creating value across hospitality, manufacturing, contracting, and corporate services.",
+        proof: "80+ specialists across our business sectors",
+        primaryCta: "View Open Positions",
+        secondaryCta: "Join Our Talent Pool",
+      },
+      pillars: {
+        heading: "A Place to Learn, Lead, and Grow",
+        list: [
+          { title: "National Talent", desc: "Structured opportunities that develop Saudi capabilities and future leaders." },
+          { title: "Career Growth", desc: "Clear development pathways, mentoring, and cross-sector experience." },
+          { title: "Collaborative Culture", desc: "Work with multidisciplinary teams that value ownership and practical ideas." },
+          { title: "Meaningful Impact", desc: "Contribute to businesses aligned with Saudi Vision 2030." },
+        ],
+      },
+      jobs: {
+        heading: "Open Positions",
+        filters: ["All", "Technology", "Design", "Marketing"],
+        empty: "There are no matching openings at the moment. You can still join our talent pool for future opportunities.",
+      },
+      talentPool: {
+        heading: "Join Our Talent Pool",
+        body: "Share your profile for current and upcoming opportunities across WD Group.",
+        cta: "Submit Application",
+      },
+    },
     footer: {
       tagline: "Value · Vision · Future",
       description: "A multi-sector conglomerate in hospitality, manufacturing, and contracting — contributing to a diversified, sustainable national economy in line with Vision 2030.",
@@ -132,12 +232,22 @@ export const translations = {
       swissblue: "SwissBlue",
       greenwood: "GreenWood",
       email: "info@wdgroup.sa",
-      phone: "+966 12 345 6789",
+      phone: "+966 50 572 5070",
       rights: "© 2025 WD Group for Business. All rights reserved.",
       location_sa: "Kingdom of Saudi Arabia",
+      location_text: "Najran, Kingdom of Saudi Arabia",
     }
-  },
-  ar: {
+} as const;
+
+type DeepStringShape<T> = T extends string
+  ? string
+  : T extends readonly (infer Item)[]
+    ? readonly DeepStringShape<Item>[]
+    : T extends object
+      ? { [Key in keyof T]: DeepStringShape<T[Key]> }
+      : T;
+
+const ar = {
     nav: {
       brand: "مجموعة دبليو دي",
       holding: "مجموعة دبليو دي للأعمال",
@@ -253,6 +363,107 @@ export const translations = {
       form_success: "شكراً لتواصلكم. تم استلام رسالتكم وسيتواصل معكم فريقنا قريباً.",
       close: "إغلاق"
     },
+    home: {
+      partnership: {
+        label: "لنبنِ المستقبل معاً",
+        heading: "جاهزون لبدء حوار مثمر",
+        body: "تواصل مع مجموعة دبليو دي للشراكات وفرص المشروعات واستفسارات الضيافة والتوظيف في المملكة العربية السعودية.",
+        primaryCta: "إرسال استفسار",
+        secondaryCta: "استكشف الوظائف",
+      },
+    },
+    common: {
+      submitInquiry: "إرسال الاستفسار",
+    },
+    forms: {
+      fullName: "الاسم الكامل",
+      company: "الشركة",
+      email: "البريد الإلكتروني",
+      phone: "رقم الهاتف",
+      sector: "مجال الاهتمام",
+      subject: "الموضوع",
+      message: "الرسالة",
+      attachment: "المرفق (اختياري)",
+      consent: "أوافق على استخدام مجموعة دبليو دي لهذه البيانات للرد على استفساري.",
+      placeholders: {
+        name: "الاسم الكامل",
+        company: "اسم الشركة",
+        email: "name@company.com",
+        phone: "+966 50 000 0000",
+        subject: "كيف يمكننا مساعدتك؟",
+        message: "اكتب تفاصيل الاستفسار أو المشروع…",
+      },
+      options: {
+        general: "استفسار عام",
+        hospitality: "الضيافة / SwissBlue",
+        manufacturing: "التصنيع / GreenWood",
+        contracting: "المقاولات والتشطيبات",
+        partnership: "شراكة أعمال",
+        tender: "مناقصة / طلب عرض",
+        careers: "التوظيف",
+        media: "الإعلام",
+      },
+      messages: {
+        success: "شكراً لتواصلك. تم استلام استفسارك وسيتواصل معك فريقنا قريباً.",
+        successApp: "شكراً لك. تم استلام طلبك وستراجعه إدارة الموارد البشرية.",
+      },
+    },
+    contact: {
+      hero: {
+        eyebrow: "تواصل مع مجموعة دبليو دي",
+        title: "لنصنع قيمة مستدامة معاً",
+        body: "تواصل مع فريقنا للاستفسارات المؤسسية والشراكات والمناقصات والضيافة والتصنيع والمقاولات والتوظيف.",
+      },
+      cards: {
+        hq_title: "المقر الرئيسي في المملكة",
+        hq_address: "نجران، المملكة العربية السعودية",
+        general_title: "قنوات البريد الإلكتروني",
+        general_email: "info@wdgroup.sa",
+        secondary_email: "projects@wdgroup.sa",
+        phone_title: "التواصل المباشر",
+        primary_phone: "+966 50 572 5070",
+        secondary_phone: "+966 53 397 9797",
+      },
+      form: {
+        heading: "أرسل استفسارك",
+        body: "اختر القطاع المناسب وشارك التفاصيل، وسنوجّه طلبك إلى الإدارة المختصة.",
+        submit: "إرسال الاستفسار",
+      },
+      legal: {
+        entity: "مجموعة دبليو دي للأعمال",
+        cr: "السجل التجاري: متاح عند الطلب",
+        vat: "التسجيل الضريبي: متاح عند الطلب",
+      },
+    },
+    careers: {
+      hero: {
+        eyebrow: "العمل في مجموعة دبليو دي",
+        title: "ابنِ المستقبل معنا",
+        body: "انضم إلى فريق سعودي متعدد التخصصات يصنع القيمة في الضيافة والتصنيع والمقاولات والخدمات المؤسسية.",
+        proof: "أكثر من 80 متخصصاً عبر قطاعات المجموعة",
+        primaryCta: "عرض الوظائف المتاحة",
+        secondaryCta: "انضم إلى قاعدة المواهب",
+      },
+      pillars: {
+        heading: "بيئة للتعلم والقيادة والنمو",
+        list: [
+          { title: "تمكين الكفاءات الوطنية", desc: "فرص منظمة لتطوير القدرات السعودية وقادة المستقبل." },
+          { title: "النمو المهني", desc: "مسارات تطوير واضحة وإرشاد وخبرة عملية عبر قطاعات متعددة." },
+          { title: "ثقافة تعاونية", desc: "اعمل مع فرق متعددة التخصصات تقدّر المسؤولية والأفكار العملية." },
+          { title: "أثر ملموس", desc: "ساهم في أعمال تتوافق مع رؤية السعودية 2030." },
+        ],
+      },
+      jobs: {
+        heading: "الوظائف المتاحة",
+        filters: ["الكل", "تقنية", "تصميم", "تسويق"],
+        empty: "لا توجد وظائف مطابقة حالياً. يمكنك الانضمام إلى قاعدة المواهب للفرص القادمة.",
+      },
+      talentPool: {
+        heading: "انضم إلى قاعدة المواهب",
+        body: "شارك ملفك للفرص الحالية والقادمة في قطاعات مجموعة دبليو دي.",
+        cta: "إرسال الطلب",
+      },
+    },
     footer: {
       tagline: "القيمة · الرؤية · المستقبل",
       description: "مجموعة سعودية متنوعة الأنشطة تنشط في قطاعات الضيافة والتصنيع والمقاولات، بهدف الإسهام في بناء اقتصاد وطني متنوع ومستدام وفق رؤية ٢٠٣٠.",
@@ -267,10 +478,14 @@ export const translations = {
       col3_title: "تواصل",
       swissblue: "SwissBlue ↗",
       greenwood: "GreenWood ↗",
-      email: "info@wdgroup.com.sa",
-      phone: "+966 12 345 6789",
+      email: "info@wdgroup.sa",
+      phone: "+966 50 572 5070",
       rights: "© ١٤٤٦هـ / ٢٠٢٥م — مجموعة دبليو دي للأعمال. جميع الحقوق محفوظة.",
       location_sa: "المملكة العربية السعودية",
+      location_text: "نجران، المملكة العربية السعودية",
     }
-  }
-};
+} satisfies DeepStringShape<typeof en>;
+
+export type TranslationDictionary = DeepStringShape<typeof en>;
+
+export const translations: Record<Language, TranslationDictionary> = { en, ar };

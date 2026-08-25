@@ -13,16 +13,9 @@ import {
   Compass, 
   Sparkles, 
   Layers, 
-  Check, 
-  ExternalLink, 
   Globe, 
-  ArrowUpRight,
-  Boxes,
-  Hammer,
-  BedDouble,
-  Maximize2
+  ArrowUpRight
 } from 'lucide-react';
-import AnimatedCounter from '@/components/home/AnimatedCounter';
 
 // Curated high-resolution editorial photography for the 3 sectors
 const SECTOR_PHOTOS = {
@@ -35,7 +28,6 @@ export default function HeroStudioPage() {
   const { lang, toggleLanguage, dict } = useLanguage();
   const [activeStyle, setActiveStyle] = useState<'split-showcase' | 'visual-curtain' | 'full-backdrop'>('split-showcase');
   const [selectedSector, setSelectedSector] = useState<'hospitality' | 'manufacturing' | 'contracting'>('hospitality');
-  const [hoveredCard, setHoveredCard] = useState<'hospitality' | 'manufacturing' | 'contracting' | null>('hospitality');
 
   return (
     <div className="min-h-screen bg-brand-dark text-white flex flex-col font-sans selection:bg-blue-600 selection:text-white">
@@ -389,13 +381,14 @@ export default function HeroStudioPage() {
                   
                   {/* Pillar 1: Hospitality (SwissBlue) */}
                   <div 
-                    onMouseEnter={() => setHoveredCard('hospitality')}
                     className="relative rounded-3xl overflow-hidden border border-white/15 group cursor-pointer transition-all duration-500 hover:border-sky-400 shadow-glow-blue flex flex-col justify-end p-6 sm:p-8"
                   >
-                    <img 
+                    <Image
                       src={SECTOR_PHOTOS.hospitality} 
                       alt="SwissBlue Hospitality" 
-                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                      fill
+                      sizes="(min-width: 768px) 33vw, 100vw"
+                      className="object-cover group-hover:scale-105 transition-transform duration-700"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-black/20"></div>
 
@@ -415,13 +408,14 @@ export default function HeroStudioPage() {
 
                   {/* Pillar 2: Manufacturing (GreenWood) */}
                   <div 
-                    onMouseEnter={() => setHoveredCard('manufacturing')}
                     className="relative rounded-3xl overflow-hidden border border-white/15 group cursor-pointer transition-all duration-500 hover:border-emerald-400 shadow-glow-emerald flex flex-col justify-end p-6 sm:p-8"
                   >
-                    <img 
+                    <Image
                       src={SECTOR_PHOTOS.manufacturing} 
                       alt="GreenWood Manufacturing" 
-                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                      fill
+                      sizes="(min-width: 768px) 33vw, 100vw"
+                      className="object-cover group-hover:scale-105 transition-transform duration-700"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-black/20"></div>
 
@@ -441,13 +435,14 @@ export default function HeroStudioPage() {
 
                   {/* Pillar 3: Contracting & Fit-out */}
                   <div 
-                    onMouseEnter={() => setHoveredCard('contracting')}
                     className="relative rounded-3xl overflow-hidden border border-white/15 group cursor-pointer transition-all duration-500 hover:border-amber-400 shadow-glow-gold flex flex-col justify-end p-6 sm:p-8"
                   >
-                    <img 
+                    <Image
                       src={SECTOR_PHOTOS.contracting} 
                       alt="Turnkey Fit-out Contracting" 
-                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                      fill
+                      sizes="(min-width: 768px) 33vw, 100vw"
+                      className="object-cover group-hover:scale-105 transition-transform duration-700"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-black/20"></div>
 
