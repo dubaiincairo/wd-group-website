@@ -380,3 +380,40 @@ export async function sendPasswordResetEmail({
     tags: ['admin-password-reset'],
   });
 }
+
+/**
+ * 6. Admin Passwordless Magic Sign-In Email
+ */
+export async function sendMagicSignInEmail({
+  adminName,
+  adminEmail,
+  magicUrl,
+}: {
+  adminName: string;
+  adminEmail: string;
+  magicUrl: string;
+}) {
+  const bodyHtml = `
+    <p>Hello <strong>${adminName}</strong>,</p>
+    <p>You requested a passwordless 1-click sign-in to the <strong>WD Group Executive Admin Console</strong> (<code>${adminEmail}</code>).</p>
+    <p>Click the secure button below to authenticate immediately. This link is single-use and valid for <strong>15 minutes</strong>.</p>
+    
+    <div style="text-align:center; margin:28px 0;">
+      <a href="${magicUrl}" class="btn" style="background-color:#2563EB;">Sign In to Admin Console &rarr;</a>
+    </div>
+
+    <p style="font-size:12px; color:#71717A; margin-top:24px;">If you did not request this login link, you can safely disregard this message. Your account remains protected.</p>
+  `;
+
+  return sendEmailWithBrevo({
+    to: [{ name: adminName, email: adminEmail }],
+    subject: `✨ 1-Click Sign In: WD Group Admin Console`,
+    htmlContent: renderBrandedShell({
+      title: 'Instant Admin Sign In',
+      preheader: 'Your 1-click passwordless login link for WD Group Admin Console.',
+      bodyHtml,
+    }),
+    tags: ['admin-magic-link'],
+  });
+}
+

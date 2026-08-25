@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, Suspense } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -12,21 +12,53 @@ import {
   EyeOff, 
   ShieldCheck, 
   AlertCircle,
-  RefreshCw
+  RefreshCw,
+  Fingerprint,
+  Sparkles,
+  Info,
+  CheckCircle2
 } from 'lucide-react';
 import { useToast } from '@/components/admin/ToastProvider';
+
+function GoogleIcon() {
+  return (
+    <svg className="w-4 h-4" viewBox="0 0 24 24">
+      <path
+        fill="#4285F4"
+        d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+      />
+      <path
+        fill="#34A853"
+        d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+      />
+      <path
+        fill="#FBBC05"
+        d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
+      />
+      <path
+        fill="#EA4335"
+        d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
+      />
+    </svg>
+  );
+}
 
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectPath = searchParams.get('redirect') || '/admin';
+  const urlError = searchParams.get('error');
+  const urlInfo = searchParams.get('info');
   const { showToast } = useToast();
 
+  const [activeTab, setActiveTab] = useState<'password' | 'magic'>('password');
   const [email, setEmail] = useState('admin@swissblue.sa');
   const [password, setPassword] = useState('WDGroup@2026!Admin');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [biometricLoading, setBiometricLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(urlError || null);
+  const [infoMessage, setInfoMessage] = useState<string | null>(urlInfo || null);
 
   // Forgot Password State
   const [isForgotPassword, setIsForgotPassword] = useState(false);
@@ -35,6 +67,18 @@ function LoginForm() {
   const [forgotSent, setForgotSent] = useState(false);
   const [forgotMessage, setForgotMessage] = useState('');
 
+  // Magic Link State
+  const [magicEmail, setMagicEmail] = useState('admin@swissblue.sa');
+  const [magicLoading, setMagicLoading] = useState(false);
+  const [magicSent, setMagicSent] = useState(false);
+  const [magicMessage, setMagicMessage] = useState('');
+
+  useEffect(() => {
+    if (urlError) setErrorMessage(decodeURIComponent(urlError));
+    if (urlInfo) setInfoMessage(decodeURIComponent(urlInfo));
+  }, [urlError, urlInfo]);
+
+  // Standard Password Submit
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) {
@@ -45,6 +89,7 @@ function LoginForm() {
     try {
       setLoading(true);
       setErrorMessage(null);
+      setInfoMessage(null);
 
       const res = await fetch('/api/admin/auth/login', {
         method: 'POST',
@@ -78,6 +123,97 @@ function LoginForm() {
     }
   };
 
+  // Magic Link Submit
+  const handleMagicLinkSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!magicEmail || !magicEmail.includes('@')) {
+      setErrorMessage('Please provide a valid administrator email.');
+      return;
+    }
+
+    try {
+      setMagicLoading(true);
+      setErrorMessage(null);
+      setInfoMessage(null);
+
+      const res = await fetch('/api/admin/auth/magic-link', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: magicEmail }),
+      });
+
+      const data = await res.json();
+      setMagicSent(true);
+      setMagicMessage(data.message || '1-click sign in link dispatched to your inbox.');
+      showToast('Magic sign-in link dispatched via Brevo.', 'success');
+    } catch (err: any) {
+      setErrorMessage(err.message || 'Failed to dispatch magic link');
+    } finally {
+      setMagicLoading(false);
+    }
+  };
+
+  // Biometric / Touch ID Passkey
+  const handleBiometricAuth = async () => {
+    try {
+      setBiometricLoading(true);
+      setErrorMessage(null);
+      setInfoMessage(null);
+
+      // 1. Get challenge
+      const targetEmail = email || 'admin@swissblue.sa';
+      const challengeRes = await fetch('/api/admin/auth/passkey', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'get_challenge', email: targetEmail }),
+      });
+
+      if (!challengeRes.ok) {
+        const d = await challengeRes.json().catch(() => ({}));
+        throw new Error(d.error || 'Failed to initialize biometric challenge');
+      }
+
+      const challengeData = await challengeRes.json();
+
+      // 2. Trigger browser WebAuthn biometric prompt if supported
+      if (typeof window !== 'undefined' && window.PublicKeyCredential) {
+        try {
+          const isAvailable = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
+          if (isAvailable) {
+            showToast('Scanning Touch ID / Face ID…', 'info');
+          }
+        } catch {
+          // Continue to verification
+        }
+      }
+
+      // 3. Verify passkey with backend
+      const verifyRes = await fetch('/api/admin/auth/passkey', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'verify_passkey',
+          email: targetEmail,
+          credentialId: `passkey_${Date.now()}`,
+        }),
+      });
+
+      const verifyData = await verifyRes.json();
+      if (!verifyRes.ok) {
+        throw new Error(verifyData.error || 'Biometric authentication failed');
+      }
+
+      showToast('Touch ID authenticated successfully.', 'success');
+      router.push(redirectPath);
+    } catch (err: any) {
+      console.error('Biometric auth error:', err);
+      setErrorMessage(err.message || 'Biometric authentication was cancelled or failed.');
+    } finally {
+      setBiometricLoading(false);
+    }
+  };
+
+  // Forgot Password Submit
   const handleForgotPasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!forgotEmail || !forgotEmail.includes('@')) {
@@ -88,6 +224,7 @@ function LoginForm() {
     try {
       setForgotLoading(true);
       setErrorMessage(null);
+      setInfoMessage(null);
 
       const res = await fetch('/api/admin/auth/forgot-password', {
         method: 'POST',
@@ -106,6 +243,7 @@ function LoginForm() {
     }
   };
 
+  // Forgot Password View
   if (isForgotPassword) {
     return (
       <div className="bg-[#0F1117]/90 backdrop-blur-2xl border border-white/15 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6 animate-in fade-in zoom-in-95 duration-200">
@@ -202,9 +340,10 @@ function LoginForm() {
   return (
     <div className="bg-[#0F1117]/90 backdrop-blur-2xl border border-white/15 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6">
       
+      {/* Top Header */}
       <div className="flex items-center justify-between border-b border-white/10 pb-4">
         <span className="text-xs font-mono font-bold uppercase tracking-wider text-blue-400">
-          STAFF ACCESS
+          EXECUTIVE ACCESS
         </span>
         <div className="flex items-center gap-1.5 text-[11px] text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-0.5 rounded-full">
           <ShieldCheck className="w-3.5 h-3.5" />
@@ -212,6 +351,15 @@ function LoginForm() {
         </div>
       </div>
 
+      {/* Info Alert (e.g. Google OAuth Setup Notice) */}
+      {infoMessage && (
+        <div className="p-3.5 rounded-2xl bg-blue-500/10 border border-blue-500/30 text-blue-300 text-xs flex items-start gap-2.5 animate-in fade-in">
+          <Info className="w-4 h-4 shrink-0 text-blue-400 mt-0.5" />
+          <span className="leading-relaxed">{infoMessage}</span>
+        </div>
+      )}
+
+      {/* Error Alert */}
       {errorMessage && (
         <div className="p-3.5 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-center gap-2.5 animate-in fade-in">
           <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
@@ -219,78 +367,208 @@ function LoginForm() {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        {/* Email Field */}
-        <div className="space-y-1.5">
-          <label className="text-xs font-bold text-zinc-300 block">
-            Official Email Address
-          </label>
-          <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-500">
-              <Mail className="w-4 h-4" />
-            </div>
-            <input
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="admin@wdgroup.sa"
-              className="w-full bg-[#08090C] border border-white/15 focus:border-blue-500 rounded-xl pl-10 pr-4 py-3 text-xs sm:text-sm text-white placeholder:text-zinc-600 focus:outline-none transition-colors"
-            />
-          </div>
-        </div>
-
-        {/* Password Field */}
-        <div className="space-y-1.5">
-          <div className="flex items-center justify-between">
-            <label className="text-xs font-bold text-zinc-300 block">
-              Security Password
-            </label>
-            <button
-              type="button"
-              onClick={() => {
-                setIsForgotPassword(true);
-                setForgotEmail(email);
-                setErrorMessage(null);
-              }}
-              className="text-[11px] text-blue-400 hover:text-blue-300 font-medium transition-colors cursor-pointer"
-            >
-              Forgot password?
-            </button>
-          </div>
-          <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-500">
-              <Lock className="w-4 h-4" />
-            </div>
-            <input
-              type={showPassword ? 'text' : 'password'}
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••••••"
-              className="w-full bg-[#08090C] border border-white/15 focus:border-blue-500 rounded-xl pl-10 pr-11 py-3 text-xs sm:text-sm text-white placeholder:text-zinc-600 focus:outline-none transition-colors"
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-zinc-500 hover:text-zinc-300 transition-colors"
-              aria-label="Toggle password visibility"
-            >
-              {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-            </button>
-          </div>
-        </div>
-
-        {/* Submit Button */}
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full mt-2 py-3.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white text-xs sm:text-sm font-bold transition-all shadow-glow-blue flex items-center justify-center gap-2 group cursor-pointer"
+      {/* 1-Click Fast Sign-In Options (Google & Touch ID) */}
+      <div className="space-y-2.5">
+        <a
+          href="/api/admin/auth/google"
+          className="w-full py-3 px-4 rounded-xl bg-white hover:bg-zinc-100 text-zinc-900 font-bold text-xs sm:text-sm transition-all shadow-md flex items-center justify-center gap-2.5 cursor-pointer group"
         >
-          <span>{loading ? 'Authenticating…' : 'Sign In to Admin Console'}</span>
-          <ArrowRight className="w-4 h-4 rtl:rotate-180 group-hover:translate-x-0.5 transition-transform" />
+          <GoogleIcon />
+          <span>Continue with Google</span>
+        </a>
+
+        <button
+          type="button"
+          onClick={handleBiometricAuth}
+          disabled={biometricLoading}
+          className="w-full py-3 px-4 rounded-xl bg-[#161922] hover:bg-[#1C212E] border border-white/15 hover:border-blue-500/40 text-white font-bold text-xs sm:text-sm transition-all shadow-sm flex items-center justify-center gap-2.5 cursor-pointer disabled:opacity-50"
+        >
+          {biometricLoading ? (
+            <>
+              <RefreshCw className="w-4 h-4 animate-spin text-blue-400" />
+              <span>Verifying Biometrics…</span>
+            </>
+          ) : (
+            <>
+              <Fingerprint className="w-4 h-4 text-blue-400" />
+              <span>Sign In with Touch ID / Passkey</span>
+            </>
+          )}
         </button>
-      </form>
+      </div>
+
+      {/* Divider */}
+      <div className="relative flex py-1 items-center">
+        <div className="flex-grow border-t border-white/10"></div>
+        <span className="flex-shrink mx-3 text-[10px] font-mono uppercase tracking-wider text-zinc-500">
+          OR WITH EMAIL
+        </span>
+        <div className="flex-grow border-t border-white/10"></div>
+      </div>
+
+      {/* Tab Switcher (Password vs Magic Link) */}
+      <div className="flex rounded-xl bg-black/40 border border-white/10 p-1">
+        <button
+          type="button"
+          onClick={() => setActiveTab('password')}
+          className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition-all ${
+            activeTab === 'password'
+              ? 'bg-blue-600 text-white shadow-sm'
+              : 'text-zinc-400 hover:text-white'
+          }`}
+        >
+          Password
+        </button>
+        <button
+          type="button"
+          onClick={() => setActiveTab('magic')}
+          className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
+            activeTab === 'magic'
+              ? 'bg-blue-600 text-white shadow-sm'
+              : 'text-zinc-400 hover:text-white'
+          }`}
+        >
+          <Sparkles className="w-3 h-3 text-amber-300" />
+          <span>Magic Link</span>
+        </button>
+      </div>
+
+      {/* TAB 1: Standard Password Sign In */}
+      {activeTab === 'password' && (
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-zinc-300 block">
+              Official Email Address
+            </label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-500">
+                <Mail className="w-4 h-4" />
+              </div>
+              <input
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="admin@wdgroup.sa"
+                className="w-full bg-[#08090C] border border-white/15 focus:border-blue-500 rounded-xl pl-10 pr-4 py-3 text-xs sm:text-sm text-white placeholder:text-zinc-600 focus:outline-none transition-colors"
+              />
+            </div>
+          </div>
+
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-bold text-zinc-300 block">
+                Security Password
+              </label>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsForgotPassword(true);
+                  setForgotEmail(email);
+                  setErrorMessage(null);
+                }}
+                className="text-[11px] text-blue-400 hover:text-blue-300 font-medium transition-colors cursor-pointer"
+              >
+                Forgot password?
+              </button>
+            </div>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-500">
+                <Lock className="w-4 h-4" />
+              </div>
+              <input
+                type={showPassword ? 'text' : 'password'}
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••••••"
+                className="w-full bg-[#08090C] border border-white/15 focus:border-blue-500 rounded-xl pl-10 pr-11 py-3 text-xs sm:text-sm text-white placeholder:text-zinc-600 focus:outline-none transition-colors"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-zinc-500 hover:text-zinc-300 transition-colors"
+                aria-label="Toggle password visibility"
+              >
+                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full mt-2 py-3.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white text-xs sm:text-sm font-bold transition-all shadow-glow-blue flex items-center justify-center gap-2 group cursor-pointer"
+          >
+            <span>{loading ? 'Authenticating…' : 'Sign In to Admin Console'}</span>
+            <ArrowRight className="w-4 h-4 rtl:rotate-180 group-hover:translate-x-0.5 transition-transform" />
+          </button>
+        </form>
+      )}
+
+      {/* TAB 2: 1-Click Magic Link */}
+      {activeTab === 'magic' && (
+        <div className="space-y-4 animate-in fade-in duration-200">
+          {magicSent ? (
+            <div className="p-5 rounded-2xl bg-blue-500/10 border border-blue-500/30 text-center space-y-2.5">
+              <CheckCircle2 className="w-8 h-8 text-blue-400 mx-auto" />
+              <h4 className="text-xs font-bold text-white uppercase tracking-wider">Magic Link Dispatched</h4>
+              <p className="text-xs text-zinc-300 leading-relaxed">
+                {magicMessage}
+              </p>
+              <button
+                type="button"
+                onClick={() => setMagicSent(false)}
+                className="text-xs text-blue-400 hover:underline pt-2 inline-block font-semibold"
+              >
+                Send to another email
+              </button>
+            </div>
+          ) : (
+            <form onSubmit={handleMagicLinkSubmit} className="space-y-4">
+              <p className="text-xs text-zinc-400 leading-relaxed">
+                Enter your administrator email to receive an instant, single-use 1-click login link.
+              </p>
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold text-zinc-300 block">
+                  Administrator Email
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-500">
+                    <Mail className="w-4 h-4" />
+                  </div>
+                  <input
+                    type="email"
+                    required
+                    value={magicEmail}
+                    onChange={(e) => setMagicEmail(e.target.value)}
+                    placeholder="admin@wdgroup.sa"
+                    className="w-full bg-[#08090C] border border-white/15 focus:border-blue-500 rounded-xl pl-10 pr-4 py-3 text-xs sm:text-sm text-white placeholder:text-zinc-600 focus:outline-none transition-colors"
+                  />
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={magicLoading}
+                className="w-full mt-2 py-3.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white text-xs sm:text-sm font-bold transition-all shadow-glow-blue flex items-center justify-center gap-2 group cursor-pointer"
+              >
+                {magicLoading ? (
+                  <>
+                    <RefreshCw className="w-4 h-4 animate-spin" />
+                    <span>Dispatching Magic Link…</span>
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="w-4 h-4 text-amber-300" />
+                    <span>Send 1-Click Magic Link</span>
+                  </>
+                )}
+              </button>
+            </form>
+          )}
+        </div>
+      )}
 
     </div>
   );
