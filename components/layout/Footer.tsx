@@ -3,12 +3,18 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 import { useLanguage } from '@/context/LanguageContext';
 import { Mail, Phone, MapPin, Building2, Factory, HardHat, FileText, Shield } from 'lucide-react';
 
 export default function Footer() {
+  const pathname = usePathname();
   const { lang, dict } = useLanguage();
   const currentYear = new Date().getFullYear();
+
+  if (pathname?.startsWith('/admin')) {
+    return null;
+  }
 
   const logoSrc = lang === 'ar' ? '/brand/wd-group-logo-ar-white.png' : '/brand/wd-group-logo-white.png';
 
