@@ -1,8 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import Image from 'next/image';
 import Link from 'next/link';
 import { 
   Lock, 
@@ -12,11 +11,11 @@ import {
   EyeOff, 
   ShieldCheck, 
   AlertCircle,
-  Building2
+  RefreshCw
 } from 'lucide-react';
 import { useToast } from '@/components/admin/ToastProvider';
 
-export default function AdminLoginPage() {
+function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectPath = searchParams.get('redirect') || '/admin';
@@ -62,6 +61,91 @@ export default function AdminLoginPage() {
   };
 
   return (
+    <div className="bg-[#0F1117]/90 backdrop-blur-2xl border border-white/15 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6">
+      
+      <div className="flex items-center justify-between border-b border-white/10 pb-4">
+        <span className="text-xs font-mono font-bold uppercase tracking-wider text-blue-400">
+          // STAFF ACCESS
+        </span>
+        <div className="flex items-center gap-1.5 text-[11px] text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-0.5 rounded-full">
+          <ShieldCheck className="w-3.5 h-3.5" />
+          <span>TLS 1.3 Encrypted</span>
+        </div>
+      </div>
+
+      {errorMessage && (
+        <div className="p-3.5 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-center gap-2.5 animate-in fade-in">
+          <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
+          <span>{errorMessage}</span>
+        </div>
+      )}
+
+      <form onSubmit={handleSubmit} className="space-y-4">
+        {/* Email Field */}
+        <div className="space-y-1.5">
+          <label className="text-xs font-bold text-zinc-300 block">
+            Official Email Address
+          </label>
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-500">
+              <Mail className="w-4 h-4" />
+            </div>
+            <input
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="admin@wdgroup.sa"
+              className="w-full bg-[#08090C] border border-white/15 focus:border-blue-500 rounded-xl pl-10 pr-4 py-3 text-xs sm:text-sm text-white placeholder:text-zinc-600 focus:outline-none transition-colors"
+            />
+          </div>
+        </div>
+
+        {/* Password Field */}
+        <div className="space-y-1.5">
+          <label className="text-xs font-bold text-zinc-300 block">
+            Security Password
+          </label>
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-500">
+              <Lock className="w-4 h-4" />
+            </div>
+            <input
+              type={showPassword ? 'text' : 'password'}
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••••••"
+              className="w-full bg-[#08090C] border border-white/15 focus:border-blue-500 rounded-xl pl-10 pr-11 py-3 text-xs sm:text-sm text-white placeholder:text-zinc-600 focus:outline-none transition-colors"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-zinc-500 hover:text-zinc-300 transition-colors"
+              aria-label="Toggle password visibility"
+            >
+              {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+            </button>
+          </div>
+        </div>
+
+        {/* Submit Button */}
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full mt-2 py-3.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white text-xs sm:text-sm font-bold transition-all shadow-glow-blue flex items-center justify-center gap-2 group"
+        >
+          <span>{loading ? 'Authenticating…' : 'Sign In to Operations'}</span>
+          <ArrowRight className="w-4 h-4 rtl:rotate-180 group-hover:translate-x-0.5 transition-transform" />
+        </button>
+      </form>
+
+    </div>
+  );
+}
+
+export default function AdminLoginPage() {
+  return (
     <div className="min-h-screen bg-[#040507] text-white flex flex-col justify-center items-center p-4 sm:p-8 relative overflow-hidden">
       
       {/* Ambient background glows */}
@@ -84,87 +168,13 @@ export default function AdminLoginPage() {
           </p>
         </div>
 
-        {/* Login Card */}
-        <div className="bg-[#0F1117]/90 backdrop-blur-2xl border border-white/15 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6">
-          
-          <div className="flex items-center justify-between border-b border-white/10 pb-4">
-            <span className="text-xs font-mono font-bold uppercase tracking-wider text-blue-400">
-              // STAFF ACCESS
-            </span>
-            <div className="flex items-center gap-1.5 text-[11px] text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-0.5 rounded-full">
-              <ShieldCheck className="w-3.5 h-3.5" />
-              <span>TLS 1.3 Encrypted</span>
-            </div>
+        <Suspense fallback={
+          <div className="p-8 text-center bg-[#0F1117]/90 rounded-3xl border border-white/15">
+            <RefreshCw className="w-6 h-6 animate-spin text-blue-500 mx-auto" />
           </div>
-
-          {errorMessage && (
-            <div className="p-3.5 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-center gap-2.5 animate-in fade-in">
-              <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
-              <span>{errorMessage}</span>
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Email Field */}
-            <div className="space-y-1.5">
-              <label className="text-xs font-bold text-zinc-300 block">
-                Official Email Address
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-500">
-                  <Mail className="w-4 h-4" />
-                </div>
-                <input
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="admin@wdgroup.sa"
-                  className="w-full bg-[#08090C] border border-white/15 focus:border-blue-500 rounded-xl pl-10 pr-4 py-3 text-xs sm:text-sm text-white placeholder:text-zinc-600 focus:outline-none transition-colors"
-                />
-              </div>
-            </div>
-
-            {/* Password Field */}
-            <div className="space-y-1.5">
-              <label className="text-xs font-bold text-zinc-300 block">
-                Security Password
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-500">
-                  <Lock className="w-4 h-4" />
-                </div>
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••••••"
-                  className="w-full bg-[#08090C] border border-white/15 focus:border-blue-500 rounded-xl pl-10 pr-11 py-3 text-xs sm:text-sm text-white placeholder:text-zinc-600 focus:outline-none transition-colors"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-zinc-500 hover:text-zinc-300 transition-colors"
-                  aria-label="Toggle password visibility"
-                >
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                </button>
-              </div>
-            </div>
-
-            {/* Submit Button */}
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full mt-2 py-3.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white text-xs sm:text-sm font-bold transition-all shadow-glow-blue flex items-center justify-center gap-2 group"
-            >
-              <span>{loading ? 'Authenticating…' : 'Sign In to Operations'}</span>
-              <ArrowRight className="w-4 h-4 rtl:rotate-180 group-hover:translate-x-0.5 transition-transform" />
-            </button>
-          </form>
-
-        </div>
+        }>
+          <LoginForm />
+        </Suspense>
 
         {/* Footer info */}
         <div className="text-center text-[11px] text-zinc-600">
