@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { Search, Globe, Save, RefreshCw, Sparkles, Share2 } from 'lucide-react';
 import BilingualInput from '@/components/admin/BilingualInput';
 import MediaFieldUploader from '@/components/admin/MediaFieldUploader';
@@ -12,6 +13,7 @@ export default function SEOAdminPage() {
   const [content, setContent] = useState<SiteContentPayload | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [ogImageError, setOgImageError] = useState(false);
 
   useEffect(() => {
     async function load() {
@@ -169,30 +171,56 @@ export default function SEOAdminPage() {
             </div>
           </div>
 
-          {/* Social Share Card Preview */}
-          <div className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 space-y-4 shadow-xl">
-            <h3 className="text-xs font-mono font-bold text-sky-400 uppercase tracking-wider flex items-center gap-2">
-              <Share2 className="w-4 h-4" />
-              <span>SOCIAL CARD PREVIEW</span>
-            </h3>
+            {/* Social Share Card Preview */}
+            <div className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 space-y-4 shadow-xl">
+              <h3 className="text-xs font-mono font-bold text-sky-400 uppercase tracking-wider flex items-center gap-2">
+                <Share2 className="w-4 h-4" />
+                <span>SOCIAL CARD PREVIEW</span>
+              </h3>
 
-            <div className="bg-black/50 border border-white/15 rounded-2xl overflow-hidden shadow-lg">
-              <div className="aspect-video bg-zinc-900 overflow-hidden relative">
-                {seo.og_image_url ? (
-                  <img src={seo.og_image_url} alt="OG Card" className="w-full h-full object-cover" />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center text-zinc-600 text-xs">
-                    No OG image provided
-                  </div>
-                )}
-              </div>
-              <div className="p-3.5 space-y-1">
-                <span className="text-[10px] font-mono text-zinc-500 uppercase">WDGROUP.SA</span>
-                <p className="text-xs font-bold text-white line-clamp-1">{seo.global_title_en}</p>
-                <p className="text-[11px] text-zinc-400 line-clamp-2">{seo.global_description_en}</p>
+              <div className="bg-black/50 border border-white/15 rounded-2xl overflow-hidden shadow-lg">
+                <div className="aspect-video bg-[#08090C] overflow-hidden relative flex items-center justify-center">
+                  {seo.og_image_url && !ogImageError ? (
+                    <img 
+                      src={seo.og_image_url} 
+                      alt="Social Card" 
+                      className="w-full h-full object-cover" 
+                      onError={() => setOgImageError(true)}
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gradient-to-br from-[#0c1222] via-[#090d18] to-[#040508] relative flex flex-col items-center justify-center p-6 text-center border border-white/5 overflow-hidden">
+                      {/* Ambient Glow */}
+                      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(37,99,235,0.22)_0%,transparent_70%)] pointer-events-none" />
+
+                      {/* Header Badge */}
+                      <div className="relative z-10 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[10px] font-mono font-bold mb-3 shadow-glow-card">
+                        <Sparkles className="w-3 h-3" />
+                        <span>WD GROUP · OFFICIAL PREVIEW</span>
+                      </div>
+
+                      {/* Centered Brand Logo */}
+                      <div className="relative z-10 h-10 w-44 mb-2">
+                        <Image
+                          src="/brand/wd-group-logo-white.png"
+                          alt="WD Group Logo"
+                          fill
+                          className="object-contain drop-shadow-[0_0_20px_rgba(37,99,235,0.5)]"
+                        />
+                      </div>
+
+                      <p className="relative z-10 text-[11px] text-zinc-400 font-medium tracking-wide">
+                        Hospitality · Manufacturing · Contracting
+                      </p>
+                    </div>
+                  )}
+                </div>
+                <div className="p-4 space-y-1 bg-[#0D0F16] border-t border-white/10">
+                  <span className="text-[10px] font-mono text-blue-400 font-bold uppercase tracking-wider">WDGROUP.SA</span>
+                  <p className="text-xs sm:text-sm font-bold text-white line-clamp-1">{seo.global_title_en || 'WD Group | Saudi Business Group'}</p>
+                  <p className="text-[11px] text-zinc-400 line-clamp-2 leading-relaxed">{seo.global_description_en || 'A premier Saudi business group creating sustainable value across hospitality, manufacturing, and contracting.'}</p>
+                </div>
               </div>
             </div>
-          </div>
 
         </div>
 
