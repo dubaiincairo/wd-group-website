@@ -348,8 +348,8 @@ export const translations = {
         hq_title: "Headquarters",
         hq_address: "King Abdulaziz Road, Al Khalidiya, Najran, Kingdom of Saudi Arabia",
         general_title: "General Inquiries",
-        general_email: "info@wdgroup.sa",
-        secondary_email: "info@watandesigns.sa",
+        general_email: "ceo@wdgroup.online",
+        secondary_email: "ceo@wdgroup.online",
         phone_title: "Call Us",
         primary_phone: "+966 50 572 5070",
         secondary_phone: "+966 53 397 9797",
@@ -405,7 +405,7 @@ export const translations = {
         sending: "Sending…",
         success: "Thank you. Your inquiry has been received. Our team will contact you using the details provided.",
         successApp: "Thank you. Your application has been received. We will contact you if your profile matches a suitable opportunity.",
-        error: "We could not send your request. Please try again or email info@wdgroup.sa.",
+        error: "We could not send your request. Please try again or email ceo@wdgroup.online.",
       }
     },
     footer: {
@@ -778,8 +778,8 @@ export const translations = {
         hq_title: "المقر الرئيسي",
         hq_address: "طريق الملك عبدالعزيز، حي الخالدية، نجران، المملكة العربية السعودية",
         general_title: "الاستفسارات العامة",
-        general_email: "info@wdgroup.sa",
-        secondary_email: "info@watandesigns.sa",
+        general_email: "ceo@wdgroup.online",
+        secondary_email: "ceo@wdgroup.online",
         phone_title: "اتصل بنا",
         primary_phone: "+966 50 572 5070",
         secondary_phone: "+966 53 397 9797",
@@ -835,7 +835,7 @@ export const translations = {
         sending: "جارٍ الإرسال…",
         success: "شكرًا لك. تم استلام استفسارك، وسيتواصل معك فريقنا عبر البيانات المقدمة.",
         successApp: "شكرًا لك. تم استلام طلبك، وسنتواصل معك إذا توافق ملفك مع فرصة مناسبة.",
-        error: "تعذر إرسال طلبك. يرجى المحاولة مرة أخرى أو مراسلتنا على info@wdgroup.sa.",
+        error: "تعذر إرسال طلبك. يرجى المحاولة مرة أخرى أو مراسلتنا على ceo@wdgroup.online.",
       }
     },
     footer: {

@@ -21,7 +21,7 @@ export async function sendEmailWithBrevo({
   tags = ['wd-group'],
 }: SendEmailParams): Promise<{ success: boolean; messageId?: string; error?: string; simulated?: boolean }> {
   const apiKey = process.env.BREVO_API_KEY || process.env.SENDINBLUE_API_KEY;
-  const senderEmail = process.env.BREVO_SENDER_EMAIL || process.env.SMTP_FROM || 'info@wdgroup.sa';
+  const senderEmail = process.env.BREVO_SENDER_EMAIL || process.env.SMTP_FROM || 'ceo@wdgroup.online';
   const senderName = process.env.BREVO_SENDER_NAME || 'WD Group';
 
   if (!apiKey) {
@@ -208,8 +208,8 @@ export async function sendContactAdminNotificationEmail({
   subject?: string | null;
   message: string;
 }) {
-  const adminEmail = process.env.ADMIN_NOTIFICATION_EMAIL || 'admin@swissblue.sa';
-  const siteUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://wdgroup.sa';
+  const adminEmail = process.env.ADMIN_NOTIFICATION_EMAIL || 'ceo@wdgroup.online';
+  const siteUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://wdgroup.online';
 
   const bodyHtml = `
     <p>A new customer inquiry has just been submitted on the WD Group platform:</p>
@@ -309,8 +309,8 @@ export async function sendJobApplicationAdminNotificationEmail({
   resumeUrl?: string | null;
   coverNote?: string | null;
 }) {
-  const adminEmail = process.env.ADMIN_NOTIFICATION_EMAIL || 'admin@swissblue.sa';
-  const siteUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://wdgroup.sa';
+  const adminEmail = process.env.ADMIN_NOTIFICATION_EMAIL || 'ceo@wdgroup.online';
+  const siteUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://wdgroup.online';
 
   const bodyHtml = `
     <p>A new job candidate has submitted their CV to the WD Group Talent Acquisition portal:</p>

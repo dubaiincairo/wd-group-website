@@ -106,7 +106,7 @@ export default function ContactCTA() {
             </div>
             <div className="flex items-center justify-center sm:justify-start gap-2">
               <Mail className="w-4 h-4 text-blue-400 shrink-0" />
-              <a href="mailto:info@wdgroup.sa" className="hover:text-white" dir="ltr">info@wdgroup.sa</a>
+              <a href="mailto:ceo@wdgroup.online" className="hover:text-white" dir="ltr">ceo@wdgroup.online</a>
             </div>
             <div className="flex items-center justify-center sm:justify-start gap-2">
               <Phone className="w-4 h-4 text-blue-400 shrink-0" />

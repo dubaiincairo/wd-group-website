@@ -133,9 +133,9 @@ export default function SEOAdminPage() {
               <label className="text-xs font-bold text-zinc-300">Canonical Base URL</label>
               <input
                 type="url"
-                value={seo.canonical_base || 'https://wdgroup.sa'}
+                value={seo.canonical_base || 'https://wdgroup.online'}
                 onChange={(e) => setContent({ ...content, seo: { ...seo, canonical_base: e.target.value } })}
-                placeholder="https://wdgroup.sa"
+                placeholder="https://wdgroup.online"
                 className="w-full bg-[#08090C] border border-white/15 rounded-xl px-4 py-2.5 text-xs text-white placeholder:text-zinc-600 focus:outline-none focus:border-blue-500 font-mono"
               />
             </div>
@@ -150,10 +150,9 @@ export default function SEOAdminPage() {
             <h3 className="text-xs font-mono font-bold text-blue-400 uppercase tracking-wider">
               GOOGLE SEARCH PREVIEW
             </h3>
-
             {/* Arabic Preview */}
             <div className="bg-[#1F1F1F] rounded-2xl p-4 space-y-1.5 font-sans" dir="rtl">
-              <div className="text-[11px] text-zinc-400 font-mono">wdgroup.sa › ar</div>
+              <div className="text-[11px] text-zinc-400 font-mono">wdgroup.online › ar</div>
               <div className="text-sm font-bold text-[#8AB4F8] hover:underline cursor-pointer leading-tight">
                 {seo.global_title_ar || 'مجموعة دبليو دي للأعمال'}
               </div>
@@ -164,7 +163,7 @@ export default function SEOAdminPage() {
 
             {/* English Preview */}
             <div className="bg-[#1F1F1F] rounded-2xl p-4 space-y-1.5 font-sans" dir="ltr">
-              <div className="text-[11px] text-zinc-400 font-mono">wdgroup.sa</div>
+              <div className="text-[11px] text-zinc-400 font-mono">wdgroup.online</div>
               <div className="text-sm font-bold text-[#8AB4F8] hover:underline cursor-pointer leading-tight">
                 {seo.global_title_en || 'WD Group | Integrated Holding'}
               </div>
@@ -205,7 +204,7 @@ export default function SEOAdminPage() {
                   )}
                 </div>
                 <div className="p-4 space-y-1 bg-[#0D0F16] border-t border-white/10">
-                  <span className="text-[10px] font-mono text-blue-400 font-bold uppercase tracking-wider">WDGROUP.SA</span>
+                  <span className="text-[10px] font-mono text-blue-400 font-bold uppercase tracking-wider">WDGROUP.ONLINE</span>
                   <p className="text-xs sm:text-sm font-bold text-white line-clamp-1">{seo.global_title_en || 'WD Group | Saudi Business Group'}</p>
                   <p className="text-[11px] text-zinc-400 line-clamp-2 leading-relaxed">{seo.global_description_en || 'A premier Saudi business group creating sustainable value across hospitality, manufacturing, and contracting.'}</p>
                 </div>

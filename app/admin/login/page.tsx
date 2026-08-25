@@ -52,7 +52,7 @@ function LoginForm() {
   const { showToast } = useToast();
 
   const [activeTab, setActiveTab] = useState<'password' | 'magic'>('password');
-  const [email, setEmail] = useState('admin@swissblue.sa');
+  const [email, setEmail] = useState('ceo@wdgroup.online');
   const [password, setPassword] = useState('WDGroup@2026!Admin');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -68,7 +68,7 @@ function LoginForm() {
   const [forgotMessage, setForgotMessage] = useState('');
 
   // Magic Link State
-  const [magicEmail, setMagicEmail] = useState('admin@swissblue.sa');
+  const [magicEmail, setMagicEmail] = useState('ceo@wdgroup.online');
   const [magicLoading, setMagicLoading] = useState(false);
   const [magicSent, setMagicSent] = useState(false);
   const [magicMessage, setMagicMessage] = useState('');
@@ -301,7 +301,7 @@ function LoginForm() {
                   required
                   value={forgotEmail}
                   onChange={(e) => setForgotEmail(e.target.value)}
-                  placeholder="admin@wdgroup.sa"
+                  placeholder="ceo@wdgroup.online"
                   className="w-full bg-[#08090C] border border-white/15 focus:border-blue-500 rounded-xl pl-10 pr-4 py-3 text-xs sm:text-sm text-white placeholder:text-zinc-600 focus:outline-none transition-colors"
                 />
               </div>
@@ -449,7 +449,7 @@ function LoginForm() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@wdgroup.sa"
+                placeholder="ceo@wdgroup.online"
                 className="w-full bg-[#08090C] border border-white/15 focus:border-blue-500 rounded-xl pl-10 pr-4 py-3 text-xs sm:text-sm text-white placeholder:text-zinc-600 focus:outline-none transition-colors"
               />
             </div>
@@ -542,7 +542,7 @@ function LoginForm() {
                     required
                     value={magicEmail}
                     onChange={(e) => setMagicEmail(e.target.value)}
-                    placeholder="admin@wdgroup.sa"
+                    placeholder="ceo@wdgroup.online"
                     className="w-full bg-[#08090C] border border-white/15 focus:border-blue-500 rounded-xl pl-10 pr-4 py-3 text-xs sm:text-sm text-white placeholder:text-zinc-600 focus:outline-none transition-colors"
                   />
                 </div>

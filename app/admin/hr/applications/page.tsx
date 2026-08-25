@@ -111,7 +111,7 @@ export default function TalentPoolATSPage() {
           id: `note_${Date.now()}`,
           text: noteText,
           author: 'HR Recruiter',
-          authorEmail: 'hr@wdgroup.sa',
+          authorEmail: 'ceo@wdgroup.online',
           createdAt: new Date().toISOString(),
         },
         ...existing,

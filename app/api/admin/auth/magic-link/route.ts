@@ -40,7 +40,9 @@ export async function POST(req: NextRequest) {
     await createPasswordResetToken(trimmedEmail, tokenHash, expiresAt);
 
     // 4. Construct magic link URL
-    const origin = req.headers.get('origin') || process.env.NEXT_PUBLIC_APP_URL || 'https://wdgroup.sa';
+    const host = req.headers.get('x-forwarded-host') || req.headers.get('host');
+    const proto = req.headers.get('x-forwarded-proto') || 'https';
+    const origin = host ? `${proto}://${host}` : (req.nextUrl.origin || process.env.NEXT_PUBLIC_APP_URL || 'https://wdgroup.online');
     const magicUrl = `${origin}/api/admin/auth/magic-link/verify?token=${token}&email=${encodeURIComponent(trimmedEmail)}`;
 
     // 5. Send Magic Link email via Brevo

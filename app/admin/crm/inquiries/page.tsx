@@ -92,7 +92,7 @@ export default function CRMInquiriesPage() {
           id: `note_${Date.now()}`,
           text: noteText,
           author: 'Admin',
-          authorEmail: 'admin@wdgroup.sa',
+          authorEmail: 'ceo@wdgroup.online',
           createdAt: new Date().toISOString(),
         },
         ...existing,

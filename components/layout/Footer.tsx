@@ -124,8 +124,8 @@ export default function Footer() {
               </div>
               <div className="flex items-center gap-2">
                 <Mail className="w-3.5 h-3.5 text-blue-400 shrink-0" />
-                <a href="mailto:info@wdgroup.sa" className="hover:text-white transition-colors" dir="ltr">
-                  info@wdgroup.sa
+                <a href="mailto:ceo@wdgroup.online" className="hover:text-white transition-colors" dir="ltr">
+                  ceo@wdgroup.online
                 </a>
               </div>
               <div className="flex flex-col gap-1 pt-1" dir="ltr">
