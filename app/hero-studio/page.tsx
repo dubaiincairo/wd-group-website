@@ -148,21 +148,21 @@ export default function HeroStudioPage() {
                     
                     <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-brand-surface border border-white/10 text-zinc-300 mb-6 shadow-xs">
                       <Sparkles className="w-3.5 h-3.5 text-blue-400" />
-                      <span className="font-bold text-white">{dict.hero.badge}</span>
+                      <span className="font-bold text-white">{dict.home.hero.eyebrow}</span>
                       <span className="text-zinc-500">•</span>
                       <span className="text-zinc-400 font-normal">{lang === 'ar' ? 'مجموعة سعودية قابضة' : 'Diversified Holding Group'}</span>
                     </div>
 
                     <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.12] mb-6">
-                      <span className="block">{dict.hero.title_line1}</span>
+                      <span className="block">{dict.home.hero.title_line1}</span>
                       <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-sky-300 to-indigo-300">
-                        {dict.hero.title_line2}
+                        {dict.home.hero.title_line2}
                       </span>
-                      <span className="block text-white">{dict.hero.title_line3}</span>
+                      <span className="block text-white">{dict.home.hero.title_line3}</span>
                     </h1>
 
                     <p className="text-base text-zinc-300 mb-8 leading-relaxed font-normal">
-                      {dict.hero.description}
+                      {dict.home.hero.body}
                     </p>
 
                     {/* Interactive 3-Sector Switcher Tabs */}
@@ -184,8 +184,8 @@ export default function HeroStudioPage() {
                             <Building2 className="w-4 h-4" />
                           </div>
                           <div>
-                            <div className="text-xs font-bold text-white">{dict.sectors.hosp.title}</div>
-                            <div className="text-[11px] text-sky-400 font-medium">{dict.sectors.hosp.subtitle} (SwissBlue)</div>
+                            <div className="text-xs font-bold text-white">{dict.home.sectors.hospitality.title}</div>
+                            <div className="text-[11px] text-sky-400 font-medium">{dict.home.sectors.hospitality.eyebrow}</div>
                           </div>
                         </div>
                         <span className="text-xs font-mono font-bold text-sky-300 bg-sky-500/20 px-2.5 py-1 rounded-full">
@@ -209,8 +209,8 @@ export default function HeroStudioPage() {
                             <Factory className="w-4 h-4" />
                           </div>
                           <div>
-                            <div className="text-xs font-bold text-white">{dict.sectors.mfg.title}</div>
-                            <div className="text-[11px] text-emerald-400 font-medium">{dict.sectors.mfg.subtitle} (GreenWood)</div>
+                            <div className="text-xs font-bold text-white">{dict.home.sectors.manufacturing.title}</div>
+                            <div className="text-[11px] text-emerald-400 font-medium">{dict.home.sectors.manufacturing.eyebrow}</div>
                           </div>
                         </div>
                         <span className="text-xs font-mono font-bold text-emerald-300 bg-emerald-500/20 px-2.5 py-1 rounded-full">
@@ -234,8 +234,8 @@ export default function HeroStudioPage() {
                             <HardHat className="w-4 h-4" />
                           </div>
                           <div>
-                            <div className="text-xs font-bold text-white">{dict.sectors.contr.title}</div>
-                            <div className="text-[11px] text-amber-400 font-medium">{dict.sectors.contr.subtitle}</div>
+                            <div className="text-xs font-bold text-white">{dict.home.sectors.contracting.title}</div>
+                            <div className="text-[11px] text-amber-400 font-medium">{dict.home.sectors.contracting.eyebrow}</div>
                           </div>
                         </div>
                         <span className="text-xs font-mono font-bold text-amber-300 bg-amber-500/20 px-2.5 py-1 rounded-full">
@@ -252,14 +252,14 @@ export default function HeroStudioPage() {
                         className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-xs text-white bg-blue-600 hover:bg-blue-500 shadow-glow-blue transition-all"
                       >
                         <Compass className="w-4 h-4" />
-                        <span>{dict.hero.cta_primary}</span>
+                        <span>{dict.home.hero.primaryCta}</span>
                       </Link>
 
                       <Link 
                         href="#contact" 
                         className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-xs text-zinc-300 bg-brand-surface hover:bg-brand-card border border-white/10 transition-all"
                       >
-                        <span>{dict.nav.rfp_btn}</span>
+                        <span>{dict.nav.contactCta}</span>
                         <ArrowUpRight className="w-4 h-4 rtl:rotate-270 text-zinc-400" />
                       </Link>
                     </div>
@@ -296,7 +296,7 @@ export default function HeroStudioPage() {
                               {lang === 'ar' ? '٦ منشآت فندقية بالمملكة وتونس' : '6 Premium Hotel Properties in KSA & Tunisia'}
                             </h3>
                             <p className="text-xs text-zinc-300 line-clamp-2">
-                              {dict.sectors.hosp.desc}
+                              {dict.home.sectors.hospitality.desc}
                             </p>
                           </div>
                         )}
@@ -311,7 +311,7 @@ export default function HeroStudioPage() {
                               {lang === 'ar' ? '٣ مصانع متخصصة في الأخشاب والألومنيوم والديكور' : '3 Specialized Factories in Woodcraft & Architectural Metal'}
                             </h3>
                             <p className="text-xs text-zinc-300 line-clamp-2">
-                              {dict.sectors.mfg.desc}
+                              {dict.home.sectors.manufacturing.desc}
                             </p>
                           </div>
                         )}
@@ -326,7 +326,7 @@ export default function HeroStudioPage() {
                               {lang === 'ar' ? 'تنفيذ متكامل لمشروعات الديكور والأثاث والمقاولات' : 'Turnkey Interior Fit-out & Project Implementation'}
                             </h3>
                             <p className="text-xs text-zinc-300 line-clamp-2">
-                              {dict.sectors.contr.desc}
+                              {dict.home.sectors.contracting.desc}
                             </p>
                           </div>
                         )}
@@ -359,13 +359,13 @@ export default function HeroStudioPage() {
                 <div className="text-center max-w-3xl mx-auto mb-10">
                   <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-bold uppercase bg-brand-surface border border-white/10 text-blue-400 mb-4">
                     <Layers className="w-3.5 h-3.5" />
-                    <span>{dict.sectors.tag}</span>
+                    <span>{dict.home.sectors.label}</span>
                   </div>
 
                   <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mb-4">
-                    <span>{dict.hero.title_line1} </span>
+                    <span>{dict.home.hero.title_line1} </span>
                     <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-sky-300">
-                      {dict.hero.title_line2}
+                      {dict.home.hero.title_line2}
                     </span>
                   </h1>
 
@@ -397,8 +397,8 @@ export default function HeroStudioPage() {
                         <Building2 className="w-3.5 h-3.5" />
                         <span>SwissBlue</span>
                       </span>
-                      <h3 className="text-2xl font-extrabold text-white">{dict.sectors.hosp.title}</h3>
-                      <p className="text-xs text-zinc-300 line-clamp-2">{dict.sectors.hosp.desc}</p>
+                      <h3 className="text-2xl font-extrabold text-white">{dict.home.sectors.hospitality.title}</h3>
+                      <p className="text-xs text-zinc-300 line-clamp-2">{dict.home.sectors.hospitality.desc}</p>
                       <div className="text-xs font-mono font-bold text-sky-300 pt-2 flex items-center justify-between">
                         <span>6 {lang === 'ar' ? 'فنادق بالمملكة وتونس' : 'Hotels in KSA & Tunisia'}</span>
                         <ArrowRight className="w-4 h-4 rtl:rotate-180" />
@@ -424,8 +424,8 @@ export default function HeroStudioPage() {
                         <Factory className="w-3.5 h-3.5" />
                         <span>GreenWood</span>
                       </span>
-                      <h3 className="text-2xl font-extrabold text-white">{dict.sectors.mfg.title}</h3>
-                      <p className="text-xs text-zinc-300 line-clamp-2">{dict.sectors.mfg.desc}</p>
+                      <h3 className="text-2xl font-extrabold text-white">{dict.home.sectors.manufacturing.title}</h3>
+                      <p className="text-xs text-zinc-300 line-clamp-2">{dict.home.sectors.manufacturing.desc}</p>
                       <div className="text-xs font-mono font-bold text-emerald-300 pt-2 flex items-center justify-between">
                         <span>3 {lang === 'ar' ? 'مصانع أخشاب وألومنيوم' : 'Specialized Factories'}</span>
                         <ArrowRight className="w-4 h-4 rtl:rotate-180" />
@@ -451,8 +451,8 @@ export default function HeroStudioPage() {
                         <HardHat className="w-3.5 h-3.5" />
                         <span>Contracting & Fit-out</span>
                       </span>
-                      <h3 className="text-2xl font-extrabold text-white">{dict.sectors.contr.title}</h3>
-                      <p className="text-xs text-zinc-300 line-clamp-2">{dict.sectors.contr.desc}</p>
+                      <h3 className="text-2xl font-extrabold text-white">{dict.home.sectors.contracting.title}</h3>
+                      <p className="text-xs text-zinc-300 line-clamp-2">{dict.home.sectors.contracting.desc}</p>
                       <div className="text-xs font-mono font-bold text-amber-300 pt-2 flex items-center justify-between">
                         <span>{lang === 'ar' ? 'تنفيذ ديكورات وتشطيب شامل' : 'Turnkey Implementation'}</span>
                         <ArrowRight className="w-4 h-4 rtl:rotate-180" />
@@ -500,7 +500,7 @@ export default function HeroStudioPage() {
                 {/* Badge */}
                 <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold bg-brand-surface/90 border border-white/20 text-zinc-300 backdrop-blur-xl mb-6 shadow-glow-card">
                   <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
-                  <span className="font-bold text-white">{dict.hero.badge}</span>
+                  <span className="font-bold text-white">{dict.home.hero.eyebrow}</span>
                   <span className="text-zinc-500">•</span>
                   <span className="text-zinc-300 font-normal">
                     {lang === 'ar' ? 'منظومة متكاملة للتصنيع والمقاولات والضيافة' : 'Integrated Manufacturing, Contracting & Hospitality'}
@@ -509,14 +509,14 @@ export default function HeroStudioPage() {
 
                 {/* Monumental Headline */}
                 <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white leading-tight mb-6">
-                  <span>{dict.hero.title_line1} </span>
+                  <span>{dict.home.hero.title_line1} </span>
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-sky-300 to-indigo-300">
-                    {dict.hero.title_line2}
+                    {dict.home.hero.title_line2}
                   </span>
                 </h1>
 
                 <p className="text-base sm:text-lg text-zinc-300 max-w-2xl mx-auto mb-10 leading-relaxed font-normal">
-                  {dict.hero.description}
+                  {dict.home.hero.body}
                 </p>
 
                 {/* Floating Interactive Sector Dock */}
@@ -565,14 +565,14 @@ export default function HeroStudioPage() {
                     className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl font-bold text-xs text-white bg-blue-600 hover:bg-blue-500 shadow-glow-blue transition-all"
                   >
                     <Compass className="w-4 h-4" />
-                    <span>{dict.hero.cta_primary}</span>
+                    <span>{dict.home.hero.primaryCta}</span>
                   </Link>
 
                   <Link 
                     href="#contact" 
                     className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl font-bold text-xs text-zinc-200 bg-brand-surface/90 hover:bg-brand-card border border-white/20 transition-all"
                   >
-                    <span>{dict.nav.rfp_btn}</span>
+                    <span>{dict.nav.contactCta}</span>
                     <ArrowRight className="w-4 h-4 rtl:rotate-180 text-zinc-400" />
                   </Link>
                 </div>

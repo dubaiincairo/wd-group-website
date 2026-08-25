@@ -59,7 +59,7 @@ export async function getSiteContent(): Promise<SiteContentPayload | null> {
  * Update centralized site content in Supabase
  */
 export async function updateSiteContent(data: Partial<SiteContentPayload>): Promise<boolean> {
-  const current = (await getSiteContent()) || {};
+  const current: Partial<SiteContentPayload> = (await getSiteContent()) || {};
   const merged = { ...current, ...data, version: (current.version || 1) + 1 };
 
   const res = await fetch(`${supabaseUrl}/rest/v1/wdgroup_content?id=eq.main`, {
