@@ -38,14 +38,14 @@ interface NavItem {
   labelAr: string;
   href: string;
   icon: any;
-  badge?: string;
-  badgeColor?: string;
+  iconBg: string;
   allowedRoles?: AdminRole[];
 }
 
 interface NavGroup {
   groupName: string;
   groupNameAr: string;
+  accentDot: string;
   items: NavItem[];
 }
 
@@ -53,24 +53,28 @@ const NAV_GROUPS: NavGroup[] = [
   {
     groupName: 'Overview',
     groupNameAr: 'نظرة عامة',
+    accentDot: 'bg-blue-400',
     items: [
       {
         label: 'Dashboard',
         labelAr: 'لوحة القيادة',
         href: '/admin',
         icon: LayoutDashboard,
+        iconBg: 'bg-blue-500/15 text-blue-400 border-blue-500/25 group-hover:bg-blue-500/25',
       },
     ],
   },
   {
     groupName: 'Content & Pages',
     groupNameAr: 'المحتوى والصفحات',
+    accentDot: 'bg-indigo-400',
     items: [
       {
         label: 'Pages & Sections',
         labelAr: 'أقسام الصفحات',
         href: '/admin/content/pages',
         icon: FileText,
+        iconBg: 'bg-indigo-500/15 text-indigo-400 border-indigo-500/25 group-hover:bg-indigo-500/25',
         allowedRoles: ['owner', 'admin', 'editor'],
       },
       {
@@ -78,6 +82,7 @@ const NAV_GROUPS: NavGroup[] = [
         labelAr: 'الإحصائيات الرئيسية',
         href: '/admin/content/metrics',
         icon: Activity,
+        iconBg: 'bg-cyan-500/15 text-cyan-400 border-cyan-500/25 group-hover:bg-cyan-500/25',
         allowedRoles: ['owner', 'admin', 'editor'],
       },
       {
@@ -85,6 +90,7 @@ const NAV_GROUPS: NavGroup[] = [
         labelAr: 'القيادة والكلمة',
         href: '/admin/content/leadership',
         icon: Sparkles,
+        iconBg: 'bg-purple-500/15 text-purple-400 border-purple-500/25 group-hover:bg-purple-500/25',
         allowedRoles: ['owner', 'admin', 'editor'],
       },
     ],
@@ -92,14 +98,14 @@ const NAV_GROUPS: NavGroup[] = [
   {
     groupName: 'Strategic Sectors',
     groupNameAr: 'قطاعات الأعمال',
+    accentDot: 'bg-amber-400',
     items: [
       {
         label: 'SwissBlue Hospitality',
         labelAr: 'قطاع الضيافة',
         href: '/admin/sectors/hospitality',
         icon: Building2,
-        badge: '6 Properties',
-        badgeColor: 'bg-sky-500/20 text-sky-300 border-sky-500/30',
+        iconBg: 'bg-sky-500/15 text-sky-400 border-sky-500/25 group-hover:bg-sky-500/25',
         allowedRoles: ['owner', 'admin', 'editor'],
       },
       {
@@ -107,8 +113,7 @@ const NAV_GROUPS: NavGroup[] = [
         labelAr: 'التصنيع والأثاث',
         href: '/admin/sectors/manufacturing',
         icon: Factory,
-        badge: '3 Factories',
-        badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
+        iconBg: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/25 group-hover:bg-emerald-500/25',
         allowedRoles: ['owner', 'admin', 'editor'],
       },
       {
@@ -116,8 +121,7 @@ const NAV_GROUPS: NavGroup[] = [
         labelAr: 'المقاولات والتشطيب',
         href: '/admin/sectors/contracting',
         icon: HardHat,
-        badge: 'Turnkey',
-        badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
+        iconBg: 'bg-amber-500/15 text-amber-400 border-amber-500/25 group-hover:bg-amber-500/25',
         allowedRoles: ['owner', 'admin', 'editor'],
       },
     ],
@@ -125,12 +129,14 @@ const NAV_GROUPS: NavGroup[] = [
   {
     groupName: 'Operations & CRM',
     groupNameAr: 'العمليات والعملاء',
+    accentDot: 'bg-emerald-400',
     items: [
       {
         label: 'Inquiries & RFPs',
         labelAr: 'الاستفسارات والمناقصات',
         href: '/admin/crm/inquiries',
         icon: MessageSquare,
+        iconBg: 'bg-blue-500/15 text-blue-400 border-blue-500/25 group-hover:bg-blue-500/25',
         allowedRoles: ['owner', 'admin', 'crm'],
       },
       {
@@ -138,6 +144,7 @@ const NAV_GROUPS: NavGroup[] = [
         labelAr: 'الشواغر الوظيفية',
         href: '/admin/hr/jobs',
         icon: Briefcase,
+        iconBg: 'bg-teal-500/15 text-teal-400 border-teal-500/25 group-hover:bg-teal-500/25',
         allowedRoles: ['owner', 'admin', 'hr'],
       },
       {
@@ -145,6 +152,7 @@ const NAV_GROUPS: NavGroup[] = [
         labelAr: 'بنك الكفاءات والـ CVs',
         href: '/admin/hr/applications',
         icon: Users,
+        iconBg: 'bg-rose-500/15 text-rose-400 border-rose-500/25 group-hover:bg-rose-500/25',
         allowedRoles: ['owner', 'admin', 'hr'],
       },
       {
@@ -152,6 +160,7 @@ const NAV_GROUPS: NavGroup[] = [
         labelAr: 'مكتبة الوسائط',
         href: '/admin/media',
         icon: ImageIcon,
+        iconBg: 'bg-pink-500/15 text-pink-400 border-pink-500/25 group-hover:bg-pink-500/25',
         allowedRoles: ['owner', 'admin', 'editor'],
       },
       {
@@ -159,6 +168,7 @@ const NAV_GROUPS: NavGroup[] = [
         labelAr: 'محركات البحث وميتاداتا',
         href: '/admin/seo',
         icon: Search,
+        iconBg: 'bg-cyan-500/15 text-cyan-400 border-cyan-500/25 group-hover:bg-cyan-500/25',
         allowedRoles: ['owner', 'admin', 'editor'],
       },
     ],
@@ -166,12 +176,14 @@ const NAV_GROUPS: NavGroup[] = [
   {
     groupName: 'System & Security',
     groupNameAr: 'النظام والأمان',
+    accentDot: 'bg-rose-400',
     items: [
       {
         label: 'Staff & Roles',
         labelAr: 'المستخدمون والصلاحيات',
         href: '/admin/system/users',
         icon: ShieldCheck,
+        iconBg: 'bg-orange-500/15 text-orange-400 border-orange-500/25 group-hover:bg-orange-500/25',
         allowedRoles: ['owner', 'admin'],
       },
       {
@@ -179,6 +191,7 @@ const NAV_GROUPS: NavGroup[] = [
         labelAr: 'سجل النشاط الإداري',
         href: '/admin/system/audit-logs',
         icon: Lock,
+        iconBg: 'bg-rose-500/15 text-rose-400 border-rose-500/25 group-hover:bg-rose-500/25',
         allowedRoles: ['owner', 'admin', 'viewer'],
       },
       {
@@ -186,6 +199,7 @@ const NAV_GROUPS: NavGroup[] = [
         labelAr: 'إعدادات المنصة',
         href: '/admin/system/settings',
         icon: Settings,
+        iconBg: 'bg-slate-500/15 text-slate-300 border-slate-500/25 group-hover:bg-slate-500/25',
         allowedRoles: ['owner', 'admin'],
       },
       {
@@ -193,6 +207,7 @@ const NAV_GROUPS: NavGroup[] = [
         labelAr: 'حالة الخوادم وقاعدة البيانات',
         href: '/admin/system/health',
         icon: Activity,
+        iconBg: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/25 group-hover:bg-emerald-500/25',
       },
     ],
   },
@@ -244,9 +259,10 @@ export default function AdminSidebar({
           if (visibleItems.length === 0) return null;
 
           return (
-            <div key={group.groupName} className="space-y-1">
-              <div className="px-3 text-[10px] font-mono font-bold uppercase tracking-wider text-zinc-500">
-                {group.groupName}
+            <div key={group.groupName} className="space-y-1.5">
+              <div className="px-3 flex items-center gap-2 text-[10px] font-mono font-bold uppercase tracking-wider text-zinc-500">
+                <span className={`w-1.5 h-1.5 rounded-full ${group.accentDot}`} />
+                <span>{group.groupName}</span>
               </div>
 
               {visibleItems.map((item) => {
@@ -258,21 +274,25 @@ export default function AdminSidebar({
                     key={item.href}
                     href={item.href}
                     onClick={onCloseMobile}
-                    className={`flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all group ${
+                    className={`flex items-center justify-between px-2.5 py-1.5 rounded-xl text-xs font-semibold transition-all group relative ${
                       isActive
-                        ? 'bg-blue-600/15 border border-blue-500/40 text-blue-400 shadow-sm'
-                        : 'text-zinc-400 hover:text-zinc-100 hover:bg-white/5 border border-transparent'
+                        ? 'bg-gradient-to-r from-blue-600/25 via-blue-500/10 to-transparent border border-blue-500/40 text-white shadow-sm'
+                        : 'text-zinc-400 hover:text-white hover:bg-white/5 border border-transparent'
                     }`}
                   >
                     <div className="flex items-center gap-2.5 min-w-0 pr-2">
-                      <Icon className={`w-4 h-4 shrink-0 transition-colors ${isActive ? 'text-blue-400' : 'text-zinc-500 group-hover:text-zinc-300'}`} />
+                      <div className={`w-7 h-7 rounded-lg flex items-center justify-center border transition-all shrink-0 ${
+                        isActive 
+                          ? 'bg-blue-500 text-white border-blue-400 shadow-[0_0_12px_rgba(59,130,246,0.5)]' 
+                          : item.iconBg
+                      }`}>
+                        <Icon className="w-3.5 h-3.5 shrink-0" />
+                      </div>
                       <span className="truncate">{item.label}</span>
                     </div>
 
-                    {item.badge && (
-                      <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border whitespace-nowrap shrink-0 inline-flex items-center ${item.badgeColor || 'bg-white/10 text-zinc-300 border-white/10'}`}>
-                        {item.badge}
-                      </span>
+                    {isActive && (
+                      <div className="w-1.5 h-4 rounded-full bg-blue-400 shadow-[0_0_8px_rgba(56,189,248,0.8)] shrink-0" />
                     )}
                   </Link>
                 );
