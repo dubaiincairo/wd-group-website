@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Inter, Noto_Kufi_Arabic } from 'next/font/google';
 import './globals.css';
 import { LanguageProvider } from '@/context/LanguageContext';
+import { ToastProvider } from '@/components/admin/ToastProvider';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import LiveEditorDock from '@/components/live-editor/LiveEditorDock';
@@ -40,12 +41,14 @@ export default function RootLayout({
     <html lang="en" dir="ltr" className={`${inter.variable} ${notoKufi.variable}`}>
       <body className="bg-[#08090C] text-[#F8FAFC] min-h-screen flex flex-col font-sans selection:bg-blue-600 selection:text-white antialiased">
         <LanguageProvider>
-          <Navbar />
-          <main className="flex-grow">
-            {children}
-          </main>
-          <Footer />
-          <LiveEditorDock />
+          <ToastProvider>
+            <Navbar />
+            <main className="flex-grow">
+              {children}
+            </main>
+            <Footer />
+            <LiveEditorDock />
+          </ToastProvider>
         </LanguageProvider>
       </body>
     </html>
