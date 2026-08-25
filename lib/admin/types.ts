@@ -103,6 +103,12 @@ export interface SiteContentPayload {
       eyebrow_ar: string;
       title_en: string;
       title_ar: string;
+      title_line1_en?: string;
+      title_line1_ar?: string;
+      title_line2_en?: string;
+      title_line2_ar?: string;
+      title_line3_en?: string;
+      title_line3_ar?: string;
       body_en: string;
       body_ar: string;
       primary_cta_en: string;

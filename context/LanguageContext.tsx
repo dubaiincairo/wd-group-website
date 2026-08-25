@@ -11,6 +11,7 @@ interface LanguageContextType {
   toggleLanguage: () => void;
   dict: typeof translations.en;
   dynamicContent: any;
+  setDynamicContent: (data: any) => void;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
@@ -75,6 +76,9 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
           ...baseDict.home.hero,
           eyebrow: (isAr ? c.home?.hero?.eyebrow_ar : c.home?.hero?.eyebrow_en) || baseDict.home.hero.eyebrow,
           title: (isAr ? c.home?.hero?.title_ar : c.home?.hero?.title_en) || baseDict.home.hero.title,
+          title_line1: (isAr ? c.home?.hero?.title_line1_ar : c.home?.hero?.title_line1_en) || baseDict.home.hero.title_line1,
+          title_line2: (isAr ? c.home?.hero?.title_line2_ar : c.home?.hero?.title_line2_en) || baseDict.home.hero.title_line2,
+          title_line3: (isAr ? c.home?.hero?.title_line3_ar : c.home?.hero?.title_line3_en) || baseDict.home.hero.title_line3,
           body: (isAr ? c.home?.hero?.body_ar : c.home?.hero?.body_en) || baseDict.home.hero.body,
           primaryCta: (isAr ? c.home?.hero?.primary_cta_ar : c.home?.hero?.primary_cta_en) || baseDict.home.hero.primaryCta,
           secondaryCta: (isAr ? c.home?.hero?.secondary_cta_ar : c.home?.hero?.secondary_cta_en) || baseDict.home.hero.secondaryCta,
@@ -180,7 +184,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <LanguageContext.Provider value={{ lang, dir, t, setLanguage, toggleLanguage, dict, dynamicContent }}>
+    <LanguageContext.Provider value={{ lang, dir, t, setLanguage, toggleLanguage, dict, dynamicContent, setDynamicContent }}>
       {children}
     </LanguageContext.Provider>
   );
