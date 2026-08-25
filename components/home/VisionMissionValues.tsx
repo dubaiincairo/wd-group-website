@@ -12,12 +12,8 @@ import {
   Scale, 
   Users,
   Globe,
-  Layers,
-  TrendingUp,
-  CheckCircle2,
   Cpu,
-  Handshake,
-  Briefcase
+  Handshake
 } from 'lucide-react';
 
 export default function VisionMissionValues() {
@@ -25,94 +21,6 @@ export default function VisionMissionValues() {
   const [activeTab, setActiveTab] = useState<'values' | 'vision' | 'mission'>('values');
 
   const VALUE_ICONS = [Award, Lightbulb, Scale, Users];
-
-  const VISION_CARDS = lang === 'ar' ? [
-    {
-      icon: Compass,
-      title: 'المساهمة في الاقتصاد الوطني',
-      desc: 'أن نكون مجموعة سعودية رائدة تُسهم في بناء اقتصاد وطني متنوع ومستدام يواكب مستهدفات رؤية المملكة 2030.',
-    },
-    {
-      icon: Globe,
-      title: 'الريادة الإقليمية والدولية',
-      desc: 'توسيع الحضور الاستثماري والتجاري إقليميًا ودوليًا من خلال الجودة العالية والابتكار المستمر في كافة العمليات.',
-    },
-    {
-      icon: Layers,
-      title: 'التكامل والتنوع الاستثماري',
-      desc: 'دمج وتكامل قطاعات الضيافة والتصنيع والمقاولات تحت مظلة تشغيلية موحدة تحقق أعلى مستويات التناغم والقيمة.',
-    },
-    {
-      icon: TrendingUp,
-      title: 'بناء أثر مؤسسي مستدام',
-      desc: 'ترسيخ مبادئ الحوكمة والنمو المتوازن لبناء كيان اقتصادي راسخ يخدم الأجيال القادمة والشركاء والمجتمع.',
-    },
-  ] : [
-    {
-      icon: Compass,
-      title: 'National Economic Impact',
-      desc: 'To be a premier Saudi business group actively contributing to a diversified and sustainable national economy aligned with Vision 2030.',
-    },
-    {
-      icon: Globe,
-      title: 'Regional & Global Expansion',
-      desc: 'Expanding our investment footprint regionally and internationally through uncompromising quality standards and continuous innovation.',
-    },
-    {
-      icon: Layers,
-      title: 'Synergistic Value Chain',
-      desc: 'Uniting hospitality, precision manufacturing, and turnkey contracting into a coordinated operational ecosystem.',
-    },
-    {
-      icon: TrendingUp,
-      title: 'Enduring Enterprise Value',
-      desc: 'Fostering institutional governance, robust scalability, and generational growth across the Kingdom of Saudi Arabia.',
-    },
-  ];
-
-  const MISSION_CARDS = lang === 'ar' ? [
-    {
-      icon: CheckCircle2,
-      title: 'أعلى معايير الجودة والتميز',
-      desc: 'تقديم منتجات وخدمات استثنائية في قطاعات الضيافة والتصنيع والمقاولات تُطبّق أدق المعايير القياسية العالمية.',
-    },
-    {
-      icon: Cpu,
-      title: 'التقنيات الصناعية الحديثة',
-      desc: 'توظيف أحدث المعدات وخطوط الإنتاج والحلول الرقمية لرفع الكفاءة التشغيلية وضمان الدقة في كافة مراحل التنفيذ.',
-    },
-    {
-      icon: Users,
-      title: 'تمكين الكفاءات الوطنية',
-      desc: 'استقطاب وتأهيل الكوادر الوطنية المتخصصة وتوفير بيئة مهنية محفزة تدعم التطوير والإبداع المستمر.',
-    },
-    {
-      icon: Handshake,
-      title: 'صناعة القيمة للشراكات',
-      desc: 'بناء علاقات استراتيجية متينة مع عملائنا وشركائنا قائمة على المصداقية والالتزام التام والنمو المشترك المستدام.',
-    },
-  ] : [
-    {
-      icon: CheckCircle2,
-      title: 'High-Standard Deliverables',
-      desc: 'Delivering exceptional products and services across hospitality, industrial manufacturing, and turnkey contracting.',
-    },
-    {
-      icon: Cpu,
-      title: 'Advanced Technology & Modern Methods',
-      desc: 'Equipping specialized factories and project teams with state-of-the-art machinery and efficient digital workflows.',
-    },
-    {
-      icon: Users,
-      title: 'Qualified Talent & National Leadership',
-      desc: 'Empowering specialized teams and nurturing high-caliber Saudi talent across executive, engineering, and operational roles.',
-    },
-    {
-      icon: Handshake,
-      title: 'Lasting Value for Partners',
-      desc: 'Building trusted, long-term relationships with clients and stakeholders founded on transparency, reliability, and mutual success.',
-    },
-  ];
 
   return (
     <section className="py-20 sm:py-24 bg-brand-dark text-white relative overflow-hidden">
@@ -183,10 +91,10 @@ export default function VisionMissionValues() {
           </div>
         </div>
 
-        {/* Tab Content Display - Smart, Balanced & Compact 2x2 Grids */}
-        <div className="max-w-4xl mx-auto min-h-[320px]">
+        {/* Tab Content Display */}
+        <div className="max-w-4xl mx-auto min-h-[300px]">
           
-          {/* ══════════ TAB 1: CORE VALUES (Default) ══════════ */}
+          {/* ══════════ TAB 1: CORE VALUES (Current Style Preserved) ══════════ */}
           {activeTab === 'values' && (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 animate-in fade-in duration-200">
               {dict.home.identity.values.map((val, idx) => {
@@ -213,57 +121,111 @@ export default function VisionMissionValues() {
             </div>
           )}
 
-          {/* ══════════ TAB 2: SMART COMPACT VISION ══════════ */}
+          {/* ══════════ TAB 2: VISION (Option 3: The Modular Bento) ══════════ */}
           {activeTab === 'vision' && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 animate-in fade-in duration-200">
-              {VISION_CARDS.map((card, idx) => {
-                const Icon = card.icon;
-                return (
-                  <div
-                    key={idx}
-                    className="p-6 rounded-2xl bg-[#0F1117]/90 border border-white/10 hover:border-blue-500/40 hover:bg-[#121622] transition-all flex items-start gap-4 group"
-                  >
-                    <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/25 flex items-center justify-center text-blue-400 shrink-0 mt-0.5 group-hover:scale-105 group-hover:bg-blue-600 group-hover:text-white transition-all">
-                      <Icon className="w-5 h-5" />
-                    </div>
-                    <div className="space-y-1">
-                      <h4 className="text-base font-bold text-white group-hover:text-blue-300 transition-colors">
-                        {card.title}
-                      </h4>
-                      <p className="text-xs text-zinc-400 leading-relaxed font-normal">
-                        {card.desc}
-                      </p>
-                    </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5 animate-in fade-in duration-200">
+              {/* Main Bento Hero Tile */}
+              <div className="md:col-span-2 p-6 sm:p-8 rounded-2xl bg-[#0F1117]/90 border border-blue-500/30 flex flex-col justify-between space-y-4 hover:border-blue-500/50 transition-colors shadow-lg">
+                <span className="text-xs font-mono text-blue-400 font-bold uppercase tracking-wider">
+                  {lang === 'ar' ? 'التوجه الاستراتيجي للرؤية' : 'VISION STRATEGIC DIRECTION'}
+                </span>
+                
+                <p className="text-base sm:text-lg font-bold text-white leading-relaxed">
+                  &ldquo;{dict.home.identity.vision_desc}&rdquo;
+                </p>
+
+                <div className="flex items-center gap-3 text-xs text-zinc-400 font-mono flex-wrap pt-2 border-t border-white/5">
+                  <span className="px-2.5 py-1 rounded-md bg-blue-500/10 text-blue-400 border border-blue-500/20 font-bold">
+                    {lang === 'ar' ? 'رؤية المملكة 2030' : 'Saudi Vision 2030'}
+                  </span>
+                  <span>• {lang === 'ar' ? 'نمو اقتصادي مستدام' : 'Sustainable Growth'}</span>
+                </div>
+              </div>
+
+              {/* Side Stacked Metric & Focus Badges */}
+              <div className="space-y-4 flex flex-col justify-between">
+                <div className="p-4 sm:p-5 rounded-xl bg-[#141721] border border-white/10 flex items-center gap-3.5 hover:border-emerald-500/30 transition-colors">
+                  <div className="w-9 h-9 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center shrink-0">
+                    <Sparkles className="w-4 h-4" />
                   </div>
-                );
-              })}
+                  <div>
+                    <span className="text-xs sm:text-sm font-bold text-white block">
+                      {lang === 'ar' ? 'مواكبة الرؤية الوطنية' : 'National Alignment'}
+                    </span>
+                    <span className="text-[11px] text-zinc-400">
+                      {lang === 'ar' ? 'تنويع الاقتصاد والمحتوى المحلي' : 'Diversification & Local Content'}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="p-4 sm:p-5 rounded-xl bg-[#141721] border border-white/10 flex items-center gap-3.5 hover:border-cyan-500/30 transition-colors">
+                  <div className="w-9 h-9 rounded-lg bg-cyan-500/10 text-cyan-400 flex items-center justify-center shrink-0">
+                    <Globe className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <span className="text-xs sm:text-sm font-bold text-white block">
+                      {lang === 'ar' ? 'التوسع الإقليمي' : 'Regional Expansion'}
+                    </span>
+                    <span className="text-[11px] text-zinc-400">
+                      {lang === 'ar' ? 'حضور رائد في السوق الخليجي' : 'GCC & International Footprint'}
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
           )}
 
-          {/* ══════════ TAB 3: SMART COMPACT MISSION ══════════ */}
+          {/* ══════════ TAB 3: MISSION (Option 3: The Modular Bento) ══════════ */}
           {activeTab === 'mission' && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 animate-in fade-in duration-200">
-              {MISSION_CARDS.map((card, idx) => {
-                const Icon = card.icon;
-                return (
-                  <div
-                    key={idx}
-                    className="p-6 rounded-2xl bg-[#0F1117]/90 border border-white/10 hover:border-blue-500/40 hover:bg-[#121622] transition-all flex items-start gap-4 group"
-                  >
-                    <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/25 flex items-center justify-center text-blue-400 shrink-0 mt-0.5 group-hover:scale-105 group-hover:bg-blue-600 group-hover:text-white transition-all">
-                      <Icon className="w-5 h-5" />
-                    </div>
-                    <div className="space-y-1">
-                      <h4 className="text-base font-bold text-white group-hover:text-blue-300 transition-colors">
-                        {card.title}
-                      </h4>
-                      <p className="text-xs text-zinc-400 leading-relaxed font-normal">
-                        {card.desc}
-                      </p>
-                    </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5 animate-in fade-in duration-200">
+              {/* Main Bento Hero Tile */}
+              <div className="md:col-span-2 p-6 sm:p-8 rounded-2xl bg-[#0F1117]/90 border border-indigo-500/30 flex flex-col justify-between space-y-4 hover:border-indigo-500/50 transition-colors shadow-lg">
+                <span className="text-xs font-mono text-indigo-400 font-bold uppercase tracking-wider">
+                  {lang === 'ar' ? 'المنطلقات التشغيلية للرسالة' : 'MISSION OPERATIONAL MANDATE'}
+                </span>
+                
+                <p className="text-base sm:text-lg font-bold text-white leading-relaxed">
+                  &ldquo;{dict.home.identity.mission_desc}&rdquo;
+                </p>
+
+                <div className="flex items-center gap-3 text-xs text-zinc-400 font-mono flex-wrap pt-2 border-t border-white/5">
+                  <span className="px-2.5 py-1 rounded-md bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 font-bold">
+                    {lang === 'ar' ? 'تنفيذ متكامل ودقيق' : 'Turnkey Precision'}
+                  </span>
+                  <span>• {lang === 'ar' ? 'قيمة مضافة لشركائنا' : 'Client & Partner Value'}</span>
+                </div>
+              </div>
+
+              {/* Side Stacked Metric & Focus Badges */}
+              <div className="space-y-4 flex flex-col justify-between">
+                <div className="p-4 sm:p-5 rounded-xl bg-[#141721] border border-white/10 flex items-center gap-3.5 hover:border-purple-500/30 transition-colors">
+                  <div className="w-9 h-9 rounded-lg bg-purple-500/10 text-purple-400 flex items-center justify-center shrink-0">
+                    <Cpu className="w-4 h-4" />
                   </div>
-                );
-              })}
+                  <div>
+                    <span className="text-xs sm:text-sm font-bold text-white block">
+                      {lang === 'ar' ? 'تقنيات صناعية متقدمة' : 'Industrial Modernity'}
+                    </span>
+                    <span className="text-[11px] text-zinc-400">
+                      {lang === 'ar' ? 'مصانع متطورة وأتمتة رقمية' : 'Advanced Facilities & Automation'}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="p-4 sm:p-5 rounded-xl bg-[#141721] border border-white/10 flex items-center gap-3.5 hover:border-pink-500/30 transition-colors">
+                  <div className="w-9 h-9 rounded-lg bg-pink-500/10 text-pink-400 flex items-center justify-center shrink-0">
+                    <Handshake className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <span className="text-xs sm:text-sm font-bold text-white block">
+                      {lang === 'ar' ? 'موثوقية مؤسسية' : 'Institutional Trust'}
+                    </span>
+                    <span className="text-[11px] text-zinc-400">
+                      {lang === 'ar' ? 'التزام تام بأعلى معايير التسليم' : 'Reliable Client Handover'}
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
           )}
 
@@ -273,3 +235,4 @@ export default function VisionMissionValues() {
     </section>
   );
 }
+
