@@ -22,8 +22,8 @@ function LoginForm() {
   const redirectPath = searchParams.get('redirect') || '/admin';
   const { showToast } = useToast();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('admin@swissblue.sa');
+  const [password, setPassword] = useState('WDGroup@2026!Admin');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
