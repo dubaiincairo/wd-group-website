@@ -13,6 +13,7 @@ export default function SEOAdminPage() {
   const [content, setContent] = useState<SiteContentPayload | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [ogImageError, setOgImageError] = useState(false);
 
   useEffect(() => {
     async function load() {
@@ -122,7 +123,10 @@ export default function SEOAdminPage() {
               bucket="photos"
               accept="image"
               value={seo.og_image_url || ''}
-              onChange={(url) => setContent({ ...content, seo: { ...seo, og_image_url: url } })}
+              onChange={(url) => {
+                setOgImageError(false);
+                setContent({ ...content, seo: { ...seo, og_image_url: url } });
+              }}
             />
 
             <div className="space-y-1.5">
@@ -179,36 +183,24 @@ export default function SEOAdminPage() {
 
               <div className="bg-black/50 border border-white/15 rounded-2xl overflow-hidden shadow-lg">
                 <div className="aspect-video bg-[#08090C] overflow-hidden relative flex items-center justify-center">
-                  {seo.og_image_url ? (
+                  {seo.og_image_url && !ogImageError ? (
                     <img 
                       src={seo.og_image_url} 
-                      alt="Social Card Preview" 
+                      alt="" 
                       className="w-full h-full object-cover" 
+                      onError={() => setOgImageError(true)}
                     />
                   ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-[#0c1222] via-[#090d18] to-[#040508] relative flex flex-col items-center justify-center p-6 text-center border border-white/5 overflow-hidden">
-                      {/* Ambient Glow */}
-                      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(37,99,235,0.22)_0%,transparent_70%)] pointer-events-none" />
-
-                      {/* Header Badge */}
-                      <div className="relative z-10 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[10px] font-mono font-bold mb-3 shadow-glow-card">
-                        <Sparkles className="w-3 h-3" />
-                        <span>WD GROUP · OFFICIAL PREVIEW</span>
-                      </div>
-
-                      {/* Centered Brand Logo */}
-                      <div className="relative z-10 h-10 w-44 mb-2">
+                    <div className="w-full h-full bg-gradient-to-br from-[#0c1222] via-[#090d18] to-[#040508] relative flex items-center justify-center p-6 text-center select-none">
+                      <div className="relative h-12 w-48">
                         <Image
                           src="/brand/wd-group-logo-white.png"
                           alt="WD Group Logo"
                           fill
-                          className="object-contain drop-shadow-[0_0_20px_rgba(37,99,235,0.5)]"
+                          className="object-contain drop-shadow-[0_0_20px_rgba(37,99,235,0.4)]"
+                          priority
                         />
                       </div>
-
-                      <p className="relative z-10 text-[11px] text-zinc-400 font-medium tracking-wide">
-                        Hospitality · Manufacturing · Contracting
-                      </p>
                     </div>
                   )}
                 </div>

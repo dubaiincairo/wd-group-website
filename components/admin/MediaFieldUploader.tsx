@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState, useRef, useId } from 'react';
+import React, { useState, useEffect, useRef, useId } from 'react';
+import Image from 'next/image';
 import { 
   UploadCloud, 
   Image as ImageIcon, 
@@ -37,6 +38,11 @@ export default function MediaFieldUploader({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
   const [dragOver, setDragOver] = useState(false);
+  const [hasError, setHasError] = useState(false);
+
+  useEffect(() => {
+    setHasError(false);
+  }, [value]);
 
   const isVideo = accept === 'video' || (value && (value.endsWith('.mp4') || value.endsWith('.webm') || value.includes('/videos/')));
 
@@ -144,7 +150,7 @@ export default function MediaFieldUploader({
         
         {/* Preview Box */}
         <div className="sm:col-span-4 h-28 rounded-xl bg-zinc-900 border border-white/10 overflow-hidden relative flex items-center justify-center group">
-          {value ? (
+          {value && !hasError ? (
             isVideo ? (
               <video
                 src={value}
@@ -153,29 +159,31 @@ export default function MediaFieldUploader({
                 loop
                 playsInline
                 className="w-full h-full object-cover"
+                onError={() => setHasError(true)}
               />
             ) : (
               <img
                 src={value}
-                alt={label}
+                alt=""
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                onError={() => setHasError(true)}
               />
             )
           ) : (
-            <div className="flex flex-col items-center justify-center p-3 text-center gap-1.5 select-none">
-              <div className="w-8 h-8 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400">
-                {accept === 'video' ? (
-                  <VideoIcon className="w-4 h-4 text-zinc-400" />
-                ) : (
-                  <ImageIcon className="w-4 h-4 text-zinc-400" />
-                )}
+            <div className="flex flex-col items-center justify-center p-3 text-center w-full h-full bg-[#0B0D14] select-none">
+              <div className="relative h-8 w-28 opacity-60 group-hover:opacity-100 transition-opacity">
+                <Image
+                  src="/brand/wd-group-logo-white.png"
+                  alt="WD Group"
+                  fill
+                  className="object-contain"
+                />
               </div>
-              <span className="text-[10px] font-medium text-zinc-500">No {accept === 'video' ? 'video' : 'photo'} selected</span>
             </div>
           )}
 
           {/* Quick Overlay Link */}
-          {value && (
+          {value && !hasError && (
             <a
               href={value}
               target="_blank"
