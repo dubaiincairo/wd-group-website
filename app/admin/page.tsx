@@ -245,8 +245,6 @@ export default function AdminDashboardPage() {
           subtitle={`${newInquiriesCount} new uncontacted`}
           icon={MessageSquare}
           iconColor="text-blue-400"
-          badge={newInquiriesCount > 0 ? `${newInquiriesCount} NEW` : 'Up to date'}
-          badgeColor={newInquiriesCount > 0 ? 'bg-blue-500/20 text-blue-300 border-blue-500/40' : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'}
           href="/admin/crm/inquiries"
         />
 
@@ -256,8 +254,6 @@ export default function AdminDashboardPage() {
           subtitle={`${newApplicationsCount} awaiting review`}
           icon={Users}
           iconColor="text-purple-400"
-          badge={newApplicationsCount > 0 ? `${newApplicationsCount} PENDING` : 'Reviewed'}
-          badgeColor="bg-purple-500/20 text-purple-300 border-purple-500/40"
           href="/admin/hr/applications"
         />
 
@@ -267,8 +263,6 @@ export default function AdminDashboardPage() {
           subtitle="Published on careers portal"
           icon={Briefcase}
           iconColor="text-emerald-400"
-          badge="Live on Site"
-          badgeColor="bg-emerald-500/20 text-emerald-300 border-emerald-500/40"
           href="/admin/hr/jobs"
         />
 
@@ -278,8 +272,6 @@ export default function AdminDashboardPage() {
           subtitle="Supabase DB & Storage Active"
           icon={Activity}
           iconColor="text-sky-400"
-          badge="99.9% Uptime"
-          badgeColor="bg-sky-500/20 text-sky-300 border-sky-500/40"
           href="/admin/system/health"
         />
       </div>
