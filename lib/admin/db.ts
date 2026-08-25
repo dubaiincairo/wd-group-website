@@ -28,12 +28,29 @@ export async function callRpc<T = any>(functionName: string, params: Record<stri
     cache: 'no-store',
   });
 
+  const responseText = await res.text();
+
   if (!res.ok) {
-    const error = await res.json().catch(() => ({}));
+    let error: { message?: string } = {};
+    try {
+      error = responseText ? JSON.parse(responseText) : {};
+    } catch {
+      // Fall back to the HTTP status when Supabase returns a non-JSON error.
+    }
     throw new Error(error.message || `RPC ${functionName} failed with status ${res.statusText}`);
   }
 
-  return res.json();
+  // PostgreSQL functions declared with a void return type produce a successful
+  // response with no body. Session creation and audit logging use that shape.
+  if (!responseText.trim()) {
+    return null as T;
+  }
+
+  try {
+    return JSON.parse(responseText) as T;
+  } catch {
+    throw new Error(`RPC ${functionName} returned an invalid JSON response`);
+  }
 }
 
 /**

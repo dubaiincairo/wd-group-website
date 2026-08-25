@@ -44,10 +44,20 @@ function LoginForm() {
         body: JSON.stringify({ email, password }),
       });
 
-      const data = await res.json();
+      const responseText = await res.text();
+      let data: { error?: string } = {};
+      if (responseText.trim()) {
+        try {
+          data = JSON.parse(responseText);
+        } catch {
+          if (res.ok) {
+            throw new Error('Authentication service returned an invalid response.');
+          }
+        }
+      }
 
       if (!res.ok) {
-        throw new Error(data.error || 'Authentication failed. Please check your credentials.');
+        throw new Error(data.error || `Authentication failed (${res.status}). Please check your credentials.`);
       }
 
       showToast('Welcome back. Authenticated successfully.', 'success');
