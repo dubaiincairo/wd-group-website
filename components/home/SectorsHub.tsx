@@ -2,11 +2,12 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useLanguage } from '@/context/LanguageContext';
 import { Building2, Factory, HardHat, ArrowRight, Sparkles, CheckCircle2 } from 'lucide-react';
 
 const SECTOR_PHOTOS = {
-  hospitality: 'https://cdn.sanity.io/images/uoj8zwj3/production/00b20cc6cb3d8c613964965da5556e8396305950-2400x1792.jpg',
+  hospitality: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80',
   manufacturing: 'https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=1200&q=80',
   contracting: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80',
 };
@@ -42,20 +43,22 @@ export default function SectorsHub() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           
           {/* 1. Hospitality (SwissBlue) */}
-          <div className="glass-card rounded-3xl p-7 flex flex-col justify-between border border-sky-500/20 hover:border-sky-400/50 hover:shadow-[0_0_30px_rgba(56,189,248,0.15)] transition-all group relative overflow-hidden">
+          <div className="glass-card rounded-3xl p-7 flex flex-col justify-between border border-sky-500/20 hover:border-sky-400/60 hover:shadow-[0_0_35px_rgba(56,189,248,0.2)] transition-all group relative overflow-hidden">
             
             {/* Top Corner Blueprint Tag */}
-            <div className="absolute top-3 right-3 rtl:right-auto rtl:left-3 text-[10px] font-mono text-sky-400/70 border border-sky-500/20 px-2 py-0.5 rounded bg-sky-950/30">
+            <div className="absolute top-3 right-3 rtl:right-auto rtl:left-3 text-[10px] font-mono text-sky-400/80 border border-sky-500/30 px-2 py-0.5 rounded bg-sky-950/40 backdrop-blur-md">
               SEC // 01
             </div>
 
             <div>
               {/* Card Photo Header */}
               <div className="relative h-48 w-full rounded-2xl overflow-hidden mb-6 border border-white/10 group-hover:border-sky-500/40 transition-colors bg-zinc-900">
-                <img
+                <Image
                   src={SECTOR_PHOTOS.hospitality}
                   alt="SwissBlue Hospitality"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 block"
+                  fill
+                  sizes="(min-width: 1024px) 33vw, 100vw"
+                  className="object-cover group-hover:scale-105 transition-transform duration-700 block"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0F1117] via-transparent to-black/20 pointer-events-none" />
                 <span className="absolute bottom-3 left-3 rtl:left-auto rtl:right-3 px-2.5 py-1 rounded-lg text-xs font-mono font-bold bg-[#1A476A]/90 text-sky-200 backdrop-blur-md border border-sky-400/30">
@@ -113,20 +116,22 @@ export default function SectorsHub() {
           </div>
 
           {/* 2. Manufacturing & Furniture (GreenWood) */}
-          <div className="glass-card rounded-3xl p-7 flex flex-col justify-between border border-emerald-500/20 hover:border-emerald-400/50 hover:shadow-[0_0_30px_rgba(52,211,153,0.15)] transition-all group relative overflow-hidden">
+          <div className="glass-card rounded-3xl p-7 flex flex-col justify-between border border-emerald-500/20 hover:border-emerald-400/60 hover:shadow-[0_0_35px_rgba(52,211,153,0.2)] transition-all group relative overflow-hidden">
             
             {/* Top Corner Blueprint Tag */}
-            <div className="absolute top-3 right-3 rtl:right-auto rtl:left-3 text-[10px] font-mono text-emerald-400/70 border border-emerald-500/20 px-2 py-0.5 rounded bg-emerald-950/30">
+            <div className="absolute top-3 right-3 rtl:right-auto rtl:left-3 text-[10px] font-mono text-emerald-400/80 border border-emerald-500/30 px-2 py-0.5 rounded bg-emerald-950/40 backdrop-blur-md">
               SEC // 02
             </div>
 
             <div>
               {/* Card Photo Header */}
               <div className="relative h-48 w-full rounded-2xl overflow-hidden mb-6 border border-white/10 group-hover:border-emerald-500/40 transition-colors bg-zinc-900">
-                <img
+                <Image
                   src={SECTOR_PHOTOS.manufacturing}
                   alt="GreenWood Manufacturing"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 block"
+                  fill
+                  sizes="(min-width: 1024px) 33vw, 100vw"
+                  className="object-cover group-hover:scale-105 transition-transform duration-700 block"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0F1117] via-transparent to-black/20 pointer-events-none" />
                 <span className="absolute bottom-3 left-3 rtl:left-auto rtl:right-3 px-2.5 py-1 rounded-lg text-xs font-mono font-bold bg-[#0B5C3D]/90 text-emerald-200 backdrop-blur-md border border-emerald-400/30">
@@ -184,20 +189,22 @@ export default function SectorsHub() {
           </div>
 
           {/* 3. Contracting & Fit-Out (Projects) */}
-          <div className="glass-card rounded-3xl p-7 flex flex-col justify-between border border-amber-500/20 hover:border-amber-400/50 hover:shadow-[0_0_30px_rgba(251,191,36,0.15)] transition-all group relative overflow-hidden">
+          <div className="glass-card rounded-3xl p-7 flex flex-col justify-between border border-amber-500/20 hover:border-amber-400/60 hover:shadow-[0_0_35px_rgba(251,191,36,0.2)] transition-all group relative overflow-hidden">
             
             {/* Top Corner Blueprint Tag */}
-            <div className="absolute top-3 right-3 rtl:right-auto rtl:left-3 text-[10px] font-mono text-amber-400/70 border border-amber-500/20 px-2 py-0.5 rounded bg-amber-950/30">
+            <div className="absolute top-3 right-3 rtl:right-auto rtl:left-3 text-[10px] font-mono text-amber-400/80 border border-amber-500/30 px-2 py-0.5 rounded bg-amber-950/40 backdrop-blur-md">
               SEC // 03
             </div>
 
             <div>
               {/* Card Photo Header */}
               <div className="relative h-48 w-full rounded-2xl overflow-hidden mb-6 border border-white/10 group-hover:border-amber-500/40 transition-colors bg-zinc-900">
-                <img
+                <Image
                   src={SECTOR_PHOTOS.contracting}
                   alt="WD Contracting & Projects"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 block"
+                  fill
+                  sizes="(min-width: 1024px) 33vw, 100vw"
+                  className="object-cover group-hover:scale-105 transition-transform duration-700 block"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0F1117] via-transparent to-black/20 pointer-events-none" />
                 <span className="absolute bottom-3 left-3 rtl:left-auto rtl:right-3 px-2.5 py-1 rounded-lg text-xs font-mono font-bold bg-[#8A7340]/90 text-amber-200 backdrop-blur-md border border-amber-400/30">

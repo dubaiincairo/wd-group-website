@@ -19,7 +19,7 @@ const SECTORS_HERO_VIDEOS = [
     video: '/videos/hospitality.mp4',
     poster: 'https://cdn.sanity.io/images/uoj8zwj3/production/00b20cc6cb3d8c613964965da5556e8396305950-2400x1792.jpg',
     glowColor: 'bg-sky-500/25',
-    activeBtn: 'bg-[#1A476A] text-white shadow-glow-blue border border-sky-400/80 ring-1 ring-sky-400/40',
+    activeBtn: 'bg-[#1A476A] text-white shadow-glow-sky border border-sky-400/80 ring-1 ring-sky-400/40',
   },
   {
     id: 'manufacturing',
@@ -138,7 +138,7 @@ export default function HeroSection() {
             onClick={() => setSelectedSector('hospitality')}
             className={`relative overflow-hidden flex items-center gap-2 px-4 sm:px-5 py-2.5 sm:py-3 rounded-xl text-xs font-bold transition-all duration-200 ${
               selectedSector === 'hospitality'
-                ? 'bg-[#1A476A] text-white shadow-glow-blue border border-sky-400/80 ring-1 ring-sky-400/40'
+                ? 'bg-[#1A476A] text-white shadow-glow-sky border border-sky-400/80 ring-1 ring-sky-400/40'
                 : 'text-zinc-400 hover:text-white hover:bg-white/5 border border-transparent'
             }`}
           >

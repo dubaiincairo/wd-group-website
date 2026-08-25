@@ -68,8 +68,10 @@ const config: Config = {
       },
       boxShadow: {
         'glow-blue': '0 0 40px -10px rgba(37, 99, 235, 0.35)',
+        'glow-sky': '0 0 40px -10px rgba(56, 189, 248, 0.35)',
         'glow-emerald': '0 0 40px -10px rgba(11, 92, 61, 0.35)',
         'glow-gold': '0 0 40px -10px rgba(138, 115, 64, 0.35)',
+        'glow-amber': '0 0 40px -10px rgba(251, 191, 36, 0.35)',
         'glow-card': '0 20px 40px -15px rgba(0, 0, 0, 0.7), 0 0 25px -5px rgba(37, 99, 235, 0.1)',
       },
     },

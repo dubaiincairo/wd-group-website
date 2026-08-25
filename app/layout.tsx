@@ -37,7 +37,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" dir="ltr" className={`${inter.variable} ${notoKufi.variable}`}>
-      <body className="bg-brand-pearl text-brand-dark min-h-screen flex flex-col font-sans selection:bg-brand-accent selection:text-white">
+      <body className="bg-[#08090C] text-[#F8FAFC] min-h-screen flex flex-col font-sans selection:bg-blue-600 selection:text-white antialiased">
         <LanguageProvider>
           <Navbar />
           <main className="flex-grow">

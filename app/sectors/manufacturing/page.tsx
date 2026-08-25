@@ -119,21 +119,23 @@ export default function ManufacturingPage() {
             {dict.manufacturing.factories.list.map((fact, idx) => (
               <div
                 key={idx}
-                className="glass-card rounded-3xl p-7 border border-white/10 hover:border-emerald-500/40 transition-all flex flex-col justify-between group bg-brand-surface/80"
+                className="glass-card rounded-3xl p-7 border border-emerald-500/20 hover:border-emerald-400/60 hover:shadow-[0_0_35px_rgba(52,211,153,0.2)] transition-all flex flex-col justify-between group bg-brand-surface/80"
               >
                 <div>
                   <div className="flex items-center justify-between mb-4">
-                    <span className="text-xs font-mono font-bold px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                    <span className="text-xs font-mono font-bold px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
                       FACTORY // 0{idx + 1}
                     </span>
-                    <Factory className="w-5 h-5 text-emerald-400" />
+                    <div className="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 group-hover:scale-110 transition-transform">
+                      <Factory className="w-5 h-5" />
+                    </div>
                   </div>
 
                   <h3 className="text-lg font-bold text-white mb-3 group-hover:text-emerald-300 transition-colors">
                     {fact.title}
                   </h3>
 
-                  <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
+                  <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed">
                     {fact.desc}
                   </p>
                 </div>

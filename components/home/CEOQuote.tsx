@@ -25,15 +25,15 @@ export default function CEOQuote() {
 
           <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12">
             
-            {/* CEO Avatar / Monogram */}
+            {/* CEO Avatar / Executive Crest */}
             <div className="shrink-0 relative">
-              <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-full bg-gradient-to-br from-blue-600/30 via-brand-surface to-brand-border p-1 shadow-glow-blue border border-blue-500/30 flex items-center justify-center">
-                <div className="w-full h-full rounded-full bg-brand-surface flex flex-col items-center justify-center text-center p-3">
-                  <span className="text-xl sm:text-2xl font-extrabold text-blue-400 font-mono">WD</span>
-                  <span className="text-[9px] font-mono text-zinc-400 uppercase tracking-widest mt-0.5">LEADERSHIP</span>
+              <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-full bg-gradient-to-br from-blue-500/40 via-sky-400/20 to-blue-600/40 p-1 shadow-glow-blue border border-blue-400/40 flex items-center justify-center">
+                <div className="w-full h-full rounded-full bg-[#0F1117] flex flex-col items-center justify-center text-center p-3 border border-white/10">
+                  <span className="text-2xl sm:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-sky-300 font-mono tracking-tight">WD</span>
+                  <span className="text-[9px] font-mono text-zinc-400 uppercase tracking-widest mt-0.5 font-bold">LEADERSHIP</span>
                 </div>
               </div>
-              <div className="absolute -bottom-2 -right-2 w-8 h-8 rounded-full bg-blue-600 border-2 border-brand-surface flex items-center justify-center text-white">
+              <div className="absolute -bottom-1.5 -right-1.5 rtl:-right-auto rtl:-left-1.5 w-9 h-9 rounded-full bg-blue-600 border-2 border-[#0F1117] flex items-center justify-center text-white shadow-glow-blue">
                 <ShieldCheck className="w-4 h-4" />
               </div>
             </div>

@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 import { useLanguage } from '@/context/LanguageContext';
 import { 
   Building2, 
@@ -16,6 +17,7 @@ import {
 } from 'lucide-react';
 
 export default function Navbar() {
+  const pathname = usePathname();
   const { lang, toggleLanguage, dict } = useLanguage();
   const [sectorsOpen, setSectorsOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -67,14 +69,18 @@ export default function Navbar() {
           <nav className="hidden lg:flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-brand-surface/80 border border-white/10 backdrop-blur-md">
             <Link 
               href="/" 
-              className="px-3.5 py-1.5 rounded-full text-xs font-semibold text-zinc-300 hover:text-white hover:bg-white/5 transition-colors"
+              className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-colors ${
+                pathname === '/' ? 'text-white bg-white/10' : 'text-zinc-300 hover:text-white hover:bg-white/5'
+              }`}
             >
               {dict.nav.home}
             </Link>
 
             <Link 
               href="/about" 
-              className="px-3.5 py-1.5 rounded-full text-xs font-semibold text-zinc-300 hover:text-white hover:bg-white/5 transition-colors"
+              className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-colors ${
+                pathname === '/about' ? 'text-white bg-white/10' : 'text-zinc-300 hover:text-white hover:bg-white/5'
+              }`}
             >
               {dict.nav.about}
             </Link>
@@ -86,7 +92,9 @@ export default function Navbar() {
               onMouseLeave={() => setSectorsOpen(false)}
             >
               <button 
-                className="px-3.5 py-1.5 rounded-full text-xs font-semibold text-zinc-300 hover:text-white hover:bg-white/5 transition-colors flex items-center gap-1"
+                className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-colors flex items-center gap-1 ${
+                  pathname.startsWith('/sectors') ? 'text-white bg-white/10' : 'text-zinc-300 hover:text-white hover:bg-white/5'
+                }`}
                 onClick={() => setSectorsOpen(!sectorsOpen)}
               >
                 <span>{dict.nav.sectors}</span>
@@ -103,7 +111,9 @@ export default function Navbar() {
                     <Link 
                       href="/sectors/hospitality" 
                       onClick={() => setSectorsOpen(false)}
-                      className="flex items-center justify-between p-2.5 rounded-xl hover:bg-white/5 transition-colors group/item"
+                      className={`flex items-center justify-between p-2.5 rounded-xl hover:bg-white/5 transition-colors group/item ${
+                        pathname === '/sectors/hospitality' ? 'bg-white/5' : ''
+                      }`}
                     >
                       <div className="flex items-center gap-2.5">
                         <Building2 className="w-4 h-4 text-sky-400" />
@@ -119,7 +129,9 @@ export default function Navbar() {
                     <Link 
                       href="/sectors/manufacturing" 
                       onClick={() => setSectorsOpen(false)}
-                      className="flex items-center justify-between p-2.5 rounded-xl hover:bg-white/5 transition-colors group/item"
+                      className={`flex items-center justify-between p-2.5 rounded-xl hover:bg-white/5 transition-colors group/item ${
+                        pathname === '/sectors/manufacturing' ? 'bg-white/5' : ''
+                      }`}
                     >
                       <div className="flex items-center gap-2.5">
                         <Factory className="w-4 h-4 text-emerald-400" />
@@ -135,7 +147,9 @@ export default function Navbar() {
                     <Link 
                       href="/sectors/contracting" 
                       onClick={() => setSectorsOpen(false)}
-                      className="flex items-center justify-between p-2.5 rounded-xl hover:bg-white/5 transition-colors group/item"
+                      className={`flex items-center justify-between p-2.5 rounded-xl hover:bg-white/5 transition-colors group/item ${
+                        pathname === '/sectors/contracting' ? 'bg-white/5' : ''
+                      }`}
                     >
                       <div className="flex items-center gap-2.5">
                         <HardHat className="w-4 h-4 text-amber-400" />
@@ -154,14 +168,18 @@ export default function Navbar() {
 
             <Link 
               href="/careers" 
-              className="px-3.5 py-1.5 rounded-full text-xs font-semibold text-zinc-300 hover:text-white hover:bg-white/5 transition-colors"
+              className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-colors ${
+                pathname === '/careers' ? 'text-white bg-white/10' : 'text-zinc-300 hover:text-white hover:bg-white/5'
+              }`}
             >
               {dict.nav.careers}
             </Link>
 
             <Link 
               href="/contact" 
-              className="px-3.5 py-1.5 rounded-full text-xs font-semibold text-zinc-300 hover:text-white hover:bg-white/5 transition-colors"
+              className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-colors ${
+                pathname === '/contact' ? 'text-white bg-white/10' : 'text-zinc-300 hover:text-white hover:bg-white/5'
+              }`}
             >
               {dict.nav.contact}
             </Link>

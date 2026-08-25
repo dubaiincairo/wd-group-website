@@ -175,16 +175,16 @@ export default function CareersPage() {
               return (
                 <div
                   key={idx}
-                  className="glass-card rounded-3xl p-6 border border-white/10 hover:border-blue-500/40 transition-all flex flex-col justify-between bg-brand-surface/80"
+                  className="glass-card rounded-3xl p-6 border border-white/10 hover:border-blue-500/50 hover:shadow-glow-blue transition-all flex flex-col justify-between bg-brand-surface/80 group"
                 >
                   <div className="space-y-3">
-                    <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400">
+                    <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400 group-hover:scale-110 transition-transform">
                       <Icon className="w-5 h-5" />
                     </div>
-                    <h3 className="text-base font-bold text-white">
+                    <h3 className="text-base font-bold text-white group-hover:text-blue-300 transition-colors">
                       {pillar.title}
                     </h3>
-                    <p className="text-xs text-zinc-400 leading-relaxed">
+                    <p className="text-xs text-zinc-300 leading-relaxed">
                       {pillar.desc}
                     </p>
                   </div>

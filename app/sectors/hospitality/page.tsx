@@ -18,6 +18,15 @@ import {
   FileUp
 } from 'lucide-react';
 
+const PROPERTY_IMAGES = [
+  'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80', // SwissBlue Hotel Jeddah
+  'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=800&q=80', // SwissBlue Residence Jeddah East
+  'https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=800&q=80', // SwissBlue Residence Jeddah West
+  'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=800&q=80', // SwissBlue Plaza Jazan
+  'https://images.unsplash.com/photo-1591088398332-8a7791972843?auto=format&fit=crop&w=800&q=80', // Vinas Riyadh Serviced Apartments
+  'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=800&q=80', // Tulip Rawda Riyadh
+];
+
 export default function HospitalityPage() {
   const { lang, dict } = useLanguage();
   const [submitted, setSubmitted] = useState(false);
@@ -129,21 +138,22 @@ export default function HospitalityPage() {
             {dict.hospitality.portfolio.properties.map((prop, idx) => (
               <div
                 key={idx}
-                className="glass-card rounded-3xl p-6 border border-white/10 hover:border-sky-500/40 transition-all flex flex-col justify-between group bg-brand-surface/80"
+                className="glass-card rounded-3xl p-6 border border-white/10 hover:border-sky-500/50 hover:shadow-[0_0_30px_rgba(56,189,248,0.15)] transition-all flex flex-col justify-between group bg-brand-surface/80"
               >
                 <div>
-                  <div className="relative h-40 w-full rounded-2xl overflow-hidden mb-5 border border-white/10">
+                  <div className="relative h-44 w-full rounded-2xl overflow-hidden mb-5 border border-white/10">
                     <Image
-                      src="/images/hospitality-hero.jpg"
+                      src={PROPERTY_IMAGES[idx % PROPERTY_IMAGES.length]}
                       alt={prop.name}
                       fill
+                      sizes="(min-width: 1024px) 33vw, 100vw"
                       className="object-cover group-hover:scale-105 transition-transform duration-700"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#0F1117] via-transparent to-black/30" />
                     <span className="absolute top-3 right-3 rtl:right-auto rtl:left-3 px-2.5 py-0.5 rounded-md text-[10px] font-mono font-bold bg-black/60 text-sky-300 border border-sky-400/30 backdrop-blur-md">
                       0{idx + 1}
                     </span>
-                    <span className="absolute bottom-3 left-3 rtl:left-auto rtl:right-3 px-2.5 py-1 rounded-lg text-xs font-semibold bg-sky-950/80 text-sky-200 border border-sky-500/30 flex items-center gap-1">
+                    <span className="absolute bottom-3 left-3 rtl:left-auto rtl:right-3 px-2.5 py-1 rounded-lg text-xs font-semibold bg-sky-950/80 text-sky-200 border border-sky-500/30 flex items-center gap-1 backdrop-blur-md">
                       <MapPin className="w-3 h-3 text-sky-400" />
                       <span>{prop.city}</span>
                     </span>

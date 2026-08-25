@@ -61,7 +61,7 @@ export default function HoldingSynergy() {
           </p>
         </div>
 
-        {/* 3 Steps Pipeline Grid */}
+        {/* 3 Steps Pipeline Grid with Visual Flow Connectors */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative">
           
           {STEPS.map((item, idx) => {
@@ -99,8 +99,11 @@ export default function HoldingSynergy() {
 
                 {/* Footer Blueprint Line */}
                 <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between text-[11px] font-mono text-zinc-500">
-                  <span>INTEGRATED SYNERGY</span>
-                  <span className="text-zinc-600">0{idx + 1} / 03</span>
+                  <div className="flex items-center gap-1.5 text-zinc-400">
+                    <span className="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
+                    <span>INTEGRATED SYNERGY</span>
+                  </div>
+                  <span className="text-zinc-500">0{idx + 1} / 03</span>
                 </div>
 
               </div>

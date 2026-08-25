@@ -79,11 +79,11 @@ export default function ContactPage() {
         <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
           
           {/* Card 1: Headquarters */}
-          <div className="glass-card rounded-3xl p-7 border border-white/10 space-y-3 bg-brand-surface/80">
-            <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400">
+          <div className="glass-card rounded-3xl p-7 border border-white/10 hover:border-blue-500/50 hover:shadow-glow-blue transition-all space-y-3 bg-brand-surface/80 group">
+            <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400 group-hover:scale-110 transition-transform">
               <MapPin className="w-5 h-5" />
             </div>
-            <h3 className="text-base font-bold text-white">
+            <h3 className="text-base font-bold text-white group-hover:text-blue-300 transition-colors">
               {dict.contact.cards.hq_title}
             </h3>
             <p className="text-xs text-zinc-400 leading-relaxed">
@@ -92,11 +92,11 @@ export default function ContactPage() {
           </div>
 
           {/* Card 2: Email Channels */}
-          <div className="glass-card rounded-3xl p-7 border border-white/10 space-y-3 bg-brand-surface/80">
-            <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400">
+          <div className="glass-card rounded-3xl p-7 border border-white/10 hover:border-blue-500/50 hover:shadow-glow-blue transition-all space-y-3 bg-brand-surface/80 group">
+            <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400 group-hover:scale-110 transition-transform">
               <Mail className="w-5 h-5" />
             </div>
-            <h3 className="text-base font-bold text-white">
+            <h3 className="text-base font-bold text-white group-hover:text-blue-300 transition-colors">
               {dict.contact.cards.general_title}
             </h3>
             <div className="space-y-1 text-xs text-zinc-400 font-mono" dir="ltr">
@@ -114,11 +114,11 @@ export default function ContactPage() {
           </div>
 
           {/* Card 3: Phones */}
-          <div className="glass-card rounded-3xl p-7 border border-white/10 space-y-3 bg-brand-surface/80">
-            <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400">
+          <div className="glass-card rounded-3xl p-7 border border-white/10 hover:border-blue-500/50 hover:shadow-glow-blue transition-all space-y-3 bg-brand-surface/80 group">
+            <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400 group-hover:scale-110 transition-transform">
               <Phone className="w-5 h-5" />
             </div>
-            <h3 className="text-base font-bold text-white">
+            <h3 className="text-base font-bold text-white group-hover:text-blue-300 transition-colors">
               {dict.contact.cards.phone_title}
             </h3>
             <div className="space-y-1 text-xs text-zinc-400 font-mono" dir="ltr">

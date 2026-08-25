@@ -115,16 +115,16 @@ export default function ContractingPage() {
             {dict.contracting.services.list.map((serv, idx) => (
               <div
                 key={idx}
-                className="glass-card rounded-3xl p-7 border border-white/10 hover:border-amber-500/40 transition-all flex items-start gap-4 bg-brand-surface/80"
+                className="glass-card rounded-3xl p-7 border border-amber-500/20 hover:border-amber-400/60 hover:shadow-[0_0_35px_rgba(251,191,36,0.2)] transition-all flex items-start gap-4 bg-brand-surface/80 group"
               >
-                <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0 mt-1">
+                <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0 mt-1 group-hover:scale-110 transition-transform">
                   <CheckCircle2 className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-white mb-2">
+                  <h3 className="text-lg font-bold text-white mb-2 group-hover:text-amber-300 transition-colors">
                     {serv.title}
                   </h3>
-                  <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
+                  <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed">
                     {serv.desc}
                   </p>
                 </div>
@@ -146,11 +146,11 @@ export default function ContractingPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {dict.contracting.lifecycle.stages.map((stage, idx) => (
-              <div key={idx} className="p-5 rounded-2xl bg-black/40 border border-white/5 space-y-3">
-                <span className="text-xs font-mono font-bold text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">
+              <div key={idx} className="p-5 rounded-2xl bg-black/40 border border-white/10 hover:border-amber-500/40 hover:bg-black/60 transition-all space-y-3 group">
+                <span className="text-xs font-mono font-bold text-amber-300 bg-amber-500/15 px-2.5 py-1 rounded-md border border-amber-500/30 inline-block">
                   STAGE {stage.num}
                 </span>
-                <h4 className="text-base font-bold text-white">
+                <h4 className="text-base font-bold text-white group-hover:text-amber-300 transition-colors">
                   {stage.title}
                 </h4>
                 <p className="text-xs text-zinc-400 leading-relaxed">

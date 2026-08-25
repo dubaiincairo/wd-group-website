@@ -106,6 +106,9 @@ export default function AboutPage() {
         {/* 4. Vision 2030 Alignment (3 Pillars) */}
         <section className="space-y-8">
           <div className="text-center max-w-2xl mx-auto space-y-2">
+            <div className="text-xs font-mono font-bold text-blue-400 uppercase tracking-wider">
+              // {lang === 'ar' ? 'مواكبة الرؤية الوطنية' : 'NATIONAL ALIGNMENT'}
+            </div>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
               {dict.about.vision2030.heading}
             </h2>
@@ -113,14 +116,19 @@ export default function AboutPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {dict.about.vision2030.pillars.map((pillar, idx) => (
-              <div key={idx} className="glass-card rounded-2xl p-6 border border-white/10 hover:border-blue-500/40 transition-all space-y-3 bg-brand-surface/70">
-                <div className="text-xs font-mono font-bold text-blue-400">
-                  PILLAR // 0{idx + 1}
+              <div key={idx} className="glass-card rounded-3xl p-7 border border-white/10 hover:border-blue-500/50 hover:shadow-glow-blue transition-all space-y-4 bg-brand-surface/80 group">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-mono font-bold text-blue-400 bg-blue-500/10 px-2.5 py-1 rounded-md border border-blue-500/20">
+                    PILLAR // 0{idx + 1}
+                  </span>
+                  <div className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-blue-400 group-hover:scale-110 transition-transform">
+                    {idx === 0 ? <Award className="w-4 h-4" /> : idx === 1 ? <Users className="w-4 h-4" /> : <ShieldCheck className="w-4 h-4" />}
+                  </div>
                 </div>
-                <h3 className="text-lg font-bold text-white">
+                <h3 className="text-lg font-bold text-white group-hover:text-blue-300 transition-colors">
                   {pillar.title}
                 </h3>
-                <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
+                <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed">
                   {pillar.desc}
                 </p>
               </div>
@@ -137,16 +145,16 @@ export default function AboutPage() {
             <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
               {dict.about.footprint.heading}
             </h2>
-            <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
+            <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed">
               {dict.about.footprint.intro}
             </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {dict.about.footprint.locations.map((loc, idx) => (
-              <div key={idx} className="p-5 rounded-2xl bg-black/40 border border-white/5 space-y-2">
+              <div key={idx} className="p-5 rounded-2xl bg-black/40 border border-white/10 hover:border-blue-500/40 hover:bg-black/60 transition-all space-y-2 group">
                 <div className="flex items-center gap-2 text-blue-400 font-bold text-sm">
-                  <MapPin className="w-4 h-4" />
+                  <MapPin className="w-4 h-4 text-blue-400 shrink-0 group-hover:scale-110 transition-transform" />
                   <span>{loc.city}</span>
                 </div>
                 <p className="text-xs text-zinc-400 leading-relaxed">
