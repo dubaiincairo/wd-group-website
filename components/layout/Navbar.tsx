@@ -66,13 +66,6 @@ export default function Navbar() {
           {/* Desktop Navigation Links */}
           <nav className="hidden lg:flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-brand-surface/80 border border-white/10 backdrop-blur-md">
             <Link 
-              href="/" 
-              className="px-3.5 py-1.5 rounded-full text-xs font-semibold text-zinc-300 hover:text-white hover:bg-white/5 transition-colors"
-            >
-              {dict.nav.home || (lang === 'ar' ? 'الرئيسية' : 'Home')}
-            </Link>
-
-            <Link 
               href="/about" 
               className="px-3.5 py-1.5 rounded-full text-xs font-semibold text-zinc-300 hover:text-white hover:bg-white/5 transition-colors"
             >
@@ -181,7 +174,7 @@ export default function Navbar() {
               href="/contact"
               className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-white bg-blue-600 hover:bg-blue-500 shadow-glow-blue transition-all"
             >
-              <span>{dict.nav.rfp_btn || (lang === 'ar' ? 'تواصل معنا' : 'Contact Us')}</span>
+              <span>{dict.nav.rfp_btn}</span>
               <ArrowUpRight className="w-3.5 h-3.5 rtl:rotate-270" />
             </Link>
           </div>
@@ -210,13 +203,6 @@ export default function Navbar() {
       {mobileMenuOpen && (
         <div className="lg:hidden bg-brand-surface border-b border-white/10 p-5 mt-3 shadow-2xl">
           <div className="flex flex-col gap-2.5">
-            <Link 
-              href="/"
-              onClick={() => setMobileMenuOpen(false)}
-              className="px-3 py-2 rounded-xl text-sm font-semibold text-zinc-200 hover:bg-white/5"
-            >
-              {dict.nav.home || (lang === 'ar' ? 'الرئيسية' : 'Home')}
-            </Link>
             <Link 
               href="/about"
               onClick={() => setMobileMenuOpen(false)}
@@ -259,7 +245,7 @@ export default function Navbar() {
               onClick={() => setMobileMenuOpen(false)}
               className="w-full py-2.5 rounded-xl text-xs font-bold text-center text-white bg-blue-600 mt-2"
             >
-              {dict.nav.rfp_btn || (lang === 'ar' ? 'تواصل معنا' : 'Contact Us')}
+              {dict.nav.rfp_btn}
             </Link>
           </div>
         </div>
