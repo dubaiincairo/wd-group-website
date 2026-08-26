@@ -23,6 +23,14 @@ const config: Config = {
           accentHover: "#1D4ED8",
           accentLight: "rgba(37, 99, 235, 0.15)",
           accentBorder: "rgba(37, 99, 235, 0.35)",
+          camel: "#C9A86A",
+          camelDeep: "#A4884F",
+          camelGlow: "#E3C58A",
+          paper: "#F4EFE5",
+          ink: "#0E1A24",
+          inkDeep: "#08111A",
+          inkSurface: "#162536",
+          ruleGold: "rgba(201, 168, 106, 0.18)",
         },
         sector: {
           hospitality: "#1A476A",
@@ -36,6 +44,8 @@ const config: Config = {
       fontFamily: {
         sans: ["var(--font-inter)", "var(--font-noto-kufi)", "system-ui", "-apple-system", "sans-serif"],
         arabic: ["var(--font-noto-kufi)", "var(--font-inter)", "sans-serif"],
+        serif: ["var(--font-playfair)", "Georgia", "serif"],
+        mono: ["var(--font-mono)", "monospace"],
       },
       keyframes: {
         aurora: {
@@ -72,6 +82,7 @@ const config: Config = {
         'glow-emerald': '0 0 40px -10px rgba(11, 92, 61, 0.35)',
         'glow-gold': '0 0 40px -10px rgba(138, 115, 64, 0.35)',
         'glow-amber': '0 0 40px -10px rgba(251, 191, 36, 0.35)',
+        'glow-camel': '0 0 40px -10px rgba(201, 168, 106, 0.4)',
         'glow-card': '0 20px 40px -15px rgba(0, 0, 0, 0.7), 0 0 25px -5px rgba(37, 99, 235, 0.1)',
       },
     },

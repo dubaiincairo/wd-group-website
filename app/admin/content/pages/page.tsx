@@ -198,14 +198,102 @@ export default function PagesContentEditor() {
               onChangeEn={(v) => setContent({ ...content, home: { ...content.home, hero: { ...content.home.hero, body_en: v } } })}
               onChangeAr={(v) => setContent({ ...content, home: { ...content.home, hero: { ...content.home.hero, body_ar: v } } })}
             />
+
+            <BilingualInput
+              label="Hero Kicker / Secondary Tag"
+              valueEn={content.home.hero.kicker_en || 'Integrated Hospitality, Manufacturing & Contracting'}
+              valueAr={content.home.hero.kicker_ar || 'منظومة متكاملة في الضيافة والتصنيع والمقاولات'}
+              onChangeEn={(v) => setContent({ ...content, home: { ...content.home, hero: { ...content.home.hero, kicker_en: v } } })}
+              onChangeAr={(v) => setContent({ ...content, home: { ...content.home, hero: { ...content.home.hero, kicker_ar: v } } })}
+            />
           </div>
 
-          {/* Section 2: Hero Background Videos & Posters */}
+          {/* Section 2: Floating Sector Switcher Dock */}
+          <div className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 space-y-5">
+            <div className="flex items-center justify-between border-b border-white/10 pb-3">
+              <span className="text-xs font-mono font-bold text-[#C9A86A] uppercase tracking-wider flex items-center gap-1.5">
+                <Sparkles className="w-4 h-4" />
+                <span>02. FLOATING SECTOR SWITCHER DOCK & BADGES</span>
+              </span>
+            </div>
+
+            <div className="space-y-4">
+              <div className="p-4 rounded-2xl bg-black/40 border border-sky-500/20 space-y-3">
+                <span className="text-xs font-mono font-bold text-sky-400 uppercase">Sector 1: Hospitality Switcher Dock</span>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <BilingualInput
+                    label="Hospitality Tab Label"
+                    valueEn={content.home.hero.dock_hospitality_label_en || 'Hospitality (SwissBlue)'}
+                    valueAr={content.home.hero.dock_hospitality_label_ar || 'الضيافة (SwissBlue)'}
+                    onChangeEn={(v) => setContent({ ...content, home: { ...content.home, hero: { ...content.home.hero, dock_hospitality_label_en: v } } })}
+                    onChangeAr={(v) => setContent({ ...content, home: { ...content.home, hero: { ...content.home.hero, dock_hospitality_label_ar: v } } })}
+                  />
+                  <BilingualInput
+                    label="Hospitality Badge / Count"
+                    valueEn={content.home.hero.dock_hospitality_badge_en || '6 Properties'}
+                    valueAr={content.home.hero.dock_hospitality_badge_ar || '6 منشآت'}
+                    onChangeEn={(v) => setContent({ ...content, home: { ...content.home, hero: { ...content.home.hero, dock_hospitality_badge_en: v } } })}
+                    onChangeAr={(v) => setContent({ ...content, home: { ...content.home, hero: { ...content.home.hero, dock_hospitality_badge_ar: v } } })}
+                  />
+                </div>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-black/40 border border-emerald-500/20 space-y-3">
+                <span className="text-xs font-mono font-bold text-emerald-400 uppercase">Sector 2: Manufacturing Switcher Dock</span>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <BilingualInput
+                    label="Manufacturing Tab Label"
+                    valueEn={content.home.hero.dock_manufacturing_label_en || 'Manufacturing (GreenWood)'}
+                    valueAr={content.home.hero.dock_manufacturing_label_ar || 'التصنيع والأثاث (GreenWood)'}
+                    onChangeEn={(v) => setContent({ ...content, home: { ...content.home, hero: { ...content.home.hero, dock_manufacturing_label_en: v } } })}
+                    onChangeAr={(v) => setContent({ ...content, home: { ...content.home, hero: { ...content.home.hero, dock_manufacturing_label_ar: v } } })}
+                  />
+                  <BilingualInput
+                    label="Manufacturing Badge / Count"
+                    valueEn={content.home.hero.dock_manufacturing_badge_en || '3 Factories'}
+                    valueAr={content.home.hero.dock_manufacturing_badge_ar || '3 مصانع'}
+                    onChangeEn={(v) => setContent({ ...content, home: { ...content.home, hero: { ...content.home.hero, dock_manufacturing_badge_en: v } } })}
+                    onChangeAr={(v) => setContent({ ...content, home: { ...content.home, hero: { ...content.home.hero, dock_manufacturing_badge_ar: v } } })}
+                  />
+                </div>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-black/40 border border-amber-500/20 space-y-3">
+                <span className="text-xs font-mono font-bold text-amber-400 uppercase">Sector 3: Contracting Switcher Dock</span>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <BilingualInput
+                    label="Contracting Tab Label"
+                    valueEn={content.home.hero.dock_contracting_label_en || 'Contracting (Projects)'}
+                    valueAr={content.home.hero.dock_contracting_label_ar || 'المقاولات والتميز الهندسي'}
+                    onChangeEn={(v) => setContent({ ...content, home: { ...content.home, hero: { ...content.home.hero, dock_contracting_label_en: v } } })}
+                    onChangeAr={(v) => setContent({ ...content, home: { ...content.home, hero: { ...content.home.hero, dock_contracting_label_ar: v } } })}
+                  />
+                  <BilingualInput
+                    label="Contracting Badge / Status"
+                    valueEn={content.home.hero.dock_contracting_badge_en || 'Turnkey Execution'}
+                    valueAr={content.home.hero.dock_contracting_badge_ar || 'تنفيذ شامل'}
+                    onChangeEn={(v) => setContent({ ...content, home: { ...content.home, hero: { ...content.home.hero, dock_contracting_badge_en: v } } })}
+                    onChangeAr={(v) => setContent({ ...content, home: { ...content.home, hero: { ...content.home.hero, dock_contracting_badge_ar: v } } })}
+                  />
+                </div>
+              </div>
+
+              <BilingualInput
+                label="Scroll Cue Indicator Text"
+                valueEn={content.home.hero.scroll_cue_en || 'Scroll to explore'}
+                valueAr={content.home.hero.scroll_cue_ar || 'استكشف المنظومة القابضة'}
+                onChangeEn={(v) => setContent({ ...content, home: { ...content.home, hero: { ...content.home.hero, scroll_cue_en: v } } })}
+                onChangeAr={(v) => setContent({ ...content, home: { ...content.home, hero: { ...content.home.hero, scroll_cue_ar: v } } })}
+              />
+            </div>
+          </div>
+
+          {/* Section 3: Hero Background Videos & Posters */}
           <div className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 space-y-5">
             <div className="flex items-center justify-between border-b border-white/10 pb-3">
               <span className="text-xs font-mono font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
                 <Video className="w-4 h-4" />
-                <span>02. HERO BACKGROUND VIDEOS & POSTERS</span>
+                <span>03. HERO BACKGROUND VIDEOS & POSTERS</span>
               </span>
             </div>
 
@@ -236,12 +324,12 @@ export default function PagesContentEditor() {
             </div>
           </div>
 
-          {/* Section 3: Homepage Sectors Photo Cards */}
+          {/* Section 4: Homepage Sectors Photo Cards */}
           <div className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 space-y-5">
             <div className="flex items-center justify-between border-b border-white/10 pb-3">
               <span className="text-xs font-mono font-bold text-sky-400 uppercase tracking-wider flex items-center gap-1.5">
                 <ImageIcon className="w-4 h-4" />
-                <span>03. STRATEGIC SECTORS PHOTO CARDS</span>
+                <span>04. STRATEGIC SECTORS PHOTO CARDS</span>
               </span>
             </div>
 
@@ -269,11 +357,11 @@ export default function PagesContentEditor() {
             </div>
           </div>
 
-          {/* Section 4: Value Chain Synergy */}
+          {/* Section 5: Value Chain Synergy (Heading & 3 Steps) */}
           <div className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 space-y-5">
             <div className="flex items-center justify-between border-b border-white/10 pb-3">
               <span className="text-xs font-mono font-bold text-emerald-400 uppercase tracking-wider">
-                04. INTEGRATED VALUE CHAIN SYNERGY
+                05. INTEGRATED VALUE CHAIN SYNERGY
               </span>
             </div>
 
@@ -294,6 +382,194 @@ export default function PagesContentEditor() {
               onChangeEn={(v) => setContent({ ...content, home: { ...content.home, synergy: { ...content.home.synergy, intro_en: v } } })}
               onChangeAr={(v) => setContent({ ...content, home: { ...content.home, synergy: { ...content.home.synergy, intro_ar: v } } })}
             />
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+              <div className="p-4 rounded-2xl bg-black/40 border border-emerald-500/20 space-y-3">
+                <span className="text-xs font-mono font-bold text-emerald-400">Step 01: Manufacturing</span>
+                <BilingualInput
+                  label="Step 1 Title"
+                  valueEn={content.home.synergy.step1_title_en || 'Manufacture'}
+                  valueAr={content.home.synergy.step1_title_ar || 'التصنيع والإنتاج'}
+                  onChangeEn={(v) => setContent({ ...content, home: { ...content.home, synergy: { ...content.home.synergy, step1_title_en: v } } })}
+                  onChangeAr={(v) => setContent({ ...content, home: { ...content.home, synergy: { ...content.home.synergy, step1_title_ar: v } } })}
+                />
+                <BilingualInput
+                  label="Step 1 Narrative"
+                  isTextarea
+                  rows={3}
+                  valueEn={content.home.synergy.step1_text_en || ''}
+                  valueAr={content.home.synergy.step1_text_ar || ''}
+                  onChangeEn={(v) => setContent({ ...content, home: { ...content.home, synergy: { ...content.home.synergy, step1_text_en: v } } })}
+                  onChangeAr={(v) => setContent({ ...content, home: { ...content.home, synergy: { ...content.home.synergy, step1_text_ar: v } } })}
+                />
+              </div>
+
+              <div className="p-4 rounded-2xl bg-black/40 border border-amber-500/20 space-y-3">
+                <span className="text-xs font-mono font-bold text-amber-400">Step 02: Fit-Out & Contracting</span>
+                <BilingualInput
+                  label="Step 2 Title"
+                  valueEn={content.home.synergy.step2_title_en || 'Build & Fit Out'}
+                  valueAr={content.home.synergy.step2_title_ar || 'التنفيذ والتجهيز المعماري'}
+                  onChangeEn={(v) => setContent({ ...content, home: { ...content.home, synergy: { ...content.home.synergy, step2_title_en: v } } })}
+                  onChangeAr={(v) => setContent({ ...content, home: { ...content.home, synergy: { ...content.home.synergy, step2_title_ar: v } } })}
+                />
+                <BilingualInput
+                  label="Step 2 Narrative"
+                  isTextarea
+                  rows={3}
+                  valueEn={content.home.synergy.step2_text_en || ''}
+                  valueAr={content.home.synergy.step2_text_ar || ''}
+                  onChangeEn={(v) => setContent({ ...content, home: { ...content.home, synergy: { ...content.home.synergy, step2_text_en: v } } })}
+                  onChangeAr={(v) => setContent({ ...content, home: { ...content.home, synergy: { ...content.home.synergy, step2_text_ar: v } } })}
+                />
+              </div>
+
+              <div className="p-4 rounded-2xl bg-black/40 border border-sky-500/20 space-y-3">
+                <span className="text-xs font-mono font-bold text-sky-400">Step 03: Hospitality Operations</span>
+                <BilingualInput
+                  label="Step 3 Title"
+                  valueEn={content.home.synergy.step3_title_en || 'Operate'}
+                  valueAr={content.home.synergy.step3_title_ar || 'التشغيل الفندقي وإدارة الأصول'}
+                  onChangeEn={(v) => setContent({ ...content, home: { ...content.home, synergy: { ...content.home.synergy, step3_title_en: v } } })}
+                  onChangeAr={(v) => setContent({ ...content, home: { ...content.home, synergy: { ...content.home.synergy, step3_title_ar: v } } })}
+                />
+                <BilingualInput
+                  label="Step 3 Narrative"
+                  isTextarea
+                  rows={3}
+                  valueEn={content.home.synergy.step3_text_en || ''}
+                  valueAr={content.home.synergy.step3_text_ar || ''}
+                  onChangeEn={(v) => setContent({ ...content, home: { ...content.home, synergy: { ...content.home.synergy, step3_title_en: v } } })}
+                  onChangeAr={(v) => setContent({ ...content, home: { ...content.home, synergy: { ...content.home.synergy, step3_title_ar: v } } })}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Section 6: Identity, Vision, Mission & Values */}
+          <div className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 space-y-5">
+            <div className="flex items-center justify-between border-b border-white/10 pb-3">
+              <span className="text-xs font-mono font-bold text-blue-400 uppercase tracking-wider">
+                06. IDENTITY, VISION, MISSION & VALUES
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <BilingualInput
+                label="Vision Title"
+                valueEn={content.home.identity.vision_title_en || 'Vision'}
+                valueAr={content.home.identity.vision_title_ar || 'الرؤية'}
+                onChangeEn={(v) => setContent({ ...content, home: { ...content.home, identity: { ...content.home.identity, vision_title_en: v } } })}
+                onChangeAr={(v) => setContent({ ...content, home: { ...content.home, identity: { ...content.home.identity, vision_title_ar: v } } })}
+              />
+              <BilingualInput
+                label="Mission Title"
+                valueEn={content.home.identity.mission_title_en || 'Mission'}
+                valueAr={content.home.identity.mission_title_ar || 'الرسالة'}
+                onChangeEn={(v) => setContent({ ...content, home: { ...content.home, identity: { ...content.home.identity, mission_title_en: v } } })}
+                onChangeAr={(v) => setContent({ ...content, home: { ...content.home, identity: { ...content.home.identity, mission_title_ar: v } } })}
+              />
+            </div>
+
+            <BilingualInput
+              label="Vision Statement"
+              isTextarea
+              rows={3}
+              valueEn={content.home.identity.vision_desc_en || ''}
+              valueAr={content.home.identity.vision_desc_ar || ''}
+              onChangeEn={(v) => setContent({ ...content, home: { ...content.home, identity: { ...content.home.identity, vision_desc_en: v } } })}
+              onChangeAr={(v) => setContent({ ...content, home: { ...content.home, identity: { ...content.home.identity, vision_desc_ar: v } } })}
+            />
+
+            <BilingualInput
+              label="Mission Statement"
+              isTextarea
+              rows={3}
+              valueEn={content.home.identity.mission_desc_en || ''}
+              valueAr={content.home.identity.mission_desc_ar || ''}
+              onChangeEn={(v) => setContent({ ...content, home: { ...content.home, identity: { ...content.home.identity, mission_desc_en: v } } })}
+              onChangeAr={(v) => setContent({ ...content, home: { ...content.home, identity: { ...content.home.identity, mission_desc_ar: v } } })}
+            />
+          </div>
+
+          {/* Section 7: CEO Quote & Governance */}
+          <div className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 space-y-5">
+            <div className="flex items-center justify-between border-b border-white/10 pb-3">
+              <span className="text-xs font-mono font-bold text-[#C9A86A] uppercase tracking-wider">
+                07. CEO LEADERSHIP QUOTE & GOVERNANCE
+              </span>
+            </div>
+
+            <BilingualInput
+              label="Quote Statement"
+              isTextarea
+              rows={3}
+              valueEn={content.home.ceo.quote_en}
+              valueAr={content.home.ceo.quote_ar}
+              onChangeEn={(v) => setContent({ ...content, home: { ...content.home, ceo: { ...content.home.ceo, quote_en: v } } })}
+              onChangeAr={(v) => setContent({ ...content, home: { ...content.home, ceo: { ...content.home.ceo, quote_ar: v } } })}
+            />
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <BilingualInput
+                label="Leader Name"
+                valueEn={content.home.ceo.name_en}
+                valueAr={content.home.ceo.name_ar}
+                onChangeEn={(v) => setContent({ ...content, home: { ...content.home, ceo: { ...content.home.ceo, name_en: v } } })}
+                onChangeAr={(v) => setContent({ ...content, home: { ...content.home, ceo: { ...content.home.ceo, name_ar: v } } })}
+              />
+              <BilingualInput
+                label="Leader Title / Role"
+                valueEn={content.home.ceo.title_en}
+                valueAr={content.home.ceo.title_ar}
+                onChangeEn={(v) => setContent({ ...content, home: { ...content.home, ceo: { ...content.home.ceo, title_en: v } } })}
+                onChangeAr={(v) => setContent({ ...content, home: { ...content.home, ceo: { ...content.home.ceo, title_ar: v } } })}
+              />
+            </div>
+          </div>
+
+          {/* Section 8: Strategic Partnership CTA Banner */}
+          <div className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 space-y-5">
+            <div className="flex items-center justify-between border-b border-white/10 pb-3">
+              <span className="text-xs font-mono font-bold text-blue-400 uppercase tracking-wider">
+                08. STRATEGIC PARTNERSHIP CTA BANNER
+              </span>
+            </div>
+
+            <BilingualInput
+              label="Banner Heading"
+              valueEn={content.home.partnership?.heading_en || 'Interested in Building a Partnership With Us?'}
+              valueAr={content.home.partnership?.heading_ar || 'هل ترغب في بناء شراكة استراتيجية معنا؟'}
+              onChangeEn={(v) => setContent({ ...content, home: { ...content.home, partnership: { ...(content.home.partnership || {}), heading_en: v } } })}
+              onChangeAr={(v) => setContent({ ...content, home: { ...content.home, partnership: { ...(content.home.partnership || {}), heading_ar: v } } })}
+            />
+
+            <BilingualInput
+              label="Banner Narrative"
+              isTextarea
+              rows={3}
+              valueEn={content.home.partnership?.body_en || ''}
+              valueAr={content.home.partnership?.body_ar || ''}
+              onChangeEn={(v) => setContent({ ...content, home: { ...content.home, partnership: { ...(content.home.partnership || {}), body_en: v } } })}
+              onChangeAr={(v) => setContent({ ...content, home: { ...content.home, partnership: { ...(content.home.partnership || {}), body_ar: v } } })}
+            />
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <BilingualInput
+                label="Primary CTA Button Label"
+                valueEn={content.home.partnership?.primary_cta_en || 'Start a Partnership'}
+                valueAr={content.home.partnership?.primary_cta_ar || 'ابدأ شراكة جديدة'}
+                onChangeEn={(v) => setContent({ ...content, home: { ...content.home, partnership: { ...(content.home.partnership || {}), primary_cta_en: v } } })}
+                onChangeAr={(v) => setContent({ ...content, home: { ...content.home, partnership: { ...(content.home.partnership || {}), primary_cta_ar: v } } })}
+              />
+              <BilingualInput
+                label="Secondary CTA Button Label"
+                valueEn={content.home.partnership?.secondary_cta_en || 'Join Our Team'}
+                valueAr={content.home.partnership?.secondary_cta_ar || 'انضم إلى فريقنا'}
+                onChangeEn={(v) => setContent({ ...content, home: { ...content.home, partnership: { ...(content.home.partnership || {}), secondary_cta_en: v } } })}
+                onChangeAr={(v) => setContent({ ...content, home: { ...content.home, partnership: { ...(content.home.partnership || {}), secondary_cta_ar: v } } })}
+              />
+            </div>
           </div>
 
         </div>

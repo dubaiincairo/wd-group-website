@@ -50,17 +50,17 @@ export default function Navbar() {
           
           {/* Dynamic Language-Aware Brand Logo */}
           <Link href="/" className="flex items-center gap-3.5 group shrink-0">
-            <div className={`relative h-10 sm:h-12 ${lang === 'ar' ? 'w-36 sm:w-44' : 'w-32 sm:w-36'} transition-transform group-hover:scale-105`}>
+            <div className={`relative h-10 sm:h-12 ${lang === 'ar' ? 'w-36 sm:w-44' : 'w-32 sm:w-38'} transition-all duration-300 group-hover:scale-105`}>
               <Image 
                 src={logoSrc} 
                 alt={lang === 'ar' ? 'مجموعة دبليو دي للأعمال' : 'WD Group'} 
                 fill
-                className="object-contain drop-shadow-[0_0_14px_rgba(37,99,235,0.45)]"
+                className="object-contain drop-shadow-[0_0_16px_rgba(201,168,106,0.25)]"
                 priority
               />
             </div>
             <div className="hidden sm:block border-l rtl:border-l-0 rtl:border-r border-white/15 pl-3.5 rtl:pl-0 rtl:pr-3.5 py-0.5">
-              <span className="text-[10px] font-extrabold uppercase tracking-widest text-blue-400 block font-mono">
+              <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#C9A86A] block font-mono">
                 {lang === 'ar' ? 'قابضة' : 'HOLDING'}
               </span>
               <span className="text-[11px] text-zinc-400 font-medium block -mt-0.5">
@@ -70,11 +70,13 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden lg:flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-brand-surface/80 border border-white/10 backdrop-blur-md">
+          <nav className="hidden lg:flex items-center gap-1 px-4 py-1.5 rounded-full bg-[#0F1117]/85 border border-white/10 backdrop-blur-xl shadow-lg">
             <Link 
               href="/" 
-              className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-colors ${
-                pathname === '/' ? 'text-white bg-white/10' : 'text-zinc-300 hover:text-white hover:bg-white/5'
+              className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 ${
+                pathname === '/' 
+                  ? 'text-white bg-white/15 shadow-sm font-bold' 
+                  : 'text-zinc-300 hover:text-white hover:bg-white/5'
               }`}
             >
               {dict.nav.home}
@@ -82,8 +84,10 @@ export default function Navbar() {
 
             <Link 
               href="/about" 
-              className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-colors ${
-                pathname === '/about' ? 'text-white bg-white/10' : 'text-zinc-300 hover:text-white hover:bg-white/5'
+              className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 ${
+                pathname === '/about' 
+                  ? 'text-white bg-white/15 shadow-sm font-bold' 
+                  : 'text-zinc-300 hover:text-white hover:bg-white/5'
               }`}
             >
               {dict.nav.about}
@@ -96,73 +100,90 @@ export default function Navbar() {
               onMouseLeave={() => setSectorsOpen(false)}
             >
               <button 
-                className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-colors flex items-center gap-1 ${
-                  pathname.startsWith('/sectors') ? 'text-white bg-white/10' : 'text-zinc-300 hover:text-white hover:bg-white/5'
+                className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 flex items-center gap-1.5 ${
+                  pathname.startsWith('/sectors') 
+                    ? 'text-white bg-white/15 shadow-sm font-bold' 
+                    : 'text-zinc-300 hover:text-white hover:bg-white/5'
                 }`}
                 onClick={() => setSectorsOpen(!sectorsOpen)}
               >
                 <span>{dict.nav.sectors}</span>
-                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${sectorsOpen ? 'rotate-180 text-blue-400' : ''}`} />
+                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${sectorsOpen ? 'rotate-180 text-[#C9A86A]' : ''}`} />
               </button>
 
               {sectorsOpen && (
-                <div className="absolute top-full -left-10 rtl:-left-auto rtl:-right-10 mt-2 w-80 bg-brand-surface rounded-2xl p-2.5 shadow-2xl border border-white/10 backdrop-blur-2xl animate-in fade-in duration-150 z-50">
-                  <div className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-zinc-500">
-                    {lang === 'ar' ? 'قطاعات المجموعة' : 'Group Sectors'}
+                <div className="absolute top-full -left-10 rtl:-left-auto rtl:-right-10 mt-2 w-80 bg-[#0F1117]/95 rounded-2xl p-2.5 shadow-2xl border border-white/15 backdrop-blur-2xl animate-in fade-in duration-150 z-50">
+                  <div className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-[#C9A86A] font-mono">
+                    {lang === 'ar' ? 'القطاعات الاستراتيجية' : 'STRATEGIC SECTORS'}
                   </div>
 
                   <div className="space-y-1">
                     <Link 
                       href="/sectors/hospitality" 
                       onClick={() => setSectorsOpen(false)}
-                      className={`flex items-center justify-between p-2.5 rounded-xl hover:bg-white/5 transition-colors group/item ${
-                        pathname === '/sectors/hospitality' ? 'bg-white/5' : ''
+                      className={`flex items-center justify-between p-2.5 rounded-xl hover:bg-white/5 transition-all group/item ${
+                        pathname === '/sectors/hospitality' ? 'bg-sky-500/10 border border-sky-500/20' : ''
                       }`}
                     >
                       <div className="flex items-center gap-2.5">
-                        <Building2 className="w-4 h-4 text-sky-400" />
-                        <span className="text-xs font-semibold text-zinc-200 group-hover/item:text-white">
-                          {dict.nav.hospitality}
-                        </span>
+                        <div className="w-7 h-7 rounded-lg bg-sky-500/10 flex items-center justify-center text-sky-400 group-hover/item:scale-110 transition-transform">
+                          <Building2 className="w-4 h-4" />
+                        </div>
+                        <div>
+                          <span className="text-xs font-semibold text-zinc-200 group-hover/item:text-white block">
+                            {dict.nav.hospitality}
+                          </span>
+                          <span className="text-[10px] text-zinc-400">SwissBlue Hotels & Suites</span>
+                        </div>
                       </div>
-                      <span className="text-[10px] font-semibold text-sky-400 bg-sky-500/10 px-2 py-0.5 rounded-full">
-                        SwissBlue
+                      <span className="text-[10px] font-semibold text-sky-400 bg-sky-500/10 px-2 py-0.5 rounded-full border border-sky-500/20 font-mono">
+                        6 Props
                       </span>
                     </Link>
 
                     <Link 
                       href="/sectors/manufacturing" 
                       onClick={() => setSectorsOpen(false)}
-                      className={`flex items-center justify-between p-2.5 rounded-xl hover:bg-white/5 transition-colors group/item ${
-                        pathname === '/sectors/manufacturing' ? 'bg-white/5' : ''
+                      className={`flex items-center justify-between p-2.5 rounded-xl hover:bg-white/5 transition-all group/item ${
+                        pathname === '/sectors/manufacturing' ? 'bg-emerald-500/10 border border-emerald-500/20' : ''
                       }`}
                     >
                       <div className="flex items-center gap-2.5">
-                        <Factory className="w-4 h-4 text-emerald-400" />
-                        <span className="text-xs font-semibold text-zinc-200 group-hover/item:text-white">
-                          {dict.nav.manufacturing}
-                        </span>
+                        <div className="w-7 h-7 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-400 group-hover/item:scale-110 transition-transform">
+                          <Factory className="w-4 h-4" />
+                        </div>
+                        <div>
+                          <span className="text-xs font-semibold text-zinc-200 group-hover/item:text-white block">
+                            {dict.nav.manufacturing}
+                          </span>
+                          <span className="text-[10px] text-zinc-400">GreenWood & Factories</span>
+                        </div>
                       </div>
-                      <span className="text-[10px] font-semibold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full">
-                        GreenWood
+                      <span className="text-[10px] font-semibold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20 font-mono">
+                        3 Factories
                       </span>
                     </Link>
 
                     <Link 
                       href="/sectors/contracting" 
                       onClick={() => setSectorsOpen(false)}
-                      className={`flex items-center justify-between p-2.5 rounded-xl hover:bg-white/5 transition-colors group/item ${
-                        pathname === '/sectors/contracting' ? 'bg-white/5' : ''
+                      className={`flex items-center justify-between p-2.5 rounded-xl hover:bg-white/5 transition-all group/item ${
+                        pathname === '/sectors/contracting' ? 'bg-amber-500/10 border border-amber-500/20' : ''
                       }`}
                     >
                       <div className="flex items-center gap-2.5">
-                        <HardHat className="w-4 h-4 text-amber-400" />
-                        <span className="text-xs font-semibold text-zinc-200 group-hover/item:text-white">
-                          {dict.nav.contracting}
-                        </span>
+                        <div className="w-7 h-7 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-400 group-hover/item:scale-110 transition-transform">
+                          <HardHat className="w-4 h-4" />
+                        </div>
+                        <div>
+                          <span className="text-xs font-semibold text-zinc-200 group-hover/item:text-white block">
+                            {dict.nav.contracting}
+                          </span>
+                          <span className="text-[10px] text-zinc-400">Engineering & Turnkey</span>
+                        </div>
                       </div>
-                      <span className="text-[10px] font-semibold text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full">
-                        Projects
+                      <span className="text-[10px] font-semibold text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20 font-mono">
+                        Turnkey
                       </span>
                     </Link>
                   </div>
@@ -172,8 +193,10 @@ export default function Navbar() {
 
             <Link 
               href="/careers" 
-              className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-colors ${
-                pathname === '/careers' ? 'text-white bg-white/10' : 'text-zinc-300 hover:text-white hover:bg-white/5'
+              className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 ${
+                pathname === '/careers' 
+                  ? 'text-white bg-white/15 shadow-sm font-bold' 
+                  : 'text-zinc-300 hover:text-white hover:bg-white/5'
               }`}
             >
               {dict.nav.careers}
@@ -181,8 +204,10 @@ export default function Navbar() {
 
             <Link 
               href="/contact" 
-              className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-colors ${
-                pathname === '/contact' ? 'text-white bg-white/10' : 'text-zinc-300 hover:text-white hover:bg-white/5'
+              className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 ${
+                pathname === '/contact' 
+                  ? 'text-white bg-white/15 shadow-sm font-bold' 
+                  : 'text-zinc-300 hover:text-white hover:bg-white/5'
               }`}
             >
               {dict.nav.contact}
@@ -193,15 +218,16 @@ export default function Navbar() {
           <div className="hidden lg:flex items-center gap-3">
             <button 
               onClick={toggleLanguage}
-              className="px-3 py-2 rounded-xl text-xs font-bold text-zinc-300 hover:text-white bg-brand-surface/80 border border-white/10 hover:border-white/20 transition-colors flex items-center gap-1.5"
+              className="px-3 py-2 rounded-xl text-xs font-bold text-zinc-300 hover:text-white bg-[#0F1117]/85 border border-white/10 hover:border-white/25 transition-all flex items-center gap-1.5 shadow-sm"
+              title={lang === 'ar' ? 'Switch to English' : 'التحويل للغة العربية'}
             >
-              <Globe className="w-3.5 h-3.5 text-blue-400" />
-              <span>{dict.nav.lang_toggle}</span>
+              <Globe className="w-3.5 h-3.5 text-[#C9A86A]" />
+              <span className="font-mono text-[11px]">{dict.nav.lang_toggle}</span>
             </button>
 
             <Link 
               href="/contact"
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-white bg-blue-600 hover:bg-blue-500 shadow-glow-blue transition-all"
+              className="inline-flex items-center gap-1.5 px-4.5 py-2 rounded-xl text-xs font-bold text-[#0E1A24] bg-[#C9A86A] hover:bg-[#E3C58A] shadow-glow-camel hover:scale-[1.03] active:scale-[0.98] transition-all"
             >
               <span>{dict.nav.contactCta}</span>
               <ArrowUpRight className="w-3.5 h-3.5 rtl:rotate-270" />

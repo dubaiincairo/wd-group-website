@@ -75,6 +75,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
         hero: {
           ...baseDict.home.hero,
           eyebrow: (isAr ? c.home?.hero?.eyebrow_ar : c.home?.hero?.eyebrow_en) || baseDict.home.hero.eyebrow,
+          kicker: (isAr ? c.home?.hero?.kicker_ar : c.home?.hero?.kicker_en) || baseDict.home.hero.kicker,
           title: (isAr ? c.home?.hero?.title_ar : c.home?.hero?.title_en) || baseDict.home.hero.title,
           title_line1: (isAr ? c.home?.hero?.title_line1_ar : c.home?.hero?.title_line1_en) || baseDict.home.hero.title_line1,
           title_line2: (isAr ? c.home?.hero?.title_line2_ar : c.home?.hero?.title_line2_en) || baseDict.home.hero.title_line2,
@@ -82,6 +83,15 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
           body: (isAr ? c.home?.hero?.body_ar : c.home?.hero?.body_en) || baseDict.home.hero.body,
           primaryCta: (isAr ? c.home?.hero?.primary_cta_ar : c.home?.hero?.primary_cta_en) || baseDict.home.hero.primaryCta,
           secondaryCta: (isAr ? c.home?.hero?.secondary_cta_ar : c.home?.hero?.secondary_cta_en) || baseDict.home.hero.secondaryCta,
+          dock: {
+            hospitality_label: (isAr ? c.home?.hero?.dock_hospitality_label_ar : c.home?.hero?.dock_hospitality_label_en) || baseDict.home.hero.dock.hospitality_label,
+            hospitality_badge: (isAr ? c.home?.hero?.dock_hospitality_badge_ar : c.home?.hero?.dock_hospitality_badge_en) || baseDict.home.hero.dock.hospitality_badge,
+            manufacturing_label: (isAr ? c.home?.hero?.dock_manufacturing_label_ar : c.home?.hero?.dock_manufacturing_label_en) || baseDict.home.hero.dock.manufacturing_label,
+            manufacturing_badge: (isAr ? c.home?.hero?.dock_manufacturing_badge_ar : c.home?.hero?.dock_manufacturing_badge_en) || baseDict.home.hero.dock.manufacturing_badge,
+            contracting_label: (isAr ? c.home?.hero?.dock_contracting_label_ar : c.home?.hero?.dock_contracting_label_en) || baseDict.home.hero.dock.contracting_label,
+            contracting_badge: (isAr ? c.home?.hero?.dock_contracting_badge_ar : c.home?.hero?.dock_contracting_badge_en) || baseDict.home.hero.dock.contracting_badge,
+          },
+          scroll_cue: (isAr ? c.home?.hero?.scroll_cue_ar : c.home?.hero?.scroll_cue_en) || baseDict.home.hero.scroll_cue,
         },
         media: {
           ...(baseDict.home as any).media,
@@ -100,14 +110,57 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
         },
         synergy: {
           ...baseDict.home.synergy,
+          label: (isAr ? c.home?.synergy?.label_ar : c.home?.synergy?.label_en) || baseDict.home.synergy.label,
           heading: (isAr ? c.home?.synergy?.heading_ar : c.home?.synergy?.heading_en) || baseDict.home.synergy.heading,
           intro: (isAr ? c.home?.synergy?.intro_ar : c.home?.synergy?.intro_en) || baseDict.home.synergy.intro,
+          step1_title: (isAr ? c.home?.synergy?.step1_title_ar : c.home?.synergy?.step1_title_en) || baseDict.home.synergy.step1_title,
+          step1_text: (isAr ? c.home?.synergy?.step1_text_ar : c.home?.synergy?.step1_text_en) || baseDict.home.synergy.step1_text,
+          step2_title: (isAr ? c.home?.synergy?.step2_title_ar : c.home?.synergy?.step2_title_en) || baseDict.home.synergy.step2_title,
+          step2_text: (isAr ? c.home?.synergy?.step2_text_ar : c.home?.synergy?.step2_text_en) || baseDict.home.synergy.step2_text,
+          step3_title: (isAr ? c.home?.synergy?.step3_title_ar : c.home?.synergy?.step3_title_en) || baseDict.home.synergy.step3_title,
+          step3_text: (isAr ? c.home?.synergy?.step3_text_ar : c.home?.synergy?.step3_text_en) || baseDict.home.synergy.step3_text,
+        },
+        identity: {
+          ...baseDict.home.identity,
+          label: (isAr ? c.home?.identity?.label_ar : c.home?.identity?.label_en) || baseDict.home.identity.label,
+          vision_title: (isAr ? c.home?.identity?.vision_title_ar : c.home?.identity?.vision_title_en) || baseDict.home.identity.vision_title,
+          vision_desc: (isAr ? c.home?.identity?.vision_desc_ar : c.home?.identity?.vision_desc_en) || baseDict.home.identity.vision_desc,
+          mission_title: (isAr ? c.home?.identity?.mission_title_ar : c.home?.identity?.mission_title_en) || baseDict.home.identity.mission_title,
+          mission_desc: (isAr ? c.home?.identity?.mission_desc_ar : c.home?.identity?.mission_desc_en) || baseDict.home.identity.mission_desc,
+          values_title: (isAr ? c.home?.identity?.values_title_ar : c.home?.identity?.values_title_en) || baseDict.home.identity.values_title,
+          values: [
+            {
+              title: (isAr ? c.home?.identity?.val1_title_ar : c.home?.identity?.val1_title_en) || baseDict.home.identity.values[0]?.title,
+              desc: (isAr ? c.home?.identity?.val1_desc_ar : c.home?.identity?.val1_desc_en) || baseDict.home.identity.values[0]?.desc,
+            },
+            {
+              title: (isAr ? c.home?.identity?.val2_title_ar : c.home?.identity?.val2_title_en) || baseDict.home.identity.values[1]?.title,
+              desc: (isAr ? c.home?.identity?.val2_desc_ar : c.home?.identity?.val2_desc_en) || baseDict.home.identity.values[1]?.desc,
+            },
+            {
+              title: (isAr ? c.home?.identity?.val3_title_ar : c.home?.identity?.val3_title_en) || baseDict.home.identity.values[2]?.title,
+              desc: (isAr ? c.home?.identity?.val3_desc_ar : c.home?.identity?.val3_desc_en) || baseDict.home.identity.values[2]?.desc,
+            },
+            {
+              title: (isAr ? c.home?.identity?.val4_title_ar : c.home?.identity?.val4_title_en) || baseDict.home.identity.values[3]?.title,
+              desc: (isAr ? c.home?.identity?.val4_desc_ar : c.home?.identity?.val4_desc_en) || baseDict.home.identity.values[3]?.desc,
+            },
+          ],
         },
         ceo: {
           ...baseDict.home.ceo,
+          label: (isAr ? c.home?.ceo?.label_ar : c.home?.ceo?.label_en) || baseDict.home.ceo.label,
           quote: (isAr ? c.home?.ceo?.quote_ar : c.home?.ceo?.quote_en) || baseDict.home.ceo.quote,
           name: (isAr ? c.home?.ceo?.name_ar : c.home?.ceo?.name_en) || baseDict.home.ceo.name,
           title: (isAr ? c.home?.ceo?.title_ar : c.home?.ceo?.title_en) || baseDict.home.ceo.title,
+        },
+        partnership: {
+          ...baseDict.home.partnership,
+          label: (isAr ? c.home?.partnership?.label_ar : c.home?.partnership?.label_en) || baseDict.home.partnership.label,
+          heading: (isAr ? c.home?.partnership?.heading_ar : c.home?.partnership?.heading_en) || baseDict.home.partnership.heading,
+          body: (isAr ? c.home?.partnership?.body_ar : c.home?.partnership?.body_en) || baseDict.home.partnership.body,
+          primaryCta: (isAr ? c.home?.partnership?.primary_cta_ar : c.home?.partnership?.primary_cta_en) || baseDict.home.partnership.primaryCta,
+          secondaryCta: (isAr ? c.home?.partnership?.secondary_cta_ar : c.home?.partnership?.secondary_cta_en) || baseDict.home.partnership.secondaryCta,
         },
       },
       about: {

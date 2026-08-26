@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Inter, Noto_Kufi_Arabic } from 'next/font/google';
+import { Inter, Noto_Kufi_Arabic, Playfair_Display, IBM_Plex_Mono } from 'next/font/google';
 import './globals.css';
 import { LanguageProvider } from '@/context/LanguageContext';
 import { ToastProvider } from '@/components/admin/ToastProvider';
@@ -21,6 +21,19 @@ const notoKufi = Noto_Kufi_Arabic({
   variable: '--font-noto-kufi',
 });
 
+const playfair = Playfair_Display({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-playfair',
+});
+
+const ibmMono = IBM_Plex_Mono({
+  weight: ['400', '500', '600'],
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-mono',
+});
+
 export const metadata: Metadata = {
   title: 'WD Group | Holding Company — Hospitality, Manufacturing, Contracting',
   description: 'WD Group is a premier Saudi holding company powering strategic investments across Hospitality (SwissBlue Hotels), Industrial Manufacturing, and General Contracting.',
@@ -40,7 +53,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" dir="ltr" className={`${inter.variable} ${notoKufi.variable}`}>
+    <html lang="en" dir="ltr" className={`${inter.variable} ${notoKufi.variable} ${playfair.variable} ${ibmMono.variable}`}>
       <body className="bg-[#08090C] text-[#F8FAFC] min-h-screen flex flex-col font-sans selection:bg-blue-600 selection:text-white antialiased">
         <LanguageProvider>
           <ToastProvider>

@@ -42,6 +42,15 @@ export const translations = {
         body: "A Saudi business group creating sustainable value through hospitality, manufacturing, and contracting. We bring focused expertise, reliable execution, and long-term thinking to every sector we serve.",
         primaryCta: "Discover Our Group",
         secondaryCta: "Explore Our Sectors",
+        dock: {
+          hospitality_label: "Hospitality (SwissBlue)",
+          hospitality_badge: "6 Properties",
+          manufacturing_label: "Manufacturing (GreenWood)",
+          manufacturing_badge: "3 Factories",
+          contracting_label: "Contracting (Projects)",
+          contracting_badge: "Turnkey Execution",
+        },
+        scroll_cue: "Scroll to explore",
       },
       media: {
         hero_video_hospitality: "/videos/hospitality.mp4",
@@ -472,6 +481,15 @@ export const translations = {
         body: "مجموعة أعمال سعودية تصنع قيمة مستدامة عبر قطاعات الضيافة والتصنيع والمقاولات. نجمع بين الخبرة المتخصصة، وجودة التنفيذ، والرؤية طويلة المدى في كل قطاع نعمل فيه.",
         primaryCta: "تعرّف على المجموعة",
         secondaryCta: "استكشف قطاعاتنا",
+        dock: {
+          hospitality_label: "الضيافة (SwissBlue)",
+          hospitality_badge: "6 منشآت",
+          manufacturing_label: "التصنيع والأثاث (GreenWood)",
+          manufacturing_badge: "3 مصانع",
+          contracting_label: "المقاولات والتميز الهندسي",
+          contracting_badge: "تنفيذ شامل",
+        },
+        scroll_cue: "استكشف المنظومة القابضة",
       },
       media: {
         hero_video_hospitality: "/videos/hospitality.mp4",

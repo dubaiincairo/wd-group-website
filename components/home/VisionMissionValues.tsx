@@ -32,19 +32,19 @@ export default function VisionMissionValues() {
         
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-14 space-y-4">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide uppercase bg-brand-surface border border-brand-border text-blue-400 shadow-glow-card">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide uppercase bg-[#0F1117]/90 border border-[#C9A86A]/30 text-[#C9A86A] shadow-glow-camel">
             <Sparkles className="w-3.5 h-3.5" />
-            <span>{dict.home.identity.label}</span>
+            <span className="font-mono">{dict.home.identity.label}</span>
           </div>
 
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white leading-tight">
+          <h2 className={`text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white leading-tight ${lang === 'en' ? 'font-serif' : ''}`}>
             {dict.home.identity.label}
           </h2>
         </div>
 
         {/* Tab Navigation (Core Values First) */}
         <div className="flex justify-center mb-10 sm:mb-12">
-          <div className="inline-flex p-1.5 rounded-2xl bg-brand-surface border border-white/10 backdrop-blur-md">
+          <div className="inline-flex p-1.5 rounded-2xl bg-[#0F1117]/90 border border-white/10 backdrop-blur-md shadow-lg">
             
             {/* 1. Core Values Tab Button (Default & First) */}
             <button
@@ -52,7 +52,7 @@ export default function VisionMissionValues() {
               onClick={() => setActiveTab('values')}
               className={`px-5 sm:px-8 py-2.5 sm:py-3 rounded-xl text-xs sm:text-sm font-bold transition-all duration-300 flex items-center gap-2 cursor-pointer ${
                 activeTab === 'values'
-                  ? 'bg-blue-600 text-white shadow-glow-blue'
+                  ? 'bg-[#C9A86A] text-[#0E1A24] shadow-glow-camel font-extrabold'
                   : 'text-zinc-400 hover:text-white hover:bg-white/5'
               }`}
             >
@@ -66,7 +66,7 @@ export default function VisionMissionValues() {
               onClick={() => setActiveTab('vision')}
               className={`px-5 sm:px-8 py-2.5 sm:py-3 rounded-xl text-xs sm:text-sm font-bold transition-all duration-300 flex items-center gap-2 cursor-pointer ${
                 activeTab === 'vision'
-                  ? 'bg-blue-600 text-white shadow-glow-blue'
+                  ? 'bg-[#C9A86A] text-[#0E1A24] shadow-glow-camel font-extrabold'
                   : 'text-zinc-400 hover:text-white hover:bg-white/5'
               }`}
             >
@@ -80,7 +80,7 @@ export default function VisionMissionValues() {
               onClick={() => setActiveTab('mission')}
               className={`px-5 sm:px-8 py-2.5 sm:py-3 rounded-xl text-xs sm:text-sm font-bold transition-all duration-300 flex items-center gap-2 cursor-pointer ${
                 activeTab === 'mission'
-                  ? 'bg-blue-600 text-white shadow-glow-blue'
+                  ? 'bg-[#C9A86A] text-[#0E1A24] shadow-glow-camel font-extrabold'
                   : 'text-zinc-400 hover:text-white hover:bg-white/5'
               }`}
             >

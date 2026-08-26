@@ -101,6 +101,8 @@ export interface SiteContentPayload {
     hero: {
       eyebrow_en: string;
       eyebrow_ar: string;
+      kicker_en?: string;
+      kicker_ar?: string;
       title_en: string;
       title_ar: string;
       title_line1_en?: string;
@@ -115,6 +117,20 @@ export interface SiteContentPayload {
       primary_cta_ar: string;
       secondary_cta_en: string;
       secondary_cta_ar: string;
+      dock_hospitality_label_en?: string;
+      dock_hospitality_label_ar?: string;
+      dock_hospitality_badge_en?: string;
+      dock_hospitality_badge_ar?: string;
+      dock_manufacturing_label_en?: string;
+      dock_manufacturing_label_ar?: string;
+      dock_manufacturing_badge_en?: string;
+      dock_manufacturing_badge_ar?: string;
+      dock_contracting_label_en?: string;
+      dock_contracting_label_ar?: string;
+      dock_contracting_badge_en?: string;
+      dock_contracting_badge_ar?: string;
+      scroll_cue_en?: string;
+      scroll_cue_ar?: string;
     };
     media?: {
       hero_video_hospitality?: string;
@@ -142,12 +158,28 @@ export interface SiteContentPayload {
       stat4_text_ar: string;
     };
     synergy: {
+      label_en?: string;
+      label_ar?: string;
       heading_en: string;
       heading_ar: string;
       intro_en: string;
       intro_ar: string;
+      step1_title_en?: string;
+      step1_title_ar?: string;
+      step1_text_en?: string;
+      step1_text_ar?: string;
+      step2_title_en?: string;
+      step2_title_ar?: string;
+      step2_text_en?: string;
+      step2_text_ar?: string;
+      step3_title_en?: string;
+      step3_title_ar?: string;
+      step3_text_en?: string;
+      step3_text_ar?: string;
     };
     identity: {
+      label_en?: string;
+      label_ar?: string;
       vision_title_en: string;
       vision_title_ar: string;
       vision_desc_en: string;
@@ -156,14 +188,46 @@ export interface SiteContentPayload {
       mission_title_ar: string;
       mission_desc_en: string;
       mission_desc_ar: string;
+      values_title_en?: string;
+      values_title_ar?: string;
+      val1_title_en?: string;
+      val1_title_ar?: string;
+      val1_desc_en?: string;
+      val1_desc_ar?: string;
+      val2_title_en?: string;
+      val2_title_ar?: string;
+      val2_desc_en?: string;
+      val2_desc_ar?: string;
+      val3_title_en?: string;
+      val3_title_ar?: string;
+      val3_desc_en?: string;
+      val3_desc_ar?: string;
+      val4_title_en?: string;
+      val4_title_ar?: string;
+      val4_desc_en?: string;
+      val4_desc_ar?: string;
     };
     ceo: {
+      label_en?: string;
+      label_ar?: string;
       quote_en: string;
       quote_ar: string;
       name_en: string;
       name_ar: string;
       title_en: string;
       title_ar: string;
+    };
+    partnership?: {
+      label_en?: string;
+      label_ar?: string;
+      heading_en?: string;
+      heading_ar?: string;
+      body_en?: string;
+      body_ar?: string;
+      primary_cta_en?: string;
+      primary_cta_ar?: string;
+      secondary_cta_en?: string;
+      secondary_cta_ar?: string;
     };
   };
   about: {

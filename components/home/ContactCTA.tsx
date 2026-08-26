@@ -57,23 +57,23 @@ export default function ContactCTA() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Main CTA Card */}
-        <div className="glass-card rounded-3xl p-8 sm:p-14 border border-blue-500/30 shadow-2xl relative overflow-hidden bg-brand-surface/90">
+        <div className="glass-card rounded-3xl p-8 sm:p-14 border border-[#C9A86A]/30 shadow-2xl relative overflow-hidden bg-[#0F1117]/90">
           
           <div className="max-w-3xl mx-auto text-center space-y-6">
             
             {/* Tag */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide uppercase bg-blue-500/10 border border-blue-500/30 text-blue-400">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide uppercase bg-[#C9A86A]/10 border border-[#C9A86A]/30 text-[#C9A86A]">
               <MessageSquare className="w-3.5 h-3.5" />
-              <span>{dict.home.partnership.label}</span>
+              <span className="font-mono">{dict.home.partnership.label}</span>
             </div>
 
             {/* Heading */}
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white leading-tight">
+            <h2 className={`text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white leading-tight ${lang === 'en' ? 'font-serif' : ''}`}>
               {dict.home.partnership.heading}
             </h2>
 
             {/* Subheading */}
-            <p className="text-sm sm:text-base text-zinc-300 leading-relaxed max-w-2xl mx-auto">
+            <p className="text-sm sm:text-base text-zinc-300 leading-relaxed max-w-2xl mx-auto font-normal">
               {dict.home.partnership.body}
             </p>
 
@@ -81,7 +81,7 @@ export default function ContactCTA() {
             <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
               <button
                 onClick={() => setModalOpen(true)}
-                className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl text-sm font-bold text-white bg-blue-600 hover:bg-blue-500 shadow-glow-blue hover:scale-[1.02] active:scale-[0.98] transition-all"
+                className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl text-sm font-bold text-[#0E1A24] bg-[#C9A86A] hover:bg-[#E3C58A] shadow-glow-camel hover:scale-[1.02] active:scale-[0.98] transition-all"
               >
                 <Send className="w-4 h-4" />
                 <span>{dict.home.partnership.primaryCta}</span>
@@ -101,15 +101,15 @@ export default function ContactCTA() {
           {/* Quick Coordinates Footer */}
           <div className="mt-12 pt-8 border-t border-white/10 grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs text-zinc-400 text-center sm:text-left rtl:sm:text-right">
             <div className="flex items-center justify-center sm:justify-start gap-2">
-              <MapPin className="w-4 h-4 text-blue-400 shrink-0" />
+              <MapPin className="w-4 h-4 text-[#C9A86A] shrink-0" />
               <span>{dict.footer.location_text}</span>
             </div>
             <div className="flex items-center justify-center sm:justify-start gap-2">
-              <Mail className="w-4 h-4 text-blue-400 shrink-0" />
+              <Mail className="w-4 h-4 text-[#C9A86A] shrink-0" />
               <a href="mailto:ceo@wdgroup.online" className="hover:text-white" dir="ltr">ceo@wdgroup.online</a>
             </div>
             <div className="flex items-center justify-center sm:justify-start gap-2">
-              <Phone className="w-4 h-4 text-blue-400 shrink-0" />
+              <Phone className="w-4 h-4 text-[#C9A86A] shrink-0" />
               <a href="tel:+966505725070" className="hover:text-white" dir="ltr">+966 50 572 5070</a>
             </div>
           </div>

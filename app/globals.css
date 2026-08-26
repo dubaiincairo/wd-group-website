@@ -116,6 +116,46 @@ body {
   100% { transform: translateX(200%); }
 }
 
+/* Luxury Design System Classes */
+.luxury-card {
+  background: linear-gradient(180deg, rgba(22, 37, 54, 0.65) 0%, rgba(14, 26, 36, 0.9) 100%);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(201, 168, 106, 0.18);
+  position: relative;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.luxury-card:hover {
+  border-color: rgba(201, 168, 106, 0.45);
+  box-shadow: 0 12px 36px -10px rgba(0, 0, 0, 0.8), 0 0 25px -5px rgba(201, 168, 106, 0.15);
+  transform: translateY(-3px);
+}
+
+.border-rule-gold {
+  border-color: rgba(201, 168, 106, 0.18);
+}
+
+.border-rule-gold-subtle {
+  border-color: rgba(201, 168, 106, 0.1);
+}
+
+.text-camel {
+  color: #C9A86A;
+}
+
+.text-camel-glow {
+  color: #E3C58A;
+}
+
+.bg-camel {
+  background-color: #C9A86A;
+}
+
+.bg-camel-glow {
+  background-color: #E3C58A;
+}
+
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
@@ -124,9 +164,10 @@ body {
   background: #08090C;
 }
 ::-webkit-scrollbar-thumb {
-  background: #252B3B;
+  background: #1e293b;
   border-radius: 4px;
+  border: 1px solid rgba(201, 168, 106, 0.15);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #3B82F6;
+  background: #C9A86A;
 }

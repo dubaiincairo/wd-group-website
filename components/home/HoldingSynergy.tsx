@@ -47,16 +47,16 @@ export default function HoldingSynergy() {
         
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide uppercase bg-brand-surface border border-brand-border text-blue-400 shadow-glow-card">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide uppercase bg-[#0F1117]/90 border border-[#C9A86A]/30 text-[#C9A86A] shadow-glow-camel">
             <Workflow className="w-3.5 h-3.5" />
-            <span>{dict.home.synergy.label}</span>
+            <span className="font-mono">{dict.home.synergy.label}</span>
           </div>
 
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white leading-tight">
+          <h2 className={`text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white leading-tight ${lang === 'en' ? 'font-serif' : ''}`}>
             {dict.home.synergy.heading}
           </h2>
 
-          <p className="text-sm sm:text-base text-zinc-400 leading-relaxed max-w-2xl mx-auto">
+          <p className="text-sm sm:text-base text-zinc-300 leading-relaxed max-w-2xl mx-auto font-normal">
             {dict.home.synergy.intro}
           </p>
         </div>
@@ -71,10 +71,6 @@ export default function HoldingSynergy() {
                 key={item.step}
                 className={`glass-card rounded-3xl p-7 border border-white/10 ${item.cardBorder} transition-all group relative overflow-hidden flex flex-col justify-between`}
               >
-                {/* Blueprint Crosshairs */}
-                <div className="absolute top-2 left-2 text-zinc-700 font-mono text-[9px] select-none">+</div>
-                <div className="absolute top-2 right-2 text-zinc-700 font-mono text-[9px] select-none">+</div>
-
                 <div>
                   {/* Step Badge */}
                   <div className="flex items-center justify-between mb-6">

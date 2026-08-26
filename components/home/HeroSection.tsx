@@ -135,21 +135,21 @@ export default function HeroSection() {
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex flex-col items-center">
         
         {/* Subtle pill badge */}
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold bg-black/80 border border-white/15 text-zinc-300 mb-8 backdrop-blur-md shadow-glow-card">
-          <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
-          <span className="font-bold text-white">{dict.home.hero.eyebrow}</span>
-          <span className="text-zinc-500">•</span>
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold bg-[#0F1117]/90 border border-[#C9A86A]/30 text-zinc-300 mb-8 backdrop-blur-md shadow-glow-camel">
+          <span className="w-2 h-2 rounded-full bg-[#C9A86A] animate-pulse"></span>
+          <span className="font-bold text-white tracking-wide">{dict.home.hero.eyebrow}</span>
+          <span className="text-[#C9A86A]/60">•</span>
           <span className="text-zinc-300 font-normal">
             {dict.home.hero.kicker}
           </span>
         </div>
 
         {/* Monumental 3-Line Headline */}
-        <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-[1.12] mb-6 max-w-5xl mx-auto drop-shadow-2xl text-center flex flex-col items-center">
+        <h1 className={`text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-[1.12] mb-6 max-w-5xl mx-auto drop-shadow-2xl text-center flex flex-col items-center ${lang === 'en' ? 'font-serif' : ''}`}>
           <span className="block text-white">
             {dict.home.hero.title_line1}
           </span>
-          <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-sky-300 to-indigo-300 py-1 drop-shadow-[0_0_35px_rgba(56,189,248,0.35)]">
+          <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[#E3C58A] via-[#C9A86A] to-[#A4884F] py-1 drop-shadow-[0_0_35px_rgba(201,168,106,0.35)]">
             {dict.home.hero.title_line2}
           </span>
           <span className="block text-white">
@@ -163,7 +163,7 @@ export default function HeroSection() {
         </p>
 
         {/* Interactive Sector Switcher Dock */}
-        <div className="inline-flex flex-wrap items-center justify-center gap-2.5 p-2 rounded-2xl bg-black/85 border border-white/20 backdrop-blur-2xl mb-8 shadow-2xl max-w-full">
+        <div className="inline-flex flex-wrap items-center justify-center gap-2.5 p-2 rounded-2xl bg-[#0F1117]/90 border border-white/15 backdrop-blur-2xl mb-8 shadow-2xl max-w-full">
           {/* SwissBlue Button */}
           <button
             onClick={() => setSelectedSector('hospitality')}
@@ -174,9 +174,9 @@ export default function HeroSection() {
             }`}
           >
             <Building2 className="w-4 h-4 text-sky-400 shrink-0" />
-            <span>{dict.nav.hospitality} (SwissBlue)</span>
+            <span>{(dict.home.hero as any).dock?.hospitality_label || `${dict.nav.hospitality} (SwissBlue)`}</span>
             <span className="text-[10px] bg-sky-500/25 px-2 py-0.5 rounded-full text-sky-200 font-mono">
-              6 {lang === 'ar' ? 'منشآت' : 'Properties'}
+              {(dict.home.hero as any).dock?.hospitality_badge || `6 ${lang === 'ar' ? 'منشآت' : 'Properties'}`}
             </span>
           </button>
 
@@ -190,9 +190,9 @@ export default function HeroSection() {
             }`}
           >
             <Factory className="w-4 h-4 text-emerald-400 shrink-0" />
-            <span>{dict.nav.manufacturing} (GreenWood)</span>
+            <span>{(dict.home.hero as any).dock?.manufacturing_label || `${dict.nav.manufacturing} (GreenWood)`}</span>
             <span className="text-[10px] bg-emerald-500/25 px-2 py-0.5 rounded-full text-emerald-200 font-mono">
-              3 {lang === 'ar' ? 'مصانع' : 'Factories'}
+              {(dict.home.hero as any).dock?.manufacturing_badge || `3 ${lang === 'ar' ? 'مصانع' : 'Factories'}`}
             </span>
           </button>
 
@@ -206,23 +206,23 @@ export default function HeroSection() {
             }`}
           >
             <HardHat className="w-4 h-4 text-amber-400 shrink-0" />
-            <span>{dict.nav.contracting} (Projects)</span>
+            <span>{(dict.home.hero as any).dock?.contracting_label || `${dict.nav.contracting} (Projects)`}</span>
             <span className="text-[10px] bg-amber-500/25 px-2 py-0.5 rounded-full text-amber-200 font-mono">
-              {lang === 'ar' ? 'تنفيذ شامل' : 'Turnkey'}
+              {(dict.home.hero as any).dock?.contracting_badge || (lang === 'ar' ? 'تنفيذ شامل' : 'Turnkey')}
             </span>
           </button>
         </div>
 
-        {/* 4-Column Statistics Bar — Clean Custom Separators (Zero Stray Lines) */}
+        {/* 4-Column Statistics Bar — Clean Custom Separators */}
         <div className="max-w-5xl mx-auto mb-6 w-full">
-          <div className="glass-card rounded-3xl p-6 sm:p-8 shadow-glow-card relative overflow-hidden border border-white/15 bg-brand-surface/85 backdrop-blur-xl">
+          <div className="glass-card rounded-3xl p-6 sm:p-8 shadow-glow-card relative overflow-hidden border border-[#C9A86A]/20 bg-[#0F1117]/90 backdrop-blur-xl">
             
             {/* Ambient inner glow */}
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-transparent to-amber-500/5 pointer-events-none"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-[#C9A86A]/5 via-transparent to-blue-500/5 pointer-events-none"></div>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-y-6 gap-x-0 relative">
               
-              {/* Metric 1: Hospitality (No Left Border) */}
+              {/* Metric 1: Hospitality */}
               <div className="flex flex-col items-center text-center px-4">
                 <div className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-sky-400 mb-1 font-mono">
                   <AnimatedCounter target={6} />
@@ -232,7 +232,7 @@ export default function HeroSection() {
                 </div>
               </div>
 
-              {/* Metric 2: Factories (Clean Separator) */}
+              {/* Metric 2: Factories */}
               <div className="flex flex-col items-center text-center px-4 border-s border-white/10">
                 <div className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-emerald-400 mb-1 font-mono">
                   <AnimatedCounter target={3} />
@@ -242,9 +242,9 @@ export default function HeroSection() {
                 </div>
               </div>
 
-              {/* Metric 3: Employees (Clean Separator on Desktop & Tablet) */}
+              {/* Metric 3: Employees */}
               <div className="flex flex-col items-center text-center px-4 md:border-s border-white/10">
-                <div className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-amber-400 mb-1 font-mono">
+                <div className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[#C9A86A] mb-1 font-mono">
                   <AnimatedCounter target={80} suffix="+" />
                 </div>
                 <div className="text-xs font-medium text-zinc-300 leading-snug">
@@ -252,7 +252,7 @@ export default function HeroSection() {
                 </div>
               </div>
 
-              {/* Metric 4: Sectors (Clean Separator) */}
+              {/* Metric 4: Sectors */}
               <div className="flex flex-col items-center text-center px-4 border-s border-white/10">
                 <div className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-zinc-100 mb-1 font-mono">
                   <AnimatedCounter target={3} />
@@ -269,8 +269,8 @@ export default function HeroSection() {
 
         {/* Scroll Cue Indicator */}
         <div className="inline-flex flex-col items-center gap-1 text-[11px] text-zinc-400 opacity-70 hover:opacity-100 transition-opacity">
-          <span>{lang === 'ar' ? 'استكشف المنظومة القابضة' : 'Scroll to explore'}</span>
-          <ChevronDown className="w-4 h-4 animate-bounce text-blue-400" />
+          <span>{(dict.home.hero as any).scroll_cue || (lang === 'ar' ? 'استكشف المنظومة القابضة' : 'Scroll to explore')}</span>
+          <ChevronDown className="w-4 h-4 animate-bounce text-[#C9A86A]" />
         </div>
 
       </div>
