@@ -246,24 +246,24 @@ function LoginForm() {
   // Forgot Password View
   if (isForgotPassword) {
     return (
-      <div className="bg-[#0F1117]/90 backdrop-blur-2xl border border-white/15 rounded-2xl p-5 shadow-2xl space-y-3.5 animate-in fade-in duration-200">
+      <div className="bg-[#0F1117]/90 backdrop-blur-2xl border border-white/15 rounded-3xl p-6 sm:p-7 shadow-2xl space-y-4 animate-in fade-in duration-200">
         
         {/* Top Header */}
-        <div className="flex items-center justify-between border-b border-white/10 pb-2.5">
-          <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-blue-400">
+        <div className="flex items-center justify-between border-b border-white/10 pb-3">
+          <span className="text-xs font-mono font-bold uppercase tracking-wider text-blue-400">
             ACCOUNT RECOVERY
           </span>
-          <div className="flex items-center gap-1 text-[10px] text-sky-400 bg-sky-500/10 border border-sky-500/20 px-2 py-0.5 rounded-full">
-            <Mail className="w-3 h-3" />
+          <div className="flex items-center gap-1.5 text-[11px] text-sky-400 bg-sky-500/10 border border-sky-500/20 px-2.5 py-0.5 rounded-full">
+            <Mail className="w-3.5 h-3.5" />
             <span>Brevo Secure Mail</span>
           </div>
         </div>
 
         {forgotSent ? (
-          <div className="p-4 rounded-xl bg-blue-500/10 border border-blue-500/30 text-center space-y-2">
-            <Mail className="w-6 h-6 text-blue-400 mx-auto" />
+          <div className="p-4 rounded-2xl bg-blue-500/10 border border-blue-500/30 text-center space-y-2.5">
+            <Mail className="w-7 h-7 text-blue-400 mx-auto" />
             <h3 className="text-xs font-bold text-white uppercase tracking-wider">Reset Link Dispatched</h3>
-            <p className="text-[11px] text-zinc-300 leading-relaxed">
+            <p className="text-xs text-zinc-300 leading-relaxed">
               {forgotMessage}
             </p>
             <button
@@ -272,31 +272,31 @@ function LoginForm() {
                 setIsForgotPassword(false);
                 setForgotSent(false);
               }}
-              className="mt-1 text-[11px] text-blue-400 hover:text-blue-300 font-bold underline cursor-pointer"
+              className="mt-1 text-xs text-blue-400 hover:text-blue-300 font-bold underline cursor-pointer"
             >
               Return to Admin Sign In
             </button>
           </div>
         ) : (
-          <form onSubmit={handleForgotPasswordSubmit} className="space-y-3">
-            <p className="text-[11px] text-zinc-400 leading-relaxed">
+          <form onSubmit={handleForgotPasswordSubmit} className="space-y-3.5">
+            <p className="text-xs text-zinc-400 leading-relaxed">
               Enter your official administrator email below to receive a secure password reset link.
             </p>
 
             {errorMessage && (
-              <div className="p-2.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-center gap-2 animate-in fade-in">
-                <AlertCircle className="w-3.5 h-3.5 shrink-0 text-rose-400" />
+              <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-center gap-2 animate-in fade-in">
+                <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
                 <span>{errorMessage}</span>
               </div>
             )}
 
-            <div className="space-y-1">
-              <label className="text-[11px] font-bold text-zinc-300 block">
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-zinc-300 block">
                 Administrator Email Address
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-zinc-500">
-                  <Mail className="w-3.5 h-3.5" />
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-500">
+                  <Mail className="w-4 h-4" />
                 </div>
                 <input
                   type="email"
@@ -304,7 +304,7 @@ function LoginForm() {
                   value={forgotEmail}
                   onChange={(e) => setForgotEmail(e.target.value)}
                   placeholder="ceo@wdgroup.online"
-                  className="w-full bg-[#08090C] border border-white/15 focus:border-blue-500 rounded-xl pl-9 pr-3 py-2 text-xs text-white placeholder:text-zinc-600 focus:outline-none transition-colors"
+                  className="w-full bg-[#08090C] border border-white/15 focus:border-blue-500 rounded-xl pl-10 pr-3.5 py-2.5 text-xs sm:text-sm text-white placeholder:text-zinc-600 focus:outline-none transition-colors"
                 />
               </div>
             </div>
@@ -312,11 +312,11 @@ function LoginForm() {
             <button
               type="submit"
               disabled={forgotLoading}
-              className="w-full mt-1 py-2.5 px-3.5 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white text-xs font-bold transition-all shadow-glow-blue flex items-center justify-center gap-2 group cursor-pointer"
+              className="w-full mt-1 py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white text-xs sm:text-sm font-bold transition-all shadow-glow-blue flex items-center justify-center gap-2 group cursor-pointer"
             >
               {forgotLoading ? (
                 <>
-                  <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                  <RefreshCw className="w-4 h-4 animate-spin" />
                   <span>Sending Reset Link…</span>
                 </>
               ) : (
@@ -328,7 +328,7 @@ function LoginForm() {
               <button
                 type="button"
                 onClick={() => setIsForgotPassword(false)}
-                className="text-[11px] text-zinc-400 hover:text-white transition-colors cursor-pointer"
+                className="text-xs text-zinc-400 hover:text-white transition-colors cursor-pointer"
               >
                 Back to sign in
               </button>
@@ -340,40 +340,40 @@ function LoginForm() {
   }
 
   return (
-    <div className="bg-[#0F1117]/90 backdrop-blur-2xl border border-white/15 rounded-2xl p-5 shadow-2xl space-y-3.5">
+    <div className="bg-[#0F1117]/90 backdrop-blur-2xl border border-white/15 rounded-3xl p-6 sm:p-7 shadow-2xl space-y-4">
       
       {/* Top Header */}
-      <div className="flex items-center justify-between border-b border-white/10 pb-2.5">
-        <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-blue-400">
+      <div className="flex items-center justify-between border-b border-white/10 pb-3">
+        <span className="text-xs font-mono font-bold uppercase tracking-wider text-blue-400">
           EXECUTIVE ACCESS
         </span>
-        <div className="flex items-center gap-1 text-[10px] text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full">
-          <ShieldCheck className="w-3 h-3" />
+        <div className="flex items-center gap-1.5 text-[11px] text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-0.5 rounded-full">
+          <ShieldCheck className="w-3.5 h-3.5" />
           <span>TLS 1.3 Encrypted</span>
         </div>
       </div>
 
       {/* Info Alert */}
       {infoMessage && (
-        <div className="p-2.5 rounded-xl bg-blue-500/10 border border-blue-500/30 text-blue-300 text-xs flex items-start gap-2 animate-in fade-in">
-          <Info className="w-3.5 h-3.5 shrink-0 text-blue-400 mt-0.5" />
+        <div className="p-3 rounded-xl bg-blue-500/10 border border-blue-500/30 text-blue-300 text-xs flex items-start gap-2.5 animate-in fade-in">
+          <Info className="w-4 h-4 shrink-0 text-blue-400 mt-0.5" />
           <span className="leading-relaxed">{infoMessage}</span>
         </div>
       )}
 
       {/* Error Alert */}
       {errorMessage && (
-        <div className="p-2.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-center gap-2 animate-in fade-in">
-          <AlertCircle className="w-3.5 h-3.5 shrink-0 text-rose-400" />
+        <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-center gap-2.5 animate-in fade-in">
+          <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
           <span>{errorMessage}</span>
         </div>
       )}
 
       {/* 1-Click Fast Sign-In Options (Google & Touch ID) */}
-      <div className="space-y-2">
+      <div className="space-y-2.5">
         <a
           href="/api/admin/auth/google"
-          className="w-full py-2.5 px-3 rounded-xl bg-white hover:bg-zinc-100 text-zinc-900 font-bold text-xs transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer group"
+          className="w-full py-2.5 sm:py-3 px-4 rounded-xl bg-white hover:bg-zinc-100 text-zinc-900 font-bold text-xs sm:text-sm transition-all shadow-md flex items-center justify-center gap-2.5 cursor-pointer group"
         >
           <GoogleIcon />
           <span>Continue with Google</span>
@@ -383,16 +383,16 @@ function LoginForm() {
           type="button"
           onClick={handleBiometricAuth}
           disabled={biometricLoading}
-          className="w-full py-2.5 px-3 rounded-xl bg-[#161922] hover:bg-[#1C212E] border border-white/15 hover:border-blue-500/40 text-white font-bold text-xs transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+          className="w-full py-2.5 sm:py-3 px-4 rounded-xl bg-[#161922] hover:bg-[#1C212E] border border-white/15 hover:border-blue-500/40 text-white font-bold text-xs sm:text-sm transition-all shadow-sm flex items-center justify-center gap-2.5 cursor-pointer disabled:opacity-50"
         >
           {biometricLoading ? (
             <>
-              <RefreshCw className="w-3.5 h-3.5 animate-spin text-blue-400" />
+              <RefreshCw className="w-4 h-4 animate-spin text-blue-400" />
               <span>Verifying Biometrics…</span>
             </>
           ) : (
             <>
-              <Fingerprint className="w-3.5 h-3.5 text-blue-400" />
+              <Fingerprint className="w-4 h-4 text-blue-400" />
               <span>Sign In with Touch ID / Passkey</span>
             </>
           )}
@@ -402,18 +402,18 @@ function LoginForm() {
       {/* Divider */}
       <div className="relative flex py-0.5 items-center">
         <div className="flex-grow border-t border-white/10"></div>
-        <span className="flex-shrink mx-2 text-[9px] font-mono uppercase tracking-wider text-zinc-500">
+        <span className="flex-shrink mx-2.5 text-[9px] font-mono uppercase tracking-wider text-zinc-500">
           OR WITH EMAIL
         </span>
         <div className="flex-grow border-t border-white/10"></div>
       </div>
 
       {/* Tab Switcher (Password vs Magic Link) */}
-      <div className="flex rounded-lg bg-black/40 border border-white/10 p-0.5">
+      <div className="flex rounded-xl bg-black/40 border border-white/10 p-1">
         <button
           type="button"
           onClick={() => setActiveTab('password')}
-          className={`flex-1 py-1 rounded-md text-[11px] font-bold transition-all ${
+          className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition-all ${
             activeTab === 'password'
               ? 'bg-blue-600 text-white shadow-sm'
               : 'text-zinc-400 hover:text-white'
@@ -424,7 +424,7 @@ function LoginForm() {
         <button
           type="button"
           onClick={() => setActiveTab('magic')}
-          className={`flex-1 py-1 rounded-md text-[11px] font-bold transition-all flex items-center justify-center gap-1.5 ${
+          className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
             activeTab === 'magic'
               ? 'bg-blue-600 text-white shadow-sm'
               : 'text-zinc-400 hover:text-white'
@@ -437,14 +437,14 @@ function LoginForm() {
 
       {/* TAB 1: Standard Password Sign In */}
       {activeTab === 'password' && (
-        <form onSubmit={handleSubmit} className="space-y-3">
-          <div className="space-y-1">
-            <label className="text-[11px] font-bold text-zinc-300 block">
+        <form onSubmit={handleSubmit} className="space-y-3.5">
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-zinc-300 block">
               Official Email Address
             </label>
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-zinc-500">
-                <Mail className="w-3.5 h-3.5" />
+              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-500">
+                <Mail className="w-4 h-4" />
               </div>
               <input
                 type="email"
@@ -452,14 +452,14 @@ function LoginForm() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="ceo@wdgroup.online"
-                className="w-full bg-[#08090C] border border-white/15 focus:border-blue-500 rounded-xl pl-9 pr-3 py-2 text-xs text-white placeholder:text-zinc-600 focus:outline-none transition-colors"
+                className="w-full bg-[#08090C] border border-white/15 focus:border-blue-500 rounded-xl pl-10 pr-3.5 py-2.5 text-xs sm:text-sm text-white placeholder:text-zinc-600 focus:outline-none transition-colors"
               />
             </div>
           </div>
 
-          <div className="space-y-1">
+          <div className="space-y-1.5">
             <div className="flex items-center justify-between">
-              <label className="text-[11px] font-bold text-zinc-300 block">
+              <label className="text-xs font-bold text-zinc-300 block">
                 Security Password
               </label>
               <button
@@ -469,14 +469,14 @@ function LoginForm() {
                   setForgotEmail(email);
                   setErrorMessage(null);
                 }}
-                className="text-[10px] text-blue-400 hover:text-blue-300 font-medium transition-colors cursor-pointer"
+                className="text-[11px] text-blue-400 hover:text-blue-300 font-medium transition-colors cursor-pointer"
               >
                 Forgot password?
               </button>
             </div>
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-zinc-500">
-                <Lock className="w-3.5 h-3.5" />
+              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-500">
+                <Lock className="w-4 h-4" />
               </div>
               <input
                 type={showPassword ? 'text' : 'password'}
@@ -484,15 +484,15 @@ function LoginForm() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••••••"
-                className="w-full bg-[#08090C] border border-white/15 focus:border-blue-500 rounded-xl pl-9 pr-9 py-2 text-xs text-white placeholder:text-zinc-600 focus:outline-none transition-colors"
+                className="w-full bg-[#08090C] border border-white/15 focus:border-blue-500 rounded-xl pl-10 pr-10 py-2.5 text-xs sm:text-sm text-white placeholder:text-zinc-600 focus:outline-none transition-colors"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute inset-y-0 right-0 pr-3 flex items-center text-zinc-500 hover:text-zinc-300 transition-colors"
+                className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-zinc-500 hover:text-zinc-300 transition-colors"
                 aria-label="Toggle password visibility"
               >
-                {showPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
             </div>
           </div>
@@ -500,44 +500,44 @@ function LoginForm() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full mt-1 py-2.5 px-3.5 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white text-xs font-bold transition-all shadow-glow-blue flex items-center justify-center gap-2 group cursor-pointer"
+            className="w-full mt-1 py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white text-xs sm:text-sm font-bold transition-all shadow-glow-blue flex items-center justify-center gap-2 group cursor-pointer"
           >
             <span>{loading ? 'Authenticating…' : 'Sign In to Admin Console'}</span>
-            <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180 group-hover:translate-x-0.5 transition-transform" />
+            <ArrowRight className="w-4 h-4 rtl:rotate-180 group-hover:translate-x-0.5 transition-transform" />
           </button>
         </form>
       )}
 
       {/* TAB 2: 1-Click Magic Link */}
       {activeTab === 'magic' && (
-        <div className="space-y-3 animate-in fade-in duration-200">
+        <div className="space-y-3.5 animate-in fade-in duration-200">
           {magicSent ? (
-            <div className="p-4 rounded-xl bg-blue-500/10 border border-blue-500/30 text-center space-y-2">
-              <CheckCircle2 className="w-6 h-6 text-blue-400 mx-auto" />
-              <h4 className="text-[11px] font-bold text-white uppercase tracking-wider">Magic Link Dispatched</h4>
-              <p className="text-[11px] text-zinc-300 leading-relaxed">
+            <div className="p-4 rounded-2xl bg-blue-500/10 border border-blue-500/30 text-center space-y-2">
+              <CheckCircle2 className="w-7 h-7 text-blue-400 mx-auto" />
+              <h4 className="text-xs font-bold text-white uppercase tracking-wider">Magic Link Dispatched</h4>
+              <p className="text-xs text-zinc-300 leading-relaxed">
                 {magicMessage}
               </p>
               <button
                 type="button"
                 onClick={() => setMagicSent(false)}
-                className="text-[11px] text-blue-400 hover:underline pt-1 inline-block font-semibold"
+                className="text-xs text-blue-400 hover:underline pt-1 inline-block font-semibold"
               >
                 Send to another email
               </button>
             </div>
           ) : (
-            <form onSubmit={handleMagicLinkSubmit} className="space-y-3">
-              <p className="text-[11px] text-zinc-400 leading-relaxed">
+            <form onSubmit={handleMagicLinkSubmit} className="space-y-3.5">
+              <p className="text-xs text-zinc-400 leading-relaxed">
                 Enter your administrator email to receive an instant, single-use 1-click login link.
               </p>
-              <div className="space-y-1">
-                <label className="text-[11px] font-bold text-zinc-300 block">
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold text-zinc-300 block">
                   Administrator Email
                 </label>
                 <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-zinc-500">
-                    <Mail className="w-3.5 h-3.5" />
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-500">
+                    <Mail className="w-4 h-4" />
                   </div>
                   <input
                     type="email"
@@ -545,7 +545,7 @@ function LoginForm() {
                     value={magicEmail}
                     onChange={(e) => setMagicEmail(e.target.value)}
                     placeholder="ceo@wdgroup.online"
-                    className="w-full bg-[#08090C] border border-white/15 focus:border-blue-500 rounded-xl pl-9 pr-3 py-2 text-xs text-white placeholder:text-zinc-600 focus:outline-none transition-colors"
+                    className="w-full bg-[#08090C] border border-white/15 focus:border-blue-500 rounded-xl pl-10 pr-3.5 py-2.5 text-xs sm:text-sm text-white placeholder:text-zinc-600 focus:outline-none transition-colors"
                   />
                 </div>
               </div>
@@ -553,16 +553,16 @@ function LoginForm() {
               <button
                 type="submit"
                 disabled={magicLoading}
-                className="w-full mt-1 py-2.5 px-3.5 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white text-xs font-bold transition-all shadow-glow-blue flex items-center justify-center gap-2 group cursor-pointer"
+                className="w-full mt-1 py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white text-xs sm:text-sm font-bold transition-all shadow-glow-blue flex items-center justify-center gap-2 group cursor-pointer"
               >
                 {magicLoading ? (
                   <>
-                    <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                    <RefreshCw className="w-4 h-4 animate-spin" />
                     <span>Dispatching Magic Link…</span>
                   </>
                 ) : (
                   <>
-                    <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+                    <Sparkles className="w-4 h-4 text-amber-300" />
                     <span>Send 1-Click Magic Link</span>
                   </>
                 )}
@@ -578,7 +578,7 @@ function LoginForm() {
 
 export default function AdminLoginPage() {
   return (
-    <div className="min-h-screen bg-[#040507] text-white flex flex-col justify-center items-center py-6 px-4 relative overflow-hidden">
+    <div className="min-h-screen bg-[#040507] text-white flex flex-col justify-center items-center py-6 sm:py-8 px-4 relative overflow-hidden">
       
       {/* Background Video Backdrop with Hero Section Overlay Style */}
       <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
@@ -601,11 +601,11 @@ export default function AdminLoginPage() {
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-blue-600/15 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-10 right-10 w-72 h-72 bg-sky-500/10 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="w-full max-w-[390px] space-y-3.5 relative z-10 my-auto">
+      <div className="w-full max-w-[420px] space-y-4 sm:space-y-5 relative z-10 my-auto">
         
         {/* Brand & Portal Header */}
-        <div className="text-center space-y-1">
-          <div className="relative h-10 w-44 mx-auto mb-1 transition-transform hover:scale-105">
+        <div className="text-center space-y-1.5">
+          <div className="relative h-12 w-48 mx-auto mb-1.5 transition-transform hover:scale-105">
             <Image 
               src="/brand/wd-group-logo-white.png" 
               alt="WD Group" 
@@ -615,16 +615,16 @@ export default function AdminLoginPage() {
             />
           </div>
 
-          <h1 className="text-xl sm:text-2xl font-black tracking-tight text-white">
+          <h1 className="text-2xl font-black tracking-tight text-white">
             Admin Console
           </h1>
-          <p className="text-[11px] sm:text-xs text-zinc-400 font-medium">
+          <p className="text-xs text-zinc-400 font-medium">
             WD Group Executive & Operations Management
           </p>
         </div>
 
         <Suspense fallback={
-          <div className="p-6 text-center bg-[#0F1117]/90 rounded-2xl border border-white/15">
+          <div className="p-6 text-center bg-[#0F1117]/90 rounded-3xl border border-white/15">
             <RefreshCw className="w-5 h-5 animate-spin text-blue-500 mx-auto" />
           </div>
         }>
@@ -632,7 +632,7 @@ export default function AdminLoginPage() {
         </Suspense>
 
         {/* Footer info */}
-        <div className="text-center text-[10px] text-zinc-500 pt-0.5 space-y-0.5">
+        <div className="text-center text-[11px] text-zinc-500 pt-1 space-y-0.5">
           <p>WD Group for Business © 2026 · Confidential & Proprietary</p>
           <Link href="/" className="text-zinc-400 hover:text-zinc-200 underline inline-block">
             Return to Public Website
