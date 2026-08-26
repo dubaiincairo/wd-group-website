@@ -25,13 +25,13 @@ export default function MaintenanceGate({ children }: MaintenanceGateProps) {
 
     async function checkMaintenanceStatus() {
       try {
-        const res = await fetch('/api/admin/content');
+        const res = await fetch('/api/settings/public');
         if (res.ok) {
           const d = await res.json();
-          setSettings(d.data?.settings || null);
+          setSettings(d.settings || null);
         }
       } catch {
-        // Default to normal rendering on fetch failure
+        // Fallback
       } finally {
         setLoading(false);
       }
