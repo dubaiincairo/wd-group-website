@@ -12,12 +12,21 @@ interface MaintenanceGateProps {
 export default function MaintenanceGate({ children }: MaintenanceGateProps) {
   const pathname = usePathname();
   const [settings, setSettings] = useState<SiteSettings | null>(null);
+  const [isProductionDomain, setIsProductionDomain] = useState(false);
   const [loading, setLoading] = useState(true);
 
   // Admin routes and login are always exempt from maintenance mode
   const isAdminRoute = pathname?.startsWith('/admin') || pathname?.startsWith('/api/admin');
 
   useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const host = window.location.hostname.toLowerCase();
+      // Maintenance mode applies ONLY to the main production domain (wdgroup.online / www.wdgroup.online)
+      // Test/preview domains (test.wdgroup.online, *.vercel.app, localhost) always show the full live site preview
+      const isProd = host === 'wdgroup.online' || host === 'www.wdgroup.online';
+      setIsProductionDomain(isProd);
+    }
+
     if (isAdminRoute) {
       setLoading(false);
       return;
@@ -44,8 +53,8 @@ export default function MaintenanceGate({ children }: MaintenanceGateProps) {
     return <>{children}</>;
   }
 
-  // If maintenance mode is enabled in global settings, render the maintenance view
-  if (settings && settings.maintenance_mode_enabled) {
+  // If maintenance mode is enabled AND visitor is on the main production domain (wdgroup.online)
+  if (settings && settings.maintenance_mode_enabled && isProductionDomain) {
     return <MaintenanceView settings={settings} />;
   }
 
