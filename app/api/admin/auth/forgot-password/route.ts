@@ -49,11 +49,19 @@ export async function POST(req: NextRequest) {
     const resetUrl = `${origin}/admin/reset-password?token=${token}&email=${encodeURIComponent(trimmedEmail)}`;
 
     // 5. Send password reset email via Brevo
-    await sendPasswordResetEmail({
+    const emailResult = await sendPasswordResetEmail({
       adminName: user.full_name || 'Administrator',
       adminEmail: user.email,
       resetUrl,
     });
+
+    if (!emailResult.success) {
+      console.error('[Password Reset Dispatch Failed]:', emailResult.error);
+      return NextResponse.json(
+        { error: `Email dispatch failed: ${emailResult.error || 'Check Brevo API Key'}` },
+        { status: 502 }
+      );
+    }
 
     return NextResponse.json({
       success: true,

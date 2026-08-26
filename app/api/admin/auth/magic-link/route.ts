@@ -46,11 +46,19 @@ export async function POST(req: NextRequest) {
     const magicUrl = `${origin}/api/admin/auth/magic-link/verify?token=${token}&email=${encodeURIComponent(trimmedEmail)}`;
 
     // 5. Send Magic Link email via Brevo
-    await sendMagicSignInEmail({
+    const emailResult = await sendMagicSignInEmail({
       adminName: user.full_name || 'Administrator',
       adminEmail: user.email,
       magicUrl,
     });
+
+    if (!emailResult.success) {
+      console.error('[Magic Link Dispatch Failed]:', emailResult.error);
+      return NextResponse.json(
+        { error: `Email dispatch failed: ${emailResult.error || 'Check Brevo API Key'}` },
+        { status: 502 }
+      );
+    }
 
     return NextResponse.json({
       success: true,
