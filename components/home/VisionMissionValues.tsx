@@ -15,7 +15,8 @@ import {
   Cpu,
   Handshake,
   TrendingUp,
-  Layers
+  Layers,
+  Quote
 } from 'lucide-react';
 
 export default function VisionMissionValues() {
@@ -25,7 +26,7 @@ export default function VisionMissionValues() {
   const VALUE_ICONS = [Award, Lightbulb, Scale, Users];
 
   return (
-    <section className="py-20 sm:py-24 bg-brand-dark text-white relative overflow-hidden">
+    <section className="py-20 sm:py-24 bg-brand-dark text-white relative overflow-hidden border-t border-white/5">
       
       {/* Background glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-blue-600/5 blur-[160px] pointer-events-none" />
@@ -33,7 +34,7 @@ export default function VisionMissionValues() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-14 space-y-4">
+        <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-12 space-y-3">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide uppercase bg-[#0F1117]/90 border border-[#C9A86A]/30 text-[#C9A86A] shadow-glow-camel">
             <Sparkles className="w-3.5 h-3.5" />
             <span className="font-mono">{dict.home.identity.label}</span>
@@ -45,7 +46,7 @@ export default function VisionMissionValues() {
         </div>
 
         {/* Tab Navigation (Values First) */}
-        <div className="flex justify-center mb-10 sm:mb-12">
+        <div className="flex justify-center mb-8 sm:mb-10">
           <div className="inline-flex p-1.5 rounded-2xl bg-[#0F1117]/90 border border-white/10 backdrop-blur-md shadow-lg">
             
             {/* 1. Values Tab Button (Default & First) */}
@@ -128,13 +129,16 @@ export default function VisionMissionValues() {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5 animate-in fade-in duration-200">
               {/* Main Bento Hero Tile */}
               <div className="lg:col-span-7 p-6 sm:p-8 rounded-2xl bg-[#0F1117]/90 border border-blue-500/30 flex flex-col justify-between space-y-6 hover:border-blue-500/50 transition-colors shadow-lg">
-                <div>
-                  <span className="text-xs font-mono text-blue-400 font-bold uppercase tracking-wider block mb-4">
-                    {lang === 'ar' ? 'التوجه الاستراتيجي للرؤية' : 'VISION STRATEGIC DIRECTION'}
-                  </span>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-mono text-blue-400 font-bold uppercase tracking-wider">
+                      {lang === 'ar' ? 'التوجه الاستراتيجي للرؤية' : 'VISION STRATEGIC DIRECTION'}
+                    </span>
+                    <Quote className="w-5 h-5 text-blue-400/40" />
+                  </div>
                   
-                  <p className="text-base sm:text-lg lg:text-xl font-bold text-white leading-relaxed">
-                    &ldquo;{dict.home.identity.vision_desc}&rdquo;
+                  <p className={`text-base sm:text-lg md:text-xl text-zinc-100 font-medium leading-relaxed sm:leading-8 ${lang === 'en' ? 'font-serif' : 'font-sans'}`}>
+                    {dict.home.identity.vision_desc}
                   </p>
                 </div>
 
@@ -201,13 +205,16 @@ export default function VisionMissionValues() {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5 animate-in fade-in duration-200">
               {/* Main Bento Hero Tile */}
               <div className="lg:col-span-7 p-6 sm:p-8 rounded-2xl bg-[#0F1117]/90 border border-indigo-500/30 flex flex-col justify-between space-y-6 hover:border-indigo-500/50 transition-colors shadow-lg">
-                <div>
-                  <span className="text-xs font-mono text-indigo-400 font-bold uppercase tracking-wider block mb-4">
-                    {lang === 'ar' ? 'المنطلقات التشغيلية للرسالة' : 'MISSION OPERATIONAL MANDATE'}
-                  </span>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-mono text-indigo-400 font-bold uppercase tracking-wider">
+                      {lang === 'ar' ? 'المنطلقات التشغيلية للرسالة' : 'MISSION OPERATIONAL MANDATE'}
+                    </span>
+                    <Quote className="w-5 h-5 text-indigo-400/40" />
+                  </div>
                   
-                  <p className="text-base sm:text-lg lg:text-xl font-bold text-white leading-relaxed">
-                    &ldquo;{dict.home.identity.mission_desc}&rdquo;
+                  <p className={`text-base sm:text-lg md:text-xl text-zinc-100 font-medium leading-relaxed sm:leading-8 ${lang === 'en' ? 'font-serif' : 'font-sans'}`}>
+                    {dict.home.identity.mission_desc}
                   </p>
                 </div>
 

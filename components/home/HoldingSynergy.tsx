@@ -38,7 +38,7 @@ export default function HoldingSynergy() {
   ];
 
   return (
-    <section className="py-24 bg-[#08090C] text-white relative overflow-hidden">
+    <section className="py-20 sm:py-24 bg-[#08090C] text-white relative overflow-hidden border-t border-white/5">
       
       {/* Subtle blueprint grid */}
       <div className="absolute inset-0 bg-blueprint-grid opacity-30 pointer-events-none" />
@@ -46,7 +46,7 @@ export default function HoldingSynergy() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
+        <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-14 space-y-3">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide uppercase bg-[#0F1117]/90 border border-[#C9A86A]/30 text-[#C9A86A] shadow-glow-camel">
             <Workflow className="w-3.5 h-3.5" />
             <span className="font-mono">{dict.home.synergy.label}</span>
@@ -56,12 +56,12 @@ export default function HoldingSynergy() {
             {dict.home.synergy.heading}
           </h2>
 
-          <p className="text-sm sm:text-base text-zinc-300 leading-relaxed max-w-2xl mx-auto font-normal">
+          <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed max-w-2xl mx-auto font-normal">
             {dict.home.synergy.intro}
           </p>
         </div>
 
-        {/* 3 Steps Pipeline Grid with Visual Flow Connectors */}
+        {/* 3 Step Process Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative">
           
           {STEPS.map((item, idx) => {

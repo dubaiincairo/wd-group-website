@@ -49,7 +49,7 @@ export default function ContactCTA() {
   };
 
   return (
-    <section id="contact" className="py-24 bg-brand-dark text-white relative overflow-hidden">
+    <section id="contact" className="py-20 sm:py-24 bg-brand-dark text-white relative overflow-hidden border-t border-white/5">
       
       {/* Background glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-blue-600/10 blur-[150px] pointer-events-none" />
@@ -57,7 +57,7 @@ export default function ContactCTA() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Main CTA Card */}
-        <div className="glass-card rounded-3xl p-8 sm:p-14 border border-[#C9A86A]/30 shadow-2xl relative overflow-hidden bg-[#0F1117]/90">
+        <div className="glass-card rounded-3xl p-8 sm:p-12 border border-[#C9A86A]/30 shadow-2xl relative overflow-hidden bg-[#0F1117]/90">
           
           <div className="max-w-3xl mx-auto text-center space-y-6">
             

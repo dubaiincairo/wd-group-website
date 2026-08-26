@@ -23,6 +23,7 @@ interface MediaFieldUploaderProps {
   onChange: (url: string) => void;
   accept?: 'image' | 'video' | 'any';
   bucket?: 'photos' | 'videos' | 'documents';
+  aspectRatio?: '1:1' | '16:9' | 'auto';
 }
 
 export default function MediaFieldUploader({
@@ -32,6 +33,7 @@ export default function MediaFieldUploader({
   onChange,
   accept = 'image',
   bucket = 'photos',
+  aspectRatio = 'auto',
 }: MediaFieldUploaderProps) {
   const inputId = useId();
   const { showToast } = useToast();
@@ -146,10 +148,10 @@ export default function MediaFieldUploader({
       </div>
 
       {/* Media Preview & Dropzone */}
-      <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center">
+      <div className={`grid grid-cols-1 ${aspectRatio === '1:1' ? 'sm:grid-cols-12' : 'sm:grid-cols-12'} gap-3 items-center`}>
         
         {/* Preview Box */}
-        <div className="sm:col-span-4 h-28 rounded-xl bg-zinc-900 border border-white/10 overflow-hidden relative flex items-center justify-center group">
+        <div className={`${aspectRatio === '1:1' ? 'sm:col-span-3 w-28 h-28 aspect-square' : 'sm:col-span-4 h-28'} rounded-xl bg-zinc-900 border border-white/10 overflow-hidden relative flex items-center justify-center group shrink-0 mx-auto sm:mx-0`}>
           {value && !hasError ? (
             isVideo ? (
               <video
@@ -171,7 +173,7 @@ export default function MediaFieldUploader({
             )
           ) : (
             <div className="flex flex-col items-center justify-center p-3 text-center w-full h-full bg-[#0B0D14] select-none">
-              <div className="relative h-8 w-28 opacity-60 group-hover:opacity-100 transition-opacity">
+              <div className={`relative ${aspectRatio === '1:1' ? 'h-7 w-20' : 'h-8 w-28'} opacity-60 group-hover:opacity-100 transition-opacity`}>
                 <Image
                   src="/brand/wd-group-logo-white.png"
                   alt="WD Group"
@@ -197,7 +199,7 @@ export default function MediaFieldUploader({
         </div>
 
         {/* Upload Controls */}
-        <div className="sm:col-span-8 space-y-2">
+        <div className={`${aspectRatio === '1:1' ? 'sm:col-span-9' : 'sm:col-span-8'} space-y-2`}>
           
           {/* Drag & Drop Upload Zone (Native Label + File Input) */}
           <label

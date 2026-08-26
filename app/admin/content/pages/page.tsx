@@ -501,7 +501,9 @@ export default function PagesContentEditor() {
             </div>
 
             <MediaFieldUploader
-              label="CEO Executive Portrait / Photo"
+              label="CEO Executive Portrait / Photo (1:1 Ratio)"
+              description="Square 1:1 aspect ratio recommended for leadership portrait"
+              aspectRatio="1:1"
               bucket="photos"
               value={content.home.ceo.photo_url || content.home.media?.ceo_photo || ''}
               onChange={(url) => setContent({

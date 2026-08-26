@@ -20,7 +20,7 @@ export default function SectorsHub() {
   const photoContracting = mediaConfig.sector_photo_contracting || SECTOR_PHOTOS.contracting;
 
   return (
-    <section id="sectors" className="py-24 bg-brand-dark text-white relative overflow-hidden bg-blueprint-grid">
+    <section id="sectors" className="py-20 sm:py-24 bg-brand-dark text-white relative overflow-hidden bg-blueprint-grid border-t border-white/5">
       
       {/* Background radial glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-600/5 blur-[140px] pointer-events-none" />
@@ -28,7 +28,7 @@ export default function SectorsHub() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
+        <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-14 space-y-3">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide uppercase bg-[#0F1117]/90 border border-[#C9A86A]/30 text-[#C9A86A] shadow-glow-camel">
             <Sparkles className="w-3.5 h-3.5" />
             <span className="font-mono">{dict.home.sectors.label}</span>
@@ -38,13 +38,13 @@ export default function SectorsHub() {
             {dict.home.sectors.heading}
           </h2>
 
-          <p className="text-sm sm:text-base text-zinc-300 leading-relaxed max-w-2xl mx-auto font-normal">
+          <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed max-w-2xl mx-auto font-normal">
             {dict.home.sectors.intro}
           </p>
         </div>
 
         {/* 3 Sectors Cards Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-7">
           
           {/* 1. Hospitality (SwissBlue) */}
           <div className="glass-card rounded-3xl p-7 flex flex-col justify-between border border-sky-500/20 hover:border-sky-400/60 hover:shadow-[0_0_35px_rgba(56,189,248,0.2)] transition-all group relative overflow-hidden">
