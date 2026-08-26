@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useLanguage } from '@/context/LanguageContext';
 import { 
@@ -10,6 +11,8 @@ import {
   CheckCircle2, 
   ChevronDown, 
   ExternalLink,
+  LayoutDashboard,
+  ArrowUpRight,
   MapPin,
   Mail,
   Phone,
@@ -21,10 +24,10 @@ import {
   Info,
   Layers,
   Sparkles,
-  Video,
-  Image as ImageIcon
+  Quote,
+  Handshake,
+  Maximize2
 } from 'lucide-react';
-import MediaFieldUploader from '@/components/admin/MediaFieldUploader';
 
 function createDefaultState(dict: any) {
   return {
@@ -33,116 +36,104 @@ function createDefaultState(dict: any) {
         eyebrow_en: dict?.home?.hero?.eyebrow || 'WD Group for Business',
         eyebrow_ar: dict?.home?.hero?.eyebrow || 'مجموعة دبليو دي للأعمال',
         title_line1_en: dict?.home?.hero?.title_line1 || 'Solid Vision.',
-        title_line1_ar: dict?.home?.hero?.title_line1 || 'رؤية راسخة.',
+        title_line1_ar: 'رؤية راسخة.',
         title_line2_en: dict?.home?.hero?.title_line2 || 'Diverse Sectors.',
-        title_line2_ar: dict?.home?.hero?.title_line2 || 'قطاعات متعددة.',
+        title_line2_ar: 'قطاعات متعددة.',
         title_line3_en: dict?.home?.hero?.title_line3 || 'Promising Future.',
-        title_line3_ar: dict?.home?.hero?.title_line3 || 'مستقبل واعد.',
-        body_en: dict?.home?.hero?.body || '',
-        body_ar: dict?.home?.hero?.body || '',
-      },
-      media: {
-        hero_video_hospitality: dict?.home?.media?.hero_video_hospitality || '/videos/hospitality.mp4',
-        hero_video_manufacturing: dict?.home?.media?.hero_video_manufacturing || '/videos/manufacturing.mp4',
-        hero_video_contracting: dict?.home?.media?.hero_video_contracting || '/videos/contracting.mp4',
-        sector_photo_hospitality: dict?.home?.media?.sector_photo_hospitality || 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80',
-        sector_photo_manufacturing: dict?.home?.media?.sector_photo_manufacturing || 'https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=1200&q=80',
-        sector_photo_contracting: dict?.home?.media?.sector_photo_contracting || 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80',
+        title_line3_ar: 'مستقبل واعد.',
+        body_en: dict?.home?.hero?.body || 'A premier multi-disciplinary Saudi business group empowering the national transformation.',
+        body_ar: 'مجموعة أعمال سعودية رائدة ومتعددة القطاعات تقود مسيرة التحول الوطني.',
       },
       metrics: {
         stat1_num: dict?.home?.metrics?.stat1_num || '6',
         stat1_text_en: dict?.home?.metrics?.stat1_text || 'Hospitality properties across Saudi Arabia',
-        stat1_text_ar: dict?.home?.metrics?.stat1_text || 'منشآت ضيافة في المملكة العربية السعودية',
+        stat1_text_ar: 'منشآت ضيافة في المملكة العربية السعودية',
         stat2_num: dict?.home?.metrics?.stat2_num || '3',
         stat2_text_en: dict?.home?.metrics?.stat2_text || 'Specialized factories',
-        stat2_text_ar: dict?.home?.metrics?.stat2_text || 'مصانع متخصصة',
+        stat2_text_ar: 'مصانع متخصصة',
         stat3_num: dict?.home?.metrics?.stat3_num || '80+',
         stat3_text_en: dict?.home?.metrics?.stat3_text || 'Professionals across our sectors',
-        stat3_text_ar: dict?.home?.metrics?.stat3_text || 'موظفًا وخبيرًا في مختلف قطاعاتنا',
+        stat3_text_ar: 'موظفًا وخبيرًا في مختلف قطاعاتنا',
         stat4_num: dict?.home?.metrics?.stat4_num || '3',
         stat4_text_en: dict?.home?.metrics?.stat4_text || 'Strategic business sectors',
-        stat4_text_ar: dict?.home?.metrics?.stat4_text || 'قطاعات أعمال استراتيجية',
+        stat4_text_ar: 'قطاعات أعمال استراتيجية',
       },
       synergy: {
-        heading_en: dict?.home?.synergy?.heading || 'From Production to Delivery and Operation',
-        heading_ar: dict?.home?.synergy?.heading || 'من الإنتاج إلى التنفيذ والتشغيل',
-        intro_en: dict?.home?.synergy?.intro || '',
-        intro_ar: dict?.home?.synergy?.intro || '',
+        heading_en: dict?.home?.synergy?.heading || 'Integrated Holding Synergy & Lifecycle Chain',
+        heading_ar: 'سلسلة القيمة والتكامل الاستراتيجي للمجموعة',
+        intro_en: dict?.home?.synergy?.intro || 'A complete lifecycle from precision factory manufacturing to turnkey interior fit-out and luxury hospitality operations.',
+        intro_ar: 'دورة عمل متكاملة تبدأ من التصنيع الدقيق في المصانع إلى التنفيذ المعماري والتشغيل الفندقي الراقي.',
       },
       ceo: {
-        quote_en: dict?.home?.ceo?.quote || '',
-        quote_ar: dict?.home?.ceo?.quote || '',
+        quote_en: dict?.home?.ceo?.quote || 'Our strength lies in our integrated foundation—uniting hospitality, manufacturing, and contracting under one vision.',
+        quote_ar: 'قوتنا تكمن في تكامل منظومتنا القابضة التي تجمع بين الضيافة والتصنيع والمقاولات تحت مظلة رؤية واحدة راسخة.',
         name_en: dict?.home?.ceo?.name || 'Eng. Mohammed Ali Saleh Al-Shaibani',
-        name_ar: dict?.home?.ceo?.name || 'المهندس محمد علي صالح الشيباني',
+        name_ar: 'المهندس محمد علي صالح الشيباني',
         title_en: dict?.home?.ceo?.title || 'Chief Executive Officer',
-        title_ar: dict?.home?.ceo?.title || 'المدير التنفيذي',
+        title_ar: 'المدير التنفيذي',
       },
     },
     about: {
-      hero_eyebrow_en: dict?.about?.hero?.eyebrow || 'About WD Group',
-      hero_eyebrow_ar: dict?.about?.hero?.eyebrow || 'عن مجموعة دبليو دي',
-      hero_title_en: dict?.about?.hero?.title || 'A Saudi Group Built for Sustainable Growth',
-      hero_title_ar: dict?.about?.hero?.title || 'مجموعة سعودية تنمو برؤية مستدامة',
-      hero_body_en: dict?.about?.hero?.body || '',
-      hero_body_ar: dict?.about?.hero?.body || '',
-      story_heading_en: dict?.about?.story?.heading || 'Experience Connected by One Vision',
-      story_heading_ar: dict?.about?.story?.heading || 'خبرات تجمعها رؤية واحدة',
-      story_body_en: dict?.about?.story?.body || '',
-      story_body_ar: dict?.about?.story?.body || '',
-      governance_statement_en: dict?.about?.governance?.statement || '',
-      governance_statement_ar: dict?.about?.governance?.statement || '',
+      hero_eyebrow_en: 'About WD Group',
+      hero_eyebrow_ar: 'عن مجموعة دبليو دي',
+      hero_title_en: 'A Saudi Group Built for Sustainable Growth',
+      hero_title_ar: 'مجموعة سعودية تنمو برؤية مستدامة',
+      hero_body_en: 'Established on principles of executive governance, national capability building, and multi-sector excellence.',
+      hero_body_ar: 'تأسست على مبادئ الحوكمة التنفيذية وبناء الكفاءات الوطنية والتميز في مختلف القطاعات.',
+      story_heading_en: 'Experience Connected by One Vision',
+      story_heading_ar: 'خبرات تجمعها رؤية واحدة',
+      story_body_en: 'From our origins in specialized manufacturing and construction to nationwide hospitality chains.',
+      story_body_ar: 'من جذورنا في التصنيع المتخصص والإنشاءات إلى سلاسل الضيافة والفنادق على مستوى المملكة.',
+      governance_statement_en: 'Committed to ethical leadership, operational transparency, and alignment with Saudi Vision 2030.',
+      governance_statement_ar: 'ملتزمون بالقيادة المسؤولة والشفافية التشغيلية والتوافق التام مع رؤية السعودية 2030.',
     },
     hospitality: {
-      hero_eyebrow_en: dict?.hospitality?.hero?.eyebrow || 'SwissBlue Hospitality',
-      hero_eyebrow_ar: dict?.hospitality?.hero?.eyebrow || 'ضيافة SwissBlue',
-      hero_title_en: dict?.hospitality?.hero?.title || 'Comfortable Stays. Thoughtful Service.',
-      hero_title_ar: dict?.hospitality?.hero?.title || 'إقامة مريحة وخدمة باهتمام',
-      hero_body_en: dict?.hospitality?.hero?.body || '',
-      hero_body_ar: dict?.hospitality?.hero?.body || '',
+      hero_eyebrow_en: 'SwissBlue Hospitality',
+      hero_eyebrow_ar: 'ضيافة SwissBlue',
+      hero_title_en: 'Comfortable Stays. Thoughtful Service.',
+      hero_title_ar: 'إقامة مريحة وخدمة باهتمام أصيل',
+      hero_body_en: 'Managing premium hotel properties and serviced residences across Jeddah, Riyadh, and Jazan.',
+      hero_body_ar: 'إدارة وتطوير منشآت فندقية راقية وشقق مفروشة متميزة في جدة والرياض وجازان.',
     },
     manufacturing: {
-      hero_eyebrow_en: dict?.manufacturing?.hero?.eyebrow || 'GreenWood Furniture & More',
-      hero_eyebrow_ar: dict?.manufacturing?.hero?.eyebrow || 'GreenWood للأثاث والديكور',
-      hero_title_en: dict?.manufacturing?.hero?.title || 'Precision Manufacturing. Made for Every Space.',
-      hero_title_ar: dict?.manufacturing?.hero?.title || 'تصنيع دقيق لكل مساحة',
-      hero_body_en: dict?.manufacturing?.hero?.body || '',
-      hero_body_ar: dict?.manufacturing?.hero?.body || '',
+      hero_eyebrow_en: 'GreenWood Manufacturing',
+      hero_eyebrow_ar: 'مصانع GreenWood للأثاث والديكور',
+      hero_title_en: 'Precision Manufacturing. Made for Every Space.',
+      hero_title_ar: 'تصنيع دقيق لكل مساحة معمارية',
+      hero_body_en: 'Three specialized manufacturing facilities in Riyadh and Najran delivering custom woodwork, aluminum, and contract furniture.',
+      hero_body_ar: 'ثلاثة مصانع متخصصة في الرياض ونجران لإنتاج أعمال النجارة والألمنيوم وأثاث المشروعات.',
     },
     contracting: {
-      hero_eyebrow_en: dict?.contracting?.hero?.eyebrow || 'Engineering Excellence',
-      hero_eyebrow_ar: dict?.contracting?.hero?.eyebrow || 'تميز هندسي',
-      hero_title_en: dict?.contracting?.hero?.title || 'From Blueprint to Handover',
-      hero_title_ar: dict?.contracting?.hero?.title || 'من المخطط إلى التسليم',
-      hero_body_en: dict?.contracting?.hero?.body || '',
-      hero_body_ar: dict?.contracting?.hero?.body || '',
+      hero_eyebrow_en: 'Engineering Excellence',
+      hero_eyebrow_ar: 'المقاولات والتنفيذ المتكامل',
+      hero_title_en: 'From Blueprint to Handover',
+      hero_title_ar: 'من المخطط الهندسي إلى التسليم النهائي',
+      hero_body_en: 'Comprehensive turnkey contracting, commercial fit-out, MEP engineering, and project delivery.',
+      hero_body_ar: 'تنفيذ شامل للمشروعات التجارية والتجهيز الداخلي والأعمال الكهروميكانيكية بأعلى معايير الجودة.',
     },
     careers: {
-      hero_eyebrow_en: dict?.careers?.hero?.eyebrow || 'Careers at WD Group',
-      hero_eyebrow_ar: dict?.careers?.hero?.eyebrow || 'الوظائف في مجموعة دبليو دي',
-      hero_title_en: dict?.careers?.hero?.title || 'Build Your Future With Us',
-      hero_title_ar: dict?.careers?.hero?.title || 'ابنِ مستقبلك معنا',
-      hero_body_en: dict?.careers?.hero?.body || '',
-      hero_body_ar: dict?.careers?.hero?.body || '',
-      hero_proof_en: dict?.careers?.hero?.proof || '80+ professionals across our sectors',
-      hero_proof_ar: dict?.careers?.hero?.proof || 'أكثر من 80 موظفًا وخبيرًا في قطاعاتنا',
+      hero_eyebrow_en: 'Careers at WD Group',
+      hero_eyebrow_ar: 'الوظائف في مجموعة دبليو دي',
+      hero_title_en: 'Build Your Future With Us',
+      hero_title_ar: 'ابنِ مستقبلك المهني معنا',
+      hero_body_en: 'Join an ambitious team of professionals driving Saudi transformation across diverse industries.',
+      hero_body_ar: 'انضم إلى فريق طموح من الخبراء والمتخصصين الذين يقودون التحول الوطني في مختلف القطاعات.',
     },
     contact: {
-      hero_eyebrow_en: dict?.contact?.hero?.eyebrow || 'CONTACT WD GROUP',
-      hero_eyebrow_ar: dict?.contact?.hero?.eyebrow || 'تواصل مع مجموعة دبليو دي',
-      hero_title_en: dict?.contact?.hero?.title || "Let's Start the Right Conversation",
-      hero_title_ar: dict?.contact?.hero?.title || 'لنبدأ الحوار المناسب',
-      hero_body_en: dict?.contact?.hero?.body || '',
-      hero_body_ar: dict?.contact?.hero?.body || '',
-      hq_address_en: dict?.contact?.cards?.hq_address || 'Prince Mishaal Street, Najran, Kingdom of Saudi Arabia',
-      hq_address_ar: dict?.contact?.cards?.hq_address || 'شارع الأمير مشعل، نجران، المملكة العربية السعودية',
-      general_email: dict?.contact?.cards?.general_email || 'info@wdgroup.com.sa',
-      primary_phone: dict?.contact?.cards?.primary_phone || '+966 17 522 2229',
-    },
-    settings: {
-      headquarters_en: dict?.contact?.cards?.hq_address || 'Prince Mishaal Street, Najran, Kingdom of Saudi Arabia',
-      headquarters_ar: dict?.contact?.cards?.hq_address || 'شارع الأمير مشعل، نجران، المملكة العربية السعودية',
+      hero_eyebrow_en: 'CONTACT WD GROUP',
+      hero_eyebrow_ar: 'تواصل مع مجموعة دبليو دي',
+      hero_title_en: "Let's Start the Right Conversation",
+      hero_title_ar: 'لنبدأ الحوار المناسب لشراكتنا',
+      hero_body_en: 'Whether you represent a property, procurement team, or future employee, our team is ready.',
+      hero_body_ar: 'سواء كنت تمثل مالك عقار أو فريق مشتريات أو كفاءة طموحة، فريقنا جاهز للتواصل معك.',
+      hq_address_en: 'Prince Mishaal Street, Najran, Kingdom of Saudi Arabia',
+      hq_address_ar: 'شارع الأمير مشعل، نجران، المملكة العربية السعودية',
       general_email: 'info@wdgroup.com.sa',
       primary_phone: '+966 17 522 2229',
+    },
+    settings: {
+      nav_cta_en: 'Contact Us',
+      nav_cta_ar: 'تواصل معنا',
     }
   };
 }
@@ -202,9 +193,17 @@ export default function LiveEditorDock() {
                   ...(prev?.home?.hero || {}),
                   ...(d.data?.home?.hero || {}),
                 },
-                media: {
-                  ...(prev?.home?.media || {}),
-                  ...(d.data?.home?.media || {}),
+                metrics: {
+                  ...(prev?.home?.metrics || {}),
+                  ...(d.data?.home?.metrics || {}),
+                },
+                synergy: {
+                  ...(prev?.home?.synergy || {}),
+                  ...(d.data?.home?.synergy || {}),
+                },
+                ceo: {
+                  ...(prev?.home?.ceo || {}),
+                  ...(d.data?.home?.ceo || {}),
                 }
               }
             }));
@@ -287,9 +286,9 @@ export default function LiveEditorDock() {
   const PAGE_OPTIONS = [
     { id: 'home', label: lang === 'ar' ? 'الرئيسية (/)' : 'Homepage (/)', icon: Home },
     { id: 'about', label: lang === 'ar' ? 'من نحن (/about)' : 'About Us (/about)', icon: Info },
-    { id: 'hospitality', label: lang === 'ar' ? 'قطاع الضيافة' : 'Hospitality', icon: Building2 },
-    { id: 'manufacturing', label: lang === 'ar' ? 'قطاع التصنيع' : 'Manufacturing', icon: Factory },
-    { id: 'contracting', label: lang === 'ar' ? 'قطاع المقاولات' : 'Contracting', icon: HardHat },
+    { id: 'hospitality', label: lang === 'ar' ? 'الضيافة (SwissBlue)' : 'Hospitality (SwissBlue)', icon: Building2 },
+    { id: 'manufacturing', label: lang === 'ar' ? 'التصنيع (GreenWood)' : 'Manufacturing (GreenWood)', icon: Factory },
+    { id: 'contracting', label: lang === 'ar' ? 'المقاولات (WatanDesign)' : 'Contracting (Fit-Out)', icon: HardHat },
     { id: 'careers', label: lang === 'ar' ? 'الوظائف (/careers)' : 'Careers (/careers)', icon: Briefcase },
     { id: 'contact', label: lang === 'ar' ? 'تواصل معنا (/contact)' : 'Contact Us (/contact)', icon: Mail },
   ];
@@ -311,7 +310,7 @@ export default function LiveEditorDock() {
           </span>
           <Edit3 className="w-4 h-4 text-blue-400 group-hover:rotate-12 transition-transform" />
           <span className="text-xs font-bold tracking-wide">
-            {lang === 'ar' ? `محرر الصفحة: ${pathname || '/'}` : `Live Editor: ${pathname || '/'}`}
+            {lang === 'ar' ? `المحرر المباشر: ${pathname || '/'}` : `Live Visual Editor: ${pathname || '/'}`}
           </span>
           {hasUnsavedChanges && (
             <span className="text-[10px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full border border-amber-500/30 font-mono font-bold">
@@ -332,20 +331,33 @@ export default function LiveEditorDock() {
               <div>
                 <div className="flex items-center gap-2">
                   <h4 className="text-xs sm:text-sm font-bold text-white tracking-tight">
-                    {lang === 'ar' ? 'محرر النصوص والوسائط المباشر' : 'Live On-Page Visual Editor'}
+                    {lang === 'ar' ? 'محرر النصوص المباشر' : 'Live On-Page Visual Editor'}
                   </h4>
                   <span className="text-[9px] font-mono font-bold px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30">
-                    MATCHING URL: {pathname || '/'}
+                    MATCHING: {pathname || '/'}
                   </span>
                 </div>
                 <p className="text-[11px] text-zinc-400">
-                  {lang === 'ar' ? 'التعديلات تنعكس مباشرة أثناء الكتابة وتُحفظ في قاعدة البيانات' : 'Type to preview changes live and sync directly with the live database'}
+                  {lang === 'ar' ? 'التعديلات تنعكس فوراً أثناء الكتابة وتُحفظ مباشرة في قاعدة البيانات' : 'Type to preview live and sync directly with the live database'}
                 </p>
               </div>
             </div>
 
-            {/* Language & Action Controls */}
+            {/* Quick Links & Actions */}
             <div className="flex items-center gap-2">
+              
+              {/* Direct Link to Main Admin Dashboard */}
+              <Link
+                href="/admin/dashboard"
+                className="hidden md:inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold text-blue-300 bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/30 transition-all whitespace-nowrap cursor-pointer"
+                title="Open Main Admin Dashboard"
+              >
+                <LayoutDashboard className="w-3.5 h-3.5" />
+                <span>{lang === 'ar' ? 'لوحة التحكم' : 'Main Dashboard'}</span>
+                <ArrowUpRight className="w-3 h-3" />
+              </Link>
+
+              {/* Language Switcher */}
               <div className="inline-flex rounded-xl bg-white/5 border border-white/10 p-1">
                 <button
                   type="button"
@@ -367,18 +379,19 @@ export default function LiveEditorDock() {
                 </button>
               </div>
 
+              {/* Save & Publish Button */}
               <button
                 type="button"
                 onClick={handleSave}
                 disabled={saving}
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-white bg-blue-600 hover:bg-blue-500 shadow-glow-blue disabled:opacity-50 transition-all cursor-pointer"
+                className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-white bg-blue-600 hover:bg-blue-500 shadow-glow-blue disabled:opacity-50 transition-all cursor-pointer whitespace-nowrap leading-none"
               >
                 {saving ? (
                   <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                 ) : (
                   <Save className="w-3.5 h-3.5" />
                 )}
-                <span>{saving ? (lang === 'ar' ? 'جارٍ الحفظ…' : 'Saving…') : (lang === 'ar' ? 'حفظ ونشر' : 'Save & Publish')}</span>
+                <span className="whitespace-nowrap leading-none">{saving ? (lang === 'ar' ? 'جارٍ الحفظ…' : 'Saving…') : (lang === 'ar' ? 'حفظ ونشر' : 'Save & Publish')}</span>
               </button>
 
               {hasUnsavedChanges && (
@@ -410,17 +423,15 @@ export default function LiveEditorDock() {
             <div className="p-2.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs flex items-center justify-between animate-in fade-in">
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                <span>{lang === 'ar' ? 'تم حفظ التعديلات وتحديث لوحة التحكم والموقع مباشرة!' : 'Changes saved! Synced live with database.'}</span>
+                <span>{lang === 'ar' ? 'تم حفظ ونشر التعديلات بنجاح وتحديث قاعدة البيانات!' : 'Changes saved & published live to database!'}</span>
               </div>
-              <a
+              <Link
                 href="/admin/content/pages"
-                target="_blank"
-                rel="noopener noreferrer"
                 className="text-[11px] font-mono text-emerald-400 hover:underline flex items-center gap-1"
               >
-                <span>View in Admin CMS</span>
+                <span>View Full CMS</span>
                 <ExternalLink className="w-3 h-3" />
-              </a>
+              </Link>
             </div>
           )}
 
@@ -460,6 +471,7 @@ export default function LiveEditorDock() {
             {/* ══════════ PAGE 1: HOMEPAGE (/) ══════════ */}
             {selectedPage === 'home' && (
               <div className="space-y-3">
+                
                 {/* 3-Line Headline Section */}
                 <div className="p-3 rounded-2xl bg-white/5 border border-white/10 space-y-2.5">
                   <div className="text-[11px] font-mono font-bold text-blue-400 uppercase">
@@ -492,7 +504,7 @@ export default function LiveEditorDock() {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     <div>
-                      <label className="block text-[11px] text-sky-400 font-semibold mb-1">Line 2 [Sapphire Accent] (English)</label>
+                      <label className="block text-[11px] text-sky-400 font-semibold mb-1">Line 2 [Accent] (English)</label>
                       <input
                         type="text"
                         value={localEdits?.home?.hero?.title_line2_en || ''}
@@ -502,7 +514,7 @@ export default function LiveEditorDock() {
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] text-sky-400 font-semibold mb-1">Line 2 [Sapphire Accent] (Arabic)</label>
+                      <label className="block text-[11px] text-sky-400 font-semibold mb-1">Line 2 [Accent] (Arabic)</label>
                       <input
                         type="text"
                         dir="rtl"
@@ -539,247 +551,243 @@ export default function LiveEditorDock() {
                   </div>
                 </div>
 
-                {/* Subtitle Body */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                  <div>
-                    <label className="block text-[11px] text-zinc-400 mb-1">Hero Subtitle (English)</label>
-                    <textarea
-                      rows={2}
-                      value={localEdits?.home?.hero?.body_en || ''}
-                      onChange={(e) => updateField(['home', 'hero', 'body_en'], e.target.value)}
-                      className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white resize-none"
-                    />
+                {/* Subtitle & Header CTA */}
+                <div className="p-3 rounded-2xl bg-white/5 border border-white/10 space-y-2.5">
+                  <div className="text-[11px] font-mono font-bold text-zinc-400 uppercase">
+                    Narrative Subtitle & Header Navigation CTA
                   </div>
-                  <div>
-                    <label className="block text-[11px] text-zinc-400 mb-1">Hero Subtitle (Arabic)</label>
-                    <textarea
-                      rows={2}
-                      dir="rtl"
-                      value={localEdits?.home?.hero?.body_ar || ''}
-                      onChange={(e) => updateField(['home', 'hero', 'body_ar'], e.target.value)}
-                      className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white resize-none"
-                    />
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <div>
+                      <label className="block text-[11px] text-zinc-400 mb-1">Hero Subtitle (English)</label>
+                      <textarea
+                        rows={2}
+                        value={localEdits?.home?.hero?.body_en || ''}
+                        onChange={(e) => updateField(['home', 'hero', 'body_en'], e.target.value)}
+                        className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white resize-none"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] text-zinc-400 mb-1">Hero Subtitle (Arabic)</label>
+                      <textarea
+                        rows={2}
+                        dir="rtl"
+                        value={localEdits?.home?.hero?.body_ar || ''}
+                        onChange={(e) => updateField(['home', 'hero', 'body_ar'], e.target.value)}
+                        className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white resize-none"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
+                    <div>
+                      <label className="block text-[11px] text-[#C9A86A] font-semibold mb-1">Header Top-Right Button (English)</label>
+                      <input
+                        type="text"
+                        value={localEdits?.settings?.nav_cta_en || 'Contact Us'}
+                        onChange={(e) => updateField(['settings', 'nav_cta_en'], e.target.value)}
+                        className="w-full px-3 py-2 rounded-xl bg-black/50 border border-[#C9A86A]/40 text-[#C9A86A]"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] text-[#C9A86A] font-semibold mb-1">Header Top-Right Button (Arabic)</label>
+                      <input
+                        type="text"
+                        dir="rtl"
+                        value={localEdits?.settings?.nav_cta_ar || 'تواصل معنا'}
+                        onChange={(e) => updateField(['settings', 'nav_cta_ar'], e.target.value)}
+                        className="w-full px-3 py-2 rounded-xl bg-black/50 border border-[#C9A86A]/40 text-[#C9A86A]"
+                      />
+                    </div>
                   </div>
                 </div>
 
-                {/* Homepage Media Uploaders */}
-                <div className="p-3 rounded-2xl bg-white/5 border border-white/10 space-y-3">
+                {/* 4-Metric Statistics Bar */}
+                <div className="p-3 rounded-2xl bg-white/5 border border-white/10 space-y-2.5">
                   <div className="text-[11px] font-mono font-bold text-amber-400 uppercase">
-                    Hero Background Videos & Sector Photos
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                    <MediaFieldUploader
-                      label="SwissBlue Video"
-                      accept="video"
-                      value={localEdits?.home?.media?.hero_video_hospitality || '/videos/hospitality.mp4'}
-                      onChange={(url) => updateField(['home', 'media', 'hero_video_hospitality'], url)}
-                    />
-                    <MediaFieldUploader
-                      label="GreenWood Video"
-                      accept="video"
-                      value={localEdits?.home?.media?.hero_video_manufacturing || '/videos/manufacturing.mp4'}
-                      onChange={(url) => updateField(['home', 'media', 'hero_video_manufacturing'], url)}
-                    />
-                    <MediaFieldUploader
-                      label="Contracting Video"
-                      accept="video"
-                      value={localEdits?.home?.media?.hero_video_contracting || '/videos/contracting.mp4'}
-                      onChange={(url) => updateField(['home', 'media', 'hero_video_contracting'], url)}
-                    />
+                    4-Metric Statistics Bar
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
-                    <MediaFieldUploader
-                      label="Hospitality Photo"
-                      value={localEdits?.home?.media?.sector_photo_hospitality || 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80'}
-                      onChange={(url) => updateField(['home', 'media', 'sector_photo_hospitality'], url)}
-                    />
-                    <MediaFieldUploader
-                      label="Manufacturing Photo"
-                      value={localEdits?.home?.media?.sector_photo_manufacturing || 'https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=1200&q=80'}
-                      onChange={(url) => updateField(['home', 'media', 'sector_photo_manufacturing'], url)}
-                    />
-                    <MediaFieldUploader
-                      label="Contracting Photo"
-                      value={localEdits?.home?.media?.sector_photo_contracting || 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80'}
-                      onChange={(url) => updateField(['home', 'media', 'sector_photo_contracting'], url)}
-                    />
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
+                    {/* Stat 1 */}
+                    <div className="p-2.5 rounded-xl bg-black/40 border border-white/10 space-y-1.5">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[10px] font-mono text-sky-400">Stat 1</span>
+                        <input
+                          type="text"
+                          value={localEdits?.home?.metrics?.stat1_num || '6'}
+                          onChange={(e) => updateField(['home', 'metrics', 'stat1_num'], e.target.value)}
+                          className="w-12 text-center px-1.5 py-0.5 rounded bg-sky-950 border border-sky-500/40 text-sky-300 font-mono font-bold text-xs"
+                        />
+                      </div>
+                      <input
+                        type="text"
+                        value={localEdits?.home?.metrics?.stat1_text_en || ''}
+                        onChange={(e) => updateField(['home', 'metrics', 'stat1_text_en'], e.target.value)}
+                        placeholder="Label EN"
+                        className="w-full px-2 py-1 rounded bg-black/50 border border-white/10 text-[11px]"
+                      />
+                      <input
+                        type="text"
+                        dir="rtl"
+                        value={localEdits?.home?.metrics?.stat1_text_ar || ''}
+                        onChange={(e) => updateField(['home', 'metrics', 'stat1_text_ar'], e.target.value)}
+                        placeholder="الوصف AR"
+                        className="w-full px-2 py-1 rounded bg-black/50 border border-white/10 text-[11px]"
+                      />
+                    </div>
+
+                    {/* Stat 2 */}
+                    <div className="p-2.5 rounded-xl bg-black/40 border border-white/10 space-y-1.5">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[10px] font-mono text-emerald-400">Stat 2</span>
+                        <input
+                          type="text"
+                          value={localEdits?.home?.metrics?.stat2_num || '3'}
+                          onChange={(e) => updateField(['home', 'metrics', 'stat2_num'], e.target.value)}
+                          className="w-12 text-center px-1.5 py-0.5 rounded bg-emerald-950 border border-emerald-500/40 text-emerald-300 font-mono font-bold text-xs"
+                        />
+                      </div>
+                      <input
+                        type="text"
+                        value={localEdits?.home?.metrics?.stat2_text_en || ''}
+                        onChange={(e) => updateField(['home', 'metrics', 'stat2_text_en'], e.target.value)}
+                        placeholder="Label EN"
+                        className="w-full px-2 py-1 rounded bg-black/50 border border-white/10 text-[11px]"
+                      />
+                      <input
+                        type="text"
+                        dir="rtl"
+                        value={localEdits?.home?.metrics?.stat2_text_ar || ''}
+                        onChange={(e) => updateField(['home', 'metrics', 'stat2_text_ar'], e.target.value)}
+                        placeholder="الوصف AR"
+                        className="w-full px-2 py-1 rounded bg-black/50 border border-white/10 text-[11px]"
+                      />
+                    </div>
+
+                    {/* Stat 3 */}
+                    <div className="p-2.5 rounded-xl bg-black/40 border border-white/10 space-y-1.5">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[10px] font-mono text-purple-400">Stat 3</span>
+                        <input
+                          type="text"
+                          value={localEdits?.home?.metrics?.stat3_num || '80+'}
+                          onChange={(e) => updateField(['home', 'metrics', 'stat3_num'], e.target.value)}
+                          className="w-12 text-center px-1.5 py-0.5 rounded bg-purple-950 border border-purple-500/40 text-purple-300 font-mono font-bold text-xs"
+                        />
+                      </div>
+                      <input
+                        type="text"
+                        value={localEdits?.home?.metrics?.stat3_text_en || ''}
+                        onChange={(e) => updateField(['home', 'metrics', 'stat3_text_en'], e.target.value)}
+                        placeholder="Label EN"
+                        className="w-full px-2 py-1 rounded bg-black/50 border border-white/10 text-[11px]"
+                      />
+                      <input
+                        type="text"
+                        dir="rtl"
+                        value={localEdits?.home?.metrics?.stat3_text_ar || ''}
+                        onChange={(e) => updateField(['home', 'metrics', 'stat3_text_ar'], e.target.value)}
+                        placeholder="الوصف AR"
+                        className="w-full px-2 py-1 rounded bg-black/50 border border-white/10 text-[11px]"
+                      />
+                    </div>
+
+                    {/* Stat 4 */}
+                    <div className="p-2.5 rounded-xl bg-black/40 border border-white/10 space-y-1.5">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[10px] font-mono text-amber-400">Stat 4</span>
+                        <input
+                          type="text"
+                          value={localEdits?.home?.metrics?.stat4_num || '3'}
+                          onChange={(e) => updateField(['home', 'metrics', 'stat4_num'], e.target.value)}
+                          className="w-12 text-center px-1.5 py-0.5 rounded bg-amber-950 border border-amber-500/40 text-amber-300 font-mono font-bold text-xs"
+                        />
+                      </div>
+                      <input
+                        type="text"
+                        value={localEdits?.home?.metrics?.stat4_text_en || ''}
+                        onChange={(e) => updateField(['home', 'metrics', 'stat4_text_en'], e.target.value)}
+                        placeholder="Label EN"
+                        className="w-full px-2 py-1 rounded bg-black/50 border border-white/10 text-[11px]"
+                      />
+                      <input
+                        type="text"
+                        dir="rtl"
+                        value={localEdits?.home?.metrics?.stat4_text_ar || ''}
+                        onChange={(e) => updateField(['home', 'metrics', 'stat4_text_ar'], e.target.value)}
+                        placeholder="الوصف AR"
+                        className="w-full px-2 py-1 rounded bg-black/50 border border-white/10 text-[11px]"
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
-            )}
 
-            {/* ══════════ PAGE 2: CONTACT US (/contact) ══════════ */}
-            {selectedPage === 'contact' && (
-              <div className="space-y-3">
-                {/* Contact Hero */}
+                {/* CEO Leadership Statement */}
                 <div className="p-3 rounded-2xl bg-white/5 border border-white/10 space-y-2.5">
-                  <div className="text-[11px] font-mono font-bold text-blue-400 uppercase">
-                    Contact Us Header & Tagline
+                  <div className="text-[11px] font-mono font-bold text-[#C9A86A] uppercase">
+                    CEO Leadership Statement
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Hero Eyebrow (English)</label>
-                      <input
-                        type="text"
-                        value={localEdits?.contact?.hero_eyebrow_en || ''}
-                        onChange={(e) => updateField(['contact', 'hero_eyebrow_en'], e.target.value)}
-                        className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"
-                        placeholder="CONTACT WD GROUP"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Hero Eyebrow (Arabic)</label>
-                      <input
-                        type="text"
-                        dir="rtl"
-                        value={localEdits?.contact?.hero_eyebrow_ar || ''}
-                        onChange={(e) => updateField(['contact', 'hero_eyebrow_ar'], e.target.value)}
-                        className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"
-                        placeholder="تواصل مع مجموعة دبليو دي"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                    <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Hero Headline (English)</label>
-                      <input
-                        type="text"
-                        value={localEdits?.contact?.hero_title_en || ''}
-                        onChange={(e) => updateField(['contact', 'hero_title_en'], e.target.value)}
-                        className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"
-                        placeholder="Let's Start the Right Conversation"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Hero Headline (Arabic)</label>
-                      <input
-                        type="text"
-                        dir="rtl"
-                        value={localEdits?.contact?.hero_title_ar || ''}
-                        onChange={(e) => updateField(['contact', 'hero_title_ar'], e.target.value)}
-                        className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"
-                        placeholder="لنبدأ الحوار المناسب"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                    <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Hero Body Description (English)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">Executive Quote (English)</label>
                       <textarea
                         rows={2}
-                        value={localEdits?.contact?.hero_body_en || ''}
-                        onChange={(e) => updateField(['contact', 'hero_body_en'], e.target.value)}
+                        value={localEdits?.home?.ceo?.quote_en || ''}
+                        onChange={(e) => updateField(['home', 'ceo', 'quote_en'], e.target.value)}
                         className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white resize-none"
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Hero Body Description (Arabic)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">Executive Quote (Arabic)</label>
                       <textarea
                         rows={2}
                         dir="rtl"
-                        value={localEdits?.contact?.hero_body_ar || ''}
-                        onChange={(e) => updateField(['contact', 'hero_body_ar'], e.target.value)}
+                        value={localEdits?.home?.ceo?.quote_ar || ''}
+                        onChange={(e) => updateField(['home', 'ceo', 'quote_ar'], e.target.value)}
                         className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white resize-none"
                       />
                     </div>
                   </div>
-                </div>
-
-                {/* Headquarters and Contact Details */}
-                <div className="p-3 rounded-2xl bg-white/5 border border-white/10 space-y-2.5">
-                  <div className="text-[11px] font-mono font-bold text-emerald-400 uppercase">
-                    Headquarters & Direct Communications
-                  </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1 flex items-center gap-1">
-                        <MapPin className="w-3 h-3 text-emerald-400" />
-                        <span>Headquarters Address (English)</span>
-                      </label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">Leader Name (English)</label>
                       <input
                         type="text"
-                        value={localEdits?.settings?.headquarters_en || localEdits?.contact?.hq_address_en || ''}
-                        onChange={(e) => {
-                          updateField(['settings', 'headquarters_en'], e.target.value);
-                          updateField(['contact', 'hq_address_en'], e.target.value);
-                        }}
+                        value={localEdits?.home?.ceo?.name_en || ''}
+                        onChange={(e) => updateField(['home', 'ceo', 'name_en'], e.target.value)}
                         className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"
-                        placeholder="Prince Mishaal Street, Najran, KSA"
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1 flex items-center gap-1">
-                        <MapPin className="w-3 h-3 text-emerald-400" />
-                        <span>Headquarters Address (Arabic)</span>
-                      </label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">Leader Name (Arabic)</label>
                       <input
                         type="text"
                         dir="rtl"
-                        value={localEdits?.settings?.headquarters_ar || localEdits?.contact?.hq_address_ar || ''}
-                        onChange={(e) => {
-                          updateField(['settings', 'headquarters_ar'], e.target.value);
-                          updateField(['contact', 'hq_address_ar'], e.target.value);
-                        }}
+                        value={localEdits?.home?.ceo?.name_ar || ''}
+                        onChange={(e) => updateField(['home', 'ceo', 'name_ar'], e.target.value)}
                         className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"
-                        placeholder="شارع الأمير مشعل، نجران، المملكة العربية السعودية"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                    <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1 flex items-center gap-1">
-                        <Mail className="w-3 h-3 text-blue-400" />
-                        <span>Corporate Email</span>
-                      </label>
-                      <input
-                        type="email"
-                        value={localEdits?.settings?.general_email || localEdits?.contact?.general_email || ''}
-                        onChange={(e) => {
-                          updateField(['settings', 'general_email'], e.target.value);
-                          updateField(['contact', 'general_email'], e.target.value);
-                        }}
-                        className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"
-                        placeholder="info@wdgroup.com.sa"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1 flex items-center gap-1">
-                        <Phone className="w-3 h-3 text-amber-400" />
-                        <span>Primary Phone</span>
-                      </label>
-                      <input
-                        type="tel"
-                        value={localEdits?.settings?.primary_phone || localEdits?.contact?.primary_phone || ''}
-                        onChange={(e) => {
-                          updateField(['settings', 'primary_phone'], e.target.value);
-                          updateField(['contact', 'primary_phone'], e.target.value);
-                        }}
-                        className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"
-                        placeholder="+966 17 522 2229"
                       />
                     </div>
                   </div>
                 </div>
+
               </div>
             )}
 
-            {/* ══════════ PAGE 3: ABOUT US (/about) ══════════ */}
+            {/* ══════════ PAGE 2: ABOUT US (/about) ══════════ */}
             {selectedPage === 'about' && (
               <div className="space-y-3">
                 <div className="p-3 rounded-2xl bg-white/5 border border-white/10 space-y-2.5">
                   <div className="text-[11px] font-mono font-bold text-blue-400 uppercase">
-                    About Us Page Headlines
+                    About Us Page Hero & Story
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Headline (English)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">Hero Title (English)</label>
                       <input
                         type="text"
                         value={localEdits?.about?.hero_title_en || ''}
@@ -788,7 +796,7 @@ export default function LiveEditorDock() {
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Headline (Arabic)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">Hero Title (Arabic)</label>
                       <input
                         type="text"
                         dir="rtl"
@@ -801,21 +809,21 @@ export default function LiveEditorDock() {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Story Body Narrative (English)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">Hero Subtitle (English)</label>
                       <textarea
-                        rows={3}
-                        value={localEdits?.about?.story_body_en || ''}
-                        onChange={(e) => updateField(['about', 'story_body_en'], e.target.value)}
+                        rows={2}
+                        value={localEdits?.about?.hero_body_en || ''}
+                        onChange={(e) => updateField(['about', 'hero_body_en'], e.target.value)}
                         className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white resize-none"
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Story Body Narrative (Arabic)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">Hero Subtitle (Arabic)</label>
                       <textarea
-                        rows={3}
+                        rows={2}
                         dir="rtl"
-                        value={localEdits?.about?.story_body_ar || ''}
-                        onChange={(e) => updateField(['about', 'story_body_ar'], e.target.value)}
+                        value={localEdits?.about?.hero_body_ar || ''}
+                        onChange={(e) => updateField(['about', 'hero_body_ar'], e.target.value)}
                         className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white resize-none"
                       />
                     </div>
@@ -824,12 +832,12 @@ export default function LiveEditorDock() {
               </div>
             )}
 
-            {/* ══════════ PAGE 4: HOSPITALITY (/sectors/hospitality) ══════════ */}
+            {/* ══════════ PAGE 3: HOSPITALITY ══════════ */}
             {selectedPage === 'hospitality' && (
               <div className="space-y-3">
-                <div className="p-3 rounded-2xl bg-white/5 border border-white/10 space-y-2.5">
+                <div className="p-3 rounded-2xl bg-white/5 border border-sky-500/20 space-y-2.5">
                   <div className="text-[11px] font-mono font-bold text-sky-400 uppercase">
-                    SwissBlue Hospitality Content
+                    SwissBlue Hospitality Page Content
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -858,7 +866,7 @@ export default function LiveEditorDock() {
                     <div>
                       <label className="block text-[11px] text-zinc-400 mb-1">Hero Subtitle (English)</label>
                       <textarea
-                        rows={3}
+                        rows={2}
                         value={localEdits?.hospitality?.hero_body_en || ''}
                         onChange={(e) => updateField(['hospitality', 'hero_body_en'], e.target.value)}
                         className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white resize-none"
@@ -867,7 +875,7 @@ export default function LiveEditorDock() {
                     <div>
                       <label className="block text-[11px] text-zinc-400 mb-1">Hero Subtitle (Arabic)</label>
                       <textarea
-                        rows={3}
+                        rows={2}
                         dir="rtl"
                         value={localEdits?.hospitality?.hero_body_ar || ''}
                         onChange={(e) => updateField(['hospitality', 'hero_body_ar'], e.target.value)}
@@ -879,12 +887,12 @@ export default function LiveEditorDock() {
               </div>
             )}
 
-            {/* ══════════ PAGE 5: MANUFACTURING (/sectors/manufacturing) ══════════ */}
+            {/* ══════════ PAGE 4: MANUFACTURING ══════════ */}
             {selectedPage === 'manufacturing' && (
               <div className="space-y-3">
-                <div className="p-3 rounded-2xl bg-white/5 border border-white/10 space-y-2.5">
+                <div className="p-3 rounded-2xl bg-white/5 border border-emerald-500/20 space-y-2.5">
                   <div className="text-[11px] font-mono font-bold text-emerald-400 uppercase">
-                    GreenWood Manufacturing Content
+                    GreenWood Manufacturing Page Content
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -913,7 +921,7 @@ export default function LiveEditorDock() {
                     <div>
                       <label className="block text-[11px] text-zinc-400 mb-1">Hero Subtitle (English)</label>
                       <textarea
-                        rows={3}
+                        rows={2}
                         value={localEdits?.manufacturing?.hero_body_en || ''}
                         onChange={(e) => updateField(['manufacturing', 'hero_body_en'], e.target.value)}
                         className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white resize-none"
@@ -922,7 +930,7 @@ export default function LiveEditorDock() {
                     <div>
                       <label className="block text-[11px] text-zinc-400 mb-1">Hero Subtitle (Arabic)</label>
                       <textarea
-                        rows={3}
+                        rows={2}
                         dir="rtl"
                         value={localEdits?.manufacturing?.hero_body_ar || ''}
                         onChange={(e) => updateField(['manufacturing', 'hero_body_ar'], e.target.value)}
@@ -934,12 +942,12 @@ export default function LiveEditorDock() {
               </div>
             )}
 
-            {/* ══════════ PAGE 6: CONTRACTING (/sectors/contracting) ══════════ */}
+            {/* ══════════ PAGE 5: CONTRACTING ══════════ */}
             {selectedPage === 'contracting' && (
               <div className="space-y-3">
-                <div className="p-3 rounded-2xl bg-white/5 border border-white/10 space-y-2.5">
+                <div className="p-3 rounded-2xl bg-white/5 border border-amber-500/20 space-y-2.5">
                   <div className="text-[11px] font-mono font-bold text-amber-400 uppercase">
-                    Contracting & Fit-Out Content
+                    Contracting & Fit-Out Page Content
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -968,7 +976,7 @@ export default function LiveEditorDock() {
                     <div>
                       <label className="block text-[11px] text-zinc-400 mb-1">Hero Subtitle (English)</label>
                       <textarea
-                        rows={3}
+                        rows={2}
                         value={localEdits?.contracting?.hero_body_en || ''}
                         onChange={(e) => updateField(['contracting', 'hero_body_en'], e.target.value)}
                         className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white resize-none"
@@ -977,7 +985,7 @@ export default function LiveEditorDock() {
                     <div>
                       <label className="block text-[11px] text-zinc-400 mb-1">Hero Subtitle (Arabic)</label>
                       <textarea
-                        rows={3}
+                        rows={2}
                         dir="rtl"
                         value={localEdits?.contracting?.hero_body_ar || ''}
                         onChange={(e) => updateField(['contracting', 'hero_body_ar'], e.target.value)}
@@ -989,12 +997,12 @@ export default function LiveEditorDock() {
               </div>
             )}
 
-            {/* ══════════ PAGE 7: CAREERS (/careers) ══════════ */}
+            {/* ══════════ PAGE 6: CAREERS ══════════ */}
             {selectedPage === 'careers' && (
               <div className="space-y-3">
                 <div className="p-3 rounded-2xl bg-white/5 border border-white/10 space-y-2.5">
                   <div className="text-[11px] font-mono font-bold text-purple-400 uppercase">
-                    Careers Content
+                    Careers Page Content
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -1023,7 +1031,7 @@ export default function LiveEditorDock() {
                     <div>
                       <label className="block text-[11px] text-zinc-400 mb-1">Hero Subtitle (English)</label>
                       <textarea
-                        rows={3}
+                        rows={2}
                         value={localEdits?.careers?.hero_body_en || ''}
                         onChange={(e) => updateField(['careers', 'hero_body_en'], e.target.value)}
                         className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white resize-none"
@@ -1032,7 +1040,7 @@ export default function LiveEditorDock() {
                     <div>
                       <label className="block text-[11px] text-zinc-400 mb-1">Hero Subtitle (Arabic)</label>
                       <textarea
-                        rows={3}
+                        rows={2}
                         dir="rtl"
                         value={localEdits?.careers?.hero_body_ar || ''}
                         onChange={(e) => updateField(['careers', 'hero_body_ar'], e.target.value)}
@@ -1044,6 +1052,87 @@ export default function LiveEditorDock() {
               </div>
             )}
 
+            {/* ══════════ PAGE 7: CONTACT US ══════════ */}
+            {selectedPage === 'contact' && (
+              <div className="space-y-3">
+                <div className="p-3 rounded-2xl bg-white/5 border border-white/10 space-y-2.5">
+                  <div className="text-[11px] font-mono font-bold text-blue-400 uppercase">
+                    Contact Information & Credentials
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <div>
+                      <label className="block text-[11px] text-zinc-400 mb-1">HQ Address (English)</label>
+                      <input
+                        type="text"
+                        value={localEdits?.contact?.hq_address_en || ''}
+                        onChange={(e) => updateField(['contact', 'hq_address_en'], e.target.value)}
+                        className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] text-zinc-400 mb-1">HQ Address (Arabic)</label>
+                      <input
+                        type="text"
+                        dir="rtl"
+                        value={localEdits?.contact?.hq_address_ar || ''}
+                        onChange={(e) => updateField(['contact', 'hq_address_ar'], e.target.value)}
+                        className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <div>
+                      <label className="block text-[11px] text-zinc-400 mb-1">General Email</label>
+                      <input
+                        type="email"
+                        value={localEdits?.contact?.general_email || 'info@wdgroup.com.sa'}
+                        onChange={(e) => updateField(['contact', 'general_email'], e.target.value)}
+                        className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white font-mono"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] text-zinc-400 mb-1">Primary Phone</label>
+                      <input
+                        type="text"
+                        value={localEdits?.contact?.primary_phone || '+966 17 522 2229'}
+                        onChange={(e) => updateField(['contact', 'primary_phone'], e.target.value)}
+                        className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white font-mono"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+          </div>
+
+          {/* Persistent Footer with Direct Link to Main Admin Dashboard */}
+          <div className="pt-3 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-2.5 text-xs text-zinc-400">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
+              <span className="font-mono text-[11px] text-zinc-300 font-semibold">WD GROUP REALTIME LIVE CMS</span>
+            </div>
+            
+            <div className="flex items-center gap-2.5">
+              <Link
+                href="/admin/dashboard"
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-blue-600/20 hover:bg-blue-600 text-blue-300 hover:text-white border border-blue-500/40 hover:border-blue-500 transition-all font-mono text-[11px] font-bold shadow-sm cursor-pointer"
+              >
+                <LayoutDashboard className="w-3.5 h-3.5" />
+                <span>Go to Main Dashboard</span>
+                <ArrowUpRight className="w-3 h-3" />
+              </Link>
+
+              <Link
+                href="/admin/content/pages"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-300 hover:text-white border border-white/10 transition-all font-mono text-[11px] font-semibold cursor-pointer"
+              >
+                <span>Full Pages CMS</span>
+                <ExternalLink className="w-3 h-3" />
+              </Link>
+            </div>
           </div>
 
         </div>
