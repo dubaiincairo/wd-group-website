@@ -70,6 +70,10 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
 
     dict = {
       ...baseDict,
+      nav: {
+        ...baseDict.nav,
+        contactCta: (isAr ? c.settings?.nav_cta_ar : c.settings?.nav_cta_en) || baseDict.nav.contactCta,
+      },
       home: {
         ...baseDict.home,
         hero: {

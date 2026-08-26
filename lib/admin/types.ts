@@ -305,6 +305,8 @@ export interface SiteContentPayload {
   settings: {
     company_name_ar: string;
     company_name_en: string;
+    nav_cta_en?: string;
+    nav_cta_ar?: string;
     cr_number: string;
     vat_number: string;
     headquarters_ar: string;
@@ -329,8 +331,23 @@ export interface SiteContentPayload {
     global_title_ar: string;
     global_description_en: string;
     global_description_ar: string;
-    og_image_url: string;
+    keywords_en?: string;
+    keywords_ar?: string;
     canonical_base: string;
+    og_image_url: string;
+    twitter_card?: string;
+    twitter_handle?: string;
+    google_site_verification?: string;
+    bing_site_verification?: string;
+    google_analytics_id?: string;
+    google_tag_manager_id?: string;
+    robots_index?: boolean;
+    sitemap_url?: string;
+    schema_org_type?: string;
+    schema_legal_name_ar?: string;
+    schema_legal_name_en?: string;
+    schema_phone?: string;
+    schema_email?: string;
   };
   version: number;
 }

@@ -206,6 +206,15 @@ export default function PagesContentEditor() {
               onChangeEn={(v) => setContent({ ...content, home: { ...content.home, hero: { ...content.home.hero, kicker_en: v } } })}
               onChangeAr={(v) => setContent({ ...content, home: { ...content.home, hero: { ...content.home.hero, kicker_ar: v } } })}
             />
+
+            {/* Header Navigation CTA Button (Top Right Corner) */}
+            <BilingualInput
+              label="Header Navigation CTA Button (Top Right Corner)"
+              valueEn={content.settings.nav_cta_en || 'Contact Us'}
+              valueAr={content.settings.nav_cta_ar || 'تواصل معنا'}
+              onChangeEn={(v) => setContent({ ...content, settings: { ...content.settings, nav_cta_en: v } })}
+              onChangeAr={(v) => setContent({ ...content, settings: { ...content.settings, nav_cta_ar: v } })}
+            />
           </div>
 
           {/* Section 2: Floating Sector Switcher Dock */}

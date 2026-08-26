@@ -6,29 +6,42 @@ import HoldingSynergy from '@/components/home/HoldingSynergy';
 import VisionMissionValues from '@/components/home/VisionMissionValues';
 import CEOQuote from '@/components/home/CEOQuote';
 import ContactCTA from '@/components/home/ContactCTA';
+import BrandedSeparator from '@/components/ui/BrandedSeparator';
 
 export default function Home() {
   return (
     <>
-      {/* Section 1: Hero & Section 2: Statistics Bar */}
+      {/* Section 1: Hero & Statistics Bar */}
       <HeroSection />
 
-      {/* Section 3: Strategic Sectors (Hospitality, Manufacturing, Contracting) */}
+      <BrandedSeparator variant="gold" />
+
+      {/* Section 2: Strategic Sectors (Hospitality, Manufacturing, Contracting) */}
       <SectorsHub />
 
-      {/* Section 3.2: Portfolio Brands Owned (SwissBlue, Vinas, Tulip, WatanDesign, GreenWood) */}
+      <BrandedSeparator variant="gold" />
+
+      {/* Section 3: Portfolio Brands Owned (SwissBlue, Vinas, Tulip, WatanDesign, GreenWood) */}
       <BrandPortfolio />
 
-      {/* Section 3.5: Integrated Holding Synergy & Lifecycle Value Chain */}
+      <BrandedSeparator variant="gold" />
+
+      {/* Section 4: Integrated Holding Synergy & Lifecycle Value Chain */}
       <HoldingSynergy />
 
-      {/* Section 4: Vision, Mission & Values */}
+      <BrandedSeparator variant="gold" />
+
+      {/* Section 5: Vision, Mission & Values */}
       <VisionMissionValues />
 
-      {/* Section 5: CEO Quote & Governance */}
+      <BrandedSeparator variant="gold" />
+
+      {/* Section 6: CEO Quote & Governance */}
       <CEOQuote />
 
-      {/* Section 6: Main Contact & Partnership CTA */}
+      <BrandedSeparator variant="gold" />
+
+      {/* Section 7: Main Contact & Partnership CTA */}
       <ContactCTA />
     </>
   );

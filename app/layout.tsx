@@ -8,6 +8,7 @@ import Footer from '@/components/layout/Footer';
 import LiveEditorDock from '@/components/live-editor/LiveEditorDock';
 
 import MaintenanceGate from '@/components/layout/MaintenanceGate';
+import DynamicHeadSEO from '@/components/seo/DynamicHeadSEO';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -54,6 +55,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" dir="ltr" className={`${inter.variable} ${notoKufi.variable} ${playfair.variable} ${ibmMono.variable}`}>
+      <head>
+        <LanguageProvider>
+          <DynamicHeadSEO />
+        </LanguageProvider>
+      </head>
       <body className="bg-[#08090C] text-[#F8FAFC] min-h-screen flex flex-col font-sans selection:bg-blue-600 selection:text-white antialiased">
         <LanguageProvider>
           <ToastProvider>
