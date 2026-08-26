@@ -83,10 +83,10 @@ export default function MetricsEditorPage() {
         <button
           type="submit"
           disabled={saving}
-          className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white text-xs sm:text-sm font-bold transition-all shadow-glow-blue"
+          className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white text-xs sm:text-sm font-bold transition-all shadow-glow-blue cursor-pointer whitespace-nowrap shrink-0 leading-none self-start sm:self-auto"
         >
-          <Save className="w-4 h-4" />
-          <span>{saving ? 'Publishing…' : 'Save & Publish Metrics'}</span>
+          <Save className="w-4 h-4 shrink-0" />
+          <span className="whitespace-nowrap leading-none">{saving ? 'Publishing…' : 'Save & Publish Metrics'}</span>
         </button>
       </div>
 

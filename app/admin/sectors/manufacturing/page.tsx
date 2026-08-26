@@ -128,10 +128,10 @@ export default function ManufacturingSectorAdminPage() {
             type="button"
             onClick={handleSave}
             disabled={saving}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white text-xs sm:text-sm font-bold transition-all shadow-glow-emerald"
+            className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white text-xs sm:text-sm font-bold transition-all shadow-glow-emerald cursor-pointer whitespace-nowrap shrink-0 leading-none"
           >
-            <Save className="w-4 h-4" />
-            <span>{saving ? 'Publishing…' : 'Save & Publish'}</span>
+            <Save className="w-4 h-4 shrink-0" />
+            <span className="whitespace-nowrap leading-none">{saving ? 'Publishing…' : 'Save & Publish'}</span>
           </button>
         </div>
       </div>
