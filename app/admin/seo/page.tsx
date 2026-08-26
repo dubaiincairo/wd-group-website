@@ -39,7 +39,12 @@ export default function SEOAdminPage() {
         const res = await fetch('/api/admin/content');
         if (res.ok) {
           const d = await res.json();
-          setContent(d.data);
+          if (d.data) {
+            if (!d.data.seo.google_analytics_id) {
+              d.data.seo.google_analytics_id = 'G-FVBW70B8H5';
+            }
+            setContent(d.data);
+          }
         }
       } catch (err) {
         showToast('Failed to load SEO metadata', 'error');

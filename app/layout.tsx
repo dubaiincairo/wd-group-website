@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Script from 'next/script';
 import { Inter, Noto_Kufi_Arabic, Playfair_Display, IBM_Plex_Mono } from 'next/font/google';
 import './globals.css';
 import { LanguageProvider } from '@/context/LanguageContext';
@@ -56,6 +57,20 @@ export default function RootLayout({
   return (
     <html lang="en" dir="ltr" className={`${inter.variable} ${notoKufi.variable} ${playfair.variable} ${ibmMono.variable}`}>
       <head>
+        {/* Google tag (gtag.js) */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-FVBW70B8H5"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics-gtag" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-FVBW70B8H5');
+          `}
+        </Script>
         <LanguageProvider>
           <DynamicHeadSEO />
         </LanguageProvider>

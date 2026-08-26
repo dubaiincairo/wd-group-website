@@ -263,7 +263,7 @@ function getDefaultContent() {
       twitter_handle: '@wdgroup',
       google_site_verification: '',
       bing_site_verification: '',
-      google_analytics_id: '',
+      google_analytics_id: 'G-FVBW70B8H5',
       google_tag_manager_id: '',
       robots_index: true,
       sitemap_url: 'https://wdgroup.online/sitemap.xml',
