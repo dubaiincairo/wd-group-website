@@ -21,7 +21,7 @@ export async function sendEmailWithBrevo({
   tags = ['wd-group'],
 }: SendEmailParams): Promise<{ success: boolean; messageId?: string; error?: string; simulated?: boolean }> {
   const apiKey = process.env.BREVO_API_KEY || process.env.SENDINBLUE_API_KEY;
-  const senderEmail = process.env.BREVO_SENDER_EMAIL || process.env.SMTP_FROM || 'ceo@wdgroup.online';
+  const senderEmail = process.env.BREVO_SENDER_EMAIL || process.env.SMTP_FROM || 'noreply@wdgroup.online';
   const senderName = process.env.BREVO_SENDER_NAME || 'WD Group';
 
   if (!apiKey) {
