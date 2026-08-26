@@ -19,15 +19,6 @@ import {
   ChevronDown
 } from 'lucide-react';
 
-const PROPERTY_IMAGES = [
-  'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80', // SwissBlue Hotel Jeddah
-  'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=800&q=80', // SwissBlue Residence Jeddah East
-  'https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=800&q=80', // SwissBlue Residence Jeddah West
-  'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=800&q=80', // SwissBlue Plaza Jazan
-  'https://images.unsplash.com/photo-1591088398332-8a7791972843?auto=format&fit=crop&w=800&q=80', // Vinas Riyadh Serviced Apartments
-  'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=800&q=80', // Tulip Rawda Riyadh
-];
-
 export default function HospitalityPage() {
   const { lang, dict } = useLanguage();
   const [submitted, setSubmitted] = useState(false);
@@ -142,15 +133,25 @@ export default function HospitalityPage() {
                 className="glass-card rounded-3xl p-6 border border-white/10 hover:border-sky-500/50 hover:shadow-[0_0_30px_rgba(56,189,248,0.15)] transition-all flex flex-col justify-between group bg-brand-surface/80"
               >
                 <div>
-                  <div className="relative h-44 w-full rounded-2xl overflow-hidden mb-5 border border-white/10">
-                    <Image
-                      src={(prop as any).image_url || PROPERTY_IMAGES[idx % PROPERTY_IMAGES.length]}
-                      alt={prop.name}
-                      fill
-                      sizes="(min-width: 1024px) 33vw, 100vw"
-                      className="object-cover group-hover:scale-105 transition-transform duration-700"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0F1117] via-transparent to-black/30" />
+                  <div className="relative h-44 w-full rounded-2xl overflow-hidden mb-5 border border-white/10 bg-gradient-to-br from-[#0c1a2e] via-[#091220] to-[#060a12] flex items-center justify-center">
+                    {(prop as any).image_url ? (
+                      <>
+                        <Image
+                          src={(prop as any).image_url}
+                          alt={prop.name}
+                          fill
+                          sizes="(min-width: 1024px) 33vw, 100vw"
+                          className="object-cover group-hover:scale-105 transition-transform duration-700"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#0F1117] via-transparent to-black/30" />
+                      </>
+                    ) : (
+                      <div className="relative w-full h-full flex flex-col items-center justify-center p-4 bg-[radial-gradient(#38bdf8_1px,transparent_1px)] [background-size:16px_16px] [background-opacity:0.15]">
+                        <div className="w-12 h-12 rounded-xl bg-sky-500/10 border border-sky-400/30 flex items-center justify-center text-sky-400 shadow-glow-sky group-hover:scale-110 transition-transform">
+                          <Building2 className="w-6 h-6" />
+                        </div>
+                      </div>
+                    )}
                     <span className="absolute top-3 right-3 rtl:right-auto rtl:left-3 px-2.5 py-0.5 rounded-md text-[10px] font-mono font-bold bg-black/60 text-sky-300 border border-sky-400/30 backdrop-blur-md">
                       0{idx + 1}
                     </span>

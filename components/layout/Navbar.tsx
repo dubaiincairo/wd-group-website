@@ -218,19 +218,19 @@ export default function Navbar() {
           <div className="hidden lg:flex items-center gap-3">
             <button 
               onClick={toggleLanguage}
-              className="px-3 py-2 rounded-xl text-xs font-bold text-zinc-300 hover:text-white bg-[#0F1117]/85 border border-white/10 hover:border-white/25 transition-all flex items-center gap-1.5 shadow-sm"
+              className="h-9 px-3.5 rounded-xl text-xs font-bold text-zinc-300 hover:text-white bg-[#0F1117]/85 border border-white/10 hover:border-white/25 transition-all inline-flex items-center justify-center gap-1.5 shadow-sm cursor-pointer"
               title={lang === 'ar' ? 'Switch to English' : 'التحويل للغة العربية'}
             >
-              <Globe className="w-3.5 h-3.5 text-[#C9A86A]" />
-              <span className="font-mono text-[11px]">{dict.nav.lang_toggle}</span>
+              <Globe className="w-3.5 h-3.5 text-[#C9A86A] shrink-0" />
+              <span className="font-mono text-[11px] leading-none">{dict.nav.lang_toggle}</span>
             </button>
 
             <Link 
               href="/contact"
-              className="inline-flex items-center gap-1.5 px-4.5 py-2 rounded-xl text-xs font-bold text-[#0E1A24] bg-[#C9A86A] hover:bg-[#E3C58A] shadow-glow-camel hover:scale-[1.03] active:scale-[0.98] transition-all"
+              className="h-9 px-4.5 rounded-xl text-xs font-bold text-[#0E1A24] bg-[#C9A86A] hover:bg-[#E3C58A] shadow-glow-camel hover:scale-[1.02] active:scale-[0.98] transition-all inline-flex items-center justify-center gap-2 whitespace-nowrap cursor-pointer"
             >
-              <span>{dict.nav.contactCta}</span>
-              <ArrowUpRight className="w-3.5 h-3.5 rtl:rotate-270" />
+              <span className="leading-none">{dict.nav.contactCta}</span>
+              <ArrowUpRight className="w-3.5 h-3.5 rtl:rotate-270 shrink-0" />
             </Link>
           </div>
 

@@ -6,18 +6,12 @@ import Image from 'next/image';
 import { useLanguage } from '@/context/LanguageContext';
 import { Building2, Factory, HardHat, ArrowRight, Sparkles, CheckCircle2 } from 'lucide-react';
 
-const SECTOR_PHOTOS = {
-  hospitality: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80',
-  manufacturing: 'https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=1200&q=80',
-  contracting: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80',
-};
-
 export default function SectorsHub() {
   const { lang, dict } = useLanguage();
   const mediaConfig = (dict.home as any)?.media || {};
-  const photoHospitality = mediaConfig.sector_photo_hospitality || SECTOR_PHOTOS.hospitality;
-  const photoManufacturing = mediaConfig.sector_photo_manufacturing || SECTOR_PHOTOS.manufacturing;
-  const photoContracting = mediaConfig.sector_photo_contracting || SECTOR_PHOTOS.contracting;
+  const photoHospitality = mediaConfig.sector_photo_hospitality || '';
+  const photoManufacturing = mediaConfig.sector_photo_manufacturing || '';
+  const photoContracting = mediaConfig.sector_photo_contracting || '';
 
   return (
     <section id="sectors" className="py-20 sm:py-24 bg-brand-dark text-white relative overflow-hidden bg-blueprint-grid border-t border-white/5">
@@ -50,15 +44,25 @@ export default function SectorsHub() {
           <div className="glass-card rounded-3xl p-7 flex flex-col justify-between border border-sky-500/20 hover:border-sky-400/60 hover:shadow-[0_0_35px_rgba(56,189,248,0.2)] transition-all group relative overflow-hidden">
             <div>
               {/* Card Photo Header */}
-              <div className="relative h-48 w-full rounded-2xl overflow-hidden mb-6 border border-white/10 group-hover:border-sky-500/40 transition-colors bg-zinc-900">
-                <Image
-                  src={photoHospitality}
-                  alt="SwissBlue Hospitality"
-                  fill
-                  sizes="(min-width: 1024px) 33vw, 100vw"
-                  className="object-cover group-hover:scale-105 transition-transform duration-700 block"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0F1117] via-transparent to-black/20 pointer-events-none" />
+              <div className="relative h-48 w-full rounded-2xl overflow-hidden mb-6 border border-white/10 group-hover:border-sky-500/40 transition-colors bg-gradient-to-br from-[#0c1a2e] via-[#091220] to-[#060a12] flex items-center justify-center">
+                {photoHospitality ? (
+                  <>
+                    <Image
+                      src={photoHospitality}
+                      alt="SwissBlue Hospitality"
+                      fill
+                      sizes="(min-width: 1024px) 33vw, 100vw"
+                      className="object-cover group-hover:scale-105 transition-transform duration-700 block"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0F1117] via-transparent to-black/20 pointer-events-none" />
+                  </>
+                ) : (
+                  <div className="relative w-full h-full flex flex-col items-center justify-center p-4 bg-[radial-gradient(#38bdf8_1px,transparent_1px)] [background-size:16px_16px] [background-opacity:0.15]">
+                    <div className="w-14 h-14 rounded-2xl bg-sky-500/10 border border-sky-400/30 flex items-center justify-center text-sky-400 shadow-glow-sky group-hover:scale-110 transition-transform">
+                      <Building2 className="w-7 h-7" />
+                    </div>
+                  </div>
+                )}
                 <span className="absolute top-3 left-3 rtl:left-auto rtl:right-3 px-2.5 py-1 rounded-lg text-xs font-mono font-bold bg-[#1A476A]/90 text-sky-200 backdrop-blur-md border border-sky-400/30 shadow-lg">
                   {dict.home.sectors.hospitality.proof}
                 </span>
@@ -113,15 +117,25 @@ export default function SectorsHub() {
           <div className="glass-card rounded-3xl p-7 flex flex-col justify-between border border-emerald-500/20 hover:border-emerald-400/60 hover:shadow-[0_0_35px_rgba(52,211,153,0.2)] transition-all group relative overflow-hidden">
             <div>
               {/* Card Photo Header */}
-              <div className="relative h-48 w-full rounded-2xl overflow-hidden mb-6 border border-white/10 group-hover:border-emerald-500/40 transition-colors bg-zinc-900">
-                <Image
-                  src={photoManufacturing}
-                  alt="GreenWood Manufacturing"
-                  fill
-                  sizes="(min-width: 1024px) 33vw, 100vw"
-                  className="object-cover group-hover:scale-105 transition-transform duration-700 block"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0F1117] via-transparent to-black/20 pointer-events-none" />
+              <div className="relative h-48 w-full rounded-2xl overflow-hidden mb-6 border border-white/10 group-hover:border-emerald-500/40 transition-colors bg-gradient-to-br from-[#081a14] via-[#05120e] to-[#030a08] flex items-center justify-center">
+                {photoManufacturing ? (
+                  <>
+                    <Image
+                      src={photoManufacturing}
+                      alt="GreenWood Manufacturing"
+                      fill
+                      sizes="(min-width: 1024px) 33vw, 100vw"
+                      className="object-cover group-hover:scale-105 transition-transform duration-700 block"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0F1117] via-transparent to-black/20 pointer-events-none" />
+                  </>
+                ) : (
+                  <div className="relative w-full h-full flex flex-col items-center justify-center p-4 bg-[radial-gradient(#34d399_1px,transparent_1px)] [background-size:16px_16px] [background-opacity:0.15]">
+                    <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-400/30 flex items-center justify-center text-emerald-400 shadow-glow-emerald group-hover:scale-110 transition-transform">
+                      <Factory className="w-7 h-7" />
+                    </div>
+                  </div>
+                )}
                 <span className="absolute top-3 left-3 rtl:left-auto rtl:right-3 px-2.5 py-1 rounded-lg text-xs font-mono font-bold bg-[#0B5C3D]/90 text-emerald-200 backdrop-blur-md border border-emerald-400/30 shadow-lg">
                   {dict.home.sectors.manufacturing.proof}
                 </span>
@@ -176,15 +190,25 @@ export default function SectorsHub() {
           <div className="glass-card rounded-3xl p-7 flex flex-col justify-between border border-amber-500/20 hover:border-amber-400/60 hover:shadow-[0_0_35px_rgba(251,191,36,0.2)] transition-all group relative overflow-hidden">
             <div>
               {/* Card Photo Header */}
-              <div className="relative h-48 w-full rounded-2xl overflow-hidden mb-6 border border-white/10 group-hover:border-amber-500/40 transition-colors bg-zinc-900">
-                <Image
-                  src={photoContracting}
-                  alt="WD Contracting & Projects"
-                  fill
-                  sizes="(min-width: 1024px) 33vw, 100vw"
-                  className="object-cover group-hover:scale-105 transition-transform duration-700 block"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0F1117] via-transparent to-black/20 pointer-events-none" />
+              <div className="relative h-48 w-full rounded-2xl overflow-hidden mb-6 border border-white/10 group-hover:border-amber-500/40 transition-colors bg-gradient-to-br from-[#1c1408] via-[#140e05] to-[#0a0702] flex items-center justify-center">
+                {photoContracting ? (
+                  <>
+                    <Image
+                      src={photoContracting}
+                      alt="WD Contracting & Projects"
+                      fill
+                      sizes="(min-width: 1024px) 33vw, 100vw"
+                      className="object-cover group-hover:scale-105 transition-transform duration-700 block"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0F1117] via-transparent to-black/20 pointer-events-none" />
+                  </>
+                ) : (
+                  <div className="relative w-full h-full flex flex-col items-center justify-center p-4 bg-[radial-gradient(#fbbf24_1px,transparent_1px)] [background-size:16px_16px] [background-opacity:0.15]">
+                    <div className="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-400/30 flex items-center justify-center text-amber-400 shadow-glow-gold group-hover:scale-110 transition-transform">
+                      <HardHat className="w-7 h-7" />
+                    </div>
+                  </div>
+                )}
                 <span className="absolute top-3 left-3 rtl:left-auto rtl:right-3 px-2.5 py-1 rounded-lg text-xs font-mono font-bold bg-[#8A7340]/90 text-amber-200 backdrop-blur-md border border-amber-400/30 shadow-lg">
                   {dict.home.sectors.contracting.proof}
                 </span>
