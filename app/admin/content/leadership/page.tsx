@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Save, RefreshCw, Sparkles, Quote, Award } from 'lucide-react';
+import { Save, RefreshCw, Sparkles, Quote, Award, Camera } from 'lucide-react';
 import BilingualInput from '@/components/admin/BilingualInput';
+import MediaFieldUploader from '@/components/admin/MediaFieldUploader';
 import { useToast } from '@/components/admin/ToastProvider';
 import type { SiteContentPayload } from '@/lib/admin/types';
 
@@ -95,8 +96,22 @@ export default function LeadershipEditorPage() {
       <div className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 space-y-5">
         <div className="flex items-center gap-2 text-xs font-mono font-bold text-blue-400 uppercase tracking-wider border-b border-white/10 pb-3">
           <Quote className="w-4 h-4" />
-          <span>CHIEF EXECUTIVE OFFICER STATEMENT</span>
+          <span>CHIEF EXECUTIVE OFFICER STATEMENT & PORTRAIT</span>
         </div>
+
+        <MediaFieldUploader
+          label="CEO Executive Portrait / Photo"
+          bucket="photos"
+          value={ceo.photo_url || content.home.media?.ceo_photo || ''}
+          onChange={(url) => setContent({
+            ...content,
+            home: {
+              ...content.home,
+              ceo: { ...ceo, photo_url: url },
+              media: { ...(content.home.media || {}), ceo_photo: url }
+            }
+          })}
+        />
 
         <BilingualInput
           label="CEO Official Quote / Message"

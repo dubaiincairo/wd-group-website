@@ -13,7 +13,9 @@ import {
   Users,
   Globe,
   Cpu,
-  Handshake
+  Handshake,
+  TrendingUp,
+  Layers
 } from 'lucide-react';
 
 export default function VisionMissionValues() {
@@ -42,11 +44,11 @@ export default function VisionMissionValues() {
           </h2>
         </div>
 
-        {/* Tab Navigation (Core Values First) */}
+        {/* Tab Navigation (Values First) */}
         <div className="flex justify-center mb-10 sm:mb-12">
           <div className="inline-flex p-1.5 rounded-2xl bg-[#0F1117]/90 border border-white/10 backdrop-blur-md shadow-lg">
             
-            {/* 1. Core Values Tab Button (Default & First) */}
+            {/* 1. Values Tab Button (Default & First) */}
             <button
               type="button"
               onClick={() => setActiveTab('values')}
@@ -57,7 +59,7 @@ export default function VisionMissionValues() {
               }`}
             >
               <ShieldCheck className="w-4 h-4" />
-              <span>{dict.home.identity.values_title}</span>
+              <span>{dict.home.identity.values_title || (lang === 'ar' ? 'القيم' : 'Values')}</span>
             </button>
 
             {/* 2. Vision Tab Button */}
@@ -92,9 +94,9 @@ export default function VisionMissionValues() {
         </div>
 
         {/* Tab Content Display */}
-        <div className="max-w-4xl mx-auto min-h-[300px]">
+        <div className="max-w-5xl mx-auto min-h-[300px]">
           
-          {/* ══════════ TAB 1: CORE VALUES (Current Style Preserved) ══════════ */}
+          {/* ══════════ TAB 1: VALUES ══════════ */}
           {activeTab === 'values' && (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 animate-in fade-in duration-200">
               {dict.home.identity.values.map((val, idx) => {
@@ -102,13 +104,13 @@ export default function VisionMissionValues() {
                 return (
                   <div
                     key={idx}
-                    className="p-6 rounded-2xl bg-[#0F1117]/90 border border-white/10 hover:border-blue-500/40 hover:bg-[#121622] transition-all flex items-start gap-4 group"
+                    className="p-6 rounded-2xl bg-[#0F1117]/90 border border-white/10 hover:border-[#C9A86A]/40 hover:bg-[#121622] transition-all flex items-start gap-4 group"
                   >
-                    <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/25 flex items-center justify-center text-blue-400 shrink-0 mt-0.5 group-hover:scale-105 group-hover:bg-blue-600 group-hover:text-white transition-all">
+                    <div className="w-10 h-10 rounded-xl bg-[#C9A86A]/10 border border-[#C9A86A]/25 flex items-center justify-center text-[#C9A86A] shrink-0 mt-0.5 group-hover:scale-105 group-hover:bg-[#C9A86A] group-hover:text-[#0E1A24] transition-all">
                       <Icon className="w-5 h-5" />
                     </div>
                     <div className="space-y-1">
-                      <h4 className="text-base font-bold text-white group-hover:text-blue-300 transition-colors">
+                      <h4 className="text-base font-bold text-white group-hover:text-[#E3C58A] transition-colors">
                         {val.title}
                       </h4>
                       <p className="text-xs text-zinc-400 leading-relaxed font-normal">
@@ -121,20 +123,22 @@ export default function VisionMissionValues() {
             </div>
           )}
 
-          {/* ══════════ TAB 2: VISION (Option 3: The Modular Bento) ══════════ */}
+          {/* ══════════ TAB 2: VISION (3 Balanced Cards on Right) ══════════ */}
           {activeTab === 'vision' && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5 animate-in fade-in duration-200">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5 animate-in fade-in duration-200">
               {/* Main Bento Hero Tile */}
-              <div className="md:col-span-2 p-6 sm:p-8 rounded-2xl bg-[#0F1117]/90 border border-blue-500/30 flex flex-col justify-between space-y-4 hover:border-blue-500/50 transition-colors shadow-lg">
-                <span className="text-xs font-mono text-blue-400 font-bold uppercase tracking-wider">
-                  {lang === 'ar' ? 'التوجه الاستراتيجي للرؤية' : 'VISION STRATEGIC DIRECTION'}
-                </span>
-                
-                <p className="text-base sm:text-lg font-bold text-white leading-relaxed">
-                  &ldquo;{dict.home.identity.vision_desc}&rdquo;
-                </p>
+              <div className="lg:col-span-7 p-6 sm:p-8 rounded-2xl bg-[#0F1117]/90 border border-blue-500/30 flex flex-col justify-between space-y-6 hover:border-blue-500/50 transition-colors shadow-lg">
+                <div>
+                  <span className="text-xs font-mono text-blue-400 font-bold uppercase tracking-wider block mb-4">
+                    {lang === 'ar' ? 'التوجه الاستراتيجي للرؤية' : 'VISION STRATEGIC DIRECTION'}
+                  </span>
+                  
+                  <p className="text-base sm:text-lg lg:text-xl font-bold text-white leading-relaxed">
+                    &ldquo;{dict.home.identity.vision_desc}&rdquo;
+                  </p>
+                </div>
 
-                <div className="flex items-center gap-3 text-xs text-zinc-400 font-mono flex-wrap pt-2 border-t border-white/5">
+                <div className="flex items-center gap-3 text-xs text-zinc-400 font-mono flex-wrap pt-4 border-t border-white/10">
                   <span className="px-2.5 py-1 rounded-md bg-blue-500/10 text-blue-400 border border-blue-500/20 font-bold">
                     {lang === 'ar' ? 'رؤية المملكة 2030' : 'Saudi Vision 2030'}
                   </span>
@@ -142,10 +146,11 @@ export default function VisionMissionValues() {
                 </div>
               </div>
 
-              {/* Side Stacked Metric & Focus Badges */}
-              <div className="space-y-4 flex flex-col justify-between">
-                <div className="p-4 sm:p-5 rounded-xl bg-[#141721] border border-white/10 flex items-center gap-3.5 hover:border-emerald-500/30 transition-colors">
-                  <div className="w-9 h-9 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center shrink-0">
+              {/* Side Stacked 3 Balanced Focus Badges */}
+              <div className="lg:col-span-5 flex flex-col gap-3 justify-between">
+                {/* 1. National Alignment */}
+                <div className="p-4 rounded-xl bg-[#141721] border border-white/10 flex items-center gap-3.5 hover:border-emerald-500/30 transition-colors flex-1">
+                  <div className="w-10 h-10 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center shrink-0">
                     <Sparkles className="w-4 h-4" />
                   </div>
                   <div>
@@ -158,8 +163,24 @@ export default function VisionMissionValues() {
                   </div>
                 </div>
 
-                <div className="p-4 sm:p-5 rounded-xl bg-[#141721] border border-white/10 flex items-center gap-3.5 hover:border-cyan-500/30 transition-colors">
-                  <div className="w-9 h-9 rounded-lg bg-cyan-500/10 text-cyan-400 flex items-center justify-center shrink-0">
+                {/* 2. Sustainable Economic Growth */}
+                <div className="p-4 rounded-xl bg-[#141721] border border-white/10 flex items-center gap-3.5 hover:border-[#C9A86A]/30 transition-colors flex-1">
+                  <div className="w-10 h-10 rounded-lg bg-[#C9A86A]/10 text-[#C9A86A] flex items-center justify-center shrink-0">
+                    <TrendingUp className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <span className="text-xs sm:text-sm font-bold text-white block">
+                      {lang === 'ar' ? 'الاستدامة الاقتصادية' : 'Sustainable Growth'}
+                    </span>
+                    <span className="text-[11px] text-zinc-400">
+                      {lang === 'ar' ? 'خلق قيمة تشغيلية واستثمارية مستمرة' : 'Long-term value creation & asset growth'}
+                    </span>
+                  </div>
+                </div>
+
+                {/* 3. Regional Expansion */}
+                <div className="p-4 rounded-xl bg-[#141721] border border-white/10 flex items-center gap-3.5 hover:border-cyan-500/30 transition-colors flex-1">
+                  <div className="w-10 h-10 rounded-lg bg-cyan-500/10 text-cyan-400 flex items-center justify-center shrink-0">
                     <Globe className="w-4 h-4" />
                   </div>
                   <div>
@@ -175,20 +196,22 @@ export default function VisionMissionValues() {
             </div>
           )}
 
-          {/* ══════════ TAB 3: MISSION (Option 3: The Modular Bento) ══════════ */}
+          {/* ══════════ TAB 3: MISSION (3 Balanced Cards on Right) ══════════ */}
           {activeTab === 'mission' && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5 animate-in fade-in duration-200">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5 animate-in fade-in duration-200">
               {/* Main Bento Hero Tile */}
-              <div className="md:col-span-2 p-6 sm:p-8 rounded-2xl bg-[#0F1117]/90 border border-indigo-500/30 flex flex-col justify-between space-y-4 hover:border-indigo-500/50 transition-colors shadow-lg">
-                <span className="text-xs font-mono text-indigo-400 font-bold uppercase tracking-wider">
-                  {lang === 'ar' ? 'المنطلقات التشغيلية للرسالة' : 'MISSION OPERATIONAL MANDATE'}
-                </span>
-                
-                <p className="text-base sm:text-lg font-bold text-white leading-relaxed">
-                  &ldquo;{dict.home.identity.mission_desc}&rdquo;
-                </p>
+              <div className="lg:col-span-7 p-6 sm:p-8 rounded-2xl bg-[#0F1117]/90 border border-indigo-500/30 flex flex-col justify-between space-y-6 hover:border-indigo-500/50 transition-colors shadow-lg">
+                <div>
+                  <span className="text-xs font-mono text-indigo-400 font-bold uppercase tracking-wider block mb-4">
+                    {lang === 'ar' ? 'المنطلقات التشغيلية للرسالة' : 'MISSION OPERATIONAL MANDATE'}
+                  </span>
+                  
+                  <p className="text-base sm:text-lg lg:text-xl font-bold text-white leading-relaxed">
+                    &ldquo;{dict.home.identity.mission_desc}&rdquo;
+                  </p>
+                </div>
 
-                <div className="flex items-center gap-3 text-xs text-zinc-400 font-mono flex-wrap pt-2 border-t border-white/5">
+                <div className="flex items-center gap-3 text-xs text-zinc-400 font-mono flex-wrap pt-4 border-t border-white/10">
                   <span className="px-2.5 py-1 rounded-md bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 font-bold">
                     {lang === 'ar' ? 'تنفيذ متكامل ودقيق' : 'Turnkey Precision'}
                   </span>
@@ -196,10 +219,11 @@ export default function VisionMissionValues() {
                 </div>
               </div>
 
-              {/* Side Stacked Metric & Focus Badges */}
-              <div className="space-y-4 flex flex-col justify-between">
-                <div className="p-4 sm:p-5 rounded-xl bg-[#141721] border border-white/10 flex items-center gap-3.5 hover:border-purple-500/30 transition-colors">
-                  <div className="w-9 h-9 rounded-lg bg-purple-500/10 text-purple-400 flex items-center justify-center shrink-0">
+              {/* Side Stacked 3 Balanced Focus Badges */}
+              <div className="lg:col-span-5 flex flex-col gap-3 justify-between">
+                {/* 1. Industrial Modernity */}
+                <div className="p-4 rounded-xl bg-[#141721] border border-white/10 flex items-center gap-3.5 hover:border-purple-500/30 transition-colors flex-1">
+                  <div className="w-10 h-10 rounded-lg bg-purple-500/10 text-purple-400 flex items-center justify-center shrink-0">
                     <Cpu className="w-4 h-4" />
                   </div>
                   <div>
@@ -212,13 +236,29 @@ export default function VisionMissionValues() {
                   </div>
                 </div>
 
-                <div className="p-4 sm:p-5 rounded-xl bg-[#141721] border border-white/10 flex items-center gap-3.5 hover:border-pink-500/30 transition-colors">
-                  <div className="w-9 h-9 rounded-lg bg-pink-500/10 text-pink-400 flex items-center justify-center shrink-0">
+                {/* 2. Execution & Handover Precision */}
+                <div className="p-4 rounded-xl bg-[#141721] border border-white/10 flex items-center gap-3.5 hover:border-amber-500/30 transition-colors flex-1">
+                  <div className="w-10 h-10 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center shrink-0">
+                    <Layers className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <span className="text-xs sm:text-sm font-bold text-white block">
+                      {lang === 'ar' ? 'جودة وتكامل التنفيذ' : 'Execution Precision'}
+                    </span>
+                    <span className="text-[11px] text-zinc-400">
+                      {lang === 'ar' ? 'تسليم شامل وفق أدق المواصفات' : 'Turnkey handover to strict specifications'}
+                    </span>
+                  </div>
+                </div>
+
+                {/* 3. Institutional Trust */}
+                <div className="p-4 rounded-xl bg-[#141721] border border-white/10 flex items-center gap-3.5 hover:border-pink-500/30 transition-colors flex-1">
+                  <div className="w-10 h-10 rounded-lg bg-pink-500/10 text-pink-400 flex items-center justify-center shrink-0">
                     <Handshake className="w-4 h-4" />
                   </div>
                   <div>
                     <span className="text-xs sm:text-sm font-bold text-white block">
-                      {lang === 'ar' ? 'موثوقية مؤسسية' : 'Institutional Trust'}
+                      {lang === 'ar' ? 'موثوقية وشراكة مؤسسية' : 'Institutional Trust'}
                     </span>
                     <span className="text-[11px] text-zinc-400">
                       {lang === 'ar' ? 'التزام تام بأعلى معايير التسليم' : 'Reliable Client Handover'}

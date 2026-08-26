@@ -142,6 +142,7 @@ export interface SiteContentPayload {
       sector_photo_hospitality?: string;
       sector_photo_manufacturing?: string;
       sector_photo_contracting?: string;
+      ceo_photo?: string;
     };
     metrics: {
       stat1_num: string;
@@ -216,6 +217,7 @@ export interface SiteContentPayload {
       name_ar: string;
       title_en: string;
       title_ar: string;
+      photo_url?: string;
     };
     partnership?: {
       label_en?: string;
@@ -232,6 +234,7 @@ export interface SiteContentPayload {
   };
   about: {
     hero_image?: string;
+    story_image?: string;
     story_heading_en: string;
     story_heading_ar: string;
     story_body_en: string;

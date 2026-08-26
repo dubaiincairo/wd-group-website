@@ -131,6 +131,7 @@ function getDefaultContent() {
         name_ar: ar.home.ceo.name,
         title_en: en.home.ceo.title,
         title_ar: ar.home.ceo.title,
+        photo_url: '',
       },
       partnership: {
         label_en: en.home.partnership.label,
@@ -147,6 +148,7 @@ function getDefaultContent() {
     },
     about: {
       hero_image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=2400&q=85',
+      story_image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=1200&q=80',
       story_heading_en: en.about.story.heading,
       story_heading_ar: ar.about.story.heading,
       story_body_en: en.about.story.body,

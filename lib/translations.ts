@@ -119,7 +119,7 @@ export const translations = {
         vision_desc: "To be a leading Saudi business group contributing to a diversified and sustainable national economy, while expanding our regional and international presence through quality and continuous innovation, in line with Saudi Vision 2030.",
         mission_title: "Mission",
         mission_desc: "To deliver high-quality products and services across hospitality, manufacturing, and contracting, supported by qualified talent and modern technology to create lasting value for our clients and partners.",
-        values_title: "Core Values",
+        values_title: "Values",
         values: [
           { title: "Quality & Excellence", desc: "Highest standards across all processes and deliverables." },
           { title: "Continuous Innovation", desc: "Evolving techniques, manufacturing, and hospitality solutions." },
@@ -127,11 +127,52 @@ export const translations = {
           { title: "National & Social Responsibility", desc: "Supporting Saudi talent, community progress, and sustainability." }
         ]
       },
+      brands: {
+        label: "Our Portfolio Brands",
+        heading: "Brands & Companies We Own & Operate",
+        intro: "A distinguished portfolio of specialized brands delivering excellence in hospitality, contracting, and interior manufacturing.",
+        swissblue: {
+          name: "SwissBlue",
+          fullName: "SwissBlue Hotels & Resorts",
+          type: "Hospitality Brand",
+          desc: "Luxury Hotel & Hospitality Brand with 6 Prime Properties across Saudi Arabia",
+          link: "/sectors/hospitality",
+        },
+        vinas: {
+          name: "Vinas",
+          fullName: "Vinas Hotel & Suites",
+          type: "Hospitality Brand",
+          desc: "Premium Furnished Suites & Serviced Residences in Jeddah",
+          link: "/sectors/hospitality",
+        },
+        tulip: {
+          name: "Tulip",
+          fullName: "Tulip Suites",
+          type: "Hospitality Brand",
+          desc: "Boutique Hospitality & Hotel Suites in Najran",
+          link: "/sectors/hospitality",
+        },
+        watandesign: {
+          name: "WatanDesign",
+          fullName: "Watan Designs Ltd.",
+          type: "Contracting & Engineering",
+          desc: "Turnkey Contracting, Engineering & Specialized Interior Fit-Out",
+          link: "/sectors/contracting",
+        },
+        greenwood: {
+          name: "GreenWood",
+          fullName: "GreenWood Manufacturing",
+          type: "Manufacturing & Furniture",
+          desc: "3 Advanced Industrial Factories for Woodwork, Metal & Furniture",
+          link: "/sectors/manufacturing",
+        },
+      },
       ceo: {
         label: "Leadership",
         quote: "“We believe true success is measured by the impact we make on our employees, our clients, and our community. We began with a simple ambition: to build a Saudi institution that future generations will be proud of.”",
         name: "Eng. Mohammed Ali Saleh Al-Shaibani",
         title: "Chief Executive Officer",
+        photo_url: "",
       },
       partnership: {
         label: "Connect with WD Group",
@@ -558,7 +599,7 @@ export const translations = {
         vision_desc: "أن نكون مجموعة سعودية رائدة تُسهم في بناء اقتصاد وطني متنوع ومستدام، وتوسّع حضورها إقليميًا ودوليًا من خلال الجودة والابتكار المستمر، بما ينسجم مع مستهدفات رؤية المملكة 2030.",
         mission_title: "الرسالة",
         mission_desc: "تقديم منتجات وخدمات عالية الجودة في قطاعات الضيافة والتصنيع والمقاولات، بكفاءات مؤهلة وتقنيات حديثة تحقق قيمة مستدامة لعملائنا وشركائنا.",
-        values_title: "القيم المؤسسية",
+        values_title: "القيم",
         values: [
           { title: "الجودة والتميز", desc: "تطبيق أعلى معايير الجودة في جميع العمليات والمنتجات." },
           { title: "الابتكار المستمر", desc: "تطوير مستمر لأساليب العمل وحلول التصنيع والضيافة." },
@@ -566,11 +607,52 @@ export const translations = {
           { title: "المسؤولية الوطنية والمجتمعية", desc: "المساهمة في تنمية المجتمع ودعم الكوادر الوطنية وحماية البيئة." }
         ]
       },
+      brands: {
+        label: "علاماتنا وشركاتنا التابعة",
+        heading: "العلامات والمنشآت التجارية المملوكة للمجموعة",
+        intro: "منظومة متكاملة من العلامات التجارية الرائدة في قطاعات الضيافة والمقاولات والتصنيع المتخصص.",
+        swissblue: {
+          name: "SwissBlue",
+          fullName: "فنادق ومنتجعات سويس بلو",
+          type: "قطاع الضيافة",
+          desc: "علامة الضيافة الفندقية الرائدة بـ 6 منشآت راقية في المملكة",
+          link: "/sectors/hospitality",
+        },
+        vinas: {
+          name: "Vinas",
+          fullName: "فندق وأجنحة فيناس",
+          type: "قطاع الضيافة",
+          desc: "أجنحة فندقية وإقامة عصرية متميزة في مدينة جدة",
+          link: "/sectors/hospitality",
+        },
+        tulip: {
+          name: "Tulip",
+          fullName: "أجنحة توليب الفندقية",
+          type: "قطاع الضيافة",
+          desc: "أجنحة ووحدات ضيافة بوتيكية فاخرة في منطقة نجران",
+          link: "/sectors/hospitality",
+        },
+        watandesign: {
+          name: "WatanDesign",
+          fullName: "شركة تصاميم الوطن المحدودة",
+          type: "المقاولات والهندسة والتجهيز",
+          desc: "المقاولات المتكاملة والتجهيز الداخلي والهندسي للمشاريع",
+          link: "/sectors/contracting",
+        },
+        greenwood: {
+          name: "GreenWood",
+          fullName: "مصانع جرين وود الوطنية",
+          type: "التصنيع والأثاث",
+          desc: "3 مصانع متخصصة في الأخشاب والمعادن والأثاث الراقي",
+          link: "/sectors/manufacturing",
+        },
+      },
       ceo: {
         label: "القيادة",
         quote: "«نؤمن أن النجاح الحقيقي يُقاس بالأثر الذي نتركه في موظفينا وعملائنا ومجتمعنا. انطلقنا بطموح بسيط: أن نبني مؤسسة وطنية تفخر بها الأجيال القادمة.»",
         name: "المهندس محمد علي صالح الشيباني",
         title: "المدير التنفيذي",
+        photo_url: "",
       },
       partnership: {
         label: "تواصل مع مجموعة دبليو دي",

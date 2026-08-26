@@ -496,9 +496,23 @@ export default function PagesContentEditor() {
           <div className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 space-y-5">
             <div className="flex items-center justify-between border-b border-white/10 pb-3">
               <span className="text-xs font-mono font-bold text-[#C9A86A] uppercase tracking-wider">
-                07. CEO LEADERSHIP QUOTE & GOVERNANCE
+                07. CEO LEADERSHIP QUOTE, PORTRAIT & GOVERNANCE
               </span>
             </div>
+
+            <MediaFieldUploader
+              label="CEO Executive Portrait / Photo"
+              bucket="photos"
+              value={content.home.ceo.photo_url || content.home.media?.ceo_photo || ''}
+              onChange={(url) => setContent({
+                ...content,
+                home: {
+                  ...content.home,
+                  ceo: { ...content.home.ceo, photo_url: url },
+                  media: { ...(content.home.media || {}), ceo_photo: url }
+                }
+              })}
+            />
 
             <BilingualInput
               label="Quote Statement"
@@ -591,6 +605,13 @@ export default function PagesContentEditor() {
               bucket="photos"
               value={content.about.hero_image || 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=2400&q=85'}
               onChange={(url) => setContent({ ...content, about: { ...content.about, hero_image: url } })}
+            />
+
+            <MediaFieldUploader
+              label="About Us Heritage & Story Photo"
+              bucket="photos"
+              value={content.about.story_image || 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=1200&q=80'}
+              onChange={(url) => setContent({ ...content, about: { ...content.about, story_image: url } })}
             />
 
             <BilingualInput

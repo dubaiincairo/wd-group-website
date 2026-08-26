@@ -19,13 +19,24 @@ export default function CEOQuote() {
           
           <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12">
             
-            {/* CEO Avatar / Executive Crest */}
+            {/* CEO Avatar / Portrait Photo */}
             <div className="shrink-0 relative">
-              <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-full bg-gradient-to-br from-[#E3C58A]/40 via-[#C9A86A]/20 to-[#A4884F]/40 p-1 shadow-glow-camel border border-[#C9A86A]/40 flex items-center justify-center">
-                <div className="w-full h-full rounded-full bg-[#08090C] flex flex-col items-center justify-center text-center p-3 border border-white/10">
-                  <span className="text-2xl sm:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#E3C58A] to-[#C9A86A] font-mono tracking-tight">WD</span>
-                  <span className="text-[9px] font-mono text-zinc-400 uppercase tracking-widest mt-0.5 font-bold">LEADERSHIP</span>
-                </div>
+              <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-full bg-gradient-to-br from-[#E3C58A] via-[#C9A86A] to-[#8A7340] p-1 shadow-glow-camel border border-[#C9A86A]/40 flex items-center justify-center overflow-hidden">
+                {((dict.home.ceo as any).photo_url || (dict.home.media as any)?.ceo_photo) ? (
+                  <div className="relative w-full h-full rounded-full overflow-hidden">
+                    <Image 
+                      src={(dict.home.ceo as any).photo_url || (dict.home.media as any)?.ceo_photo} 
+                      alt={dict.home.ceo.name} 
+                      fill 
+                      className="object-cover" 
+                    />
+                  </div>
+                ) : (
+                  <div className="w-full h-full rounded-full bg-[#08090C] flex flex-col items-center justify-center text-center p-3 border border-white/10">
+                    <span className="text-2xl sm:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#E3C58A] to-[#C9A86A] font-mono tracking-tight">WD</span>
+                    <span className="text-[9px] font-mono text-zinc-400 uppercase tracking-widest mt-0.5 font-bold">LEADERSHIP</span>
+                  </div>
+                )}
               </div>
               <div className="absolute -bottom-1.5 -right-1.5 rtl:-right-auto rtl:-left-1.5 w-9 h-9 rounded-full bg-[#C9A86A] border-2 border-[#0F1117] flex items-center justify-center text-[#0E1A24] shadow-glow-camel font-bold">
                 <ShieldCheck className="w-4 h-4" />

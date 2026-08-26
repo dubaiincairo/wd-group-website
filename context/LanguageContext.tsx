@@ -153,6 +153,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
           quote: (isAr ? c.home?.ceo?.quote_ar : c.home?.ceo?.quote_en) || baseDict.home.ceo.quote,
           name: (isAr ? c.home?.ceo?.name_ar : c.home?.ceo?.name_en) || baseDict.home.ceo.name,
           title: (isAr ? c.home?.ceo?.title_ar : c.home?.ceo?.title_en) || baseDict.home.ceo.title,
+          photo_url: c.home?.ceo?.photo_url || c.home?.media?.ceo_photo || (baseDict.home.ceo as any)?.photo_url || '',
         },
         partnership: {
           ...baseDict.home.partnership,
