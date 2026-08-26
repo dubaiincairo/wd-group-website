@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Settings, Save, RefreshCw, Building, Phone, Mail, AlertTriangle } from 'lucide-react';
+import { Settings, Save, RefreshCw, Building, Phone, Mail, AlertTriangle, Wrench } from 'lucide-react';
 import BilingualInput from '@/components/admin/BilingualInput';
 import { useToast } from '@/components/admin/ToastProvider';
 import type { SiteContentPayload } from '@/lib/admin/types';
@@ -195,6 +195,86 @@ export default function GlobalSettingsAdminPage() {
               className="w-full bg-[#08090C] border border-white/15 rounded-xl px-4 py-2.5 text-xs font-mono text-white focus:outline-none focus:border-blue-500"
             />
           </div>
+        </div>
+
+        {/* 3. Platform Maintenance Mode Control */}
+        <div className={`col-span-1 md:col-span-2 rounded-3xl p-6 space-y-5 border transition-all shadow-xl ${
+          s.maintenance_mode_enabled 
+            ? 'bg-amber-950/20 border-amber-500/40 shadow-amber-950/30' 
+            : 'bg-[#0F1117]/90 border-white/10'
+        }`}>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-4">
+            <div className="flex items-center gap-3">
+              <div className={`w-10 h-10 rounded-2xl flex items-center justify-center ${
+                s.maintenance_mode_enabled ? 'bg-amber-500/20 text-amber-400' : 'bg-white/5 text-zinc-400'
+              }`}>
+                <Wrench className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                  <span>Public Maintenance & Launching Soon Mode</span>
+                  {s.maintenance_mode_enabled ? (
+                    <span className="text-[10px] bg-amber-500/20 border border-amber-500/30 text-amber-300 font-mono px-2 py-0.5 rounded-full font-bold">
+                      ACTIVE · PUBLIC SITE HIDDEN
+                    </span>
+                  ) : (
+                    <span className="text-[10px] bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 font-mono px-2 py-0.5 rounded-full font-bold">
+                      DISABLED · PUBLIC SITE LIVE
+                    </span>
+                  )}
+                </h3>
+                <p className="text-xs text-zinc-400 mt-0.5">
+                  When active, public visitors to wdgroup.online see the luxury Maintenance screen. Staff can always access /admin.
+                </p>
+              </div>
+            </div>
+
+            {/* Main Switch */}
+            <label className="relative inline-flex items-center cursor-pointer shrink-0">
+              <input
+                type="checkbox"
+                checked={s.maintenance_mode_enabled || false}
+                onChange={(e) => setContent({ ...content, settings: { ...s, maintenance_mode_enabled: e.target.checked } })}
+                className="sr-only peer"
+              />
+              <div className="w-14 h-7 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-amber-600"></div>
+            </label>
+          </div>
+
+          {s.maintenance_mode_enabled && (
+            <div className="space-y-4 pt-2 animate-in fade-in duration-200">
+              <BilingualInput
+                label="Maintenance Headline"
+                description="Displayed prominently above the message"
+                valueEn={s.maintenance_headline_en || 'Platform Under Scheduled Maintenance'}
+                valueAr={s.maintenance_headline_ar || 'المنصة تحت الصيانة والتطوير'}
+                onChangeEn={(v) => setContent({ ...content, settings: { ...s, maintenance_headline_en: v } })}
+                onChangeAr={(v) => setContent({ ...content, settings: { ...s, maintenance_headline_ar: v } })}
+              />
+
+              <BilingualInput
+                label="Maintenance Message / Notice"
+                description="Paragraph explaining the upgrade"
+                isTextarea
+                rows={2}
+                valueEn={s.maintenance_message_en || 'We are currently preparing and upgrading the official digital platform for WD Group. We look forward to welcoming you soon.'}
+                valueAr={s.maintenance_message_ar || 'نعمل حالياً على تطوير وتجهيز المنصة الرقمية الرسمية لمجموعة دبليو دي للأعمال. سنكون معكم قريباً بحلتنا الجديدة.'}
+                onChangeEn={(v) => setContent({ ...content, settings: { ...s, maintenance_message_en: v } })}
+                onChangeAr={(v) => setContent({ ...content, settings: { ...s, maintenance_message_ar: v } })}
+              />
+
+              <div className="space-y-1.5 max-w-xs">
+                <label className="text-xs font-bold text-zinc-300">Estimated Launch / Return Date</label>
+                <input
+                  type="text"
+                  value={s.maintenance_estimated_date || 'Q3 2026'}
+                  onChange={(e) => setContent({ ...content, settings: { ...s, maintenance_estimated_date: e.target.value } })}
+                  placeholder="e.g. Q3 2026 or September 2026"
+                  className="w-full bg-[#08090C] border border-white/15 rounded-xl px-4 py-2 text-xs font-mono text-white focus:outline-none focus:border-amber-500"
+                />
+              </div>
+            </div>
+          )}
         </div>
 
       </div>

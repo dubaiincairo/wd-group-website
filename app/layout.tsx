@@ -7,6 +7,8 @@ import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import LiveEditorDock from '@/components/live-editor/LiveEditorDock';
 
+import MaintenanceGate from '@/components/layout/MaintenanceGate';
+
 const inter = Inter({
   subsets: ['latin'],
   display: 'swap',
@@ -42,12 +44,14 @@ export default function RootLayout({
       <body className="bg-[#08090C] text-[#F8FAFC] min-h-screen flex flex-col font-sans selection:bg-blue-600 selection:text-white antialiased">
         <LanguageProvider>
           <ToastProvider>
-            <Navbar />
-            <main className="flex-grow">
-              {children}
-            </main>
-            <Footer />
-            <LiveEditorDock />
+            <MaintenanceGate>
+              <Navbar />
+              <main className="flex-grow">
+                {children}
+              </main>
+              <Footer />
+              <LiveEditorDock />
+            </MaintenanceGate>
           </ToastProvider>
         </LanguageProvider>
       </body>

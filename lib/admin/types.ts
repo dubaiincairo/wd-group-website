@@ -250,6 +250,12 @@ export interface SiteContentPayload {
     emergency_notice_enabled: boolean;
     emergency_notice_ar?: string;
     emergency_notice_en?: string;
+    maintenance_mode_enabled?: boolean;
+    maintenance_headline_ar?: string;
+    maintenance_headline_en?: string;
+    maintenance_message_ar?: string;
+    maintenance_message_en?: string;
+    maintenance_estimated_date?: string;
   };
   seo: {
     global_title_en: string;
@@ -261,3 +267,5 @@ export interface SiteContentPayload {
   };
   version: number;
 }
+
+export type SiteSettings = SiteContentPayload['settings'];

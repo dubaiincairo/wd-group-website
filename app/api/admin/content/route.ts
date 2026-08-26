@@ -171,6 +171,12 @@ function getDefaultContent() {
       emergency_notice_enabled: false,
       emergency_notice_ar: '',
       emergency_notice_en: '',
+      maintenance_mode_enabled: true,
+      maintenance_headline_ar: 'المنصة تحت الصيانة والتطوير',
+      maintenance_headline_en: 'Platform Under Scheduled Maintenance',
+      maintenance_message_ar: 'نعمل حالياً على تطوير وتجهيز المنصة الرقمية لمجموعة دبليو دي للأعمال. سنكون معكم قريباً.',
+      maintenance_message_en: 'We are currently preparing the new digital platform for WD Group. We look forward to launching soon.',
+      maintenance_estimated_date: 'Q3 2026',
     },
     seo: {
       global_title_en: 'WD Group | Integrated Hospitality, Manufacturing & Contracting',
