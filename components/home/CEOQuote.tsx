@@ -21,27 +21,27 @@ export default function CEOQuote() {
           
           <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12">
             
-            {/* CEO Avatar / Portrait Photo — Strict 1:1 Square */}
+            {/* CEO Avatar / Executive Crest */}
             <div className="shrink-0 relative">
-              <div className="w-32 h-32 sm:w-40 sm:h-40 aspect-square rounded-3xl bg-gradient-to-br from-[#E3C58A] via-[#C9A86A] to-[#8A7340] p-1 shadow-glow-camel border border-[#C9A86A]/40 flex items-center justify-center overflow-hidden shrink-0">
+              <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-full bg-gradient-to-br from-[#E3C58A] via-[#C9A86A] to-[#8A7340] p-1 shadow-glow-camel border border-[#C9A86A]/40 flex items-center justify-center overflow-hidden shrink-0">
                 {ceoPhoto ? (
-                  <div className="relative w-full h-full rounded-[22px] overflow-hidden aspect-square">
+                  <div className="relative w-full h-full rounded-full overflow-hidden">
                     <Image 
                       src={ceoPhoto} 
                       alt={dict.home.ceo.name} 
                       fill 
-                      sizes="(max-width: 640px) 128px, 160px"
-                      className="object-cover object-top" 
+                      sizes="(max-width: 640px) 112px, 144px"
+                      className="object-cover" 
                     />
                   </div>
                 ) : (
-                  <div className="w-full h-full rounded-[22px] bg-[#08090C] flex flex-col items-center justify-center text-center p-3 border border-white/10 aspect-square">
+                  <div className="w-full h-full rounded-full bg-[#08090C] flex flex-col items-center justify-center text-center p-3 border border-white/10">
                     <span className="text-2xl sm:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#E3C58A] to-[#C9A86A] font-mono tracking-tight">WD</span>
                     <span className="text-[9px] font-mono text-zinc-400 uppercase tracking-widest mt-0.5 font-bold">LEADERSHIP</span>
                   </div>
                 )}
               </div>
-              <div className="absolute -bottom-2 -right-2 rtl:-right-auto rtl:-left-2 w-9 h-9 rounded-full bg-[#C9A86A] border-2 border-[#0F1117] flex items-center justify-center text-[#0E1A24] shadow-glow-camel font-bold">
+              <div className="absolute -bottom-1.5 -right-1.5 rtl:-right-auto rtl:-left-1.5 w-9 h-9 rounded-full bg-[#C9A86A] border-2 border-[#0F1117] flex items-center justify-center text-[#0E1A24] shadow-glow-camel font-bold">
                 <ShieldCheck className="w-4 h-4" />
               </div>
             </div>
