@@ -256,6 +256,8 @@ export default function LiveEditorDock() {
   const pathname = usePathname();
   const { lang, setLanguage, setDynamicContent } = useLanguage();
 
+  const isAr = lang === 'ar';
+
   const [isMinimized, setIsMinimized] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
@@ -506,7 +508,7 @@ export default function LiveEditorDock() {
 
   // Discard local changes and revert
   const handleDiscard = async () => {
-    if (!confirm(lang === 'ar' ? 'هل أنت متأكد من التراجع عن جميع التعديلات غير المحفوظة؟' : 'Are you sure you want to discard unsaved edits?')) {
+    if (!confirm(isAr ? 'هل أنت متأكد من التراجع عن جميع التعديلات غير المحفوظة؟' : 'Are you sure you want to discard unsaved edits?')) {
       return;
     }
     setSaving(true);
@@ -530,18 +532,19 @@ export default function LiveEditorDock() {
     }
   };
 
+  // Single word main labels per tab
   const PAGE_OPTIONS = [
-    { id: 'home', label: lang === 'ar' ? 'الرئيسية' : 'Home', icon: Home },
-    { id: 'about', label: lang === 'ar' ? 'عنّا' : 'About', icon: Info },
-    { id: 'hospitality', label: lang === 'ar' ? 'الضيافة' : 'Hospitality', icon: Building2 },
-    { id: 'manufacturing', label: lang === 'ar' ? 'التصنيع' : 'Manufacturing', icon: Factory },
-    { id: 'contracting', label: lang === 'ar' ? 'المقاولات' : 'Contracting', icon: HardHat },
-    { id: 'careers', label: lang === 'ar' ? 'الوظائف' : 'Careers', icon: Briefcase },
-    { id: 'contact', label: lang === 'ar' ? 'تواصل' : 'Contact', icon: Mail },
+    { id: 'home', label: isAr ? 'الرئيسية' : 'Home', icon: Home },
+    { id: 'about', label: isAr ? 'عنّا' : 'About', icon: Info },
+    { id: 'hospitality', label: isAr ? 'الضيافة' : 'Hospitality', icon: Building2 },
+    { id: 'manufacturing', label: isAr ? 'التصنيع' : 'Manufacturing', icon: Factory },
+    { id: 'contracting', label: isAr ? 'المقاولات' : 'Contracting', icon: HardHat },
+    { id: 'careers', label: isAr ? 'الوظائف' : 'Careers', icon: Briefcase },
+    { id: 'contact', label: isAr ? 'تواصل' : 'Contact', icon: Mail },
   ];
 
   return (
-    <div className="fixed bottom-5 inset-x-0 z-50 pointer-events-none flex justify-center px-4">
+    <div dir={isAr ? 'rtl' : 'ltr'} lang={lang} className="fixed bottom-5 inset-x-0 z-50 pointer-events-none flex justify-center px-4">
       
       {/* Minimized Floating Launcher Badge */}
       {isMinimized ? (
@@ -549,7 +552,7 @@ export default function LiveEditorDock() {
           type="button"
           onClick={() => setIsMinimized(false)}
           className="pointer-events-auto group inline-flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-[#0F1117]/95 hover:bg-[#151922] text-white border border-blue-500/40 hover:border-blue-400 shadow-[0_0_25px_rgba(37,99,235,0.4)] backdrop-blur-2xl transition-all transform hover:scale-105 active:scale-95 cursor-pointer"
-          title="Open Live On-Page Visual Editor"
+          title={isAr ? 'فتح محرر النصوص المباشر' : 'Open Live On-Page Visual Editor'}
         >
           <span className="relative flex h-2.5 w-2.5">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
@@ -557,11 +560,11 @@ export default function LiveEditorDock() {
           </span>
           <Edit3 className="w-4 h-4 text-blue-400 group-hover:rotate-12 transition-transform" />
           <span className="text-xs font-bold tracking-wide">
-            {lang === 'ar' ? 'المحرر المباشر' : 'Live Visual Editor'}
+            {isAr ? 'المحرر المباشر' : 'Live Visual Editor'}
           </span>
           {hasUnsavedChanges && (
             <span className="text-[10px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full border border-amber-500/30 font-mono font-bold">
-              {lang === 'ar' ? 'تعديلات غير محفوظة' : 'Unsaved'}
+              {isAr ? 'تعديلات غير محفوظة' : 'Unsaved'}
             </span>
           )}
         </button>
@@ -572,20 +575,20 @@ export default function LiveEditorDock() {
           {/* Header Action Bar */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-3">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl bg-blue-500/20 border border-blue-400/40 flex items-center justify-center text-blue-400">
+              <div className="w-8 h-8 rounded-xl bg-blue-500/20 border border-blue-400/40 flex items-center justify-center text-blue-400 shrink-0">
                 <Edit3 className="w-4 h-4" />
               </div>
               <div>
                 <div className="flex items-center gap-2">
                   <h4 className="text-xs sm:text-sm font-bold text-white tracking-tight">
-                    {lang === 'ar' ? 'محرر النصوص المباشر' : 'Live On-Page Visual Editor'}
+                    {isAr ? 'محرر النصوص المباشر' : 'Live On-Page Visual Editor'}
                   </h4>
-                  <span className="text-[9px] font-mono font-bold px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30">
+                  <span className="text-[9px] font-mono font-bold px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30" dir="ltr">
                     MATCHING URL: {pathname || '/'}
                   </span>
                 </div>
                 <p className="text-[11px] text-zinc-400">
-                  {lang === 'ar' ? 'التعديلات تنعكس فوراً أثناء الكتابة وتُحفظ مباشرة في قاعدة البيانات' : 'Type to preview live and sync directly with the live database'}
+                  {isAr ? 'التعديلات تنعكس فوراً أثناء الكتابة وتُحفظ مباشرة في قاعدة البيانات' : 'Type to preview live and sync directly with the live database'}
                 </p>
               </div>
             </div>
@@ -594,7 +597,7 @@ export default function LiveEditorDock() {
             <div className="flex items-center gap-2 self-end sm:self-auto">
               
               {/* Language Switcher inside Editor HUD */}
-              <div className="flex items-center rounded-xl bg-black/40 border border-white/10 p-0.5 text-[11px]">
+              <div className="flex items-center rounded-xl bg-black/40 border border-white/10 p-0.5 text-[11px]" dir="ltr">
                 <button
                   type="button"
                   onClick={() => setLanguage('en')}
@@ -627,7 +630,7 @@ export default function LiveEditorDock() {
                 ) : (
                   <Save className="w-3.5 h-3.5" />
                 )}
-                <span className="whitespace-nowrap leading-none">{saving ? (lang === 'ar' ? 'جارٍ الحفظ…' : 'Saving…') : (lang === 'ar' ? 'حفظ ونشر' : 'Save & Publish')}</span>
+                <span className="whitespace-nowrap leading-none">{saving ? (isAr ? 'جارٍ الحفظ…' : 'Saving…') : (isAr ? 'حفظ ونشر' : 'Save & Publish')}</span>
               </button>
 
               {hasUnsavedChanges && (
@@ -636,7 +639,7 @@ export default function LiveEditorDock() {
                   onClick={handleDiscard}
                   disabled={saving}
                   className="px-3 py-2 rounded-xl text-xs font-semibold text-zinc-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 cursor-pointer"
-                  title="Discard changes and reload"
+                  title={isAr ? 'التراجع عن التعديلات' : 'Discard changes and reload'}
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
                 </button>
@@ -646,7 +649,7 @@ export default function LiveEditorDock() {
                 type="button"
                 onClick={() => setIsMinimized(true)}
                 className="p-2 rounded-xl text-zinc-400 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 cursor-pointer"
-                title="Minimize Editor"
+                title={isAr ? 'تصغير المحرر' : 'Minimize Editor'}
               >
                 <ChevronDown className="w-4 h-4" />
               </button>
@@ -659,13 +662,13 @@ export default function LiveEditorDock() {
             <div className="p-2.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs flex items-center justify-between animate-in fade-in">
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                <span>{lang === 'ar' ? 'تم حفظ ونشر التعديلات بنجاح وتحديث قاعدة البيانات!' : 'Changes saved & published live to database!'}</span>
+                <span>{isAr ? 'تم حفظ ونشر التعديلات بنجاح وتحديث قاعدة البيانات!' : 'Changes saved & published live to database!'}</span>
               </div>
               <Link
                 href="/admin/content/pages"
                 className="text-[11px] font-mono text-emerald-400 hover:underline flex items-center gap-1"
               >
-                <span>View Full CMS</span>
+                <span>{isAr ? 'إدارة الصفحات' : 'View Full CMS'}</span>
                 <ExternalLink className="w-3 h-3" />
               </Link>
             </div>
@@ -712,15 +715,16 @@ export default function LiveEditorDock() {
                 <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 space-y-3">
                   <div className="text-[11px] font-mono font-bold text-blue-400 uppercase tracking-wider flex items-center gap-1.5">
                     <Sparkles className="w-3.5 h-3.5" />
-                    <span>Hero Section & 3-Line Slogan</span>
+                    <span>{isAr ? 'القسم الرئيسي والشعار الثلاثي' : 'Hero Section & 3-Line Slogan'}</span>
                   </div>
 
                   {/* Eyebrow */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Eyebrow (English)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'العنوان التمهيدي (إنجليزي)' : 'Eyebrow (English)'}</label>
                       <input
                         type="text"
+                        dir="ltr"
                         value={localEdits?.home?.hero?.eyebrow_en || ''}
                         onChange={(e) => updateField(['home', 'hero', 'eyebrow_en'], e.target.value)}
                         className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"
@@ -728,7 +732,7 @@ export default function LiveEditorDock() {
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Eyebrow (Arabic)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'العنوان التمهيدي (عربي)' : 'Eyebrow (Arabic)'}</label>
                       <input
                         type="text"
                         dir="rtl"
@@ -743,9 +747,10 @@ export default function LiveEditorDock() {
                   {/* Line 1 */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Line 1 (English)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'السطر 1 (إنجليزي)' : 'Line 1 (English)'}</label>
                       <input
                         type="text"
+                        dir="ltr"
                         value={localEdits?.home?.hero?.title_line1_en || ''}
                         onChange={(e) => updateField(['home', 'hero', 'title_line1_en'], e.target.value)}
                         className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"
@@ -753,7 +758,7 @@ export default function LiveEditorDock() {
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Line 1 (Arabic)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'السطر 1 (عربي)' : 'Line 1 (Arabic)'}</label>
                       <input
                         type="text"
                         dir="rtl"
@@ -768,9 +773,10 @@ export default function LiveEditorDock() {
                   {/* Line 2 */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     <div>
-                      <label className="block text-[11px] text-sky-400 font-semibold mb-1">Line 2 [Accent] (English)</label>
+                      <label className="block text-[11px] text-sky-400 font-semibold mb-1">{isAr ? 'السطر 2 [مميز] (إنجليزي)' : 'Line 2 [Accent] (English)'}</label>
                       <input
                         type="text"
+                        dir="ltr"
                         value={localEdits?.home?.hero?.title_line2_en || ''}
                         onChange={(e) => updateField(['home', 'hero', 'title_line2_en'], e.target.value)}
                         className="w-full px-3 py-2 rounded-xl bg-sky-950/40 border border-sky-500/40 text-sky-200"
@@ -778,7 +784,7 @@ export default function LiveEditorDock() {
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] text-sky-400 font-semibold mb-1">Line 2 [Accent] (Arabic)</label>
+                      <label className="block text-[11px] text-sky-400 font-semibold mb-1">{isAr ? 'السطر 2 [مميز] (عربي)' : 'Line 2 [Accent] (Arabic)'}</label>
                       <input
                         type="text"
                         dir="rtl"
@@ -793,9 +799,10 @@ export default function LiveEditorDock() {
                   {/* Line 3 */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Line 3 (English)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'السطر 3 (إنجليزي)' : 'Line 3 (English)'}</label>
                       <input
                         type="text"
+                        dir="ltr"
                         value={localEdits?.home?.hero?.title_line3_en || ''}
                         onChange={(e) => updateField(['home', 'hero', 'title_line3_en'], e.target.value)}
                         className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"
@@ -803,7 +810,7 @@ export default function LiveEditorDock() {
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Line 3 (Arabic)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'السطر 3 (عربي)' : 'Line 3 (Arabic)'}</label>
                       <input
                         type="text"
                         dir="rtl"
@@ -818,16 +825,17 @@ export default function LiveEditorDock() {
                   {/* Hero Subtitle */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Hero Subtitle Narrative (English)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'الوصف الفرعي (إنجليزي)' : 'Hero Subtitle Narrative (English)'}</label>
                       <textarea
                         rows={2}
+                        dir="ltr"
                         value={localEdits?.home?.hero?.body_en || ''}
                         onChange={(e) => updateField(['home', 'hero', 'body_en'], e.target.value)}
                         className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white resize-none"
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Hero Subtitle Narrative (Arabic)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'الوصف الفرعي (عربي)' : 'Hero Subtitle Narrative (Arabic)'}</label>
                       <textarea
                         rows={2}
                         dir="rtl"
@@ -841,10 +849,11 @@ export default function LiveEditorDock() {
                   {/* Primary & Secondary Hero CTAs */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Primary CTA Button (EN / AR)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'زر الحث الأساسي (إنجليزي / عربي)' : 'Primary CTA Button (EN / AR)'}</label>
                       <div className="grid grid-cols-2 gap-2">
                         <input
                           type="text"
+                          dir="ltr"
                           value={localEdits?.home?.hero?.primary_cta_en || 'Discover Our Group'}
                           onChange={(e) => updateField(['home', 'hero', 'primary_cta_en'], e.target.value)}
                           className="w-full px-2.5 py-1.5 rounded-lg bg-black/50 border border-white/15 text-xs"
@@ -859,10 +868,11 @@ export default function LiveEditorDock() {
                       </div>
                     </div>
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Secondary CTA Button (EN / AR)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'زر الحث الثانوي (إنجليزي / عربي)' : 'Secondary CTA Button (EN / AR)'}</label>
                       <div className="grid grid-cols-2 gap-2">
                         <input
                           type="text"
+                          dir="ltr"
                           value={localEdits?.home?.hero?.secondary_cta_en || 'Explore Our Sectors'}
                           onChange={(e) => updateField(['home', 'hero', 'secondary_cta_en'], e.target.value)}
                           className="w-full px-2.5 py-1.5 rounded-lg bg-black/50 border border-white/15 text-xs"
@@ -884,16 +894,17 @@ export default function LiveEditorDock() {
                 <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 space-y-3">
                   <div className="text-[11px] font-mono font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
                     <Sparkles className="w-3.5 h-3.5" />
-                    <span>4-Metric Statistics Bar</span>
+                    <span>{isAr ? 'شريط الإحصائيات والأرقام' : '4-Metric Statistics Bar'}</span>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
                     {/* Stat 1 */}
                     <div className="p-2.5 rounded-xl bg-black/40 border border-white/10 space-y-1.5">
                       <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-mono text-sky-400 font-bold">Stat 1</span>
+                        <span className="text-[10px] font-mono text-sky-400 font-bold">{isAr ? 'رقم 1' : 'Stat 1'}</span>
                         <input
                           type="text"
+                          dir="ltr"
                           value={localEdits?.home?.metrics?.stat1_num || '6'}
                           onChange={(e) => updateField(['home', 'metrics', 'stat1_num'], e.target.value)}
                           className="w-12 text-center px-1.5 py-0.5 rounded bg-sky-950 border border-sky-500/40 text-sky-300 font-mono font-bold text-xs"
@@ -901,6 +912,7 @@ export default function LiveEditorDock() {
                       </div>
                       <input
                         type="text"
+                        dir="ltr"
                         value={localEdits?.home?.metrics?.stat1_text_en || ''}
                         onChange={(e) => updateField(['home', 'metrics', 'stat1_text_en'], e.target.value)}
                         placeholder="Label EN"
@@ -919,9 +931,10 @@ export default function LiveEditorDock() {
                     {/* Stat 2 */}
                     <div className="p-2.5 rounded-xl bg-black/40 border border-white/10 space-y-1.5">
                       <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-mono text-emerald-400 font-bold">Stat 2</span>
+                        <span className="text-[10px] font-mono text-emerald-400 font-bold">{isAr ? 'رقم 2' : 'Stat 2'}</span>
                         <input
                           type="text"
+                          dir="ltr"
                           value={localEdits?.home?.metrics?.stat2_num || '3'}
                           onChange={(e) => updateField(['home', 'metrics', 'stat2_num'], e.target.value)}
                           className="w-12 text-center px-1.5 py-0.5 rounded bg-emerald-950 border border-emerald-500/40 text-emerald-300 font-mono font-bold text-xs"
@@ -929,6 +942,7 @@ export default function LiveEditorDock() {
                       </div>
                       <input
                         type="text"
+                        dir="ltr"
                         value={localEdits?.home?.metrics?.stat2_text_en || ''}
                         onChange={(e) => updateField(['home', 'metrics', 'stat2_text_en'], e.target.value)}
                         placeholder="Label EN"
@@ -947,9 +961,10 @@ export default function LiveEditorDock() {
                     {/* Stat 3 */}
                     <div className="p-2.5 rounded-xl bg-black/40 border border-white/10 space-y-1.5">
                       <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-mono text-purple-400 font-bold">Stat 3</span>
+                        <span className="text-[10px] font-mono text-purple-400 font-bold">{isAr ? 'رقم 3' : 'Stat 3'}</span>
                         <input
                           type="text"
+                          dir="ltr"
                           value={localEdits?.home?.metrics?.stat3_num || '80+'}
                           onChange={(e) => updateField(['home', 'metrics', 'stat3_num'], e.target.value)}
                           className="w-12 text-center px-1.5 py-0.5 rounded bg-purple-950 border border-purple-500/40 text-purple-300 font-mono font-bold text-xs"
@@ -957,6 +972,7 @@ export default function LiveEditorDock() {
                       </div>
                       <input
                         type="text"
+                        dir="ltr"
                         value={localEdits?.home?.metrics?.stat3_text_en || ''}
                         onChange={(e) => updateField(['home', 'metrics', 'stat3_text_en'], e.target.value)}
                         placeholder="Label EN"
@@ -975,9 +991,10 @@ export default function LiveEditorDock() {
                     {/* Stat 4 */}
                     <div className="p-2.5 rounded-xl bg-black/40 border border-white/10 space-y-1.5">
                       <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-mono text-amber-400 font-bold">Stat 4</span>
+                        <span className="text-[10px] font-mono text-amber-400 font-bold">{isAr ? 'رقم 4' : 'Stat 4'}</span>
                         <input
                           type="text"
+                          dir="ltr"
                           value={localEdits?.home?.metrics?.stat4_num || '3'}
                           onChange={(e) => updateField(['home', 'metrics', 'stat4_num'], e.target.value)}
                           className="w-12 text-center px-1.5 py-0.5 rounded bg-amber-950 border border-amber-500/40 text-amber-300 font-mono font-bold text-xs"
@@ -985,6 +1002,7 @@ export default function LiveEditorDock() {
                       </div>
                       <input
                         type="text"
+                        dir="ltr"
                         value={localEdits?.home?.metrics?.stat4_text_en || ''}
                         onChange={(e) => updateField(['home', 'metrics', 'stat4_text_en'], e.target.value)}
                         placeholder="Label EN"
@@ -1006,22 +1024,23 @@ export default function LiveEditorDock() {
                 <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 space-y-3">
                   <div className="text-[11px] font-mono font-bold text-sky-400 uppercase tracking-wider flex items-center gap-1.5">
                     <Layers className="w-3.5 h-3.5" />
-                    <span>Strategic Sectors Hub</span>
+                    <span>{isAr ? 'محور القطاعات الاستراتيجية' : 'Strategic Sectors Hub'}</span>
                   </div>
 
                   {/* Sectors Heading */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Section Heading (English)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'عنوان القطاعات (إنجليزي)' : 'Section Heading (English)'}</label>
                       <input
                         type="text"
+                        dir="ltr"
                         value={localEdits?.home?.sectors?.heading_en || ''}
                         onChange={(e) => updateField(['home', 'sectors', 'heading_en'], e.target.value)}
                         className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Section Heading (Arabic)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'عنوان القطاعات (عربي)' : 'Section Heading (Arabic)'}</label>
                       <input
                         type="text"
                         dir="rtl"
@@ -1034,10 +1053,11 @@ export default function LiveEditorDock() {
 
                   {/* Hospitality Card */}
                   <div className="p-2.5 rounded-xl bg-sky-950/20 border border-sky-500/20 space-y-2">
-                    <span className="text-[10px] font-mono text-sky-400 font-bold">1. SwissBlue Hospitality</span>
+                    <span className="text-[10px] font-mono text-sky-400 font-bold">{isAr ? '1. فنادق سويس بلو' : '1. SwissBlue Hospitality'}</span>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                       <textarea
                         rows={2}
+                        dir="ltr"
                         value={localEdits?.home?.sectors?.hospitality_desc_en || ''}
                         onChange={(e) => updateField(['home', 'sectors', 'hospitality_desc_en'], e.target.value)}
                         placeholder="Description (EN)"
@@ -1056,10 +1076,11 @@ export default function LiveEditorDock() {
 
                   {/* Manufacturing Card */}
                   <div className="p-2.5 rounded-xl bg-emerald-950/20 border border-emerald-500/20 space-y-2">
-                    <span className="text-[10px] font-mono text-emerald-400 font-bold">2. GreenWood Manufacturing</span>
+                    <span className="text-[10px] font-mono text-emerald-400 font-bold">{isAr ? '2. مصانع جرين وود' : '2. GreenWood Manufacturing'}</span>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                       <textarea
                         rows={2}
+                        dir="ltr"
                         value={localEdits?.home?.sectors?.manufacturing_desc_en || ''}
                         onChange={(e) => updateField(['home', 'sectors', 'manufacturing_desc_en'], e.target.value)}
                         placeholder="Description (EN)"
@@ -1078,10 +1099,11 @@ export default function LiveEditorDock() {
 
                   {/* Contracting Card */}
                   <div className="p-2.5 rounded-xl bg-amber-950/20 border border-amber-500/20 space-y-2">
-                    <span className="text-[10px] font-mono text-amber-400 font-bold">3. Turnkey Contracting</span>
+                    <span className="text-[10px] font-mono text-amber-400 font-bold">{isAr ? '3. المقاولات والتنفيذ الشامل' : '3. Turnkey Contracting'}</span>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                       <textarea
                         rows={2}
+                        dir="ltr"
                         value={localEdits?.home?.sectors?.contracting_desc_en || ''}
                         onChange={(e) => updateField(['home', 'sectors', 'contracting_desc_en'], e.target.value)}
                         placeholder="Description (EN)"
@@ -1103,21 +1125,22 @@ export default function LiveEditorDock() {
                 <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 space-y-3">
                   <div className="text-[11px] font-mono font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
                     <Layers className="w-3.5 h-3.5" />
-                    <span>Integrated Holding Synergy & Lifecycle Chain</span>
+                    <span>{isAr ? 'سلسلة التكامل والقيمة للمجموعة' : 'Integrated Holding Synergy & Lifecycle Chain'}</span>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Synergy Heading (English)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'عنوان التكامل (إنجليزي)' : 'Synergy Heading (English)'}</label>
                       <input
                         type="text"
+                        dir="ltr"
                         value={localEdits?.home?.synergy?.heading_en || ''}
                         onChange={(e) => updateField(['home', 'synergy', 'heading_en'], e.target.value)}
                         className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Synergy Heading (Arabic)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'عنوان التكامل (عربي)' : 'Synergy Heading (Arabic)'}</label>
                       <input
                         type="text"
                         dir="rtl"
@@ -1130,16 +1153,17 @@ export default function LiveEditorDock() {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Synergy Intro Body (English)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'مقدمة التكامل (إنجليزي)' : 'Synergy Intro Body (English)'}</label>
                       <textarea
                         rows={2}
+                        dir="ltr"
                         value={localEdits?.home?.synergy?.intro_en || ''}
                         onChange={(e) => updateField(['home', 'synergy', 'intro_en'], e.target.value)}
                         className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white resize-none"
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Synergy Intro Body (Arabic)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'مقدمة التكامل (عربي)' : 'Synergy Intro Body (Arabic)'}</label>
                       <textarea
                         rows={2}
                         dir="rtl"
@@ -1155,21 +1179,22 @@ export default function LiveEditorDock() {
                 <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 space-y-3">
                   <div className="text-[11px] font-mono font-bold text-purple-400 uppercase tracking-wider flex items-center gap-1.5">
                     <Quote className="w-3.5 h-3.5" />
-                    <span>Vision & Mission Statements</span>
+                    <span>{isAr ? 'بيان الرؤية والرسالة' : 'Vision & Mission Statements'}</span>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Vision Statement (English)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'نص الرؤية (إنجليزي)' : 'Vision Statement (English)'}</label>
                       <textarea
                         rows={3}
+                        dir="ltr"
                         value={localEdits?.home?.identity?.vision_desc_en || ''}
                         onChange={(e) => updateField(['home', 'identity', 'vision_desc_en'], e.target.value)}
                         className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white resize-none"
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Vision Statement (Arabic)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'نص الرؤية (عربي)' : 'Vision Statement (Arabic)'}</label>
                       <textarea
                         rows={3}
                         dir="rtl"
@@ -1182,16 +1207,17 @@ export default function LiveEditorDock() {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Mission Statement (English)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'نص الرسالة (إنجليزي)' : 'Mission Statement (English)'}</label>
                       <textarea
                         rows={3}
+                        dir="ltr"
                         value={localEdits?.home?.identity?.mission_desc_en || ''}
                         onChange={(e) => updateField(['home', 'identity', 'mission_desc_en'], e.target.value)}
                         className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white resize-none"
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Mission Statement (Arabic)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'نص الرسالة (عربي)' : 'Mission Statement (Arabic)'}</label>
                       <textarea
                         rows={3}
                         dir="rtl"
@@ -1207,21 +1233,22 @@ export default function LiveEditorDock() {
                 <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 space-y-3">
                   <div className="text-[11px] font-mono font-bold text-[#C9A86A] uppercase tracking-wider flex items-center gap-1.5">
                     <Quote className="w-3.5 h-3.5" />
-                    <span>CEO Leadership Statement</span>
+                    <span>{isAr ? 'كلمة القيادة التنفيذية' : 'CEO Leadership Statement'}</span>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Executive Quote (English)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'اقتباس القيادة (إنجليزي)' : 'Executive Quote (English)'}</label>
                       <textarea
                         rows={2}
+                        dir="ltr"
                         value={localEdits?.home?.ceo?.quote_en || ''}
                         onChange={(e) => updateField(['home', 'ceo', 'quote_en'], e.target.value)}
                         className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white resize-none"
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Executive Quote (Arabic)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'اقتباس القيادة (عربي)' : 'Executive Quote (Arabic)'}</label>
                       <textarea
                         rows={2}
                         dir="rtl"
@@ -1234,16 +1261,17 @@ export default function LiveEditorDock() {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Leader Name (English)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'اسم الرئيس التنفيذي (إنجليزي)' : 'Leader Name (English)'}</label>
                       <input
                         type="text"
+                        dir="ltr"
                         value={localEdits?.home?.ceo?.name_en || ''}
                         onChange={(e) => updateField(['home', 'ceo', 'name_en'], e.target.value)}
                         className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Leader Name (Arabic)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'اسم الرئيس التنفيذي (عربي)' : 'Leader Name (Arabic)'}</label>
                       <input
                         type="text"
                         dir="rtl"
@@ -1259,21 +1287,22 @@ export default function LiveEditorDock() {
                 <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 space-y-3">
                   <div className="text-[11px] font-mono font-bold text-rose-400 uppercase tracking-wider flex items-center gap-1.5">
                     <Handshake className="w-3.5 h-3.5" />
-                    <span>Partnership & Contact CTA Banner</span>
+                    <span>{isAr ? 'شريط الشراكة وطلب العروض' : 'Partnership & Contact CTA Banner'}</span>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">CTA Heading (English)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'عنوان الشراكة (إنجليزي)' : 'CTA Heading (English)'}</label>
                       <input
                         type="text"
+                        dir="ltr"
                         value={localEdits?.home?.partnership?.heading_en || ''}
                         onChange={(e) => updateField(['home', 'partnership', 'heading_en'], e.target.value)}
                         className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">CTA Heading (Arabic)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'عنوان الشراكة (عربي)' : 'CTA Heading (Arabic)'}</label>
                       <input
                         type="text"
                         dir="rtl"
@@ -1286,16 +1315,17 @@ export default function LiveEditorDock() {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">CTA Body Narrative (English)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'نص الشراكة (إنجليزي)' : 'CTA Body Narrative (English)'}</label>
                       <textarea
                         rows={2}
+                        dir="ltr"
                         value={localEdits?.home?.partnership?.body_en || ''}
                         onChange={(e) => updateField(['home', 'partnership', 'body_en'], e.target.value)}
                         className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white resize-none"
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">CTA Body Narrative (Arabic)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'نص الشراكة (عربي)' : 'CTA Body Narrative (Arabic)'}</label>
                       <textarea
                         rows={2}
                         dir="rtl"
@@ -1318,21 +1348,22 @@ export default function LiveEditorDock() {
                 <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 space-y-3">
                   <div className="text-[11px] font-mono font-bold text-blue-400 uppercase tracking-wider flex items-center gap-1.5">
                     <Info className="w-3.5 h-3.5" />
-                    <span>About Us Hero Section</span>
+                    <span>{isAr ? 'القسم الرئيسي لصفحة عنّا' : 'About Us Hero Section'}</span>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Hero Title (English)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'عنوان الصفحة (إنجليزي)' : 'Hero Title (English)'}</label>
                       <input
                         type="text"
+                        dir="ltr"
                         value={localEdits?.about?.hero_title_en || ''}
                         onChange={(e) => updateField(['about', 'hero_title_en'], e.target.value)}
                         className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Hero Title (Arabic)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'عنوان الصفحة (عربي)' : 'Hero Title (Arabic)'}</label>
                       <input
                         type="text"
                         dir="rtl"
@@ -1345,16 +1376,17 @@ export default function LiveEditorDock() {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Hero Subtitle Narrative (English)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'الوصف التمهيدي (إنجليزي)' : 'Hero Subtitle Narrative (English)'}</label>
                       <textarea
                         rows={2}
+                        dir="ltr"
                         value={localEdits?.about?.hero_body_en || ''}
                         onChange={(e) => updateField(['about', 'hero_body_en'], e.target.value)}
                         className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white resize-none"
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Hero Subtitle Narrative (Arabic)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'الوصف التمهيدي (عربي)' : 'Hero Subtitle Narrative (Arabic)'}</label>
                       <textarea
                         rows={2}
                         dir="rtl"
@@ -1370,21 +1402,22 @@ export default function LiveEditorDock() {
                 <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 space-y-3">
                   <div className="text-[11px] font-mono font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
                     <FileText className="w-3.5 h-3.5" />
-                    <span>Corporate Story & Heritage</span>
+                    <span>{isAr ? 'مسيرة وتاريخ المجموعة' : 'Corporate Story & Heritage'}</span>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Story Heading (English)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'عنوان المسيرة (إنجليزي)' : 'Story Heading (English)'}</label>
                       <input
                         type="text"
+                        dir="ltr"
                         value={localEdits?.about?.story_heading_en || ''}
                         onChange={(e) => updateField(['about', 'story_heading_en'], e.target.value)}
                         className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Story Heading (Arabic)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'عنوان المسيرة (عربي)' : 'Story Heading (Arabic)'}</label>
                       <input
                         type="text"
                         dir="rtl"
@@ -1397,16 +1430,17 @@ export default function LiveEditorDock() {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Story Narrative (English)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'نص المسيرة (إنجليزي)' : 'Story Narrative (English)'}</label>
                       <textarea
                         rows={3}
+                        dir="ltr"
                         value={localEdits?.about?.story_body_en || ''}
                         onChange={(e) => updateField(['about', 'story_body_en'], e.target.value)}
                         className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white resize-none"
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Story Narrative (Arabic)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'نص المسيرة (عربي)' : 'Story Narrative (Arabic)'}</label>
                       <textarea
                         rows={3}
                         dir="rtl"
@@ -1422,21 +1456,22 @@ export default function LiveEditorDock() {
                 <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 space-y-3">
                   <div className="text-[11px] font-mono font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
                     <Quote className="w-3.5 h-3.5" />
-                    <span>Executive Governance & Saudi 2030 Alignment</span>
+                    <span>{isAr ? 'الحوكمة ومواكبة رؤية السعودية 2030' : 'Executive Governance & Saudi 2030 Alignment'}</span>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Governance Statement (English)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'بيان الحوكمة (إنجليزي)' : 'Governance Statement (English)'}</label>
                       <textarea
                         rows={3}
+                        dir="ltr"
                         value={localEdits?.about?.governance_statement_en || ''}
                         onChange={(e) => updateField(['about', 'governance_statement_en'], e.target.value)}
                         className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white resize-none"
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Governance Statement (Arabic)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'بيان الحوكمة (عربي)' : 'Governance Statement (Arabic)'}</label>
                       <textarea
                         rows={3}
                         dir="rtl"
@@ -1459,21 +1494,22 @@ export default function LiveEditorDock() {
                 <div className="p-3.5 rounded-2xl bg-white/5 border border-sky-500/20 space-y-3">
                   <div className="text-[11px] font-mono font-bold text-sky-400 uppercase tracking-wider flex items-center gap-1.5">
                     <Building2 className="w-3.5 h-3.5" />
-                    <span>SwissBlue Hospitality Hero Section</span>
+                    <span>{isAr ? 'القسم الرئيسي لقطاع الضيافة' : 'SwissBlue Hospitality Hero Section'}</span>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Hero Title (English)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'عنوان الصفحة (إنجليزي)' : 'Hero Title (English)'}</label>
                       <input
                         type="text"
+                        dir="ltr"
                         value={localEdits?.hospitality?.hero_title_en || ''}
                         onChange={(e) => updateField(['hospitality', 'hero_title_en'], e.target.value)}
                         className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Hero Title (Arabic)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'عنوان الصفحة (عربي)' : 'Hero Title (Arabic)'}</label>
                       <input
                         type="text"
                         dir="rtl"
@@ -1486,16 +1522,17 @@ export default function LiveEditorDock() {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Hero Subtitle (English)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'الوصف التمهيدي (إنجليزي)' : 'Hero Subtitle (English)'}</label>
                       <textarea
                         rows={2}
+                        dir="ltr"
                         value={localEdits?.hospitality?.hero_body_en || ''}
                         onChange={(e) => updateField(['hospitality', 'hero_body_en'], e.target.value)}
                         className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white resize-none"
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Hero Subtitle (Arabic)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'الوصف التمهيدي (عربي)' : 'Hero Subtitle (Arabic)'}</label>
                       <textarea
                         rows={2}
                         dir="rtl"
@@ -1511,21 +1548,22 @@ export default function LiveEditorDock() {
                 <div className="p-3.5 rounded-2xl bg-white/5 border border-sky-500/20 space-y-3">
                   <div className="text-[11px] font-mono font-bold text-sky-400 uppercase tracking-wider flex items-center gap-1.5">
                     <Layers className="w-3.5 h-3.5" />
-                    <span>Hospitality Management & Asset Operations</span>
+                    <span>{isAr ? 'خدمات إدارة وتشغيل الفنادق' : 'Hospitality Management & Asset Operations'}</span>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Services Heading (English)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'عنوان الخدمات (إنجليزي)' : 'Services Heading (English)'}</label>
                       <input
                         type="text"
+                        dir="ltr"
                         value={localEdits?.hospitality?.services_heading_en || ''}
                         onChange={(e) => updateField(['hospitality', 'services_heading_en'], e.target.value)}
                         className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Services Heading (Arabic)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'عنوان الخدمات (عربي)' : 'Services Heading (Arabic)'}</label>
                       <input
                         type="text"
                         dir="rtl"
@@ -1541,21 +1579,22 @@ export default function LiveEditorDock() {
                 <div className="p-3.5 rounded-2xl bg-white/5 border border-sky-500/20 space-y-3">
                   <div className="text-[11px] font-mono font-bold text-sky-400 uppercase tracking-wider flex items-center gap-1.5">
                     <Handshake className="w-3.5 h-3.5" />
-                    <span>Hotel Property RFP & Operator Partnership</span>
+                    <span>{isAr ? 'شراكة وتشغيل المنشآت الفندقية' : 'Hotel Property RFP & Operator Partnership'}</span>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">RFP Heading (English)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'عنوان الشراكة (إنجليزي)' : 'RFP Heading (English)'}</label>
                       <input
                         type="text"
+                        dir="ltr"
                         value={localEdits?.hospitality?.rfp_heading_en || ''}
                         onChange={(e) => updateField(['hospitality', 'rfp_heading_en'], e.target.value)}
                         className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">RFP Heading (Arabic)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'عنوان الشراكة (عربي)' : 'RFP Heading (Arabic)'}</label>
                       <input
                         type="text"
                         dir="rtl"
@@ -1578,21 +1617,22 @@ export default function LiveEditorDock() {
                 <div className="p-3.5 rounded-2xl bg-white/5 border border-emerald-500/20 space-y-3">
                   <div className="text-[11px] font-mono font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
                     <Factory className="w-3.5 h-3.5" />
-                    <span>GreenWood Manufacturing Hero Section</span>
+                    <span>{isAr ? 'القسم الرئيسي لقطاع التصنيع' : 'GreenWood Manufacturing Hero Section'}</span>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Hero Title (English)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'عنوان الصفحة (إنجليزي)' : 'Hero Title (English)'}</label>
                       <input
                         type="text"
+                        dir="ltr"
                         value={localEdits?.manufacturing?.hero_title_en || ''}
                         onChange={(e) => updateField(['manufacturing', 'hero_title_en'], e.target.value)}
                         className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Hero Title (Arabic)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'عنوان الصفحة (عربي)' : 'Hero Title (Arabic)'}</label>
                       <input
                         type="text"
                         dir="rtl"
@@ -1605,16 +1645,17 @@ export default function LiveEditorDock() {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Hero Subtitle (English)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'الوصف التمهيدي (إنجليزي)' : 'Hero Subtitle (English)'}</label>
                       <textarea
                         rows={2}
+                        dir="ltr"
                         value={localEdits?.manufacturing?.hero_body_en || ''}
                         onChange={(e) => updateField(['manufacturing', 'hero_body_en'], e.target.value)}
                         className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white resize-none"
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Hero Subtitle (Arabic)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'الوصف التمهيدي (عربي)' : 'Hero Subtitle (Arabic)'}</label>
                       <textarea
                         rows={2}
                         dir="rtl"
@@ -1630,21 +1671,22 @@ export default function LiveEditorDock() {
                 <div className="p-3.5 rounded-2xl bg-white/5 border border-emerald-500/20 space-y-3">
                   <div className="text-[11px] font-mono font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
                     <Layers className="w-3.5 h-3.5" />
-                    <span>Specialized Industrial & CNC Capabilities</span>
+                    <span>{isAr ? 'القدرات الصناعية وتقنيات CNC' : 'Specialized Industrial & CNC Capabilities'}</span>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Capabilities Heading (English)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'عنوان القدرات (إنجليزي)' : 'Capabilities Heading (English)'}</label>
                       <input
                         type="text"
+                        dir="ltr"
                         value={localEdits?.manufacturing?.capabilities_heading_en || ''}
                         onChange={(e) => updateField(['manufacturing', 'capabilities_heading_en'], e.target.value)}
                         className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Capabilities Heading (Arabic)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'عنوان القدرات (عربي)' : 'Capabilities Heading (Arabic)'}</label>
                       <input
                         type="text"
                         dir="rtl"
@@ -1660,21 +1702,22 @@ export default function LiveEditorDock() {
                 <div className="p-3.5 rounded-2xl bg-white/5 border border-emerald-500/20 space-y-3">
                   <div className="text-[11px] font-mono font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
                     <Handshake className="w-3.5 h-3.5" />
-                    <span>Custom Contract Furniture & Production RFP</span>
+                    <span>{isAr ? 'طلب تصنيع وتوريد أثاث المشروعات' : 'Custom Contract Furniture & Production RFP'}</span>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">RFP Heading (English)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'عنوان الطلب (إنجليزي)' : 'RFP Heading (English)'}</label>
                       <input
                         type="text"
+                        dir="ltr"
                         value={localEdits?.manufacturing?.rfp_heading_en || ''}
                         onChange={(e) => updateField(['manufacturing', 'rfp_heading_en'], e.target.value)}
                         className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">RFP Heading (Arabic)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'عنوان الطلب (عربي)' : 'RFP Heading (Arabic)'}</label>
                       <input
                         type="text"
                         dir="rtl"
@@ -1697,21 +1740,22 @@ export default function LiveEditorDock() {
                 <div className="p-3.5 rounded-2xl bg-white/5 border border-amber-500/20 space-y-3">
                   <div className="text-[11px] font-mono font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
                     <HardHat className="w-3.5 h-3.5" />
-                    <span>Contracting & Fit-Out Hero Section</span>
+                    <span>{isAr ? 'القسم الرئيسي لقطاع المقاولات والتجهيز' : 'Contracting & Fit-Out Hero Section'}</span>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Hero Title (English)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'عنوان الصفحة (إنجليزي)' : 'Hero Title (English)'}</label>
                       <input
                         type="text"
+                        dir="ltr"
                         value={localEdits?.contracting?.hero_title_en || ''}
                         onChange={(e) => updateField(['contracting', 'hero_title_en'], e.target.value)}
                         className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Hero Title (Arabic)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'عنوان الصفحة (عربي)' : 'Hero Title (Arabic)'}</label>
                       <input
                         type="text"
                         dir="rtl"
@@ -1724,16 +1768,17 @@ export default function LiveEditorDock() {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Hero Subtitle (English)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'الوصف التمهيدي (إنجليزي)' : 'Hero Subtitle (English)'}</label>
                       <textarea
                         rows={2}
+                        dir="ltr"
                         value={localEdits?.contracting?.hero_body_en || ''}
                         onChange={(e) => updateField(['contracting', 'hero_body_en'], e.target.value)}
                         className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white resize-none"
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Hero Subtitle (Arabic)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'الوصف التمهيدي (عربي)' : 'Hero Subtitle (Arabic)'}</label>
                       <textarea
                         rows={2}
                         dir="rtl"
@@ -1749,21 +1794,22 @@ export default function LiveEditorDock() {
                 <div className="p-3.5 rounded-2xl bg-white/5 border border-amber-500/20 space-y-3">
                   <div className="text-[11px] font-mono font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
                     <Layers className="w-3.5 h-3.5" />
-                    <span>Project Execution Lifecycle & Stages</span>
+                    <span>{isAr ? 'مراحل ومسار تنفيذ المشاريع' : 'Project Execution Lifecycle & Stages'}</span>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Lifecycle Heading (English)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'عنوان مراحل التنفيذ (إنجليزي)' : 'Lifecycle Heading (English)'}</label>
                       <input
                         type="text"
+                        dir="ltr"
                         value={localEdits?.contracting?.lifecycle_heading_en || ''}
                         onChange={(e) => updateField(['contracting', 'lifecycle_heading_en'], e.target.value)}
                         className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Lifecycle Heading (Arabic)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'عنوان مراحل التنفيذ (عربي)' : 'Lifecycle Heading (Arabic)'}</label>
                       <input
                         type="text"
                         dir="rtl"
@@ -1779,21 +1825,22 @@ export default function LiveEditorDock() {
                 <div className="p-3.5 rounded-2xl bg-white/5 border border-amber-500/20 space-y-3">
                   <div className="text-[11px] font-mono font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
                     <Handshake className="w-3.5 h-3.5" />
-                    <span>Turnkey Contracting & Tender RFP</span>
+                    <span>{isAr ? 'طلب عروض أسعار ومناقصات المقاولات' : 'Turnkey Contracting & Tender RFP'}</span>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">RFP Heading (English)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'عنوان طلب العروض (إنجليزي)' : 'RFP Heading (English)'}</label>
                       <input
                         type="text"
+                        dir="ltr"
                         value={localEdits?.contracting?.rfp_heading_en || ''}
                         onChange={(e) => updateField(['contracting', 'rfp_heading_en'], e.target.value)}
                         className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">RFP Heading (Arabic)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'عنوان طلب العروض (عربي)' : 'RFP Heading (Arabic)'}</label>
                       <input
                         type="text"
                         dir="rtl"
@@ -1814,21 +1861,22 @@ export default function LiveEditorDock() {
                 <div className="p-3.5 rounded-2xl bg-white/5 border border-purple-500/20 space-y-3">
                   <div className="text-[11px] font-mono font-bold text-purple-400 uppercase tracking-wider flex items-center gap-1.5">
                     <Briefcase className="w-3.5 h-3.5" />
-                    <span>Careers & Saudi Talent Development</span>
+                    <span>{isAr ? 'الفرص الوظيفية واستقطاب الكفاءات' : 'Careers & Saudi Talent Development'}</span>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Hero Title (English)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'عنوان الصفحة (إنجليزي)' : 'Hero Title (English)'}</label>
                       <input
                         type="text"
+                        dir="ltr"
                         value={localEdits?.careers?.hero_title_en || ''}
                         onChange={(e) => updateField(['careers', 'hero_title_en'], e.target.value)}
                         className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Hero Title (Arabic)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'عنوان الصفحة (عربي)' : 'Hero Title (Arabic)'}</label>
                       <input
                         type="text"
                         dir="rtl"
@@ -1841,16 +1889,17 @@ export default function LiveEditorDock() {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Hero Subtitle (English)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'الوصف التمهيدي (إنجليزي)' : 'Hero Subtitle (English)'}</label>
                       <textarea
                         rows={2}
+                        dir="ltr"
                         value={localEdits?.careers?.hero_body_en || ''}
                         onChange={(e) => updateField(['careers', 'hero_body_en'], e.target.value)}
                         className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white resize-none"
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Hero Subtitle (Arabic)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'الوصف التمهيدي (عربي)' : 'Hero Subtitle (Arabic)'}</label>
                       <textarea
                         rows={2}
                         dir="rtl"
@@ -1863,16 +1912,17 @@ export default function LiveEditorDock() {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Proof Badge (English)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'شارة التوطين والفرص (إنجليزي)' : 'Proof Badge (English)'}</label>
                       <input
                         type="text"
+                        dir="ltr"
                         value={localEdits?.careers?.hero_proof_en || ''}
                         onChange={(e) => updateField(['careers', 'hero_proof_en'], e.target.value)}
                         className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Proof Badge (Arabic)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'شارة التوطين والفرص (عربي)' : 'Proof Badge (Arabic)'}</label>
                       <input
                         type="text"
                         dir="rtl"
@@ -1894,21 +1944,22 @@ export default function LiveEditorDock() {
                 <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 space-y-3">
                   <div className="text-[11px] font-mono font-bold text-blue-400 uppercase tracking-wider flex items-center gap-1.5">
                     <Mail className="w-3.5 h-3.5" />
-                    <span>Contact Us Hero Section</span>
+                    <span>{isAr ? 'القسم الرئيسي لصفحة تواصل معنا' : 'Contact Us Hero Section'}</span>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Hero Title (English)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'عنوان الصفحة (إنجليزي)' : 'Hero Title (English)'}</label>
                       <input
                         type="text"
+                        dir="ltr"
                         value={localEdits?.contact?.hero_title_en || ''}
                         onChange={(e) => updateField(['contact', 'hero_title_en'], e.target.value)}
                         className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Hero Title (Arabic)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'عنوان الصفحة (عربي)' : 'Hero Title (Arabic)'}</label>
                       <input
                         type="text"
                         dir="rtl"
@@ -1921,16 +1972,17 @@ export default function LiveEditorDock() {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Hero Subtitle (English)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'الوصف التمهيدي (إنجليزي)' : 'Hero Subtitle (English)'}</label>
                       <textarea
                         rows={2}
+                        dir="ltr"
                         value={localEdits?.contact?.hero_body_en || ''}
                         onChange={(e) => updateField(['contact', 'hero_body_en'], e.target.value)}
                         className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white resize-none"
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Hero Subtitle (Arabic)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'الوصف التمهيدي (عربي)' : 'Hero Subtitle (Arabic)'}</label>
                       <textarea
                         rows={2}
                         dir="rtl"
@@ -1946,21 +1998,22 @@ export default function LiveEditorDock() {
                 <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 space-y-3">
                   <div className="text-[11px] font-mono font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
                     <MapPin className="w-3.5 h-3.5" />
-                    <span>Headquarters & Credentials</span>
+                    <span>{isAr ? 'بيانات المقر الرئيسي وقنوات التواصل' : 'Headquarters & Credentials'}</span>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">HQ Address (English)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'عنوان المقر (إنجليزي)' : 'HQ Address (English)'}</label>
                       <input
                         type="text"
+                        dir="ltr"
                         value={localEdits?.contact?.hq_address_en || ''}
                         onChange={(e) => updateField(['contact', 'hq_address_en'], e.target.value)}
                         className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">HQ Address (Arabic)</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'عنوان المقر (عربي)' : 'HQ Address (Arabic)'}</label>
                       <input
                         type="text"
                         dir="rtl"
@@ -1973,18 +2026,20 @@ export default function LiveEditorDock() {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">General Inquiries Email</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'البريد الإلكتروني العام' : 'General Inquiries Email'}</label>
                       <input
                         type="email"
+                        dir="ltr"
                         value={localEdits?.contact?.general_email || 'info@wdgroup.com.sa'}
                         onChange={(e) => updateField(['contact', 'general_email'], e.target.value)}
                         className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white font-mono"
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">Primary Telephone</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'الهاتف الرئيسي' : 'Primary Telephone'}</label>
                       <input
                         type="text"
+                        dir="ltr"
                         value={localEdits?.contact?.primary_phone || '+966 17 522 2229'}
                         onChange={(e) => updateField(['contact', 'primary_phone'], e.target.value)}
                         className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white font-mono"
@@ -1995,11 +2050,12 @@ export default function LiveEditorDock() {
                   {/* Header Top-Right CTA Button Text */}
                   <div className="pt-2 border-t border-white/10">
                     <label className="block text-[11px] text-[#C9A86A] font-semibold mb-1">
-                      Header Top-Right Contact Button (EN / AR)
+                      {isAr ? 'نص زر التواصل في أعلى الموقع (إنجليزي / عربي)' : 'Header Top-Right Contact Button (EN / AR)'}
                     </label>
                     <div className="grid grid-cols-2 gap-2.5">
                       <input
                         type="text"
+                        dir="ltr"
                         value={localEdits?.settings?.nav_cta_en || 'Contact Us'}
                         onChange={(e) => updateField(['settings', 'nav_cta_en'], e.target.value)}
                         className="w-full px-3 py-2 rounded-xl bg-black/50 border border-[#C9A86A]/40 text-[#C9A86A]"
@@ -2025,7 +2081,7 @@ export default function LiveEditorDock() {
           <div className="pt-3 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-2.5 text-xs text-zinc-400">
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
-              <span className="font-mono text-[11px] text-zinc-300 font-semibold">WD GROUP REALTIME LIVE CMS</span>
+              <span className="font-mono text-[11px] text-zinc-300 font-semibold" dir="ltr">WD GROUP REALTIME LIVE CMS</span>
             </div>
             
             <div className="flex items-center gap-2.5">
@@ -2034,15 +2090,15 @@ export default function LiveEditorDock() {
                 className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-blue-600/20 hover:bg-blue-600 text-blue-300 hover:text-white border border-blue-500/40 hover:border-blue-500 transition-all font-mono text-[11px] font-bold shadow-sm cursor-pointer"
               >
                 <LayoutDashboard className="w-3.5 h-3.5" />
-                <span>Go to Main Dashboard</span>
-                <ArrowUpRight className="w-3 h-3" />
+                <span>{isAr ? 'لوحة التحكم الرئيسية' : 'Go to Main Dashboard'}</span>
+                <ArrowUpRight className="w-3 h-3 rtl:rotate-270" />
               </Link>
 
               <Link
                 href="/admin/content/pages"
                 className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-300 hover:text-white border border-white/10 transition-all font-mono text-[11px] font-semibold cursor-pointer"
               >
-                <span>Full Pages CMS</span>
+                <span>{isAr ? 'إدارة الصفحات' : 'Full Pages CMS'}</span>
                 <ExternalLink className="w-3 h-3" />
               </Link>
             </div>
