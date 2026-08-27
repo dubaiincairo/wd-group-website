@@ -233,7 +233,7 @@ export default function Navbar() {
 
             <Link 
               href="/contact"
-              className="h-9 px-3.5 sm:px-4 rounded-xl text-xs font-extrabold text-[#08090C] bg-gradient-to-r from-[#C9A86A] via-[#DFBA73] to-[#C9A86A] border border-[#E3C58A]/60 hover:border-[#E3C58A] shadow-[0_0_20px_rgba(201,168,106,0.35)] hover:shadow-[0_0_28px_rgba(201,168,106,0.55)] hover:scale-[1.02] active:scale-[0.98] transition-all inline-flex items-center justify-center gap-1.5 whitespace-nowrap cursor-pointer"
+              className="h-9 px-3.5 rounded-xl text-xs font-extrabold text-[#08090C] bg-gradient-to-r from-[#C9A86A] via-[#DFBA73] to-[#C9A86A] border border-[#E3C58A]/60 hover:border-[#E3C58A] shadow-[0_0_20px_rgba(201,168,106,0.35)] hover:shadow-[0_0_28px_rgba(201,168,106,0.55)] hover:scale-[1.02] active:scale-[0.98] transition-all inline-flex items-center justify-center gap-1.5 whitespace-nowrap cursor-pointer"
             >
               <span className="leading-none">{dict.nav.contactCta}</span>
               <ArrowUpRight className="w-4 h-4 rtl:rotate-270 shrink-0 text-[#08090C]" />
