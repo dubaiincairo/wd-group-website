@@ -75,10 +75,10 @@ export default function RootLayout({
       </head>
       <body className="bg-[#08090C] text-[#F8FAFC] min-h-screen flex flex-col font-sans selection:bg-blue-600 selection:text-white antialiased">
         <LanguageProvider>
-          <WebsitePreloader />
           <DynamicHeadSEO />
           <ToastProvider>
             <MaintenanceGate>
+              <WebsitePreloader />
               <Navbar />
               <main className="flex-grow">
                 {children}
