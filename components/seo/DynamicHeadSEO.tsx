@@ -39,8 +39,19 @@ export default function DynamicHeadSEO() {
     ],
   };
 
+  const dynamicFavicon = dynamicContent?.branding?.favicon || dynamicContent?.settings?.favicon_url || seo.favicon_url;
+
   return (
     <>
+      {/* Dynamic Admin-Managed Favicon */}
+      {dynamicFavicon && (
+        <>
+          <link rel="icon" href={dynamicFavicon} sizes="any" />
+          <link rel="shortcut icon" href={dynamicFavicon} />
+          <link rel="apple-touch-icon" href={dynamicFavicon} />
+        </>
+      )}
+
       {/* 1. Google Site Verification */}
       {seo.google_site_verification && (
         <meta name="google-site-verification" content={seo.google_site_verification} />

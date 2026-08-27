@@ -9,17 +9,19 @@ export default function Icon() {
     (
       <div
         style={{
-          fontSize: 16,
-          background: '#08090C',
           width: '100%',
           height: '100%',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          color: '#C9A86A',
-          fontWeight: 800,
-          borderRadius: 6,
+          background: 'linear-gradient(135deg, #141722 0%, #08090C 100%)',
+          borderRadius: 8,
           border: '1.5px solid #C9A86A',
+          boxShadow: '0 0 10px rgba(201, 168, 106, 0.3)',
+          color: '#C9A86A',
+          fontSize: 15,
+          fontWeight: 900,
+          fontFamily: 'system-ui, -apple-system, sans-serif',
           letterSpacing: '-0.5px',
         }}
       >

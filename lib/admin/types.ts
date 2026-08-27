@@ -310,6 +310,7 @@ export interface SiteContentPayload {
   settings: {
     company_name_ar: string;
     company_name_en: string;
+    favicon_url?: string;
     nav_cta_en?: string;
     nav_cta_ar?: string;
     cr_number: string;
@@ -340,6 +341,7 @@ export interface SiteContentPayload {
     keywords_ar?: string;
     canonical_base: string;
     og_image_url: string;
+    favicon_url?: string;
     twitter_card?: string;
     twitter_handle?: string;
     google_site_verification?: string;

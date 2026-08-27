@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Settings, Save, RefreshCw, Building, Phone, Mail, AlertTriangle, Wrench } from 'lucide-react';
+import { Settings, Save, RefreshCw, Building, Phone, Mail, AlertTriangle, Wrench, Sparkles } from 'lucide-react';
 import BilingualInput from '@/components/admin/BilingualInput';
+import MediaFieldUploader from '@/components/admin/MediaFieldUploader';
 import { useToast } from '@/components/admin/ToastProvider';
 import AdminLoadingState from '@/components/admin/AdminLoadingState';
 import { useLanguage } from '@/context/LanguageContext';
@@ -211,7 +212,45 @@ export default function GlobalSettingsAdminPage() {
           </div>
         </div>
 
-        {/* 3. Platform Maintenance Mode Control */}
+        {/* 3. Brand Identity & Favicon */}
+        <div className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 space-y-4 shadow-xl col-span-1 md:col-span-2">
+          <h3 className="text-xs font-mono font-bold text-[#C9A86A] uppercase tracking-wider border-b border-white/10 pb-3 flex items-center gap-2">
+            <Sparkles className="w-4 h-4" />
+            <span>{isAr ? 'أيقونة وهوية الموقع (Favicon & Brand Icon)' : 'FAVICON & BRAND ASSETS'}</span>
+          </h3>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+            <div>
+              <MediaFieldUploader
+                label={isAr ? 'أيقونة الموقع (Favicon & Touch Icon)' : 'Website Favicon & Touch Icon'}
+                description={isAr ? 'ارفع أيقونة مخصصة (SVG, PNG, ICO) لتظهر في لسان المتصفح والإشارات المرجعية.' : 'Upload custom icon (SVG, PNG, ICO) to display in browser tabs and home bookmarks.'}
+                value={s.favicon_url || content.branding?.favicon || ''}
+                onChange={(url) => setContent({
+                  ...content,
+                  settings: { ...s, favicon_url: url },
+                  branding: { ...content.branding, favicon: url }
+                })}
+                accept="image"
+                bucket="photos"
+                aspectRatio="1:1"
+              />
+            </div>
+
+            <div className="space-y-3 bg-[#08090C] border border-white/10 rounded-2xl p-4 text-xs">
+              <div className="font-bold text-white flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-[#C9A86A]" />
+                <span>{isAr ? 'المواصفات القياسية للأيقونة' : 'Favicon Guidelines & Specs'}</span>
+              </div>
+              <ul className="space-y-1.5 text-zinc-400 font-mono text-[11px] list-disc list-inside">
+                <li>{isAr ? 'المقاس الموصى به: 64x64 أو 192x192 بكسل (مربع 1:1)' : 'Recommended dimension: 64x64 or 192x192 px (Square 1:1)'}</li>
+                <li>{isAr ? 'الصيغ المعتمدة: SVG (موصى بها لأعلى دقة), PNG, ICO' : 'Supported formats: SVG (Crisp vector recommended), PNG, ICO'}</li>
+                <li>{isAr ? 'الخلفية: داكنة متوافقة مع الهوية (#08090C) أو شفافة' : 'Background: Obsidian (#08090C) or Transparent'}</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        {/* 4. Platform Maintenance Mode Control */}
         <div className={`col-span-1 md:col-span-2 rounded-3xl p-6 space-y-5 border transition-all shadow-xl ${
           s.maintenance_mode_enabled 
             ? 'bg-amber-950/20 border-amber-500/40 shadow-amber-950/30' 

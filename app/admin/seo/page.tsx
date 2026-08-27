@@ -315,6 +315,23 @@ export default function SEOAdminPage() {
                     className="w-full bg-[#08090C] border border-white/15 rounded-xl px-4 py-2.5 text-xs text-white font-mono placeholder:text-zinc-600 focus:outline-none focus:border-blue-500"
                   />
                 </div>
+
+                <div className="pt-4 border-t border-white/10">
+                  <MediaFieldUploader
+                    label={isAr ? 'أيقونة المتصفح والمفضلة (Favicon & Touch Icon)' : 'Browser Favicon & Touch Icon'}
+                    description={isAr ? 'أيقونة الموقع التي تظهر في ألسنة المتصفحات ومحركات البحث وقوائم المشاركة' : 'Favicon displayed in browser tabs, address bar, mobile shortcuts, and search engine snippets'}
+                    value={seo.favicon_url || content.branding?.favicon || content.settings?.favicon_url || ''}
+                    onChange={(url) => setContent({
+                      ...content,
+                      seo: { ...seo, favicon_url: url },
+                      settings: { ...content.settings, favicon_url: url },
+                      branding: { ...content.branding, favicon: url }
+                    })}
+                    bucket="photos"
+                    accept="image"
+                    aspectRatio="1:1"
+                  />
+                </div>
               </div>
             </div>
           )}
