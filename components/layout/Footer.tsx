@@ -37,6 +37,7 @@ export default function Footer() {
                   src={logoSrc} 
                   alt={lang === 'ar' ? 'مجموعة دبليو دي للأعمال' : 'WD Group'} 
                   fill
+                  sizes="176px"
                   className="object-contain"
                 />
               </div>

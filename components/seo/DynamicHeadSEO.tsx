@@ -79,13 +79,13 @@ export default function DynamicHeadSEO() {
       />
 
       {/* 8. Google Analytics 4 (GA4) */}
-      {seo.google_analytics_id && (
+      {seo.google_analytics_id && seo.google_analytics_id !== 'G-FVBW70B8H5' && (
         <>
           <Script
             src={`https://www.googletagmanager.com/gtag/js?id=${seo.google_analytics_id}`}
             strategy="afterInteractive"
           />
-          <Script id="google-analytics" strategy="afterInteractive">
+          <Script id="google-analytics-dynamic" strategy="afterInteractive">
             {`
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}

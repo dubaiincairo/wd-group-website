@@ -55,6 +55,7 @@ export default function Navbar() {
                 src={logoSrc} 
                 alt={lang === 'ar' ? 'مجموعة دبليو دي للأعمال' : 'WD Group'} 
                 fill
+                sizes="(max-width: 640px) 176px, 176px"
                 className="object-contain drop-shadow-[0_0_16px_rgba(201,168,106,0.25)]"
                 priority
               />

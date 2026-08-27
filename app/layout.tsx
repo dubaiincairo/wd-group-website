@@ -6,11 +6,15 @@ import { LanguageProvider } from '@/context/LanguageContext';
 import { ToastProvider } from '@/components/admin/ToastProvider';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
-import LiveEditorDock from '@/components/live-editor/LiveEditorDock';
-
+import dynamic from 'next/dynamic';
 import MaintenanceGate from '@/components/layout/MaintenanceGate';
 import DynamicHeadSEO from '@/components/seo/DynamicHeadSEO';
 import WebsitePreloader from '@/components/layout/WebsitePreloader';
+
+const LiveEditorDock = dynamic(
+  () => import('@/components/live-editor/LiveEditorDock'),
+  { ssr: false }
+);
 
 const inter = Inter({
   subsets: ['latin'],
@@ -47,6 +51,14 @@ export const metadata: Metadata = {
     siteName: 'WD Group Holding',
     locale: 'en_US',
     type: 'website',
+  },
+  icons: {
+    icon: [
+      { url: '/favicon.ico' },
+      { url: '/brand/wd-group-logo-white.png', sizes: '192x192', type: 'image/png' },
+    ],
+    shortcut: '/favicon.ico',
+    apple: '/brand/wd-group-logo-white.png',
   },
 };
 

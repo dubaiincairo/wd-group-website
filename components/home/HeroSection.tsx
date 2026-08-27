@@ -120,11 +120,11 @@ export default function HeroSection() {
                 ref={(el) => { videoRefs.current[item.id] = el; }}
                 src={item.video}
                 poster={item.poster}
-                autoPlay
+                autoPlay={isActive}
                 loop
                 muted
                 playsInline
-                preload="auto"
+                preload={isActive ? 'auto' : 'none'}
                 className="absolute inset-0 w-full h-full object-cover object-center scale-105"
               />
             </div>

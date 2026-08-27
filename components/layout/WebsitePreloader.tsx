@@ -81,6 +81,7 @@ export default function WebsitePreloader({ forced = false }: { forced?: boolean 
                 src="/brand/wd-group-logo-ar-white.png"
                 alt="مجموعة دبليو دي للأعمال"
                 fill
+                sizes="(max-width: 640px) 224px, 256px"
                 className="object-contain drop-shadow-[0_0_24px_rgba(201,168,106,0.35)]"
                 priority
               />
@@ -91,6 +92,7 @@ export default function WebsitePreloader({ forced = false }: { forced?: boolean 
                 src="/brand/wd-group-logo-white.png"
                 alt="WD Group"
                 fill
+                sizes="(max-width: 640px) 192px, 224px"
                 className="object-contain drop-shadow-[0_0_24px_rgba(201,168,106,0.35)]"
                 priority
               />
