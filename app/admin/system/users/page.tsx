@@ -17,10 +17,14 @@ import {
 } from 'lucide-react';
 import ConfirmationModal from '@/components/admin/ConfirmationModal';
 import { useToast } from '@/components/admin/ToastProvider';
+import { useLanguage } from '@/context/LanguageContext';
 import type { AdminUser, AdminRole } from '@/lib/admin/types';
 
 export default function StaffUsersAdminPage() {
   const { showToast } = useToast();
+  const { lang } = useLanguage();
+  const isAr = lang === 'ar';
+
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -39,7 +43,7 @@ export default function StaffUsersAdminPage() {
       }
     } catch (e) {
       console.error('Users fetch error:', e);
-      showToast('Failed to load users', 'error');
+      showToast(isAr ? 'فشل تحميل بيانات المستخدمين' : 'Failed to load users', 'error');
     } finally {
       setLoading(false);
     }
@@ -51,8 +55,8 @@ export default function StaffUsersAdminPage() {
 
   const handleOpenCreate = () => {
     setEditingUser({
-      email: '',
       full_name: '',
+      email: '',
       role: 'editor',
       is_active: true,
       password: '',
@@ -67,21 +71,16 @@ export default function StaffUsersAdminPage() {
 
   const handleSaveUser = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!editingUser || !editingUser.email || !editingUser.full_name) {
-      showToast('Email and Full Name are required', 'error');
-      return;
-    }
-
-    if (!editingUser.id && (!editingUser.password || editingUser.password.length < 8)) {
-      showToast('Password must be at least 8 characters long for new users', 'error');
+    if (!editingUser?.email || !editingUser.full_name) {
+      showToast(isAr ? 'يرجى إكمال الاسم والبريد الإلكتروني' : 'Name and Email are required', 'error');
       return;
     }
 
     try {
       setSavingUser(true);
-      const isEdit = Boolean(editingUser.id);
-      const url = isEdit ? `/api/admin/users/${editingUser.id}` : '/api/admin/users';
-      const method = isEdit ? 'PUT' : 'POST';
+      const isNew = !editingUser.id;
+      const url = isNew ? '/api/admin/users' : `/api/admin/users/${editingUser.id}`;
+      const method = isNew ? 'POST' : 'PUT';
 
       const res = await fetch(url, {
         method,
@@ -91,15 +90,15 @@ export default function StaffUsersAdminPage() {
 
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
-        throw new Error(err.error || 'Failed to save staff account');
+        throw new Error(err.error || 'Failed to save account');
       }
 
-      showToast(isEdit ? 'Staff profile updated' : 'New staff member added', 'success');
+      showToast(isNew ? (isAr ? 'تم إنشاء الحساب بنجاح' : 'Staff member created') : (isAr ? 'تم تحديث الحساب' : 'Staff member updated'), 'success');
       setModalOpen(false);
       setEditingUser(null);
       fetchUsers();
     } catch (err: any) {
-      showToast(err.message || 'Error saving user', 'error');
+      showToast(err.message || (isAr ? 'فشل حفظ الحساب' : 'Error saving staff member'), 'error');
     } finally {
       setSavingUser(false);
     }
@@ -113,11 +112,11 @@ export default function StaffUsersAdminPage() {
         body: JSON.stringify({ is_active: !user.is_active }),
       });
       if (res.ok) {
-        showToast(user.is_active ? 'User account deactivated' : 'User account activated', 'info');
+        showToast(user.is_active ? (isAr ? 'تم إلغاء تفعيل الحساب' : 'User account deactivated') : (isAr ? 'تم تفعيل الحساب' : 'User account activated'), 'info');
         setUsers((prev) => prev.map((u) => (u.id === user.id ? { ...u, is_active: !u.is_active } : u)));
       }
     } catch (e) {
-      showToast('Failed to toggle status', 'error');
+      showToast(isAr ? 'فشل تغيير الحالة' : 'Failed to toggle status', 'error');
     }
   };
 
@@ -129,46 +128,46 @@ export default function StaffUsersAdminPage() {
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-mono font-bold mb-2">
             <ShieldCheck className="w-3.5 h-3.5" />
-            <span>ROLE-BASED ACCESS CONTROL</span>
+            <span>{isAr ? 'إدارة الهوية وصلاحيات الفريق' : 'IDENTITY & ACCESS CONTROL'}</span>
           </div>
           <h1 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
-            Staff & Permissions
+            {isAr ? 'فريق العمل والصلاحيات' : 'Staff & Permissions'}
           </h1>
           <p className="text-xs sm:text-sm text-zinc-400 mt-1">
-            Manage administrator accounts, roles (Owner, Admin, Editor, CRM, HR, Viewer), and access security.
+            {isAr ? 'إدارة حسابات المشرفين، الأدوار (المالك، المدير، المحرر، علاقات العملاء، الموارد البشرية)، وحماية الوصول.' : 'Manage administrator accounts, roles (Owner, Admin, Editor, CRM, HR, Viewer), and access security.'}
           </p>
         </div>
 
         <div className="flex items-center gap-3">
           <button
             onClick={fetchUsers}
-            className="p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-400 hover:text-white transition-colors"
-            title="Refresh staff"
+            className="p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-400 hover:text-white transition-colors cursor-pointer"
+            title={isAr ? 'تحديث القائمة' : 'Refresh staff'}
           >
             <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
           </button>
 
           <button
             onClick={handleOpenCreate}
-            className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs sm:text-sm font-bold transition-all shadow-glow-blue"
+            className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs sm:text-sm font-bold transition-all shadow-glow-blue cursor-pointer"
           >
             <Plus className="w-4 h-4" />
-            <span>Add Staff Member</span>
+            <span>{isAr ? 'إضافة عضو جديد' : 'Add Staff Member'}</span>
           </button>
         </div>
       </div>
 
       {/* Users Table */}
       <div className="bg-[#0F1117]/90 border border-white/10 rounded-3xl overflow-hidden shadow-xl">
-        <table className="w-full text-left text-xs">
+        <table className={`w-full ${isAr ? 'text-right' : 'text-left'} text-xs`}>
           <thead className="bg-black/40 border-b border-white/10 text-zinc-400 font-mono">
             <tr>
-              <th className="py-4 px-6 font-semibold">Staff Member</th>
-              <th className="py-4 px-4 font-semibold">Email</th>
-              <th className="py-4 px-4 font-semibold">Assigned Role</th>
-              <th className="py-4 px-4 font-semibold">Status</th>
-              <th className="py-4 px-4 font-semibold">Last Login</th>
-              <th className="py-4 px-6 text-right font-semibold">Action</th>
+              <th className="py-4 px-6 font-semibold">{isAr ? 'عضو الفريق' : 'Staff Member'}</th>
+              <th className="py-4 px-4 font-semibold">{isAr ? 'البريد الإلكتروني' : 'Email'}</th>
+              <th className="py-4 px-4 font-semibold">{isAr ? 'الدور المخصص' : 'Assigned Role'}</th>
+              <th className="py-4 px-4 font-semibold">{isAr ? 'الحالة' : 'Status'}</th>
+              <th className="py-4 px-4 font-semibold">{isAr ? 'آخر تسجيل دخول' : 'Last Login'}</th>
+              <th className={`py-4 px-6 ${isAr ? 'text-left' : 'text-right'} font-semibold`}>{isAr ? 'الإجراء' : 'Action'}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-white/5">
@@ -176,7 +175,7 @@ export default function StaffUsersAdminPage() {
               <tr>
                 <td colSpan={6} className="py-12 text-center text-zinc-500 font-mono">
                   <RefreshCw className="w-6 h-6 animate-spin mx-auto text-blue-500 mb-2" />
-                  Loading accounts…
+                  {isAr ? 'جارٍ تحميل الحسابات…' : 'Loading accounts…'}
                 </td>
               </tr>
             ) : users.map((user) => (

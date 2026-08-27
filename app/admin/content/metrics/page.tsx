@@ -4,10 +4,14 @@ import React, { useState, useEffect } from 'react';
 import { Save, RefreshCw, Activity, CheckCircle2 } from 'lucide-react';
 import BilingualInput from '@/components/admin/BilingualInput';
 import { useToast } from '@/components/admin/ToastProvider';
+import { useLanguage } from '@/context/LanguageContext';
 import type { SiteContentPayload } from '@/lib/admin/types';
 
 export default function MetricsEditorPage() {
   const { showToast } = useToast();
+  const { lang } = useLanguage();
+  const isAr = lang === 'ar';
+
   const [content, setContent] = useState<SiteContentPayload | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -22,13 +26,13 @@ export default function MetricsEditorPage() {
           setContent(d.data);
         }
       } catch (err) {
-        showToast('Failed to load metrics data', 'error');
+        showToast(isAr ? 'فشل تحميل بيانات الأرقام والإحصائيات' : 'Failed to load metrics data', 'error');
       } finally {
         setLoading(false);
       }
     }
     load();
-  }, [showToast]);
+  }, [showToast, isAr]);
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,9 +47,9 @@ export default function MetricsEditorPage() {
       });
 
       if (!res.ok) throw new Error('Failed to save metrics');
-      showToast('Metrics updated and published successfully', 'success');
+      showToast(isAr ? 'تم حفظ ونشر الإحصائيات والأرقام بنجاح' : 'Metrics updated and published successfully', 'success');
     } catch (err: any) {
-      showToast(err.message || 'Error saving metrics', 'error');
+      showToast(err.message || (isAr ? 'خطأ في حفظ الإحصائيات' : 'Error saving metrics'), 'error');
     } finally {
       setSaving(false);
     }
@@ -55,7 +59,7 @@ export default function MetricsEditorPage() {
     return (
       <div className="p-12 text-center space-y-3">
         <RefreshCw className="w-8 h-8 text-blue-500 animate-spin mx-auto" />
-        <p className="text-xs text-zinc-400 font-mono">Loading metrics configuration…</p>
+        <p className="text-xs text-zinc-400 font-mono">{isAr ? 'جارٍ تحميل إحصائيات وأرقام المنظومة…' : 'Loading metrics configuration…'}</p>
       </div>
     );
   }
@@ -70,13 +74,13 @@ export default function MetricsEditorPage() {
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-mono font-bold mb-2">
             <Activity className="w-3.5 h-3.5" />
-            <span>STATISTICS BAR</span>
+            <span>{isAr ? 'شريط المؤشرات والأرقام الرئيسية' : 'STATISTICS BAR'}</span>
           </div>
           <h1 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
-            Corporate Key Metrics
+            {isAr ? 'المؤشرات والأرقام الرئيسية' : 'Corporate Key Metrics'}
           </h1>
           <p className="text-xs sm:text-sm text-zinc-400 mt-1">
-            Edit the 4 primary statistics cards displayed on the homepage stats bar.
+            {isAr ? 'تعديل بطاقات الإحصاءات الأربع الرئيسية المعروضة في الصفحة الرئيسية.' : 'Edit the 4 primary statistics cards displayed on the homepage stats bar.'}
           </p>
         </div>
 
@@ -86,7 +90,7 @@ export default function MetricsEditorPage() {
           className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white text-xs sm:text-sm font-bold transition-all shadow-glow-blue cursor-pointer whitespace-nowrap shrink-0 leading-none self-start sm:self-auto"
         >
           <Save className="w-4 h-4 shrink-0" />
-          <span className="whitespace-nowrap leading-none">{saving ? 'Publishing…' : 'Save & Publish Metrics'}</span>
+          <span className="whitespace-nowrap leading-none">{saving ? (isAr ? 'جارٍ النشر…' : 'Publishing…') : (isAr ? 'حفظ ونشر الإحصائيات' : 'Save & Publish Metrics')}</span>
         </button>
       </div>
 

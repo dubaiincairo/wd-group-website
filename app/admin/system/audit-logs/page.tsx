@@ -3,10 +3,14 @@
 import React, { useState, useEffect } from 'react';
 import { Lock, RefreshCw, Search, Shield, Clock } from 'lucide-react';
 import { useToast } from '@/components/admin/ToastProvider';
+import { useLanguage } from '@/context/LanguageContext';
 import type { AuditLogEntry } from '@/lib/admin/types';
 
 export default function AuditLogsAdminPage() {
   const { showToast } = useToast();
+  const { lang } = useLanguage();
+  const isAr = lang === 'ar';
+
   const [logs, setAuditLogs] = useState<AuditLogEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -21,7 +25,7 @@ export default function AuditLogsAdminPage() {
       }
     } catch (e) {
       console.error('Audit logs fetch error:', e);
-      showToast('Failed to load audit logs', 'error');
+      showToast(isAr ? 'فشل تحميل سجل التدقيق والأمان' : 'Failed to load audit logs', 'error');
     } finally {
       setLoading(false);
     }
@@ -50,20 +54,20 @@ export default function AuditLogsAdminPage() {
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-mono font-bold mb-2">
             <Lock className="w-3.5 h-3.5" />
-            <span>IMMUTABLE AUDIT TRAIL</span>
+            <span>{isAr ? 'سجل التدقيق والأمان غير القابل للتعديل' : 'IMMUTABLE AUDIT TRAIL'}</span>
           </div>
           <h1 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
-            Security & Activity Audit
+            {isAr ? 'سجل الأمان وتدقيق العمليات' : 'Security & Activity Audit'}
           </h1>
           <p className="text-xs sm:text-sm text-zinc-400 mt-1">
-            Complete chronological record of administrative logins, content mutations, and data operations.
+            {isAr ? 'سجل زمني متكامل لعمليات الدخول، تعديل المحتوى، وتحديث البيانات الإدارية.' : 'Complete chronological record of administrative logins, content mutations, and data operations.'}
           </p>
         </div>
 
         <button
           onClick={fetchLogs}
-          className="p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-400 hover:text-white transition-colors"
-          title="Refresh logs"
+          className="p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-400 hover:text-white transition-colors cursor-pointer"
+          title={isAr ? 'تحديث السجل' : 'Refresh logs'}
         >
           <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
         </button>
@@ -71,27 +75,27 @@ export default function AuditLogsAdminPage() {
 
       {/* Search Bar */}
       <div className="relative bg-[#0F1117]/90 border border-white/10 rounded-2xl p-4">
-        <Search className="w-4 h-4 text-zinc-500 absolute left-7 top-1/2 -translate-y-1/2" />
+        <Search className={`w-4 h-4 text-zinc-500 absolute ${isAr ? 'right-7' : 'left-7'} top-1/2 -translate-y-1/2`} />
         <input
           type="text"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder="Filter by actor email, action, resource, or IP address…"
-          className="w-full bg-[#08090C] border border-white/15 focus:border-blue-500 rounded-xl pl-10 pr-4 py-2.5 text-xs sm:text-sm text-white placeholder:text-zinc-600 focus:outline-none"
+          placeholder={isAr ? 'تصفية حسب بريد المنفّذ، الإجراء، نوع المورد، أو عنوان IP…' : 'Filter by actor email, action, resource, or IP address…'}
+          className={`w-full bg-[#08090C] border border-white/15 focus:border-blue-500 rounded-xl ${isAr ? 'pr-10 pl-4 text-right' : 'pl-10 pr-4 text-left'} py-2.5 text-xs sm:text-sm text-white placeholder:text-zinc-600 focus:outline-none`}
         />
       </div>
 
       {/* Audit Logs Table */}
       <div className="bg-[#0F1117]/90 border border-white/10 rounded-3xl overflow-hidden shadow-xl">
-        <table className="w-full text-left text-xs">
+        <table className={`w-full ${isAr ? 'text-right' : 'text-left'} text-xs`}>
           <thead className="bg-black/40 border-b border-white/10 text-zinc-400 font-mono">
             <tr>
-              <th className="py-4 px-6 font-semibold">Timestamp</th>
-              <th className="py-4 px-4 font-semibold">Actor</th>
-              <th className="py-4 px-4 font-semibold">Action</th>
-              <th className="py-4 px-4 font-semibold">Resource</th>
-              <th className="py-4 px-4 font-semibold">IP Address</th>
-              <th className="py-4 px-6 font-semibold">Metadata</th>
+              <th className="py-4 px-6 font-semibold">{isAr ? 'التوقيت' : 'Timestamp'}</th>
+              <th className="py-4 px-4 font-semibold">{isAr ? 'المنفّذ' : 'Actor'}</th>
+              <th className="py-4 px-4 font-semibold">{isAr ? 'الإجراء' : 'Action'}</th>
+              <th className="py-4 px-4 font-semibold">{isAr ? 'المورد' : 'Resource'}</th>
+              <th className="py-4 px-4 font-semibold">{isAr ? 'عنوان IP' : 'IP Address'}</th>
+              <th className="py-4 px-6 font-semibold">{isAr ? 'البيانات الوصفية' : 'Metadata'}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-white/5 font-mono">
@@ -99,13 +103,13 @@ export default function AuditLogsAdminPage() {
               <tr>
                 <td colSpan={6} className="py-12 text-center text-zinc-500">
                   <RefreshCw className="w-6 h-6 animate-spin mx-auto text-blue-500 mb-2" />
-                  Loading audit stream…
+                  {isAr ? 'جارٍ تحميل تدفق سجل العمليات…' : 'Loading audit stream…'}
                 </td>
               </tr>
             ) : filteredLogs.length === 0 ? (
               <tr>
                 <td colSpan={6} className="py-12 text-center text-zinc-500 font-sans">
-                  No audit events matching criteria.
+                  {isAr ? 'لا توجد أحداث مطابقة لمعايير البحث.' : 'No audit events matching criteria.'}
                 </td>
               </tr>
             ) : (

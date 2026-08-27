@@ -5,10 +5,14 @@ import { HardHat, Plus, Trash2, Save, RefreshCw } from 'lucide-react';
 import BilingualInput from '@/components/admin/BilingualInput';
 import ConfirmationModal from '@/components/admin/ConfirmationModal';
 import { useToast } from '@/components/admin/ToastProvider';
+import { useLanguage } from '@/context/LanguageContext';
 import type { SiteContentPayload } from '@/lib/admin/types';
 
 export default function ContractingSectorAdminPage() {
   const { showToast } = useToast();
+  const { lang } = useLanguage();
+  const isAr = lang === 'ar';
+
   const [content, setContent] = useState<SiteContentPayload | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -24,13 +28,13 @@ export default function ContractingSectorAdminPage() {
           setContent(d.data);
         }
       } catch (err) {
-        showToast('Failed to load contracting data', 'error');
+        showToast(isAr ? 'فشل تحميل بيانات المقاولات' : 'Failed to load contracting data', 'error');
       } finally {
         setLoading(false);
       }
     }
     load();
-  }, [showToast]);
+  }, [showToast, isAr]);
 
   const handleSave = async () => {
     if (!content) return;
@@ -42,9 +46,9 @@ export default function ContractingSectorAdminPage() {
         body: JSON.stringify(content),
       });
       if (!res.ok) throw new Error('Failed to save contracting data');
-      showToast('Contracting services saved and published', 'success');
+      showToast(isAr ? 'تم حفظ ونشر خدمات المقاولات بنجاح' : 'Contracting services saved and published', 'success');
     } catch (err: any) {
-      showToast(err.message || 'Error saving contracting data', 'error');
+      showToast(err.message || (isAr ? 'خطأ في حفظ خدمات المقاولات' : 'Failed to save contracting data'), 'error');
     } finally {
       setSaving(false);
     }
@@ -52,22 +56,23 @@ export default function ContractingSectorAdminPage() {
 
   const handleAddService = () => {
     if (!content) return;
+    const currentServices = content.contracting?.services || [];
     const newService = {
-      id: `service_${Date.now()}`,
-      title_en: 'New Contracting Service',
-      title_ar: 'خدمة مقاولات جديدة',
-      desc_en: 'Architectural coordination, fit-out execution, and turnkey delivery.',
-      desc_ar: 'تنسيق معماري وتنفيذ تجهيز داخلي وتسليم تسليم مفتاح.',
+      id: `serv_${Date.now()}`,
+      title_en: 'New Contracting Capability',
+      title_ar: 'خدمة مقاولات وتجهيز جديدة',
+      desc_en: 'Comprehensive execution, engineering compliance, and turnkey delivery.',
+      desc_ar: 'تنفيذ متكامل ومطابقة هندسية وتسليم شامل للمشاريع.',
     };
 
     setContent({
       ...content,
       contracting: {
         ...content.contracting,
-        services: [...content.contracting.services, newService],
+        services: [...currentServices, newService],
       },
     });
-    showToast('New service added', 'info');
+    showToast(isAr ? 'تمت إضافة الخدمة. اضغط حفظ ونشر.' : 'New service added. Remember to Save & Publish.', 'info');
   };
 
   const handleDeleteService = (id: string) => {
@@ -80,14 +85,14 @@ export default function ContractingSectorAdminPage() {
       },
     });
     setDeletingId(null);
-    showToast('Service removed', 'info');
+    showToast(isAr ? 'تم حذف الخدمة' : 'Service removed', 'info');
   };
 
   if (loading || !content) {
     return (
       <div className="p-12 text-center space-y-3">
         <RefreshCw className="w-8 h-8 text-amber-500 animate-spin mx-auto" />
-        <p className="text-xs text-zinc-400 font-mono">Loading Contracting services…</p>
+        <p className="text-xs text-zinc-400 font-mono">{isAr ? 'جارٍ تحميل خدمات المقاولات والتجهيز…' : 'Loading Contracting services…'}</p>
       </div>
     );
   }
@@ -102,13 +107,13 @@ export default function ContractingSectorAdminPage() {
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-mono font-bold mb-2">
             <HardHat className="w-3.5 h-3.5" />
-            <span>CONTRACTING & FIT-OUT SERVICES</span>
+            <span>{isAr ? 'خدمات المقاولات والتجهيز الداخلي' : 'CONTRACTING & FIT-OUT SERVICES'}</span>
           </div>
           <h1 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
-            Turnkey Services & Lifecycle
+            {isAr ? 'الخدمات الشاملة ودورة التنفيذ' : 'Turnkey Services & Lifecycle'}
           </h1>
           <p className="text-xs sm:text-sm text-zinc-400 mt-1">
-            Manage general contracting capabilities, interior fit-out services, and execution lifecycle.
+            {isAr ? 'إدارة قدرات المقاولات العامة وخدمات التجهيز الداخلي والتنفيذ المتكامل.' : 'Manage general contracting capabilities, interior fit-out services, and execution lifecycle.'}
           </p>
         </div>
 
@@ -119,7 +124,7 @@ export default function ContractingSectorAdminPage() {
             className="inline-flex items-center gap-2 px-4 py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white text-xs sm:text-sm font-bold transition-all"
           >
             <Plus className="w-4 h-4 text-amber-400" />
-            <span>Add Service</span>
+            <span>{isAr ? 'إضافة خدمة' : 'Add Service'}</span>
           </button>
 
           <button
@@ -129,7 +134,7 @@ export default function ContractingSectorAdminPage() {
             className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-amber-600 hover:bg-amber-500 disabled:opacity-50 text-white text-xs sm:text-sm font-bold transition-all shadow-glow-gold cursor-pointer whitespace-nowrap shrink-0 leading-none"
           >
             <Save className="w-4 h-4 shrink-0" />
-            <span className="whitespace-nowrap leading-none">{saving ? 'Publishing…' : 'Save & Publish'}</span>
+            <span className="whitespace-nowrap leading-none">{saving ? (isAr ? 'جارٍ النشر…' : 'Publishing…') : (isAr ? 'حفظ ونشر الخدمات' : 'Save & Publish')}</span>
           </button>
         </div>
       </div>

@@ -106,8 +106,8 @@ export default function WebsitePreloader() {
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/15 to-transparent -translate-x-full animate-[shimmer_2s_infinite]" />
             
             {/* Gold WD Monogram */}
-            <span className="font-serif text-3xl sm:text-4xl font-extrabold tracking-wider bg-gradient-to-b from-[#FFF0D0] via-[#C9A86A] to-[#8C6D37] bg-clip-text text-transparent drop-shadow-md">
-              WD
+            <span className={`${isAr ? 'text-lg sm:text-xl font-bold font-sans' : 'font-serif text-3xl sm:text-4xl font-extrabold tracking-wider'} bg-gradient-to-b from-[#FFF0D0] via-[#C9A86A] to-[#8C6D37] bg-clip-text text-transparent drop-shadow-md text-center px-1`}>
+              {isAr ? 'دبليو دي' : 'WD'}
             </span>
           </div>
 

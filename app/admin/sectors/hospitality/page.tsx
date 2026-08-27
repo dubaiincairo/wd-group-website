@@ -15,10 +15,14 @@ import {
 import BilingualInput from '@/components/admin/BilingualInput';
 import ConfirmationModal from '@/components/admin/ConfirmationModal';
 import { useToast } from '@/components/admin/ToastProvider';
+import { useLanguage } from '@/context/LanguageContext';
 import type { SiteContentPayload } from '@/lib/admin/types';
 
 export default function HospitalitySectorAdminPage() {
   const { showToast } = useToast();
+  const { lang } = useLanguage();
+  const isAr = lang === 'ar';
+
   const [content, setContent] = useState<SiteContentPayload | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -34,13 +38,13 @@ export default function HospitalitySectorAdminPage() {
           setContent(d.data);
         }
       } catch (err) {
-        showToast('Failed to load hospitality data', 'error');
+        showToast(isAr ? 'فشل تحميل بيانات الضيافة' : 'Failed to load hospitality data', 'error');
       } finally {
         setLoading(false);
       }
     }
     load();
-  }, [showToast]);
+  }, [showToast, isAr]);
 
   const handleSave = async () => {
     if (!content) return;
@@ -51,10 +55,10 @@ export default function HospitalitySectorAdminPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(content),
       });
-      if (!res.ok) throw new Error('Failed to save properties');
-      showToast('SwissBlue hospitality portfolio saved and published', 'success');
+      if (!res.ok) throw new Error('Failed to save hospitality data');
+      showToast(isAr ? 'تم حفظ ونشر بيانات الضيافة بنجاح' : 'Hospitality properties saved and published', 'success');
     } catch (err: any) {
-      showToast(err.message || 'Error saving properties', 'error');
+      showToast(err.message || (isAr ? 'خطأ في الحفظ' : 'Failed to save hospitality data'), 'error');
     } finally {
       setSaving(false);
     }
@@ -62,14 +66,18 @@ export default function HospitalitySectorAdminPage() {
 
   const handleAddProperty = () => {
     if (!content) return;
+    const currentProps = content.hospitality?.properties || [];
     const newProp = {
       id: `prop_${Date.now()}`,
-      name_en: 'New SwissBlue Property',
-      name_ar: 'منشأة سويس بلو جديدة',
+      name_en: 'SwissBlue New Property',
+      name_ar: 'فندق سويس بلو الجديد',
       city_en: 'Riyadh',
       city_ar: 'الرياض',
-      desc_en: 'Luxury serviced suites with contemporary amenities.',
-      desc_ar: 'أجنحة فندقية مخدومة راقية مزودة بأحدث التجهيزات.',
+      stars: 4,
+      desc_en: 'Premium serviced residence providing modern hospitality excellence.',
+      desc_ar: 'وحدات سكنية فندقية راقية تقدم تجربة ضيافة عصرية متميزة.',
+      image_url: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80',
+      google_maps_url: 'https://maps.google.com',
       review_url: '',
       website_url: 'https://new.swissbluehotels.com',
     };
@@ -78,10 +86,10 @@ export default function HospitalitySectorAdminPage() {
       ...content,
       hospitality: {
         ...content.hospitality,
-        properties: [...content.hospitality.properties, newProp],
+        properties: [...currentProps, newProp],
       },
     });
-    showToast('New property card added to portfolio', 'info');
+    showToast(isAr ? 'تمت إضافة المنشأة. اضغط حفظ ونشر.' : 'New property added. Remember to Save & Publish.', 'info');
   };
 
   const handleDeleteProperty = (id: string) => {
@@ -94,14 +102,14 @@ export default function HospitalitySectorAdminPage() {
       },
     });
     setDeletingId(null);
-    showToast('Property removed', 'info');
+    showToast(isAr ? 'تم حذف المنشأة' : 'Property removed', 'info');
   };
 
   if (loading || !content) {
     return (
       <div className="p-12 text-center space-y-3">
         <RefreshCw className="w-8 h-8 text-sky-500 animate-spin mx-auto" />
-        <p className="text-xs text-zinc-400 font-mono">Loading SwissBlue properties portfolio…</p>
+        <p className="text-xs text-zinc-400 font-mono">{isAr ? 'جارٍ تحميل محفظة منشآت سويس بلو الفندقية…' : 'Loading SwissBlue properties portfolio…'}</p>
       </div>
     );
   }
@@ -116,13 +124,13 @@ export default function HospitalitySectorAdminPage() {
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-500/10 border border-sky-500/20 text-sky-400 text-xs font-mono font-bold mb-2">
             <Building2 className="w-3.5 h-3.5" />
-            <span>SWISSBLUE HOSPITALITY PORTFOLIO</span>
+            <span>{isAr ? 'محفظة منشآت ضيافة سويس بلو' : 'SWISSBLUE HOSPITALITY PORTFOLIO'}</span>
           </div>
           <h1 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
-            Hotel & Serviced Residences
+            {isAr ? 'الفنادق والوحدات السكنية المخدومة' : 'Hotel & Serviced Residences'}
           </h1>
           <p className="text-xs sm:text-sm text-zinc-400 mt-1">
-            Manage the 6 Saudi properties, location tags, Google review links, and descriptions.
+            {isAr ? 'إدارة منشآت سويس بلو في السعودية، تصنيف النجوم، وروابط خرائط جوجل والتفاصيل.' : 'Manage the 6 Saudi properties, location tags, Google review links, and descriptions.'}
           </p>
         </div>
 
@@ -133,17 +141,17 @@ export default function HospitalitySectorAdminPage() {
             className="inline-flex items-center gap-2 px-4 py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white text-xs sm:text-sm font-bold transition-all"
           >
             <Plus className="w-4 h-4 text-sky-400" />
-            <span>Add Property</span>
+            <span>{isAr ? 'إضافة منشأة' : 'Add Property'}</span>
           </button>
 
           <button
             type="button"
             onClick={handleSave}
             disabled={saving}
-            className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-sky-600 hover:bg-sky-500 disabled:opacity-50 text-white text-xs sm:text-sm font-bold transition-all shadow-glow-blue cursor-pointer whitespace-nowrap shrink-0 leading-none"
+            className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-sky-600 hover:bg-sky-500 disabled:opacity-50 text-white text-xs sm:text-sm font-bold transition-all shadow-glow-sky cursor-pointer whitespace-nowrap shrink-0 leading-none"
           >
             <Save className="w-4 h-4 shrink-0" />
-            <span className="whitespace-nowrap leading-none">{saving ? 'Publishing…' : 'Save & Publish Portfolio'}</span>
+            <span className="whitespace-nowrap leading-none">{saving ? (isAr ? 'جارٍ النشر…' : 'Publishing…') : (isAr ? 'حفظ ونشر المنشآت' : 'Save & Publish')}</span>
           </button>
         </div>
       </div>

@@ -22,10 +22,14 @@ import {
 import BilingualInput from '@/components/admin/BilingualInput';
 import MediaFieldUploader from '@/components/admin/MediaFieldUploader';
 import { useToast } from '@/components/admin/ToastProvider';
+import { useLanguage } from '@/context/LanguageContext';
 import type { SiteContentPayload } from '@/lib/admin/types';
 
 export default function SEOAdminPage() {
   const { showToast } = useToast();
+  const { lang } = useLanguage();
+  const isAr = lang === 'ar';
+
   const [content, setContent] = useState<SiteContentPayload | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -47,13 +51,13 @@ export default function SEOAdminPage() {
           }
         }
       } catch (err) {
-        showToast('Failed to load SEO metadata', 'error');
+        showToast(isAr ? 'فشل تحميل بيانات محركات البحث' : 'Failed to load SEO configuration', 'error');
       } finally {
         setLoading(false);
       }
     }
     load();
-  }, [showToast]);
+  }, [showToast, isAr]);
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -67,9 +71,9 @@ export default function SEOAdminPage() {
         body: JSON.stringify(content),
       });
       if (!res.ok) throw new Error('Failed to save SEO metadata');
-      showToast('Google Search records & SEO metadata published successfully!', 'success');
+      showToast(isAr ? 'تم حفظ ونشر بيانات السيو ومحركات البحث بنجاح' : 'Google Search records & SEO metadata published successfully!', 'success');
     } catch (err: any) {
-      showToast(err.message || 'Error saving SEO data', 'error');
+      showToast(err.message || (isAr ? 'خطأ في الحفظ' : 'Error saving SEO data'), 'error');
     } finally {
       setSaving(false);
     }
@@ -79,7 +83,7 @@ export default function SEOAdminPage() {
     return (
       <div className="p-12 text-center space-y-3">
         <RefreshCw className="w-8 h-8 text-blue-500 animate-spin mx-auto" />
-        <p className="text-xs text-zinc-400 font-mono">Loading Google Search & SEO records…</p>
+        <p className="text-xs text-zinc-400 font-mono">{isAr ? 'جارٍ تحميل سجلات محركات البحث وبيانات السيو…' : 'Loading Google Search & SEO records…'}</p>
       </div>
     );
   }
@@ -94,13 +98,13 @@ export default function SEOAdminPage() {
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-mono font-bold mb-2">
             <Search className="w-3.5 h-3.5" />
-            <span>GOOGLE SEARCH & SEO CONTROL CENTER</span>
+            <span>{isAr ? 'مركز التحكم في محركات البحث وجوجل' : 'GOOGLE SEARCH & SEO CONTROL CENTER'}</span>
           </div>
           <h1 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
-            Google Search & SEO Records
+            {isAr ? 'سجلات محركات البحث والسيو' : 'Google Search & SEO Records'}
           </h1>
           <p className="text-xs sm:text-sm text-zinc-400 mt-1">
-            Manage Google Search Console verification, Analytics (GA4), GTM, structured Schema.org, keywords, and social sharing metadata.
+            {isAr ? 'إدارة ظهور الموقع في نتائج جوجل، بطاقات المشاركة على السوشيال ميديا، وإحصائيات جوجل.' : 'Configure search appearance, OpenGraph sharing cards, structured JSON-LD schemas, and Google Analytics.'}
           </p>
         </div>
 
@@ -110,7 +114,7 @@ export default function SEOAdminPage() {
           className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white text-xs sm:text-sm font-bold transition-all shadow-glow-blue cursor-pointer whitespace-nowrap shrink-0 leading-none self-start sm:self-auto"
         >
           <Save className="w-4 h-4 shrink-0" />
-          <span className="whitespace-nowrap leading-none">{saving ? 'Publishing…' : 'Save & Publish Records'}</span>
+          <span className="whitespace-nowrap leading-none">{saving ? (isAr ? 'جارٍ النشر…' : 'Publishing…') : (isAr ? 'حفظ ونشر إعدادات السيو' : 'Save & Publish SEO')}</span>
         </button>
       </div>
 

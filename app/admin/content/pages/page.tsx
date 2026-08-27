@@ -443,7 +443,7 @@ export default function PagesContentEditor() {
     return (
       <div className="p-12 text-center space-y-3">
         <RefreshCw className="w-8 h-8 text-blue-500 animate-spin mx-auto" />
-        <p className="text-xs text-zinc-400 font-mono">Loading multilingual CMS schemas…</p>
+        <p className="text-xs text-zinc-400 font-mono">{isAr ? 'جارٍ تحميل محتوى النظام…' : 'Loading multilingual CMS schemas…'}</p>
       </div>
     );
   }
@@ -520,7 +520,7 @@ export default function PagesContentEditor() {
                 className="inline-flex items-center gap-1.5 text-[11px] font-mono text-blue-400 hover:text-blue-300 px-3 py-1.5 rounded-xl bg-blue-500/10 border border-blue-500/20 transition-all cursor-pointer"
               >
                 <Maximize2 className="w-3 h-3" />
-                <span>{isAr ? 'توسيع الكل' : 'Expand All'}</span>
+                <span>{isAr ? 'عرض المحتوى للكل' : 'Expand All'}</span>
               </button>
               <button
                 type="button"
@@ -528,7 +528,7 @@ export default function PagesContentEditor() {
                 className="inline-flex items-center gap-1.5 text-[11px] font-mono text-zinc-400 hover:text-white px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 transition-all cursor-pointer"
               >
                 <Minimize2 className="w-3 h-3" />
-                <span>{isAr ? 'طي الكل' : 'Collapse All'}</span>
+                <span>{isAr ? 'إغلاق الكل' : 'Collapse All'}</span>
               </button>
             </div>
           </div>
@@ -554,7 +554,7 @@ export default function PagesContentEditor() {
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-[10px] font-mono text-zinc-500 group-hover:text-zinc-300">
-                  {openSections.hero ? (isAr ? 'طي' : 'Collapse') : (isAr ? 'توسيع' : 'Expand')}
+                  {openSections.hero ? (isAr ? 'إغلاق' : 'Collapse') : (isAr ? 'عرض المحتوى' : 'Expand')}
                 </span>
                 {openSections.hero ? <ChevronUp className="w-4 h-4 text-zinc-400" /> : <ChevronDown className="w-4 h-4 text-zinc-400" />}
               </div>
@@ -646,7 +646,7 @@ export default function PagesContentEditor() {
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-[10px] font-mono text-zinc-500 group-hover:text-zinc-300">
-                  {openSections.dock ? (isAr ? 'طي' : 'Collapse') : (isAr ? 'توسيع' : 'Expand')}
+                  {openSections.dock ? (isAr ? 'إغلاق' : 'Collapse') : (isAr ? 'عرض المحتوى' : 'Expand')}
                 </span>
                 {openSections.dock ? <ChevronUp className="w-4 h-4 text-zinc-400" /> : <ChevronDown className="w-4 h-4 text-zinc-400" />}
               </div>
@@ -746,7 +746,7 @@ export default function PagesContentEditor() {
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-[10px] font-mono text-zinc-500 group-hover:text-zinc-300">
-                  {openSections.videos ? (isAr ? 'طي' : 'Collapse') : (isAr ? 'توسيع' : 'Expand')}
+                  {openSections.videos ? (isAr ? 'إغلاق' : 'Collapse') : (isAr ? 'عرض المحتوى' : 'Expand')}
                 </span>
                 {openSections.videos ? <ChevronUp className="w-4 h-4 text-zinc-400" /> : <ChevronDown className="w-4 h-4 text-zinc-400" />}
               </div>
@@ -802,7 +802,7 @@ export default function PagesContentEditor() {
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-[10px] font-mono text-zinc-500 group-hover:text-zinc-300">
-                  {openSections.sectors ? (isAr ? 'طي' : 'Collapse') : (isAr ? 'توسيع' : 'Expand')}
+                  {openSections.sectors ? (isAr ? 'إغلاق' : 'Collapse') : (isAr ? 'عرض المحتوى' : 'Expand')}
                 </span>
                 {openSections.sectors ? <ChevronUp className="w-4 h-4 text-zinc-400" /> : <ChevronDown className="w-4 h-4 text-zinc-400" />}
               </div>
@@ -855,7 +855,7 @@ export default function PagesContentEditor() {
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-[10px] font-mono text-zinc-500 group-hover:text-zinc-300">
-                  {openSections.synergy ? (isAr ? 'طي' : 'Collapse') : (isAr ? 'توسيع' : 'Expand')}
+                  {openSections.synergy ? (isAr ? 'إغلاق' : 'Collapse') : (isAr ? 'عرض المحتوى' : 'Expand')}
                 </span>
                 {openSections.synergy ? <ChevronUp className="w-4 h-4 text-zinc-400" /> : <ChevronDown className="w-4 h-4 text-zinc-400" />}
               </div>
@@ -967,7 +967,7 @@ export default function PagesContentEditor() {
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-[10px] font-mono text-zinc-500 group-hover:text-zinc-300">
-                  {openSections.identity ? (isAr ? 'طي' : 'Collapse') : (isAr ? 'توسيع' : 'Expand')}
+                  {openSections.identity ? (isAr ? 'إغلاق' : 'Collapse') : (isAr ? 'عرض المحتوى' : 'Expand')}
                 </span>
                 {openSections.identity ? <ChevronUp className="w-4 h-4 text-zinc-400" /> : <ChevronDown className="w-4 h-4 text-zinc-400" />}
               </div>
@@ -1036,7 +1036,7 @@ export default function PagesContentEditor() {
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-[10px] font-mono text-zinc-500 group-hover:text-zinc-300">
-                  {openSections.ceo ? (isAr ? 'طي' : 'Collapse') : (isAr ? 'توسيع' : 'Expand')}
+                  {openSections.ceo ? (isAr ? 'إغلاق' : 'Collapse') : (isAr ? 'عرض المحتوى' : 'Expand')}
                 </span>
                 {openSections.ceo ? <ChevronUp className="w-4 h-4 text-zinc-400" /> : <ChevronDown className="w-4 h-4 text-zinc-400" />}
               </div>
@@ -1111,7 +1111,7 @@ export default function PagesContentEditor() {
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-[10px] font-mono text-zinc-500 group-hover:text-zinc-300">
-                  {openSections.partnership ? (isAr ? 'طي' : 'Collapse') : (isAr ? 'توسيع' : 'Expand')}
+                  {openSections.partnership ? (isAr ? 'إغلاق' : 'Collapse') : (isAr ? 'عرض المحتوى' : 'Expand')}
                 </span>
                 {openSections.partnership ? <ChevronUp className="w-4 h-4 text-zinc-400" /> : <ChevronDown className="w-4 h-4 text-zinc-400" />}
               </div>

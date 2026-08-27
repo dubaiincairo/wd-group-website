@@ -5,10 +5,14 @@ import { Factory, Plus, Trash2, Save, RefreshCw, Layers } from 'lucide-react';
 import BilingualInput from '@/components/admin/BilingualInput';
 import ConfirmationModal from '@/components/admin/ConfirmationModal';
 import { useToast } from '@/components/admin/ToastProvider';
+import { useLanguage } from '@/context/LanguageContext';
 import type { SiteContentPayload } from '@/lib/admin/types';
 
 export default function ManufacturingSectorAdminPage() {
   const { showToast } = useToast();
+  const { lang } = useLanguage();
+  const isAr = lang === 'ar';
+
   const [content, setContent] = useState<SiteContentPayload | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -24,13 +28,13 @@ export default function ManufacturingSectorAdminPage() {
           setContent(d.data);
         }
       } catch (err) {
-        showToast('Failed to load manufacturing data', 'error');
+        showToast(isAr ? 'فشل تحميل بيانات التصنيع' : 'Failed to load manufacturing data', 'error');
       } finally {
         setLoading(false);
       }
     }
     load();
-  }, [showToast]);
+  }, [showToast, isAr]);
 
   const handleSave = async () => {
     if (!content) return;
@@ -42,9 +46,9 @@ export default function ManufacturingSectorAdminPage() {
         body: JSON.stringify(content),
       });
       if (!res.ok) throw new Error('Failed to save manufacturing data');
-      showToast('Manufacturing factories data saved and published', 'success');
+      showToast(isAr ? 'تم حفظ ونشر بيانات المصانع بنجاح' : 'Manufacturing factories data saved and published', 'success');
     } catch (err: any) {
-      showToast(err.message || 'Error saving manufacturing data', 'error');
+      showToast(err.message || (isAr ? 'خطأ في الحفظ' : 'Error saving manufacturing data'), 'error');
     } finally {
       setSaving(false);
     }
@@ -69,7 +73,7 @@ export default function ManufacturingSectorAdminPage() {
         factories: [...content.manufacturing.factories, newFactory],
       },
     });
-    showToast('New factory added', 'info');
+    showToast(isAr ? 'تمت إضافة المنشأة الصناعية. اضغط حفظ ونشر.' : 'New factory added', 'info');
   };
 
   const handleDeleteFactory = (id: string) => {
@@ -82,14 +86,14 @@ export default function ManufacturingSectorAdminPage() {
       },
     });
     setDeletingId(null);
-    showToast('Factory removed', 'info');
+    showToast(isAr ? 'تم حذف المنشأة الصناعية' : 'Factory removed', 'info');
   };
 
   if (loading || !content) {
     return (
       <div className="p-12 text-center space-y-3">
         <RefreshCw className="w-8 h-8 text-emerald-500 animate-spin mx-auto" />
-        <p className="text-xs text-zinc-400 font-mono">Loading GreenWood manufacturing specs…</p>
+        <p className="text-xs text-zinc-400 font-mono">{isAr ? 'جارٍ تحميل مواصفات مصانع جرين وود…' : 'Loading GreenWood manufacturing specs…'}</p>
       </div>
     );
   }
@@ -104,13 +108,13 @@ export default function ManufacturingSectorAdminPage() {
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-mono font-bold mb-2">
             <Factory className="w-3.5 h-3.5" />
-            <span>GREENWOOD MANUFACTURING & CNC</span>
+            <span>{isAr ? 'مصانع وإنتاج جرين وود' : 'GREENWOOD MANUFACTURING & CNC'}</span>
           </div>
           <h1 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
-            Specialized Production Centers
+            {isAr ? 'المراكز الصناعية والإنتاج المتخصص' : 'Specialized Production Centers'}
           </h1>
           <p className="text-xs sm:text-sm text-zinc-400 mt-1">
-            Manage the 3 manufacturing factories in Riyadh & Najran, production lines, and FF&E capabilities.
+            {isAr ? 'إدارة المصانع الثلاثة في الرياض ونجران، وخطوط الإنتاج والتصنيع الخشبي والمعدني.' : 'Manage the 3 manufacturing factories in Riyadh & Najran, production lines, and FF&E capabilities.'}
           </p>
         </div>
 
@@ -121,7 +125,7 @@ export default function ManufacturingSectorAdminPage() {
             className="inline-flex items-center gap-2 px-4 py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white text-xs sm:text-sm font-bold transition-all"
           >
             <Plus className="w-4 h-4 text-emerald-400" />
-            <span>Add Factory</span>
+            <span>{isAr ? 'إضافة مصنع' : 'Add Factory'}</span>
           </button>
 
           <button
@@ -131,7 +135,7 @@ export default function ManufacturingSectorAdminPage() {
             className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white text-xs sm:text-sm font-bold transition-all shadow-glow-emerald cursor-pointer whitespace-nowrap shrink-0 leading-none"
           >
             <Save className="w-4 h-4 shrink-0" />
-            <span className="whitespace-nowrap leading-none">{saving ? 'Publishing…' : 'Save & Publish'}</span>
+            <span className="whitespace-nowrap leading-none">{saving ? (isAr ? 'جارٍ النشر…' : 'Publishing…') : (isAr ? 'حفظ ونشر المصانع' : 'Save & Publish')}</span>
           </button>
         </div>
       </div>

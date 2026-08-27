@@ -4,10 +4,14 @@ import React, { useState, useEffect } from 'react';
 import { Settings, Save, RefreshCw, Building, Phone, Mail, AlertTriangle, Wrench } from 'lucide-react';
 import BilingualInput from '@/components/admin/BilingualInput';
 import { useToast } from '@/components/admin/ToastProvider';
+import { useLanguage } from '@/context/LanguageContext';
 import type { SiteContentPayload } from '@/lib/admin/types';
 
 export default function GlobalSettingsAdminPage() {
   const { showToast } = useToast();
+  const { lang } = useLanguage();
+  const isAr = lang === 'ar';
+
   const [content, setContent] = useState<SiteContentPayload | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -22,13 +26,13 @@ export default function GlobalSettingsAdminPage() {
           setContent(d.data);
         }
       } catch (err) {
-        showToast('Failed to load system settings', 'error');
+        showToast(isAr ? 'فشل تحميل إعدادات النظام' : 'Failed to load system settings', 'error');
       } finally {
         setLoading(false);
       }
     }
     load();
-  }, [showToast]);
+  }, [showToast, isAr]);
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,9 +47,9 @@ export default function GlobalSettingsAdminPage() {
       });
 
       if (!res.ok) throw new Error('Failed to save settings');
-      showToast('Global settings saved and updated', 'success');
+      showToast(isAr ? 'تم حفظ وتحديث إعدادات النظام بنجاح' : 'Global settings saved and updated', 'success');
     } catch (err: any) {
-      showToast(err.message || 'Error saving settings', 'error');
+      showToast(err.message || (isAr ? 'خطأ في الحفظ' : 'Error saving settings'), 'error');
     } finally {
       setSaving(false);
     }
@@ -55,7 +59,7 @@ export default function GlobalSettingsAdminPage() {
     return (
       <div className="p-12 text-center space-y-3">
         <RefreshCw className="w-8 h-8 text-blue-500 animate-spin mx-auto" />
-        <p className="text-xs text-zinc-400 font-mono">Loading global system settings…</p>
+        <p className="text-xs text-zinc-400 font-mono">{isAr ? 'جارٍ تحميل إعدادات النظام العامة…' : 'Loading global system settings…'}</p>
       </div>
     );
   }
@@ -70,13 +74,13 @@ export default function GlobalSettingsAdminPage() {
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-mono font-bold mb-2">
             <Settings className="w-3.5 h-3.5" />
-            <span>GLOBAL CONFIGURATION</span>
+            <span>{isAr ? 'الإعدادات والتهيئة العامة' : 'GLOBAL CONFIGURATION'}</span>
           </div>
           <h1 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
-            Company & System Settings
+            {isAr ? 'إعدادات الشركة والمنظومة' : 'Company & System Settings'}
           </h1>
           <p className="text-xs sm:text-sm text-zinc-400 mt-1">
-            Official commercial registration, tax IDs, contact channels, and emergency banners.
+            {isAr ? 'السجل التجاري الرسمي، الأرقام الضريبية، قنوات التواصل وإشعارات الصيانة.' : 'Official commercial registration, tax IDs, contact channels, and emergency banners.'}
           </p>
         </div>
 
@@ -86,7 +90,7 @@ export default function GlobalSettingsAdminPage() {
           className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white text-xs sm:text-sm font-bold transition-all shadow-glow-blue cursor-pointer whitespace-nowrap shrink-0 leading-none self-start sm:self-auto"
         >
           <Save className="w-4 h-4 shrink-0" />
-          <span className="whitespace-nowrap leading-none">{saving ? 'Publishing…' : 'Save & Publish Settings'}</span>
+          <span className="whitespace-nowrap leading-none">{saving ? (isAr ? 'جارٍ النشر…' : 'Publishing…') : (isAr ? 'حفظ ونشر الإعدادات' : 'Save & Publish Settings')}</span>
         </button>
       </div>
 

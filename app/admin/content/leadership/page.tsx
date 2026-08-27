@@ -5,10 +5,14 @@ import { Save, RefreshCw, Sparkles, Quote, Award, Camera } from 'lucide-react';
 import BilingualInput from '@/components/admin/BilingualInput';
 import MediaFieldUploader from '@/components/admin/MediaFieldUploader';
 import { useToast } from '@/components/admin/ToastProvider';
+import { useLanguage } from '@/context/LanguageContext';
 import type { SiteContentPayload } from '@/lib/admin/types';
 
 export default function LeadershipEditorPage() {
   const { showToast } = useToast();
+  const { lang } = useLanguage();
+  const isAr = lang === 'ar';
+
   const [content, setContent] = useState<SiteContentPayload | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -23,13 +27,13 @@ export default function LeadershipEditorPage() {
           setContent(d.data);
         }
       } catch (err) {
-        showToast('Failed to load leadership data', 'error');
+        showToast(isAr ? 'فشل تحميل بيانات القيادة' : 'Failed to load leadership data', 'error');
       } finally {
         setLoading(false);
       }
     }
     load();
-  }, [showToast]);
+  }, [showToast, isAr]);
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,9 +48,9 @@ export default function LeadershipEditorPage() {
       });
 
       if (!res.ok) throw new Error('Failed to save leadership data');
-      showToast('Leadership and governance statement published', 'success');
+      showToast(isAr ? 'تم حفظ ونشر كلمة القيادة والرؤية بنجاح' : 'Leadership and governance statement published', 'success');
     } catch (err: any) {
-      showToast(err.message || 'Error saving leadership data', 'error');
+      showToast(err.message || (isAr ? 'خطأ في الحفظ' : 'Error saving leadership data'), 'error');
     } finally {
       setSaving(false);
     }
@@ -56,7 +60,7 @@ export default function LeadershipEditorPage() {
     return (
       <div className="p-12 text-center space-y-3">
         <RefreshCw className="w-8 h-8 text-blue-500 animate-spin mx-auto" />
-        <p className="text-xs text-zinc-400 font-mono">Loading leadership statements…</p>
+        <p className="text-xs text-zinc-400 font-mono">{isAr ? 'جارٍ تحميل بيانات القيادة والرؤية…' : 'Loading leadership statements…'}</p>
       </div>
     );
   }
@@ -72,13 +76,13 @@ export default function LeadershipEditorPage() {
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-mono font-bold mb-2">
             <Sparkles className="w-3.5 h-3.5" />
-            <span>GOVERNANCE & LEADERSHIP</span>
+            <span>{isAr ? 'الحوكمة والقيادة التنفيذية' : 'GOVERNANCE & LEADERSHIP'}</span>
           </div>
           <h1 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
-            Leadership & Vision
+            {isAr ? 'القيادة التنفيذية والرؤية' : 'Leadership & Vision'}
           </h1>
           <p className="text-xs sm:text-sm text-zinc-400 mt-1">
-            Manage the CEO statement, corporate vision, and mission across all languages.
+            {isAr ? 'إدارة كلمة الرئيس التنفيذي، ورؤية ورسالة المنظومة بكافة اللغات.' : 'Manage the CEO statement, corporate vision, and mission across all languages.'}
           </p>
         </div>
 
@@ -88,7 +92,7 @@ export default function LeadershipEditorPage() {
           className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white text-xs sm:text-sm font-bold transition-all shadow-glow-blue cursor-pointer whitespace-nowrap shrink-0 leading-none self-start sm:self-auto"
         >
           <Save className="w-4 h-4 shrink-0" />
-          <span className="whitespace-nowrap leading-none">{saving ? 'Publishing…' : 'Save & Publish'}</span>
+          <span className="whitespace-nowrap leading-none">{saving ? (isAr ? 'جارٍ النشر…' : 'Publishing…') : (isAr ? 'حفظ ونشر التعديلات' : 'Save & Publish')}</span>
         </button>
       </div>
 
@@ -96,12 +100,12 @@ export default function LeadershipEditorPage() {
       <div className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 space-y-5">
         <div className="flex items-center gap-2 text-xs font-mono font-bold text-blue-400 uppercase tracking-wider border-b border-white/10 pb-3">
           <Quote className="w-4 h-4" />
-          <span>CHIEF EXECUTIVE OFFICER STATEMENT & PORTRAIT</span>
+          <span>{isAr ? 'كلمة وصورة الرئيس التنفيذي' : 'CHIEF EXECUTIVE OFFICER STATEMENT & PORTRAIT'}</span>
         </div>
 
         <MediaFieldUploader
-          label="CEO Executive Portrait / Photo (1:1 Ratio)"
-          description="Square 1:1 aspect ratio recommended for leadership portrait"
+          label={isAr ? 'الصورة الشخصية للرئيس التنفيذي (مربعة 1:1)' : 'CEO Executive Portrait / Photo (1:1 Ratio)'}
+          description={isAr ? 'يُفضل نسبة أبعاد مربعة 1:1 لصورة القيادة' : 'Square 1:1 aspect ratio recommended for leadership portrait'}
           aspectRatio="1:1"
           bucket="photos"
           value={ceo.photo_url || content.home.media?.ceo_photo || ''}
@@ -116,7 +120,7 @@ export default function LeadershipEditorPage() {
         />
 
         <BilingualInput
-          label="CEO Official Quote / Message"
+          label={isAr ? 'نص كلمة / رسالة الرئيس التنفيذي' : 'CEO Official Quote / Message'}
           isTextarea
           rows={4}
           valueEn={ceo.quote_en}
@@ -127,7 +131,7 @@ export default function LeadershipEditorPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <BilingualInput
-            label="CEO Name"
+            label={isAr ? 'اسم الرئيس التنفيذي' : 'CEO Name'}
             valueEn={ceo.name_en}
             valueAr={ceo.name_ar}
             onChangeEn={(v) => setContent({ ...content, home: { ...content.home, ceo: { ...ceo, name_en: v } } })}
@@ -135,7 +139,7 @@ export default function LeadershipEditorPage() {
           />
 
           <BilingualInput
-            label="CEO Official Title"
+            label={isAr ? 'المسمى الوظيفي للرئيس التنفيذي' : 'CEO Official Title'}
             valueEn={ceo.title_en}
             valueAr={ceo.title_ar}
             onChangeEn={(v) => setContent({ ...content, home: { ...content.home, ceo: { ...ceo, title_en: v } } })}
@@ -148,11 +152,11 @@ export default function LeadershipEditorPage() {
       <div className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 space-y-5">
         <div className="flex items-center gap-2 text-xs font-mono font-bold text-emerald-400 uppercase tracking-wider border-b border-white/10 pb-3">
           <Award className="w-4 h-4" />
-          <span>CORPORATE VISION & MISSION</span>
+          <span>{isAr ? 'الرؤية والرسالة المؤسسية' : 'CORPORATE VISION & MISSION'}</span>
         </div>
 
         <BilingualInput
-          label="Corporate Vision Narrative"
+          label={isAr ? 'نص الرؤية المؤسسية' : 'Corporate Vision Narrative'}
           isTextarea
           rows={3}
           valueEn={identity.vision_desc_en}
@@ -162,7 +166,7 @@ export default function LeadershipEditorPage() {
         />
 
         <BilingualInput
-          label="Corporate Mission Narrative"
+          label={isAr ? 'نص الرسالة المؤسسية' : 'Corporate Mission Narrative'}
           isTextarea
           rows={3}
           valueEn={identity.mission_desc_en}
