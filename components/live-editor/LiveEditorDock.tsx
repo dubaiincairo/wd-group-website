@@ -310,7 +310,7 @@ export default function LiveEditorDock() {
           </span>
           <Edit3 className="w-4 h-4 text-blue-400 group-hover:rotate-12 transition-transform" />
           <span className="text-xs font-bold tracking-wide">
-            {lang === 'ar' ? `المحرر المباشر: ${pathname || '/'}` : `Live Visual Editor: ${pathname || '/'}`}
+            {lang === 'ar' ? 'المحرر المباشر' : 'Live Visual Editor'}
           </span>
           {hasUnsavedChanges && (
             <span className="text-[10px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full border border-amber-500/30 font-mono font-bold">
