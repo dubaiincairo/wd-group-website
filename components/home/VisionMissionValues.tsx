@@ -24,7 +24,7 @@ export default function VisionMissionValues() {
   const { lang, dict } = useLanguage();
   const [activeTab, setActiveTab] = useState<'vision' | 'mission' | 'values'>('vision');
 
-  const VALUE_ICONS = [Award, Lightbulb, Scale, Users];
+  const VALUE_ICONS = [Award, Lightbulb, Users];
 
   return (
     <section className="py-20 sm:py-24 bg-brand-dark text-white relative overflow-hidden border-t border-white/5">
@@ -294,20 +294,19 @@ export default function VisionMissionValues() {
 
                   <div className="flex items-center gap-3 text-xs text-zinc-400 font-mono flex-wrap pt-4 border-t border-white/10">
                     <span className="px-2.5 py-1 rounded-md bg-[#C9A86A]/10 text-[#C9A86A] border border-[#C9A86A]/20 font-bold">
-                      {lang === 'ar' ? 'النزاهة والتميز' : 'Integrity & Excellence'}
+                      {lang === 'ar' ? 'الجودة والتميز' : 'Quality & Excellence'}
                     </span>
                     <span>• {lang === 'ar' ? 'مسؤولية وتنمية وطنية مستدامة' : 'National Responsibility & Impact'}</span>
                   </div>
                 </div>
 
-                {/* Side Stacked 4 Balanced Value Focus Cards */}
-                <div className="lg:col-span-5 flex flex-col gap-2.5 justify-between">
-                  {dict.home.identity.values.map((val, idx) => {
+                {/* Side Stacked 3 Balanced Value Focus Cards */}
+                <div className="lg:col-span-5 flex flex-col gap-3 justify-between">
+                  {dict.home.identity.values.slice(0, 3).map((val, idx) => {
                     const Icon = VALUE_ICONS[idx % VALUE_ICONS.length];
                     const styles = [
                       { border: 'hover:border-amber-400/50', iconBg: 'bg-amber-500/10 border-amber-500/25 text-amber-400 group-hover:bg-amber-500 group-hover:text-amber-950', text: 'group-hover:text-amber-300' },
                       { border: 'hover:border-emerald-400/50', iconBg: 'bg-emerald-500/10 border-emerald-500/25 text-emerald-400 group-hover:bg-emerald-500 group-hover:text-emerald-950', text: 'group-hover:text-emerald-300' },
-                      { border: 'hover:border-sky-400/50', iconBg: 'bg-sky-500/10 border-sky-500/25 text-sky-400 group-hover:bg-sky-500 group-hover:text-sky-950', text: 'group-hover:text-sky-300' },
                       { border: 'hover:border-purple-400/50', iconBg: 'bg-purple-500/10 border-purple-500/25 text-purple-400 group-hover:bg-purple-500 group-hover:text-purple-950', text: 'group-hover:text-purple-300' },
                     ];
                     const s = styles[idx % styles.length];
@@ -315,16 +314,16 @@ export default function VisionMissionValues() {
                     return (
                       <div
                         key={idx}
-                        className={`p-3 sm:p-3.5 rounded-xl bg-[#141721] border border-white/10 flex items-center gap-3.5 ${s.border} hover:bg-[#161B28] transition-all duration-300 flex-1 group cursor-default shadow-xs`}
+                        className={`p-4 rounded-xl bg-[#141721] border border-white/10 flex items-center gap-3.5 ${s.border} hover:bg-[#161B28] transition-all duration-300 flex-1 group cursor-default shadow-xs hover:shadow-[0_0_20px_rgba(201,168,106,0.12)]`}
                       >
-                        <div className={`w-9 h-9 rounded-lg ${s.iconBg} border flex items-center justify-center shrink-0 group-hover:scale-110 transition-all duration-300`}>
+                        <div className={`w-10 h-10 rounded-lg ${s.iconBg} border flex items-center justify-center shrink-0 group-hover:scale-110 transition-all duration-300`}>
                           <Icon className="w-4 h-4" />
                         </div>
                         <div>
                           <span className={`text-xs sm:text-sm font-bold text-white block ${s.text} transition-colors duration-300`}>
                             {val.title}
                           </span>
-                          <span className="text-[11px] text-zinc-400 line-clamp-1 sm:line-clamp-none">
+                          <span className="text-[11px] text-zinc-400">
                             {val.desc}
                           </span>
                         </div>

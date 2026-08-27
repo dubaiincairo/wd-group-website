@@ -123,7 +123,6 @@ export const translations = {
         values: [
           { title: "Quality & Excellence", desc: "Highest standards across all processes and deliverables." },
           { title: "Continuous Innovation", desc: "Evolving techniques, manufacturing, and hospitality solutions." },
-          { title: "Integrity & Transparency", desc: "Total credibility and clarity in every agreement and interaction." },
           { title: "National & Social Responsibility", desc: "Supporting Saudi talent, community progress, and sustainability." }
         ]
       },
@@ -605,7 +604,6 @@ export const translations = {
         values: [
           { title: "الجودة والتميز", desc: "تطبيق أعلى معايير الجودة في جميع العمليات والمنتجات." },
           { title: "الابتكار المستمر", desc: "تطوير مستمر لأساليب العمل وحلول التصنيع والضيافة." },
-          { title: "الأمانة والشفافية", desc: "المصداقية والوضوح التام في كافة تعاملاتنا وتعاقداتنا." },
           { title: "المسؤولية الوطنية والمجتمعية", desc: "المساهمة في تنمية المجتمع ودعم الكوادر الوطنية وحماية البيئة." }
         ]
       },
