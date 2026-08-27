@@ -107,7 +107,7 @@ export default function SectorsHub() {
               href="/sectors/hospitality"
               className="inline-flex items-center justify-between w-full px-4 py-3 rounded-xl font-bold text-xs bg-[#1A476A]/40 hover:bg-[#1A476A] text-sky-200 border border-sky-400/30 hover:border-sky-400 transition-all group/btn"
             >
-              <span>{dict.home.sectors.hospitality.cta}</span>
+              <span className="whitespace-nowrap">{dict.home.sectors.hospitality.cta}</span>
               <ArrowRight className="w-4 h-4 text-sky-300 group-hover/btn:translate-x-1 rtl:group-hover/btn:-translate-x-1 rtl:rotate-180 transition-all" />
             </Link>
 
@@ -180,7 +180,7 @@ export default function SectorsHub() {
               href="/sectors/manufacturing"
               className="inline-flex items-center justify-between w-full px-4 py-3 rounded-xl font-bold text-xs bg-[#0B5C3D]/40 hover:bg-[#0B5C3D] text-emerald-200 border border-emerald-400/30 hover:border-emerald-400 transition-all group/btn"
             >
-              <span>{dict.home.sectors.manufacturing.cta}</span>
+              <span className="whitespace-nowrap">{dict.home.sectors.manufacturing.cta}</span>
               <ArrowRight className="w-4 h-4 text-emerald-300 group-hover/btn:translate-x-1 rtl:group-hover/btn:-translate-x-1 rtl:rotate-180 transition-all" />
             </Link>
 
@@ -253,7 +253,7 @@ export default function SectorsHub() {
               href="/sectors/contracting"
               className="inline-flex items-center justify-between w-full px-4 py-3 rounded-xl font-bold text-xs bg-[#8A7340]/40 hover:bg-[#8A7340] text-amber-200 border border-amber-400/30 hover:border-amber-400 transition-all group/btn"
             >
-              <span>{dict.home.sectors.contracting.cta}</span>
+              <span className="whitespace-nowrap">{dict.home.sectors.contracting.cta}</span>
               <ArrowRight className="w-4 h-4 text-amber-300 group-hover/btn:translate-x-1 rtl:group-hover/btn:-translate-x-1 rtl:rotate-180 transition-all" />
             </Link>
 
