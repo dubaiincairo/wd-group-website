@@ -112,6 +112,36 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
           stat4_num: c.home?.metrics?.stat4_num || baseDict.home.metrics.stat4_num,
           stat4_text: (isAr ? c.home?.metrics?.stat4_text_ar : c.home?.metrics?.stat4_text_en) || baseDict.home.metrics.stat4_text,
         },
+        sectors: {
+          ...baseDict.home.sectors,
+          label: (isAr ? c.home?.sectors?.label_ar : c.home?.sectors?.label_en) || baseDict.home.sectors.label,
+          heading: (isAr ? c.home?.sectors?.heading_ar : c.home?.sectors?.heading_en) || baseDict.home.sectors.heading,
+          intro: (isAr ? c.home?.sectors?.intro_ar : c.home?.sectors?.intro_en) || baseDict.home.sectors.intro,
+          hospitality: {
+            ...baseDict.home.sectors.hospitality,
+            eyebrow: (isAr ? c.home?.sectors?.hospitality_eyebrow_ar : c.home?.sectors?.hospitality_eyebrow_en) || baseDict.home.sectors.hospitality.eyebrow,
+            title: (isAr ? c.home?.sectors?.hospitality_title_ar : c.home?.sectors?.hospitality_title_en) || baseDict.home.sectors.hospitality.title,
+            desc: (isAr ? c.home?.sectors?.hospitality_desc_ar : c.home?.sectors?.hospitality_desc_en) || baseDict.home.sectors.hospitality.desc,
+            proof: (isAr ? c.home?.sectors?.hospitality_proof_ar : c.home?.sectors?.hospitality_proof_en) || baseDict.home.sectors.hospitality.proof,
+            cta: (isAr ? c.home?.sectors?.hospitality_cta_ar : c.home?.sectors?.hospitality_cta_en) || baseDict.home.sectors.hospitality.cta,
+          },
+          manufacturing: {
+            ...baseDict.home.sectors.manufacturing,
+            eyebrow: (isAr ? c.home?.sectors?.manufacturing_eyebrow_ar : c.home?.sectors?.manufacturing_eyebrow_en) || baseDict.home.sectors.manufacturing.eyebrow,
+            title: (isAr ? c.home?.sectors?.manufacturing_title_ar : c.home?.sectors?.manufacturing_title_en) || baseDict.home.sectors.manufacturing.title,
+            desc: (isAr ? c.home?.sectors?.manufacturing_desc_ar : c.home?.sectors?.manufacturing_desc_en) || baseDict.home.sectors.manufacturing.desc,
+            proof: (isAr ? c.home?.sectors?.manufacturing_proof_ar : c.home?.sectors?.manufacturing_proof_en) || baseDict.home.sectors.manufacturing.proof,
+            cta: (isAr ? c.home?.sectors?.manufacturing_cta_ar : c.home?.sectors?.manufacturing_cta_en) || baseDict.home.sectors.manufacturing.cta,
+          },
+          contracting: {
+            ...baseDict.home.sectors.contracting,
+            eyebrow: (isAr ? c.home?.sectors?.contracting_eyebrow_ar : c.home?.sectors?.contracting_eyebrow_en) || baseDict.home.sectors.contracting.eyebrow,
+            title: (isAr ? c.home?.sectors?.contracting_title_ar : c.home?.sectors?.contracting_title_en) || baseDict.home.sectors.contracting.title,
+            desc: (isAr ? c.home?.sectors?.contracting_desc_ar : c.home?.sectors?.contracting_desc_en) || baseDict.home.sectors.contracting.desc,
+            proof: (isAr ? c.home?.sectors?.contracting_proof_ar : c.home?.sectors?.contracting_proof_en) || baseDict.home.sectors.contracting.proof,
+            cta: (isAr ? c.home?.sectors?.contracting_cta_ar : c.home?.sectors?.contracting_cta_en) || baseDict.home.sectors.contracting.cta,
+          },
+        },
         synergy: {
           ...baseDict.home.synergy,
           label: (isAr ? c.home?.synergy?.label_ar : c.home?.synergy?.label_en) || baseDict.home.synergy.label,
@@ -197,6 +227,16 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
         },
         hero_image: c.hospitality?.hero_image || (baseDict.hospitality as any).hero_image,
         hero_video: c.hospitality?.hero_video || (baseDict.hospitality as any).hero_video,
+        services: {
+          ...baseDict.hospitality.services,
+          heading: (isAr ? c.hospitality?.services_heading_ar : c.hospitality?.services_heading_en) || baseDict.hospitality.services.heading,
+          intro: (isAr ? c.hospitality?.services_intro_ar : c.hospitality?.services_intro_en) || baseDict.hospitality.services.intro,
+        },
+        rfp: {
+          ...baseDict.hospitality.rfp,
+          heading: (isAr ? c.hospitality?.rfp_heading_ar : c.hospitality?.rfp_heading_en) || baseDict.hospitality.rfp.heading,
+          body: (isAr ? c.hospitality?.rfp_body_ar : c.hospitality?.rfp_body_en) || baseDict.hospitality.rfp.body,
+        },
         portfolio: {
           ...baseDict.hospitality.portfolio,
           properties: Array.isArray(c.hospitality?.properties) && c.hospitality.properties.length > 0
@@ -219,6 +259,15 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
         },
         hero_image: c.manufacturing?.hero_image || (baseDict.manufacturing as any).hero_image,
         hero_video: c.manufacturing?.hero_video || (baseDict.manufacturing as any).hero_video,
+        capabilities: {
+          ...baseDict.manufacturing.capabilities,
+          heading: (isAr ? c.manufacturing?.capabilities_heading_ar : c.manufacturing?.capabilities_heading_en) || baseDict.manufacturing.capabilities.heading,
+        },
+        rfp: {
+          ...baseDict.manufacturing.rfp,
+          heading: (isAr ? c.manufacturing?.rfp_heading_ar : c.manufacturing?.rfp_heading_en) || baseDict.manufacturing.rfp.heading,
+          body: (isAr ? c.manufacturing?.rfp_body_ar : c.manufacturing?.rfp_body_en) || baseDict.manufacturing.rfp.body,
+        },
         factories: {
           ...baseDict.manufacturing.factories,
           list: Array.isArray(c.manufacturing?.factories) && c.manufacturing.factories.length > 0
@@ -240,6 +289,15 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
         },
         hero_image: c.contracting?.hero_image || (baseDict.contracting as any).hero_image,
         hero_video: c.contracting?.hero_video || (baseDict.contracting as any).hero_video,
+        lifecycle: {
+          ...baseDict.contracting.lifecycle,
+          heading: (isAr ? c.contracting?.lifecycle_heading_ar : c.contracting?.lifecycle_heading_en) || baseDict.contracting.lifecycle.heading,
+        },
+        rfp: {
+          ...baseDict.contracting.rfp,
+          heading: (isAr ? c.contracting?.rfp_heading_ar : c.contracting?.rfp_heading_en) || baseDict.contracting.rfp.heading,
+          body: (isAr ? c.contracting?.rfp_body_ar : c.contracting?.rfp_body_en) || baseDict.contracting.rfp.body,
+        },
         services: {
           ...baseDict.contracting.services,
           list: Array.isArray(c.contracting?.services) && c.contracting.services.length > 0
