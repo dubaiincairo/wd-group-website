@@ -22,7 +22,7 @@ import {
 
 export default function VisionMissionValues() {
   const { lang, dict } = useLanguage();
-  const [activeTab, setActiveTab] = useState<'values' | 'vision' | 'mission'>('values');
+  const [activeTab, setActiveTab] = useState<'vision' | 'mission' | 'values'>('vision');
 
   const VALUE_ICONS = [Award, Lightbulb, Scale, Users];
 
@@ -46,25 +46,11 @@ export default function VisionMissionValues() {
           </h2>
         </div>
 
-        {/* Tab Navigation (Values First) */}
+        {/* Tab Navigation (Vision -> Mission -> Values) */}
         <div className="flex justify-center mb-8 sm:mb-10">
           <div className="inline-flex p-1.5 rounded-2xl bg-[#0F1117]/90 border border-white/10 backdrop-blur-md shadow-lg">
             
-            {/* 1. Values Tab Button (Default & First) */}
-            <button
-              type="button"
-              onClick={() => setActiveTab('values')}
-              className={`px-5 sm:px-8 py-2.5 sm:py-3 rounded-xl text-xs sm:text-sm font-bold transition-all duration-300 flex items-center gap-2 cursor-pointer ${
-                activeTab === 'values'
-                  ? 'bg-[#C9A86A] text-[#0E1A24] shadow-glow-camel font-extrabold'
-                  : 'text-zinc-400 hover:text-white hover:bg-white/5'
-              }`}
-            >
-              <ShieldCheck className="w-4 h-4" />
-              <span>{dict.home.identity.values_title || (lang === 'ar' ? 'القيم' : 'Values')}</span>
-            </button>
-
-            {/* 2. Vision Tab Button */}
+            {/* 1. Vision Tab Button (Default & First) */}
             <button
               type="button"
               onClick={() => setActiveTab('vision')}
@@ -78,7 +64,7 @@ export default function VisionMissionValues() {
               <span>{dict.home.identity.vision_title}</span>
             </button>
 
-            {/* 3. Mission Tab Button */}
+            {/* 2. Mission Tab Button */}
             <button
               type="button"
               onClick={() => setActiveTab('mission')}
@@ -92,6 +78,20 @@ export default function VisionMissionValues() {
               <span>{dict.home.identity.mission_title}</span>
             </button>
 
+            {/* 3. Values Tab Button */}
+            <button
+              type="button"
+              onClick={() => setActiveTab('values')}
+              className={`px-5 sm:px-8 py-2.5 sm:py-3 rounded-xl text-xs sm:text-sm font-bold transition-all duration-300 flex items-center gap-2 cursor-pointer ${
+                activeTab === 'values'
+                  ? 'bg-[#C9A86A] text-[#0E1A24] shadow-glow-camel font-extrabold'
+                  : 'text-zinc-400 hover:text-white hover:bg-white/5'
+              }`}
+            >
+              <ShieldCheck className="w-4 h-4" />
+              <span>{dict.home.identity.values_title || (lang === 'ar' ? 'القيم' : 'Values')}</span>
+            </button>
+
           </div>
         </div>
 
@@ -99,41 +99,7 @@ export default function VisionMissionValues() {
         <div className="max-w-5xl mx-auto min-h-[300px]">
           <AnimatePresence mode="wait">
             
-            {/* ══════════ TAB 1: VALUES ══════════ */}
-            {activeTab === 'values' && (
-              <motion.div 
-                key="values"
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -12 }}
-                transition={{ duration: 0.25, ease: 'easeOut' }}
-                className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5"
-              >
-                {dict.home.identity.values.map((val, idx) => {
-                  const Icon = VALUE_ICONS[idx % VALUE_ICONS.length];
-                  return (
-                    <div
-                      key={idx}
-                      className="p-6 rounded-2xl bg-[#0F1117]/90 border border-white/10 hover:border-[#C9A86A]/50 hover:bg-[#121622] transition-all duration-300 flex items-start gap-4 group cursor-default shadow-xs hover:shadow-[0_0_25px_rgba(201,168,106,0.15)]"
-                    >
-                      <div className="w-10 h-10 rounded-xl bg-[#C9A86A]/10 border border-[#C9A86A]/25 flex items-center justify-center text-[#C9A86A] shrink-0 mt-0.5 group-hover:scale-110 group-hover:bg-[#C9A86A] group-hover:text-[#0E1A24] transition-all duration-300">
-                        <Icon className="w-5 h-5" />
-                      </div>
-                      <div className="space-y-1">
-                        <h4 className="text-base font-bold text-white group-hover:text-[#E3C58A] transition-colors duration-300">
-                          {val.title}
-                        </h4>
-                        <p className="text-xs text-zinc-400 leading-relaxed font-normal">
-                          {val.desc}
-                        </p>
-                      </div>
-                    </div>
-                  );
-                })}
-              </motion.div>
-            )}
-
-            {/* ══════════ TAB 2: VISION (3 Balanced Cards on Right) ══════════ */}
+            {/* ══════════ TAB 1: VISION (DEFAULT) ══════════ */}
             {activeTab === 'vision' && (
               <motion.div 
                 key="vision"
@@ -216,7 +182,7 @@ export default function VisionMissionValues() {
               </motion.div>
             )}
 
-            {/* ══════════ TAB 3: MISSION (3 Balanced Cards on Right) ══════════ */}
+            {/* ══════════ TAB 2: MISSION ══════════ */}
             {activeTab === 'mission' && (
               <motion.div 
                 key="mission"
@@ -295,6 +261,76 @@ export default function VisionMissionValues() {
                       </span>
                     </div>
                   </div>
+                </div>
+              </motion.div>
+            )}
+
+            {/* ══════════ TAB 3: VALUES ══════════ */}
+            {activeTab === 'values' && (
+              <motion.div 
+                key="values"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -12 }}
+                transition={{ duration: 0.25, ease: 'easeOut' }}
+                className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5"
+              >
+                {/* Main Bento Hero Tile */}
+                <div className="lg:col-span-7 p-6 sm:p-8 rounded-2xl bg-[#0F1117]/90 border border-[#C9A86A]/30 flex flex-col justify-between space-y-6 hover:border-[#C9A86A]/60 hover:bg-[#121622] transition-all duration-300 shadow-lg group hover:shadow-[0_0_30px_rgba(201,168,106,0.15)]">
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-mono text-[#C9A86A] font-bold uppercase tracking-wider">
+                        {lang === 'ar' ? 'منظومة المبادئ والقيم المؤسسية' : 'CORE VALUES & FOUNDATIONAL ETHOS'}
+                      </span>
+                      <Quote className="w-5 h-5 text-[#C9A86A]/40 group-hover:text-[#C9A86A] transition-colors duration-300" />
+                    </div>
+                    
+                    <p className={`text-base sm:text-lg md:text-xl text-zinc-100 font-medium leading-relaxed sm:leading-8 ${lang === 'en' ? 'font-serif' : 'font-sans'}`}>
+                      {lang === 'ar' 
+                        ? 'نلتزم في كافة قطاعاتنا ومصانعنا بأعلى معايير الحوكمة والنزاهة والتميز التشغيلي، واضعين الجودة والمسؤولية الوطنية في صميم كل مشروع واستثمار نقوده.' 
+                        : 'Across all our sectors and manufacturing facilities, we are committed to the highest standards of governance, integrity, and operational excellence—placing quality and national responsibility at the core of every project and investment.'}
+                    </p>
+                  </div>
+
+                  <div className="flex items-center gap-3 text-xs text-zinc-400 font-mono flex-wrap pt-4 border-t border-white/10">
+                    <span className="px-2.5 py-1 rounded-md bg-[#C9A86A]/10 text-[#C9A86A] border border-[#C9A86A]/20 font-bold">
+                      {lang === 'ar' ? 'النزاهة والتميز' : 'Integrity & Excellence'}
+                    </span>
+                    <span>• {lang === 'ar' ? 'مسؤولية وتنمية وطنية مستدامة' : 'National Responsibility & Impact'}</span>
+                  </div>
+                </div>
+
+                {/* Side Stacked 4 Balanced Value Focus Cards */}
+                <div className="lg:col-span-5 flex flex-col gap-2.5 justify-between">
+                  {dict.home.identity.values.map((val, idx) => {
+                    const Icon = VALUE_ICONS[idx % VALUE_ICONS.length];
+                    const styles = [
+                      { border: 'hover:border-amber-400/50', iconBg: 'bg-amber-500/10 border-amber-500/25 text-amber-400 group-hover:bg-amber-500 group-hover:text-amber-950', text: 'group-hover:text-amber-300' },
+                      { border: 'hover:border-emerald-400/50', iconBg: 'bg-emerald-500/10 border-emerald-500/25 text-emerald-400 group-hover:bg-emerald-500 group-hover:text-emerald-950', text: 'group-hover:text-emerald-300' },
+                      { border: 'hover:border-sky-400/50', iconBg: 'bg-sky-500/10 border-sky-500/25 text-sky-400 group-hover:bg-sky-500 group-hover:text-sky-950', text: 'group-hover:text-sky-300' },
+                      { border: 'hover:border-purple-400/50', iconBg: 'bg-purple-500/10 border-purple-500/25 text-purple-400 group-hover:bg-purple-500 group-hover:text-purple-950', text: 'group-hover:text-purple-300' },
+                    ];
+                    const s = styles[idx % styles.length];
+
+                    return (
+                      <div
+                        key={idx}
+                        className={`p-3 sm:p-3.5 rounded-xl bg-[#141721] border border-white/10 flex items-center gap-3.5 ${s.border} hover:bg-[#161B28] transition-all duration-300 flex-1 group cursor-default shadow-xs`}
+                      >
+                        <div className={`w-9 h-9 rounded-lg ${s.iconBg} border flex items-center justify-center shrink-0 group-hover:scale-110 transition-all duration-300`}>
+                          <Icon className="w-4 h-4" />
+                        </div>
+                        <div>
+                          <span className={`text-xs sm:text-sm font-bold text-white block ${s.text} transition-colors duration-300`}>
+                            {val.title}
+                          </span>
+                          <span className="text-[11px] text-zinc-400 line-clamp-1 sm:line-clamp-none">
+                            {val.desc}
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               </motion.div>
             )}
