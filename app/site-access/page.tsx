@@ -208,7 +208,7 @@ export default function SiteAccessPage() {
           muted
           playsInline
           preload="auto"
-          poster="https://cdn.sanity.io/images/uoj8zwj3/production/00b20cc6cb3d8c613964965da5556e8396305950-2400x1792.jpg"
+          poster=""
           className="absolute inset-0 w-full h-full object-cover scale-105 opacity-40"
         >
           <source src="/videos/hospitality.mp4" type="video/mp4" />

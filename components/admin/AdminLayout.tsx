@@ -87,7 +87,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             muted
             playsInline
             preload="metadata"
-            poster="https://cdn.sanity.io/images/uoj8zwj3/production/00b20cc6cb3d8c613964965da5556e8396305950-2400x1792.jpg"
             className="absolute inset-0 w-full h-full object-cover opacity-30"
             style={{ transform: 'translateZ(0)' }}
           >

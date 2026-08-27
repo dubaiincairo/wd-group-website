@@ -49,7 +49,7 @@ function getDefaultContent() {
       },
       media: {
         hero_video_hospitality: '/videos/hospitality.mp4',
-        hero_poster_hospitality: 'https://cdn.sanity.io/images/uoj8zwj3/production/00b20cc6cb3d8c613964965da5556e8396305950-2400x1792.jpg',
+        hero_poster_hospitality: '',
         hero_video_manufacturing: '/videos/manufacturing.mp4',
         hero_poster_manufacturing: 'https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=2400&q=85',
         hero_video_contracting: '/videos/contracting.mp4',
