@@ -26,20 +26,28 @@ export default function AdminLoadingState({
   const content = (
     <div className="relative z-10 flex flex-col items-center max-w-sm w-full px-6 text-center select-none animate-in fade-in duration-300">
       {/* Ambient Luxury Lighting Backdrops */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[420px] h-[420px] bg-radial from-[#C9A86A]/15 via-blue-600/10 to-transparent blur-[100px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[420px] h-[420px] bg-radial from-[#C9A86A]/10 via-blue-600/5 to-transparent blur-[100px] pointer-events-none" />
 
-      {/* Real Brand Logo with Luxury Pulse */}
-      <div className="relative mb-5 flex items-center justify-center">
+      {/* Expanding 1px Laser Horizon Line */}
+      <div className="relative w-full max-w-xs flex items-center justify-center mb-6">
+        <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-[#C9A86A]/60 to-transparent" />
+        <div className="absolute w-1.5 h-1.5 rounded-full bg-[#C9A86A] shadow-[0_0_12px_#C9A86A] animate-ping" />
+      </div>
+
+      {/* Real Brand Logo with Shimmer Overlay */}
+      <div className="relative mb-5 flex items-center justify-center overflow-hidden rounded-2xl p-2">
         <div className={`relative h-12 sm:h-14 ${isAr ? 'w-52 sm:w-60' : 'w-44 sm:w-52'}`}>
           <Image
             src={logoSrc}
             alt={logoAlt}
             fill
-            className="object-contain drop-shadow-[0_0_24px_rgba(201,168,106,0.35)]"
+            sizes="(max-width: 640px) 208px, 240px"
+            className="object-contain drop-shadow-[0_0_20px_rgba(201,168,106,0.3)]"
             priority
           />
         </div>
-        <div className="absolute -inset-4 rounded-3xl bg-[#C9A86A]/10 blur-xl -z-10 animate-pulse" />
+        {/* Angled metallic light sweep */}
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#C9A86A]/30 to-transparent -skew-x-12 animate-[shimmer_2.5s_infinite] pointer-events-none" />
       </div>
 
       {/* Corporate Brand Identity */}
@@ -48,19 +56,19 @@ export default function AdminLoadingState({
           <span>{isAr ? 'مجموعة دبليو دي للأعمال' : 'WD GROUP HOLDING'}</span>
           <Sparkles className="w-3 h-3 text-[#C9A86A]" />
         </h3>
-        <p className="text-[10px] sm:text-[11px] font-mono tracking-widest text-[#C9A86A]/85 uppercase">
-          {isAr ? 'الضيافة · التصنيع · المقاولات' : 'Hospitality · Manufacturing · Contracting'}
+        <p className="text-[10px] sm:text-[11px] font-mono tracking-[0.2em] text-zinc-400 uppercase">
+          {isAr ? 'شركة قابضة · المملكة العربية السعودية' : 'HOLDING COMPANY · SAUDI ARABIA'}
         </p>
       </div>
 
-      {/* Luxury Shimmer Progress Track */}
-      <div className="w-full max-w-xs space-y-2">
-        <p className="text-[11px] font-mono text-zinc-400 font-medium">
+      {/* Precision 2px Hairline Progress Track */}
+      <div className="w-full max-w-xs space-y-3">
+        <div className="w-48 sm:w-56 mx-auto h-[2px] bg-white/10 rounded-full overflow-hidden">
+          <div className="h-full bg-gradient-to-r from-[#C9A86A] via-[#E3C58A] to-[#C9A86A] rounded-full animate-pulse shadow-[0_0_10px_#C9A86A] w-full" />
+        </div>
+        <p className="text-[10px] font-mono text-zinc-500 tracking-widest uppercase">
           {message || defaultMsg}
         </p>
-        <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden border border-white/10 p-[0.5px]">
-          <div className="h-full bg-gradient-to-r from-[#C9A86A] via-blue-500 to-[#C9A86A] rounded-full animate-pulse shadow-[0_0_12px_rgba(201,168,106,0.6)] w-full" />
-        </div>
       </div>
     </div>
   );
