@@ -29,29 +29,39 @@ export default function WebsitePreloader({ forced = false }: { forced?: boolean 
     setActiveLang(resolved);
     setMounted(true);
 
-    // Run swift smooth preloader timer
-    const hasSeen = sessionStorage.getItem('wd_preloader_seen');
-    const targetDuration = (hasSeen && !forced) ? 280 : 550;
-    const intervalTime = 16;
-    const totalSteps = Math.max(1, Math.round(targetDuration / intervalTime));
-    let currentStep = 0;
+    // Smooth 60fps requestAnimationFrame luxury counter
+    let startTime: number | null = null;
+    let animationFrameId: number;
+    const duration = 1600; // 1.6s elegant duration
 
-    const timer = setInterval(() => {
-      currentStep++;
-      const currentProgress = Math.min(100, Math.round((currentStep / totalSteps) * 100));
+    const step = (timestamp: number) => {
+      if (!startTime) startTime = timestamp;
+      const elapsed = timestamp - startTime;
+      const t = Math.min(1, elapsed / duration);
+      
+      // Smooth cubic ease-out
+      const eased = 1 - Math.pow(1 - t, 3);
+      const currentProgress = Math.min(100, Math.round(eased * 100));
       setProgress(currentProgress);
 
-      if (currentProgress >= 100) {
-        clearInterval(timer);
-        setFadingOut(true);
-        sessionStorage.setItem('wd_preloader_seen', 'true');
+      if (t < 1) {
+        animationFrameId = requestAnimationFrame(step);
+      } else {
+        setProgress(100);
         setTimeout(() => {
-          setLoading(false);
-        }, 300); // quick fade
+          setFadingOut(true);
+          setTimeout(() => {
+            setLoading(false);
+          }, 450);
+        }, 250); // brief hold on 100%
       }
-    }, intervalTime);
+    };
 
-    return () => clearInterval(timer);
+    animationFrameId = requestAnimationFrame(step);
+
+    return () => {
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
+    };
   }, [forced, lang]);
 
   if (!loading || !mounted) return null;
@@ -121,14 +131,14 @@ export default function WebsitePreloader({ forced = false }: { forced?: boolean 
         {/* Minimal Precision Digital Progress Counter & Hairline Bar */}
         <div className="w-full max-w-xs space-y-3 mb-6">
           <div className="text-center font-mono text-2xl sm:text-3xl font-extrabold text-[#C9A86A] tracking-tighter">
-            {progress < 10 ? `0${progress}` : progress}
+            {String(progress).padStart(2, '0')}
             <span className="text-xs text-zinc-500 ml-1 rtl:mr-1 rtl:ml-0 font-normal">%</span>
           </div>
 
           {/* Precision 2px Hairline Track */}
           <div className="w-48 sm:w-56 mx-auto h-[2px] bg-white/10 rounded-full overflow-hidden">
             <div
-              className="h-full bg-gradient-to-r from-[#C9A86A] via-[#E3C58A] to-[#C9A86A] transition-all duration-75 shadow-[0_0_10px_#C9A86A]"
+              className="h-full bg-gradient-to-r from-[#C9A86A] via-[#E3C58A] to-[#C9A86A] shadow-[0_0_10px_#C9A86A]"
               style={{ width: `${progress}%` }}
             />
           </div>
