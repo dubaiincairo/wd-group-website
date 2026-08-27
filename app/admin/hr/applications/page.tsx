@@ -59,11 +59,11 @@ export default function TalentPoolATSPage() {
       }
     } catch (e) {
       console.error('Applications fetch error:', e);
-      showToast('Failed to load applications', 'error');
+      showToast(isAr ? 'فشل تحميل طلبات التوظيف' : 'Failed to load applications', 'error');
     } finally {
       setLoading(false);
     }
-  }, [page, sectorFilter, statusFilter, searchTerm, showToast]);
+  }, [page, sectorFilter, statusFilter, searchTerm, showToast, isAr]);
 
   useEffect(() => {
     fetchApplications();
@@ -77,14 +77,14 @@ export default function TalentPoolATSPage() {
         body: JSON.stringify({ status: newStatus }),
       });
       if (res.ok) {
-        showToast('Candidate stage updated', 'success');
+        showToast(isAr ? 'تم تحديث مرحلة المرشح بنجاح' : 'Candidate stage updated', 'success');
         setApplications((prev) => prev.map((app) => (app.id === id ? { ...app, status: newStatus } : app)));
         if (selectedCandidate?.id === id) {
           setSelectedCandidate((prev) => prev ? { ...prev, status: newStatus } : null);
         }
       }
     } catch (e) {
-      showToast('Failed to update status', 'error');
+      showToast(isAr ? 'فشل تحديث المرحلة' : 'Failed to update status', 'error');
     }
   };
 
@@ -96,14 +96,14 @@ export default function TalentPoolATSPage() {
         body: JSON.stringify({ rating }),
       });
       if (res.ok) {
-        showToast(`Rating set to ${rating} stars`, 'success');
+        showToast(isAr ? `تم تعيين التقييم إلى ${rating} نجوم` : `Rating set to ${rating} stars`, 'success');
         setApplications((prev) => prev.map((app) => (app.id === id ? { ...app, rating } : app)));
         if (selectedCandidate?.id === id) {
           setSelectedCandidate((prev) => prev ? { ...prev, rating } : null);
         }
       }
     } catch (e) {
-      showToast('Failed to update rating', 'error');
+      showToast(isAr ? 'فشل تحديث التقييم' : 'Failed to update rating', 'error');
     }
   };
 
@@ -128,14 +128,14 @@ export default function TalentPoolATSPage() {
       });
 
       if (res.ok) {
-        showToast('HR note saved', 'success');
+        showToast(isAr ? 'تم حفظ ملاحظة الموارد البشرية' : 'HR note saved', 'success');
         setApplications((prev) => prev.map((app) => (app.id === id ? { ...app, internal_notes: updatedNotes } : app)));
         if (selectedCandidate?.id === id) {
           setSelectedCandidate((prev) => prev ? { ...prev, internal_notes: updatedNotes } : null);
         }
       }
     } catch (e) {
-      showToast('Failed to add note', 'error');
+      showToast(isAr ? 'فشل إضافة الملاحظة' : 'Failed to add note', 'error');
     }
   };
 

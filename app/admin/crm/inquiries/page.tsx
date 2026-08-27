@@ -59,11 +59,11 @@ export default function CRMInquiriesPage() {
       }
     } catch (e) {
       console.error('Inquiries fetch error:', e);
-      showToast('Failed to load inquiries', 'error');
+      showToast(isAr ? 'فشل تحميل طلبات التواصل والاستفسارات' : 'Failed to load inquiries', 'error');
     } finally {
       setLoading(false);
     }
-  }, [page, sectorFilter, statusFilter, searchTerm, showToast]);
+  }, [page, sectorFilter, statusFilter, searchTerm, showToast, isAr]);
 
   useEffect(() => {
     fetchInquiries();
@@ -77,14 +77,14 @@ export default function CRMInquiriesPage() {
         body: JSON.stringify({ status: newStatus }),
       });
       if (res.ok) {
-        showToast('Lead status updated successfully', 'success');
+        showToast(isAr ? 'تم تحديث حالة الطلب بنجاح' : 'Lead status updated successfully', 'success');
         setInquiries((prev) => prev.map((inq) => (inq.id === id ? { ...inq, status: newStatus } : inq)));
         if (selectedInquiry?.id === id) {
           setSelectedInquiry((prev) => prev ? { ...prev, status: newStatus } : null);
         }
       }
     } catch (e) {
-      showToast('Failed to update status', 'error');
+      showToast(isAr ? 'فشل تحديث حالة الطلب' : 'Failed to update status', 'error');
     }
   };
 
@@ -109,14 +109,14 @@ export default function CRMInquiriesPage() {
       });
 
       if (res.ok) {
-        showToast('Internal note saved', 'success');
+        showToast(isAr ? 'تم حفظ الملاحظة الداخلية' : 'Internal note saved', 'success');
         setInquiries((prev) => prev.map((inq) => (inq.id === id ? { ...inq, internal_notes: updatedNotes } : inq)));
         if (selectedInquiry?.id === id) {
           setSelectedInquiry((prev) => prev ? { ...prev, internal_notes: updatedNotes } : null);
         }
       }
     } catch (e) {
-      showToast('Failed to add note', 'error');
+      showToast(isAr ? 'فشل إضافة الملاحظة' : 'Failed to add note', 'error');
     }
   };
 

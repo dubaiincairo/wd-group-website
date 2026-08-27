@@ -419,9 +419,9 @@ export default function PagesContentEditor() {
         throw new Error(err.error || 'Failed to update content');
       }
 
-      showToast('Page content & media saved and published successfully', 'success');
+      showToast(isAr ? 'تم حفظ ونشر محتوى الصفحات والوسائط بنجاح' : 'Page content & media saved and published successfully', 'success');
     } catch (err: any) {
-      showToast(err.message || 'Error saving content', 'error');
+      showToast(err.message || (isAr ? 'حدث خطأ أثناء حفظ المحتوى' : 'Error saving content'), 'error');
     } finally {
       setSaving(false);
     }
