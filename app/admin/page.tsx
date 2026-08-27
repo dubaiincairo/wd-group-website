@@ -25,10 +25,14 @@ import StatCard from '@/components/admin/StatCard';
 import LeadDetailDrawer from '@/components/admin/LeadDetailDrawer';
 import CandidateDrawer from '@/components/admin/CandidateDrawer';
 import { useToast } from '@/components/admin/ToastProvider';
+import { useLanguage } from '@/context/LanguageContext';
 import type { CRMInquiry, JobApplicationRecord, AuditLogEntry, CRMInquiryStatus, JobApplicationStatus } from '@/lib/admin/types';
 
 export default function AdminDashboardPage() {
   const { showToast } = useToast();
+  const { lang } = useLanguage();
+  const isAr = lang === 'ar';
+
   const [loading, setLoading] = useState(true);
   const [inquiries, setInquiries] = useState<CRMInquiry[]>([]);
   const [applications, setApplications] = useState<JobApplicationRecord[]>([]);
@@ -84,14 +88,14 @@ export default function AdminDashboardPage() {
         body: JSON.stringify({ status: newStatus }),
       });
       if (res.ok) {
-        showToast('Lead status updated successfully', 'success');
+        showToast(isAr ? 'تم تحديث حالة الطلب بنجاح' : 'Lead status updated successfully', 'success');
         setInquiries((prev) => prev.map((inq) => (inq.id === id ? { ...inq, status: newStatus } : inq)));
         if (selectedInquiry?.id === id) {
           setSelectedInquiry((prev) => prev ? { ...prev, status: newStatus } : null);
         }
       }
     } catch (e) {
-      showToast('Failed to update status', 'error');
+      showToast(isAr ? 'فشل تحديث الحالة' : 'Failed to update status', 'error');
     }
   };
 
@@ -102,7 +106,7 @@ export default function AdminDashboardPage() {
         {
           id: `note_${Date.now()}`,
           text: noteText,
-          author: 'Admin',
+          author: 'Operations Admin',
           authorEmail: 'ceo@wdgroup.online',
           createdAt: new Date().toISOString(),
         },
@@ -116,14 +120,14 @@ export default function AdminDashboardPage() {
       });
 
       if (res.ok) {
-        showToast('Internal note saved', 'success');
+        showToast(isAr ? 'تمت إضافة الملاحظة بنجاح' : 'Note added successfully', 'success');
         setInquiries((prev) => prev.map((inq) => (inq.id === id ? { ...inq, internal_notes: updatedNotes } : inq)));
         if (selectedInquiry?.id === id) {
           setSelectedInquiry((prev) => prev ? { ...prev, internal_notes: updatedNotes } : null);
         }
       }
     } catch (e) {
-      showToast('Failed to add note', 'error');
+      showToast(isAr ? 'فشل إضافة الملاحظة' : 'Failed to add note', 'error');
     }
   };
 
@@ -135,14 +139,14 @@ export default function AdminDashboardPage() {
         body: JSON.stringify({ status: newStatus }),
       });
       if (res.ok) {
-        showToast('Candidate stage updated', 'success');
+        showToast(isAr ? 'تم تحديث مرحلة المرشح' : 'Candidate stage updated', 'success');
         setApplications((prev) => prev.map((app) => (app.id === id ? { ...app, status: newStatus } : app)));
         if (selectedCandidate?.id === id) {
           setSelectedCandidate((prev) => prev ? { ...prev, status: newStatus } : null);
         }
       }
     } catch (e) {
-      showToast('Failed to update stage', 'error');
+      showToast(isAr ? 'فشل التحديث' : 'Failed to update stage', 'error');
     }
   };
 
@@ -154,14 +158,14 @@ export default function AdminDashboardPage() {
         body: JSON.stringify({ rating }),
       });
       if (res.ok) {
-        showToast(`Rating set to ${rating} stars`, 'success');
+        showToast(isAr ? `تم تحديد التقييم بـ ${rating} نجوم` : `Rating set to ${rating} stars`, 'success');
         setApplications((prev) => prev.map((app) => (app.id === id ? { ...app, rating } : app)));
         if (selectedCandidate?.id === id) {
           setSelectedCandidate((prev) => prev ? { ...prev, rating } : null);
         }
       }
     } catch (e) {
-      showToast('Failed to update rating', 'error');
+      showToast(isAr ? 'فشل التقييم' : 'Failed to update rating', 'error');
     }
   };
 
@@ -186,14 +190,14 @@ export default function AdminDashboardPage() {
       });
 
       if (res.ok) {
-        showToast('HR note saved', 'success');
+        showToast(isAr ? 'تم حفظ ملاحظة الموارد البشرية' : 'HR note saved', 'success');
         setApplications((prev) => prev.map((app) => (app.id === id ? { ...app, internal_notes: updatedNotes } : app)));
         if (selectedCandidate?.id === id) {
           setSelectedCandidate((prev) => prev ? { ...prev, internal_notes: updatedNotes } : null);
         }
       }
     } catch (e) {
-      showToast('Failed to add note', 'error');
+      showToast(isAr ? 'فشل إضافة الملاحظة' : 'Failed to add note', 'error');
     }
   };
 
@@ -208,13 +212,13 @@ export default function AdminDashboardPage() {
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-mono font-bold mb-2">
             <ShieldCheck className="w-3.5 h-3.5" />
-            <span>EXECUTIVE COMMAND CENTER</span>
+            <span>{isAr ? 'مركز العمليات التنفيذي' : 'EXECUTIVE COMMAND CENTER'}</span>
           </div>
           <h1 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
-            Dashboard Overview
+            {isAr ? 'لوحة القيادة والمؤشرات' : 'Dashboard Overview'}
           </h1>
           <p className="text-xs sm:text-sm text-zinc-400 mt-1">
-            Real-time management for WD Group hospitality, manufacturing, and contracting operations.
+            {isAr ? 'إدارة فورية لعمليات الضيافة والتصنيع والمقاولات في مجموعة دبليو دي' : 'Real-time management for WD Group hospitality, manufacturing, and contracting operations.'}
           </p>
         </div>
 
@@ -225,14 +229,14 @@ export default function AdminDashboardPage() {
             className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition-all shadow-glow-blue"
           >
             <MessageSquare className="w-3.5 h-3.5" />
-            <span>Manage Leads</span>
+            <span>{isAr ? 'إدارة الطلبات' : 'Manage Leads'}</span>
           </Link>
           <Link
             href="/admin/content/pages"
             className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white text-xs font-bold transition-all"
           >
             <FileText className="w-3.5 h-3.5 text-blue-400" />
-            <span>Edit Website Content</span>
+            <span>{isAr ? 'محتوى الموقع' : 'Edit Website Content'}</span>
           </Link>
         </div>
       </div>
@@ -240,36 +244,36 @@ export default function AdminDashboardPage() {
       {/* 2. Key Metrics Stats Bar */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         <StatCard
-          title="Total Inquiries & RFPs"
+          title={isAr ? 'إجمالي الطلبات والاستفسارات' : 'Total Inquiries & RFPs'}
           value={inquiries.length}
-          subtitle={`${newInquiriesCount} new uncontacted`}
+          subtitle={isAr ? `${newInquiriesCount} طلب جديد غير متصل` : `${newInquiriesCount} new uncontacted`}
           icon={MessageSquare}
           iconColor="text-blue-400"
           href="/admin/crm/inquiries"
         />
 
         <StatCard
-          title="Talent Pool Candidates"
+          title={isAr ? 'مرشحو بنك المواهب' : 'Talent Pool Candidates'}
           value={applications.length}
-          subtitle={`${newApplicationsCount} awaiting review`}
+          subtitle={isAr ? `${newApplicationsCount} بانتظار المراجعة` : `${newApplicationsCount} awaiting review`}
           icon={Users}
           iconColor="text-purple-400"
           href="/admin/hr/applications"
         />
 
         <StatCard
-          title="Active Job Vacancies"
+          title={isAr ? 'الوظائف المتاحة حالياً' : 'Active Job Vacancies'}
           value={jobCount}
-          subtitle="Published on careers portal"
+          subtitle={isAr ? 'منشورة على بوابة التوظيف' : 'Published on careers portal'}
           icon={Briefcase}
           iconColor="text-emerald-400"
           href="/admin/hr/jobs"
         />
 
         <StatCard
-          title="Infrastructure Status"
-          value="Healthy"
-          subtitle="Supabase DB & Storage Active"
+          title={isAr ? 'حالة البنية التحتية' : 'Infrastructure Status'}
+          value={isAr ? 'متصل ونشط' : 'Healthy'}
+          subtitle={isAr ? 'قاعدة البيانات والتخزين تعمل' : 'Supabase DB & Storage Active'}
           icon={Activity}
           iconColor="text-sky-400"
           href="/admin/system/health"
@@ -288,16 +292,18 @@ export default function AdminDashboardPage() {
               <div>
                 <h2 className="text-base sm:text-lg font-extrabold text-white flex items-center gap-2">
                   <MessageSquare className="w-5 h-5 text-blue-400" />
-                  <span>Recent Inquiries & Sector RFPs</span>
+                  <span>{isAr ? 'أحدث الطلبات والاستفسارات' : 'Recent Inquiries & Sector RFPs'}</span>
                 </h2>
-                <p className="text-xs text-zinc-400">Incoming inquiries from SwissBlue, GreenWood, and Watan Contracting forms</p>
+                <p className="text-xs text-zinc-400">
+                  {isAr ? 'الطلبات الواردة من سويس بلو وجرين وود وتصاميم الوطن' : 'Incoming inquiries from SwissBlue, GreenWood, and Watan Contracting forms'}
+                </p>
               </div>
 
               <Link
                 href="/admin/crm/inquiries"
                 className="text-xs font-bold text-blue-400 hover:text-blue-300 flex items-center gap-1"
               >
-                <span>View all</span>
+                <span>{isAr ? 'عرض الكل' : 'View all'}</span>
                 <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
               </Link>
             </div>
@@ -311,18 +317,18 @@ export default function AdminDashboardPage() {
             ) : inquiries.length === 0 ? (
               <div className="p-8 text-center border border-dashed border-white/10 rounded-2xl space-y-2">
                 <MessageSquare className="w-8 h-8 text-zinc-600 mx-auto" />
-                <p className="text-xs text-zinc-400">No customer inquiries submitted yet.</p>
+                <p className="text-xs text-zinc-400">{isAr ? 'لا توجد طلبات جديدة حالياً.' : 'No customer inquiries submitted yet.'}</p>
               </div>
             ) : (
               <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs">
+                <table className="w-full text-left rtl:text-right text-xs">
                   <thead className="border-b border-white/10 text-zinc-400 font-mono">
                     <tr>
-                      <th className="pb-3 font-semibold">Contact / Company</th>
-                      <th className="pb-3 font-semibold">Sector</th>
-                      <th className="pb-3 font-semibold">Status</th>
-                      <th className="pb-3 font-semibold">Submitted</th>
-                      <th className="pb-3 text-right font-semibold">Action</th>
+                      <th className="pb-3 font-semibold">{isAr ? 'جهة الاتصال / الشركة' : 'Contact / Company'}</th>
+                      <th className="pb-3 font-semibold">{isAr ? 'القطاع' : 'Sector'}</th>
+                      <th className="pb-3 font-semibold">{isAr ? 'الحالة' : 'Status'}</th>
+                      <th className="pb-3 font-semibold">{isAr ? 'التاريخ' : 'Submitted'}</th>
+                      <th className="pb-3 text-right rtl:text-left font-semibold">{isAr ? 'الإجراء' : 'Action'}</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-white/5">
@@ -332,18 +338,18 @@ export default function AdminDashboardPage() {
                         className="hover:bg-white/5 transition-colors group cursor-pointer"
                         onClick={() => setSelectedInquiry(inq)}
                       >
-                        <td className="py-3.5 pr-3">
+                        <td className="py-3.5 pr-3 rtl:pr-0 rtl:pl-3">
                           <div className="font-bold text-white group-hover:text-blue-400 transition-colors">
                             {inq.name}
                           </div>
-                          <div className="text-[11px] text-zinc-400 truncate max-w-[180px]">
+                          <div className="text-[11px] text-zinc-400 truncate max-w-[180px]" dir="ltr">
                             {inq.company || inq.email}
                           </div>
                         </td>
 
                         <td className="py-3.5 px-3">
                           <span className="capitalize text-zinc-300 font-medium">
-                            {inq.sector || 'General'}
+                            {inq.sector || (isAr ? 'عام' : 'General')}
                           </span>
                         </td>
 
@@ -361,19 +367,19 @@ export default function AdminDashboardPage() {
                           </span>
                         </td>
 
-                        <td className="py-3.5 px-3 text-zinc-500 font-mono text-[11px]">
+                        <td className="py-3.5 px-3 text-zinc-500 font-mono text-[11px]" dir="ltr">
                           {new Date(inq.created_at).toLocaleDateString()}
                         </td>
 
-                        <td className="py-3.5 pl-3 text-right">
+                        <td className="py-3.5 pl-3 rtl:pl-0 rtl:pr-3 text-right rtl:text-left">
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
                               setSelectedInquiry(inq);
                             }}
-                            className="px-3 py-1 rounded-lg bg-white/5 group-hover:bg-blue-600 group-hover:text-white text-zinc-300 text-[11px] font-bold transition-all"
+                            className="px-3 py-1 rounded-lg bg-white/5 group-hover:bg-blue-600 group-hover:text-white text-zinc-300 text-[11px] font-bold transition-all cursor-pointer"
                           >
-                            Inspect
+                            {isAr ? 'معاينة' : 'Inspect'}
                           </button>
                         </td>
                       </tr>
@@ -390,16 +396,18 @@ export default function AdminDashboardPage() {
               <div>
                 <h2 className="text-base sm:text-lg font-extrabold text-white flex items-center gap-2">
                   <Users className="w-5 h-5 text-purple-400" />
-                  <span>Recent Talent Pool Applications</span>
+                  <span>{isAr ? 'أحدث طلبات بنك المواهب' : 'Recent Talent Pool Applications'}</span>
                 </h2>
-                <p className="text-xs text-zinc-400">Candidate CVs submitted through the /careers portal</p>
+                <p className="text-xs text-zinc-400">
+                  {isAr ? 'السير الذاتية للمرشحين المقدمة عبر بوابة التوظيف' : 'Candidate CVs submitted through the /careers portal'}
+                </p>
               </div>
 
               <Link
                 href="/admin/hr/applications"
                 className="text-xs font-bold text-purple-400 hover:text-purple-300 flex items-center gap-1"
               >
-                <span>View all</span>
+                <span>{isAr ? 'عرض الكل' : 'View all'}</span>
                 <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
               </Link>
             </div>
@@ -413,18 +421,18 @@ export default function AdminDashboardPage() {
             ) : applications.length === 0 ? (
               <div className="p-8 text-center border border-dashed border-white/10 rounded-2xl space-y-2">
                 <Users className="w-8 h-8 text-zinc-600 mx-auto" />
-                <p className="text-xs text-zinc-400">No job applicants submitted yet.</p>
+                <p className="text-xs text-zinc-400">{isAr ? 'لا يوجد متقدمين حتى الآن.' : 'No job applicants submitted yet.'}</p>
               </div>
             ) : (
               <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs">
+                <table className="w-full text-left rtl:text-right text-xs">
                   <thead className="border-b border-white/10 text-zinc-400 font-mono">
                     <tr>
-                      <th className="pb-3 font-semibold">Candidate Name</th>
-                      <th className="pb-3 font-semibold">Role / Sector</th>
-                      <th className="pb-3 font-semibold">Status</th>
-                      <th className="pb-3 font-semibold">Location</th>
-                      <th className="pb-3 text-right font-semibold">Action</th>
+                      <th className="pb-3 font-semibold">{isAr ? 'اسم المرشح' : 'Candidate Name'}</th>
+                      <th className="pb-3 font-semibold">{isAr ? 'المسمى / القطاع' : 'Role / Sector'}</th>
+                      <th className="pb-3 font-semibold">{isAr ? 'الحالة' : 'Status'}</th>
+                      <th className="pb-3 font-semibold">{isAr ? 'الموقع' : 'Location'}</th>
+                      <th className="pb-3 text-right rtl:text-left font-semibold">{isAr ? 'الإجراء' : 'Action'}</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-white/5">
@@ -434,21 +442,21 @@ export default function AdminDashboardPage() {
                         className="hover:bg-white/5 transition-colors group cursor-pointer"
                         onClick={() => setSelectedCandidate(app)}
                       >
-                        <td className="py-3.5 pr-3">
+                        <td className="py-3.5 pr-3 rtl:pr-0 rtl:pl-3">
                           <div className="font-bold text-white group-hover:text-purple-400 transition-colors">
                             {app.full_name}
                           </div>
-                          <div className="text-[11px] text-zinc-400 truncate max-w-[180px]">
+                          <div className="text-[11px] text-zinc-400 truncate max-w-[180px]" dir="ltr">
                             {app.email}
                           </div>
                         </td>
 
                         <td className="py-3.5 px-3">
                           <div className="font-semibold text-zinc-200 truncate max-w-[160px]">
-                            {app.job_title || 'General Talent'}
+                            {app.job_title || (isAr ? 'موهبة عامة' : 'General Talent')}
                           </div>
                           <div className="text-[10px] text-zinc-500 capitalize">
-                            {app.sector || 'All sectors'}
+                            {app.sector || (isAr ? 'جميع القطاعات' : 'All sectors')}
                           </div>
                         </td>
 
@@ -467,18 +475,18 @@ export default function AdminDashboardPage() {
                         </td>
 
                         <td className="py-3.5 px-3 text-zinc-400 text-[11px]">
-                          {app.city || 'Saudi Arabia'}
+                          {app.city || (isAr ? 'المملكة العربية السعودية' : 'Saudi Arabia')}
                         </td>
 
-                        <td className="py-3.5 pl-3 text-right">
+                        <td className="py-3.5 pl-3 rtl:pl-0 rtl:pr-3 text-right rtl:text-left">
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
                               setSelectedCandidate(app);
                             }}
-                            className="px-3 py-1 rounded-lg bg-white/5 group-hover:bg-purple-600 group-hover:text-white text-zinc-300 text-[11px] font-bold transition-all"
+                            className="px-3 py-1 rounded-lg bg-white/5 group-hover:bg-purple-600 group-hover:text-white text-zinc-300 text-[11px] font-bold transition-all cursor-pointer"
                           >
-                            Review CV
+                            {isAr ? 'فحص السيرة' : 'Review CV'}
                           </button>
                         </td>
                       </tr>
@@ -497,7 +505,7 @@ export default function AdminDashboardPage() {
           {/* Quick CMS Navigation Hub */}
           <div className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 space-y-4 shadow-xl">
             <h3 className="text-sm font-extrabold text-white uppercase tracking-wider font-mono text-blue-400">
-              SECTOR MANAGERS
+              {isAr ? 'إدارة القطاعات الاستراتيجية' : 'SECTOR MANAGERS'}
             </h3>
 
             <div className="space-y-2.5">
@@ -510,8 +518,12 @@ export default function AdminDashboardPage() {
                     <Building2 className="w-4 h-4" />
                   </div>
                   <div>
-                    <h4 className="text-xs font-bold text-white group-hover:text-sky-300">SwissBlue Hospitality</h4>
-                    <p className="text-[11px] text-zinc-400">6 Hotels & Serviced Residences</p>
+                    <h4 className="text-xs font-bold text-white group-hover:text-sky-300">
+                      {isAr ? 'قطاع الضيافة (سويس بلو)' : 'SwissBlue Hospitality'}
+                    </h4>
+                    <p className="text-[11px] text-zinc-400">
+                      {isAr ? '6 فنادق ووحدات سكنية مخدومة' : '6 Hotels & Serviced Residences'}
+                    </p>
                   </div>
                 </div>
                 <ArrowRight className="w-4 h-4 text-zinc-500 group-hover:text-white rtl:rotate-180 transition-transform group-hover:translate-x-1" />
@@ -526,8 +538,12 @@ export default function AdminDashboardPage() {
                     <Factory className="w-4 h-4" />
                   </div>
                   <div>
-                    <h4 className="text-xs font-bold text-white group-hover:text-emerald-300">GreenWood Manufacturing</h4>
-                    <p className="text-[11px] text-zinc-400">3 Factories & CNC Machinery</p>
+                    <h4 className="text-xs font-bold text-white group-hover:text-emerald-300">
+                      {isAr ? 'قطاع التصنيع والأثاث (جرين وود)' : 'GreenWood Manufacturing'}
+                    </h4>
+                    <p className="text-[11px] text-zinc-400">
+                      {isAr ? '3 مصانع متخصصة وخطوط إنتاج' : '3 Factories & CNC Machinery'}
+                    </p>
                   </div>
                 </div>
                 <ArrowRight className="w-4 h-4 text-zinc-500 group-hover:text-white rtl:rotate-180 transition-transform group-hover:translate-x-1" />
@@ -542,8 +558,12 @@ export default function AdminDashboardPage() {
                     <HardHat className="w-4 h-4" />
                   </div>
                   <div>
-                    <h4 className="text-xs font-bold text-white group-hover:text-amber-300">Contracting & Fit-Out</h4>
-                    <p className="text-[11px] text-zinc-400">Turnkey Fit-Out & Joinery</p>
+                    <h4 className="text-xs font-bold text-white group-hover:text-amber-300">
+                      {isAr ? 'المقاولات والتجهيز الداخلي (تصاميم الوطن)' : 'Contracting & Fit-Out'}
+                    </h4>
+                    <p className="text-[11px] text-zinc-400">
+                      {isAr ? 'تنفيذ شامل وتجهيز فندقي وتجاري' : 'Turnkey Fit-Out & Joinery'}
+                    </p>
                   </div>
                 </div>
                 <ArrowRight className="w-4 h-4 text-zinc-500 group-hover:text-white rtl:rotate-180 transition-transform group-hover:translate-x-1" />
@@ -556,25 +576,25 @@ export default function AdminDashboardPage() {
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-extrabold text-white flex items-center gap-2">
                 <Clock className="w-4 h-4 text-zinc-400" />
-                <span>Recent Admin Activity</span>
+                <span>{isAr ? 'سجل العمليات الأخير' : 'Recent Admin Activity'}</span>
               </h3>
               <Link href="/admin/system/audit-logs" className="text-[11px] text-blue-400 font-bold hover:underline">
-                Full logs
+                {isAr ? 'السجل الكامل' : 'Full logs'}
               </Link>
             </div>
 
             <div className="space-y-3">
               {auditLogs.length === 0 ? (
-                <p className="text-xs text-zinc-500 italic">No activity recorded yet.</p>
+                <p className="text-xs text-zinc-500 italic">{isAr ? 'لم يتم تسجيل نشاط بعد.' : 'No activity recorded yet.'}</p>
               ) : (
                 auditLogs.slice(0, 6).map((log) => (
                   <div key={log.id} className="p-3 rounded-xl bg-black/30 border border-white/5 text-xs space-y-1">
                     <div className="flex items-center justify-between text-[10px] text-zinc-500">
-                      <span className="font-bold text-blue-400">{log.actor_email}</span>
-                      <span className="font-mono">{new Date(log.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                      <span className="font-bold text-blue-400" dir="ltr">{log.actor_email}</span>
+                      <span className="font-mono" dir="ltr">{new Date(log.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                     </div>
                     <p className="font-semibold text-zinc-200">
-                      <span className="font-mono text-sky-300">{log.action}</span> on <span className="text-zinc-400">{log.resource_type}</span>
+                      <span className="font-mono text-sky-300" dir="ltr">{log.action}</span> {isAr ? 'على' : 'on'} <span className="text-zinc-400" dir="ltr">{log.resource_type}</span>
                     </p>
                   </div>
                 ))
