@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 import { useLanguage } from '@/context/LanguageContext';
 import { Mail, Phone, MapPin, Send, CheckCircle2, MessageSquare, ArrowRight, X, ChevronDown } from 'lucide-react';
 
@@ -56,8 +57,14 @@ export default function ContactCTA() {
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
-        {/* Main CTA Card */}
-        <div className="glass-card rounded-3xl p-8 sm:p-12 border border-[#C9A86A]/30 shadow-2xl relative overflow-hidden bg-[#0F1117]/90">
+        {/* Main CTA Card with Scroll Reveal */}
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          className="glass-card rounded-3xl p-8 sm:p-12 border border-[#C9A86A]/30 shadow-2xl relative overflow-hidden bg-[#0F1117]/90"
+        >
           
           <div className="max-w-3xl mx-auto text-center space-y-6">
             
@@ -114,7 +121,7 @@ export default function ContactCTA() {
             </div>
           </div>
 
-        </div>
+        </motion.div>
 
       </div>
 

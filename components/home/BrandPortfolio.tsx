@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 import { useLanguage } from '@/context/LanguageContext';
 import { 
   Building2, 
@@ -102,8 +103,14 @@ export default function BrandPortfolio() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
-        {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-12 space-y-3">
+        {/* Section Header with Scroll Reveal */}
+        <motion.div 
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          className="text-center max-w-3xl mx-auto mb-12 space-y-3"
+        >
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide uppercase bg-[#0F1117]/90 border border-[#C9A86A]/30 text-[#C9A86A] shadow-glow-camel">
             <Shield className="w-3.5 h-3.5" />
             <span className="font-mono">{lang === 'ar' ? 'العلامات والمنشآت التجارية' : 'OUR PORTFOLIO BRANDS'}</span>
@@ -118,55 +125,63 @@ export default function BrandPortfolio() {
               ? 'تضم مجموعة دبليو دي للأعمال محفظة استراتيجية من العلامات التجارية المتخصصة في الضيافة، المقاولات، والتصنيع' 
               : 'WD Group owns and manages a strategic portfolio of market-leading brands across hospitality, contracting, and specialized manufacturing.'}
           </p>
-        </div>
+        </motion.div>
 
-        {/* Brand Grid — 5 Luxury Cards */}
+        {/* Brand Grid — 5 Luxury Cards with Staggered Scroll Animation */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-5">
-          {BRANDS.map((brand) => {
+          {BRANDS.map((brand, idx) => {
             const Icon = brand.icon;
             return (
-              <Link
+              <motion.div
                 key={brand.id}
-                href={brand.link}
-                className={`group relative rounded-2xl bg-[#0F1117]/90 border border-white/10 ${brand.borderColor} p-6 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl overflow-hidden`}
+                initial={{ opacity: 0, y: 28 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-50px' }}
+                transition={{ duration: 0.55, delay: idx * 0.08, ease: [0.22, 1, 0.36, 1] }}
+                className="flex"
               >
-                {/* Ambient Top Glow */}
-                <div className={`absolute top-0 inset-x-0 h-24 bg-gradient-to-b ${brand.color} opacity-30 group-hover:opacity-100 transition-opacity`} />
+                <Link
+                  href={brand.link}
+                  className={`w-full group relative rounded-2xl bg-[#0F1117]/90 border border-white/10 ${brand.borderColor} p-6 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl overflow-hidden`}
+                >
+                  {/* Ambient Top Glow */}
+                  <div className={`absolute top-0 inset-x-0 h-24 bg-gradient-to-b ${brand.color} opacity-30 group-hover:opacity-100 transition-opacity`} />
 
-                <div className="relative z-10 space-y-4">
-                  {/* Top Bar: Icon + Category Badge */}
-                  <div className="flex items-center justify-between">
-                    <div className={`w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center ${brand.accentColor} group-hover:scale-110 transition-transform`}>
-                      <Icon className="w-5 h-5" />
+                  <div className="relative z-10 space-y-4">
+                    {/* Top Bar: Icon + Category Badge */}
+                    <div className="flex items-center justify-between">
+                      <div className={`w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center ${brand.accentColor} group-hover:scale-110 transition-transform`}>
+                        <Icon className="w-5 h-5" />
+                      </div>
+                      <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-md border ${brand.badgeBg}`}>
+                        {brand.badge}
+                      </span>
                     </div>
-                    <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-md border ${brand.badgeBg}`}>
-                      {brand.badge}
-                    </span>
+
+                    {/* Brand Typography Title */}
+                    <div>
+                      <h3 className="text-lg font-black text-white group-hover:text-[#C9A86A] transition-colors flex items-center gap-1.5">
+                        <span>{lang === 'ar' ? brand.nameAr : brand.name}</span>
+                        <ArrowUpRight className="w-3.5 h-3.5 opacity-0 -translate-x-1 rtl:translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all text-[#C9A86A]" />
+                      </h3>
+                      <div className="text-[11px] font-semibold text-zinc-300">
+                        {brand.fullName}
+                      </div>
+                    </div>
+
+                    {/* Narrative Body */}
+                    <p className="text-xs text-zinc-400 leading-relaxed font-normal">
+                      {brand.desc}
+                    </p>
                   </div>
 
-                  {/* Brand Typography Title */}
-                  <div>
-                    <h3 className="text-lg font-black text-white group-hover:text-[#C9A86A] transition-colors flex items-center gap-1.5">
-                      <span>{lang === 'ar' ? brand.nameAr : brand.name}</span>
-                      <ArrowUpRight className="w-3.5 h-3.5 opacity-0 -translate-x-1 rtl:translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all text-[#C9A86A]" />
-                    </h3>
-                    <div className="text-[11px] font-semibold text-zinc-300">
-                      {brand.fullName}
-                    </div>
+                  {/* Bottom Bar: Action link */}
+                  <div className="relative z-10 pt-4 mt-4 border-t border-white/5 flex items-center justify-between text-xs text-zinc-400 group-hover:text-white transition-colors">
+                    <span className="text-[11px] font-mono text-zinc-500 group-hover:text-zinc-300">{brand.category}</span>
+                    <span className="text-[11px] font-bold text-[#C9A86A]">{lang === 'ar' ? 'عرض القطاع ←' : 'Explore →'}</span>
                   </div>
-
-                  {/* Narrative Body */}
-                  <p className="text-xs text-zinc-400 leading-relaxed font-normal">
-                    {brand.desc}
-                  </p>
-                </div>
-
-                {/* Bottom Bar: Action link */}
-                <div className="relative z-10 pt-4 mt-4 border-t border-white/5 flex items-center justify-between text-xs text-zinc-400 group-hover:text-white transition-colors">
-                  <span className="text-[11px] font-mono text-zinc-500 group-hover:text-zinc-300">{brand.category}</span>
-                  <span className="text-[11px] font-bold text-[#C9A86A]">{lang === 'ar' ? 'عرض القطاع ←' : 'Explore →'}</span>
-                </div>
-              </Link>
+                </Link>
+              </motion.div>
             );
           })}
         </div>

@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { motion } from 'framer-motion';
 import { useLanguage } from '@/context/LanguageContext';
 import { Factory, HardHat, Building2, Workflow, ArrowRight, ShieldCheck, Zap } from 'lucide-react';
 
@@ -45,8 +46,14 @@ export default function HoldingSynergy() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
-        {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-14 space-y-3">
+        {/* Section Header with Scroll Reveal */}
+        <motion.div 
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          className="text-center max-w-3xl mx-auto mb-12 sm:mb-14 space-y-3"
+        >
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide uppercase bg-[#0F1117]/90 border border-[#C9A86A]/30 text-[#C9A86A] shadow-glow-camel">
             <Workflow className="w-3.5 h-3.5" />
             <span className="font-mono">{dict.home.synergy.label}</span>
@@ -59,16 +66,20 @@ export default function HoldingSynergy() {
           <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed max-w-2xl mx-auto font-normal">
             {dict.home.synergy.intro}
           </p>
-        </div>
+        </motion.div>
 
-        {/* 3 Step Process Cards */}
+        {/* 3 Step Process Cards with Staggered Scroll Animation */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative">
           
           {STEPS.map((item, idx) => {
             const Icon = item.icon;
             return (
-              <div
+              <motion.div
                 key={item.step}
+                initial={{ opacity: 0, y: 32 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-50px' }}
+                transition={{ duration: 0.6, delay: idx * 0.15, ease: [0.22, 1, 0.36, 1] }}
                 className={`glass-card rounded-3xl p-7 border border-white/10 ${item.cardBorder} transition-all group relative overflow-hidden flex flex-col justify-between`}
               >
                 <div>
@@ -102,7 +113,7 @@ export default function HoldingSynergy() {
                   <span className="text-zinc-500">0{idx + 1} / 03</span>
                 </div>
 
-              </div>
+              </motion.div>
             );
           })}
 

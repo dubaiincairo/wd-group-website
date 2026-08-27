@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Image from 'next/image';
+import { motion } from 'framer-motion';
 import { useLanguage } from '@/context/LanguageContext';
 import { Quote, Sparkles, ShieldCheck } from 'lucide-react';
 
@@ -17,7 +18,13 @@ export default function CEOQuote() {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-blue-600/5 blur-[140px] pointer-events-none" />
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="glass-card rounded-3xl p-8 sm:p-12 border border-[#C9A86A]/20 shadow-2xl relative overflow-hidden bg-[#0F1117]/90">
+        <motion.div 
+          initial={{ opacity: 0, y: 32, scale: 0.98 }}
+          whileInView={{ opacity: 1, y: 0, scale: 1 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          className="glass-card rounded-3xl p-8 sm:p-12 border border-[#C9A86A]/20 shadow-2xl relative overflow-hidden bg-[#0F1117]/90"
+        >
           
           <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12">
             
@@ -77,7 +84,7 @@ export default function CEOQuote() {
 
           </div>
 
-        </div>
+        </motion.div>
       </div>
     </section>
   );

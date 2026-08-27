@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { motion } from 'framer-motion';
 import { useLanguage } from '@/context/LanguageContext';
 import { Building2, Factory, HardHat, ArrowRight, Sparkles, CheckCircle2 } from 'lucide-react';
 
@@ -21,8 +22,14 @@ export default function SectorsHub() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
-        {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-14 space-y-3">
+        {/* Section Header with Scroll Reveal */}
+        <motion.div 
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          className="text-center max-w-3xl mx-auto mb-12 sm:mb-14 space-y-3"
+        >
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide uppercase bg-[#0F1117]/90 border border-[#C9A86A]/30 text-[#C9A86A] shadow-glow-camel">
             <Sparkles className="w-3.5 h-3.5" />
             <span className="font-mono">{dict.home.sectors.label}</span>
@@ -35,13 +42,19 @@ export default function SectorsHub() {
           <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed max-w-2xl mx-auto font-normal">
             {dict.home.sectors.intro}
           </p>
-        </div>
+        </motion.div>
 
         {/* 3 Sectors Cards Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-7">
           
           {/* 1. Hospitality (SwissBlue) */}
-          <div className="glass-card rounded-3xl p-7 flex flex-col justify-between border border-sky-500/20 hover:border-sky-400/60 hover:shadow-[0_0_35px_rgba(56,189,248,0.2)] transition-all group relative overflow-hidden">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-60px' }}
+            transition={{ duration: 0.6, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
+            className="glass-card rounded-3xl p-7 flex flex-col justify-between border border-sky-500/20 hover:border-sky-400/60 hover:shadow-[0_0_35px_rgba(56,189,248,0.2)] transition-all group relative overflow-hidden"
+          >
             <div>
               {/* Card Photo Header */}
               <div className="relative h-48 w-full rounded-2xl overflow-hidden mb-6 border border-white/10 group-hover:border-sky-500/40 transition-colors bg-gradient-to-br from-[#0c1a2e] via-[#091220] to-[#060a12] flex items-center justify-center">
@@ -111,10 +124,16 @@ export default function SectorsHub() {
               <ArrowRight className="w-4 h-4 text-sky-300 group-hover/btn:translate-x-1 rtl:group-hover/btn:-translate-x-1 rtl:rotate-180 transition-all" />
             </Link>
 
-          </div>
+          </motion.div>
 
           {/* 2. Manufacturing & Furniture (GreenWood) */}
-          <div className="glass-card rounded-3xl p-7 flex flex-col justify-between border border-emerald-500/20 hover:border-emerald-400/60 hover:shadow-[0_0_35px_rgba(52,211,153,0.2)] transition-all group relative overflow-hidden">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-60px' }}
+            transition={{ duration: 0.6, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+            className="glass-card rounded-3xl p-7 flex flex-col justify-between border border-emerald-500/20 hover:border-emerald-400/60 hover:shadow-[0_0_35px_rgba(52,211,153,0.2)] transition-all group relative overflow-hidden"
+          >
             <div>
               {/* Card Photo Header */}
               <div className="relative h-48 w-full rounded-2xl overflow-hidden mb-6 border border-white/10 group-hover:border-emerald-500/40 transition-colors bg-gradient-to-br from-[#081a14] via-[#05120e] to-[#030a08] flex items-center justify-center">
@@ -184,10 +203,16 @@ export default function SectorsHub() {
               <ArrowRight className="w-4 h-4 text-emerald-300 group-hover/btn:translate-x-1 rtl:group-hover/btn:-translate-x-1 rtl:rotate-180 transition-all" />
             </Link>
 
-          </div>
+          </motion.div>
 
           {/* 3. Contracting & Fit-Out (Projects) */}
-          <div className="glass-card rounded-3xl p-7 flex flex-col justify-between border border-amber-500/20 hover:border-amber-400/60 hover:shadow-[0_0_35px_rgba(251,191,36,0.2)] transition-all group relative overflow-hidden">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-60px' }}
+            transition={{ duration: 0.6, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
+            className="glass-card rounded-3xl p-7 flex flex-col justify-between border border-amber-500/20 hover:border-amber-400/60 hover:shadow-[0_0_35px_rgba(251,191,36,0.2)] transition-all group relative overflow-hidden"
+          >
             <div>
               {/* Card Photo Header */}
               <div className="relative h-48 w-full rounded-2xl overflow-hidden mb-6 border border-white/10 group-hover:border-amber-500/40 transition-colors bg-gradient-to-br from-[#1c1408] via-[#140e05] to-[#0a0702] flex items-center justify-center">
@@ -257,7 +282,7 @@ export default function SectorsHub() {
               <ArrowRight className="w-4 h-4 text-amber-300 group-hover/btn:translate-x-1 rtl:group-hover/btn:-translate-x-1 rtl:rotate-180 transition-all" />
             </Link>
 
-          </div>
+          </motion.div>
 
         </div>
 

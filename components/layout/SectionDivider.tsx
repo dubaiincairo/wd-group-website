@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { motion } from 'framer-motion';
 import { useLanguage } from '@/context/LanguageContext';
 
 interface SectionDividerProps {
@@ -29,16 +30,34 @@ export default function SectionDivider({ label, badge, className = '' }: Section
         <div className="relative flex items-center justify-between">
           
           {/* Left Blueprint Crosshair */}
-          <div className="text-zinc-500 font-mono text-[10px] hidden sm:block tracking-widest uppercase">
+          <motion.div 
+            initial={{ opacity: 0, x: -12 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: '-40px' }}
+            transition={{ duration: 0.6, ease: 'easeOut' }}
+            className="text-zinc-500 font-mono text-[10px] hidden sm:block tracking-widest uppercase"
+          >
             {lang === 'ar' ? '+ مجموعة دبليو دي للأعمال // السعودية' : '+ WD // KSA'}
-          </div>
+          </motion.div>
 
           {/* Central Hairline Rule with Monogram / Badge Pill */}
           <div className="flex-1 mx-4 sm:mx-8 relative flex items-center justify-center">
-            <div className="w-full h-px bg-gradient-to-r from-transparent via-[#C9A86A]/30 to-transparent"></div>
+            <motion.div 
+              initial={{ scaleX: 0, opacity: 0 }}
+              whileInView={{ scaleX: 1, opacity: 1 }}
+              viewport={{ once: true, margin: '-40px' }}
+              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+              className="w-full h-px bg-gradient-to-r from-transparent via-[#C9A86A]/40 to-transparent origin-center"
+            />
             
             {/* Center Monogram / Coordinate Pill */}
-            <div className="absolute px-3.5 py-1 rounded-full bg-[#0F1117]/95 border border-[#C9A86A]/30 text-[9px] sm:text-[10px] font-mono font-bold tracking-widest text-[#C9A86A] uppercase flex items-center gap-2 backdrop-blur-md shadow-glow-camel">
+            <motion.div 
+              initial={{ scale: 0.9, opacity: 0 }}
+              whileInView={{ scale: 1, opacity: 1 }}
+              viewport={{ once: true, margin: '-40px' }}
+              transition={{ duration: 0.5, delay: 0.2, ease: 'easeOut' }}
+              className="absolute px-3.5 py-1 rounded-full bg-[#0F1117]/95 border border-[#C9A86A]/30 text-[9px] sm:text-[10px] font-mono font-bold tracking-widest text-[#C9A86A] uppercase flex items-center gap-2 backdrop-blur-md shadow-glow-camel"
+            >
               <span className="w-1.5 h-1.5 rounded-full bg-[#C9A86A] animate-pulse"></span>
               <span>{badge || (lang === 'ar' ? 'مجموعة دبليو دي للأعمال' : 'WD GROUP FOR BUSINESS')}</span>
               {displayLabel && (
@@ -47,13 +66,19 @@ export default function SectionDivider({ label, badge, className = '' }: Section
                   <span className="text-zinc-300 font-semibold">{displayLabel}</span>
                 </>
               )}
-            </div>
+            </motion.div>
           </div>
 
           {/* Right Blueprint Crosshair */}
-          <div className="text-zinc-500 font-mono text-[10px] hidden sm:block tracking-widest uppercase">
+          <motion.div 
+            initial={{ opacity: 0, x: 12 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: '-40px' }}
+            transition={{ duration: 0.6, ease: 'easeOut' }}
+            className="text-zinc-500 font-mono text-[10px] hidden sm:block tracking-widest uppercase"
+          >
             {lang === 'ar' ? '+ رؤية المملكة 2030' : '+ VISION 2030'}
-          </div>
+          </motion.div>
 
         </div>
 
