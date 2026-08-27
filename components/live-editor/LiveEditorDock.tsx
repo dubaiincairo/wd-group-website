@@ -53,6 +53,8 @@ function createDefaultState() {
       hero: {
         eyebrow_en: en.home.hero.eyebrow,
         eyebrow_ar: ar.home.hero.eyebrow,
+        kicker_en: en.home.hero.kicker,
+        kicker_ar: ar.home.hero.kicker,
         title_line1_en: en.home.hero.title_line1,
         title_line1_ar: ar.home.hero.title_line1,
         title_line2_en: en.home.hero.title_line2,
@@ -314,6 +316,7 @@ export default function LiveEditorDock() {
                   ...defaults.home.hero,
                   ...(server.home?.hero || {}),
                   eyebrow_ar: getArabicField(server.home?.hero?.eyebrow_ar, defaults.home.hero.eyebrow_ar),
+                  kicker_ar: getArabicField(server.home?.hero?.kicker_ar, defaults.home.hero.kicker_ar),
                   title_line1_ar: getArabicField(server.home?.hero?.title_line1_ar, defaults.home.hero.title_line1_ar),
                   title_line2_ar: getArabicField(server.home?.hero?.title_line2_ar, defaults.home.hero.title_line2_ar),
                   title_line3_ar: getArabicField(server.home?.hero?.title_line3_ar, defaults.home.hero.title_line3_ar),
@@ -723,7 +726,7 @@ export default function LiveEditorDock() {
                   {/* Eyebrow */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'العنوان التمهيدي (عربي)' : 'Eyebrow (Arabic)'}</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'العنوان التمهيدي في الشارة (عربي)' : 'Badge Eyebrow (Arabic)'}</label>
                       <input
                         type="text"
                         dir="rtl"
@@ -734,7 +737,7 @@ export default function LiveEditorDock() {
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'العنوان التمهيدي (إنجليزي)' : 'Eyebrow (English)'}</label>
+                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'العنوان التمهيدي في الشارة (إنجليزي)' : 'Badge Eyebrow (English)'}</label>
                       <input
                         type="text"
                         dir="ltr"
@@ -743,6 +746,53 @@ export default function LiveEditorDock() {
                         className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"
                         placeholder="WD Group for Business"
                       />
+                    </div>
+                  </div>
+
+                  {/* Kicker Tagline (Hero Pill Part 2) */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <div>
+                      <label className="block text-[11px] text-[#C9A86A] font-semibold mb-1">{isAr ? 'نص الشارة الفرعي / الشعار (عربي)' : 'Badge Tagline / Kicker (Arabic)'}</label>
+                      <input
+                        type="text"
+                        dir="rtl"
+                        value={localEdits?.home?.hero?.kicker_ar || ''}
+                        onChange={(e) => updateField(['home', 'hero', 'kicker_ar'], e.target.value)}
+                        className="w-full px-3 py-2 rounded-xl bg-black/50 border border-[#C9A86A]/40 text-white"
+                        placeholder="منظومة متكاملة في الضيافة والتصنيع والمقاولات"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] text-[#C9A86A] font-semibold mb-1">{isAr ? 'نص الشارة الفرعي / الشعار (إنجليزي)' : 'Badge Tagline / Kicker (English)'}</label>
+                      <input
+                        type="text"
+                        dir="ltr"
+                        value={localEdits?.home?.hero?.kicker_en || ''}
+                        onChange={(e) => updateField(['home', 'hero', 'kicker_en'], e.target.value)}
+                        className="w-full px-3 py-2 rounded-xl bg-black/50 border border-[#C9A86A]/40 text-white"
+                        placeholder="Integrated Hospitality, Manufacturing & Contracting"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Hero Pill Live Preview Badge */}
+                  <div className="p-2.5 rounded-xl bg-black/40 border border-[#C9A86A]/20 flex flex-col items-center justify-center gap-1">
+                    <span className="text-[10px] font-mono text-zinc-400">
+                      {isAr ? 'معاينة شارة أعلى الهيرو:' : 'Hero Top Pill Badge Preview:'}
+                    </span>
+                    <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-semibold bg-[#0F1117]/90 border border-[#C9A86A]/40 text-zinc-300 backdrop-blur-md">
+                      <span className="w-2 h-2 rounded-full bg-[#C9A86A] animate-pulse"></span>
+                      <span className="font-bold text-white tracking-wide">
+                        {isAr
+                          ? (localEdits?.home?.hero?.eyebrow_ar || 'مجموعة دبليو دي للأعمال')
+                          : (localEdits?.home?.hero?.eyebrow_en || 'WD Group for Business')}
+                      </span>
+                      <span className="text-[#C9A86A]/60">•</span>
+                      <span className="text-zinc-300 font-normal">
+                        {isAr
+                          ? (localEdits?.home?.hero?.kicker_ar || 'منظومة متكاملة في الضيافة والتصنيع والمقاولات')
+                          : (localEdits?.home?.hero?.kicker_en || 'Integrated Hospitality, Manufacturing & Contracting')}
+                      </span>
                     </div>
                   </div>
 

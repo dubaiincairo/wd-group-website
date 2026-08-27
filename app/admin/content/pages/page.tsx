@@ -562,13 +562,53 @@ export default function PagesContentEditor() {
 
             {openSections.hero && (
               <div className="space-y-5 pt-5 border-t border-white/10 mt-4 animate-in fade-in duration-150">
-                <BilingualInput
-                  label={isAr ? 'العنوان الترويجي العلوي' : 'Hero Eyebrow / Tag'}
-                  valueEn={content.home.hero.eyebrow_en}
-                  valueAr={content.home.hero.eyebrow_ar}
-                  onChangeEn={(v) => setContent({ ...content, home: { ...content.home, hero: { ...content.home.hero, eyebrow_en: v } } })}
-                  onChangeAr={(v) => setContent({ ...content, home: { ...content.home, hero: { ...content.home.hero, eyebrow_ar: v } } })}
-                />
+                {/* Hero Badge Pill Box */}
+                <div className="p-4 rounded-2xl bg-black/40 border border-[#C9A86A]/30 space-y-4">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                    <div>
+                      <h4 className="text-xs font-bold font-mono text-[#C9A86A] uppercase tracking-wider">
+                        {isAr ? 'شارة أعلى الهيرو (الشعار والتعريف)' : 'Hero Pill Badge (Brand & Tagline)'}
+                      </h4>
+                      <p className="text-[11px] text-zinc-400">
+                        {isAr ? 'الشارة الدائرية أعلى الشعار الثلاثي في الصفحة الرئيسية للموقع' : 'The circular pill badge rendered directly above the 3-line headline on homepage'}
+                      </p>
+                    </div>
+
+                    {/* Live Preview Pill */}
+                    <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-[#0F1117]/90 border border-[#C9A86A]/40 text-zinc-300 backdrop-blur-md shadow-sm">
+                      <span className="w-2 h-2 rounded-full bg-[#C9A86A] animate-pulse"></span>
+                      <span className="font-bold text-white tracking-wide">
+                        {isAr ? (content.home.hero.eyebrow_ar || 'مجموعة دبليو دي للأعمال') : (content.home.hero.eyebrow_en || 'WD Group for Business')}
+                      </span>
+                      <span className="text-[#C9A86A]/60">•</span>
+                      <span className="text-zinc-300 font-normal">
+                        {isAr ? (content.home.hero.kicker_ar || 'منظومة متكاملة في الضيافة والتصنيع والمقاولات') : (content.home.hero.kicker_en || 'Integrated Hospitality, Manufacturing & Contracting')}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
+                    <BilingualInput
+                      label={isAr ? 'اسم العلامة في الشارة (الجزء الأول)' : 'Badge Brand Name (Part 1)'}
+                      valueEn={content.home.hero.eyebrow_en}
+                      valueAr={content.home.hero.eyebrow_ar}
+                      placeholderEn="WD Group for Business"
+                      placeholderAr="مجموعة دبليو دي للأعمال"
+                      onChangeEn={(v) => setContent({ ...content, home: { ...content.home, hero: { ...content.home.hero, eyebrow_en: v } } })}
+                      onChangeAr={(v) => setContent({ ...content, home: { ...content.home, hero: { ...content.home.hero, eyebrow_ar: v } } })}
+                    />
+
+                    <BilingualInput
+                      label={isAr ? 'النص التعريفي في الشارة (الجزء الثاني / Kicker)' : 'Badge Tagline / Kicker (Part 2)'}
+                      valueEn={content.home.hero.kicker_en || 'Integrated Hospitality, Manufacturing & Contracting'}
+                      valueAr={content.home.hero.kicker_ar || 'منظومة متكاملة في الضيافة والتصنيع والمقاولات'}
+                      placeholderEn="Integrated Hospitality, Manufacturing & Contracting"
+                      placeholderAr="منظومة متكاملة في الضيافة والتصنيع والمقاولات"
+                      onChangeEn={(v) => setContent({ ...content, home: { ...content.home, hero: { ...content.home.hero, kicker_en: v } } })}
+                      onChangeAr={(v) => setContent({ ...content, home: { ...content.home, hero: { ...content.home.hero, kicker_ar: v } } })}
+                    />
+                  </div>
+                </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <BilingualInput
@@ -604,14 +644,6 @@ export default function PagesContentEditor() {
                   valueAr={content.home.hero.body_ar}
                   onChangeEn={(v) => setContent({ ...content, home: { ...content.home, hero: { ...content.home.hero, body_en: v } } })}
                   onChangeAr={(v) => setContent({ ...content, home: { ...content.home, hero: { ...content.home.hero, body_ar: v } } })}
-                />
-
-                <BilingualInput
-                  label={isAr ? 'الشعار الفرعي للقطاعات' : 'Hero Kicker / Secondary Tag'}
-                  valueEn={content.home.hero.kicker_en || 'Integrated Hospitality, Manufacturing & Contracting'}
-                  valueAr={content.home.hero.kicker_ar || 'منظومة متكاملة في الضيافة والتصنيع والمقاولات'}
-                  onChangeEn={(v) => setContent({ ...content, home: { ...content.home, hero: { ...content.home.hero, kicker_en: v } } })}
-                  onChangeAr={(v) => setContent({ ...content, home: { ...content.home, hero: { ...content.home.hero, kicker_ar: v } } })}
                 />
 
                 <BilingualInput
