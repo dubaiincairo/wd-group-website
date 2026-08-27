@@ -669,13 +669,15 @@ export default function LiveEditorDock() {
                 <CheckCircle2 className="w-4 h-4 text-emerald-400" />
                 <span>{isAr ? 'تم حفظ ونشر التعديلات بنجاح وتحديث قاعدة البيانات!' : 'Changes saved & published live to database!'}</span>
               </div>
-              <Link
+              <a
                 href="/admin/content/pages"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-[11px] font-mono text-emerald-400 hover:underline flex items-center gap-1"
               >
                 <span>{isAr ? 'إدارة الصفحات' : 'View Full CMS'}</span>
                 <ExternalLink className="w-3 h-3" />
-              </Link>
+              </a>
             </div>
           )}
 
@@ -2157,22 +2159,26 @@ export default function LiveEditorDock() {
             </div>
             
             <div className="flex items-center gap-2.5">
-              <Link
+              <a
                 href="/admin"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-blue-600/20 hover:bg-blue-600 text-blue-300 hover:text-white border border-blue-500/40 hover:border-blue-500 transition-all font-mono text-[11px] font-bold shadow-sm cursor-pointer"
               >
                 <LayoutDashboard className="w-3.5 h-3.5" />
                 <span>{isAr ? 'لوحة التحكم الرئيسية' : 'Go to Main Dashboard'}</span>
                 <ArrowUpRight className="w-3 h-3 rtl:rotate-270" />
-              </Link>
+              </a>
 
-              <Link
+              <a
                 href="/admin/content/pages"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-300 hover:text-white border border-white/10 transition-all font-mono text-[11px] font-semibold cursor-pointer"
               >
                 <span>{isAr ? 'إدارة الصفحات' : 'Full Pages CMS'}</span>
                 <ExternalLink className="w-3 h-3" />
-              </Link>
+              </a>
             </div>
           </div>
 
