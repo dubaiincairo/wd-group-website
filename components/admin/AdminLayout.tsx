@@ -111,21 +111,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     <ToastProvider>
       <div dir={lang === 'ar' ? 'rtl' : 'ltr'} lang={lang} className="min-h-screen bg-[#08090C] text-white flex flex-col lg:flex-row font-sans selection:bg-blue-600 selection:text-white relative">
         
-        {/* Background Video Backdrop with Hero Section Overlay Style */}
+        {/* Lightweight High-Performance Luxury Dark Backdrop */}
         <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
-          <video
-            autoPlay
-            loop
-            muted
-            playsInline
-            preload="auto"
-            poster="https://cdn.sanity.io/images/uoj8zwj3/production/00b20cc6cb3d8c613964965da5556e8396305950-2400x1792.jpg"
-            className="absolute inset-0 w-full h-full object-cover scale-105"
-          >
-            <source src="/videos/hospitality.mp4" type="video/mp4" />
-          </video>
-          <div className="absolute inset-0 bg-gradient-to-b from-[#08090C]/90 via-[#08090C]/80 to-[#08090C]/95 backdrop-blur-[2px]" />
-          <div className="absolute inset-0 bg-dot-matrix opacity-25" />
+          <div className="absolute top-0 right-1/4 w-[600px] h-[600px] bg-radial from-[#C9A86A]/5 via-blue-600/5 to-transparent blur-[100px]" />
+          <div className="absolute bottom-0 left-1/4 w-[500px] h-[500px] bg-radial from-blue-500/5 via-[#C9A86A]/5 to-transparent blur-[100px]" />
+          <div className="absolute inset-0 bg-dot-matrix opacity-15" />
         </div>
 
         {/* Sidebar */}

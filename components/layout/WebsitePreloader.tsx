@@ -16,8 +16,8 @@ export default function WebsitePreloader({ forced = false }: { forced?: boolean 
   useEffect(() => {
     // Check if user already saw the full preloader in this tab session
     const hasSeen = sessionStorage.getItem('wd_preloader_seen');
-    const targetDuration = (hasSeen && !forced) ? 450 : 1000;
-    const intervalTime = 20;
+    const targetDuration = (hasSeen && !forced) ? 300 : 600;
+    const intervalTime = 16;
     const totalSteps = targetDuration / intervalTime;
     let currentStep = 0;
 
