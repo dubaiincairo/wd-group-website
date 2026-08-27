@@ -67,7 +67,9 @@ export default function AdminHeader({ user, onOpenMobileSidebar }: AdminHeaderPr
         </button>
 
         <div className="hidden sm:flex items-center gap-2 text-xs text-zinc-400">
-          <span className="font-mono text-blue-400" dir="ltr">WD GROUP</span>
+          <span className="font-semibold text-blue-400">
+            {isAr ? 'مجموعة دبليو دي للأعمال' : 'WD GROUP'}
+          </span>
           <span>/</span>
           <span className="font-semibold text-white">
             {isAr ? 'لوحة التحكم والإدارة' : 'Admin Console'}
@@ -120,8 +122,18 @@ export default function AdminHeader({ user, onOpenMobileSidebar }: AdminHeaderPr
               <span className="text-xs font-bold text-white block leading-tight">
                 {user?.fullName || (isAr ? 'المسؤول' : 'Administrator')}
               </span>
-              <span className="text-[10px] font-mono text-sky-400 uppercase block" dir="ltr">
-                {user?.role || 'Admin'}
+              <span className="text-[10px] font-mono text-sky-400 uppercase block">
+                {user?.role === 'owner' 
+                  ? (isAr ? 'المالك' : 'Owner') 
+                  : user?.role === 'admin' 
+                  ? (isAr ? 'مدير عام' : 'Admin') 
+                  : user?.role === 'editor' 
+                  ? (isAr ? 'محرر محتوى' : 'Editor') 
+                  : user?.role === 'crm' 
+                  ? (isAr ? 'علاقات العملاء' : 'CRM') 
+                  : user?.role === 'hr' 
+                  ? (isAr ? 'الموارد البشرية' : 'HR') 
+                  : (isAr ? 'مستعرض' : 'Viewer')}
               </span>
             </div>
             <ChevronDown className={`hidden sm:block w-3.5 h-3.5 text-zinc-400 transition-transform ${userMenuOpen ? 'rotate-180 text-white' : ''}`} />

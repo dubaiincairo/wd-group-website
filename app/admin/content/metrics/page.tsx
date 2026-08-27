@@ -100,11 +100,15 @@ export default function MetricsEditorPage() {
         {/* Metric 1 */}
         <div className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 space-y-4">
           <div className="flex items-center justify-between border-b border-white/10 pb-3">
-            <span className="text-xs font-mono font-bold text-sky-400">METRIC 01 (HOSPITALITY)</span>
+            <span className="text-xs font-mono font-bold text-sky-400">
+              {isAr ? 'المؤشر 01 (قطاع الضيافة)' : 'METRIC 01 (HOSPITALITY)'}
+            </span>
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-zinc-300">Metric Value / Number</label>
+            <label className="text-xs font-bold text-zinc-300">
+              {isAr ? 'قيمة المؤشر / الرقم' : 'Metric Value / Number'}
+            </label>
             <input
               type="text"
               value={metrics.stat1_num}
@@ -114,7 +118,7 @@ export default function MetricsEditorPage() {
           </div>
 
           <BilingualInput
-            label="Metric Label / Caption"
+            label={isAr ? 'عنوان وتسمية المؤشر' : 'Metric Label / Caption'}
             valueEn={metrics.stat1_text_en}
             valueAr={metrics.stat1_text_ar}
             onChangeEn={(v) => setContent({ ...content, home: { ...content.home, metrics: { ...metrics, stat1_text_en: v } } })}
@@ -125,11 +129,15 @@ export default function MetricsEditorPage() {
         {/* Metric 2 */}
         <div className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 space-y-4">
           <div className="flex items-center justify-between border-b border-white/10 pb-3">
-            <span className="text-xs font-mono font-bold text-emerald-400">METRIC 02 (FACTORIES)</span>
+            <span className="text-xs font-mono font-bold text-emerald-400">
+              {isAr ? 'المؤشر 02 (المصانع والإنتاج)' : 'METRIC 02 (FACTORIES)'}
+            </span>
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-zinc-300">Metric Value / Number</label>
+            <label className="text-xs font-bold text-zinc-300">
+              {isAr ? 'قيمة المؤشر / الرقم' : 'Metric Value / Number'}
+            </label>
             <input
               type="text"
               value={metrics.stat2_num}
@@ -139,7 +147,7 @@ export default function MetricsEditorPage() {
           </div>
 
           <BilingualInput
-            label="Metric Label / Caption"
+            label={isAr ? 'عنوان وتسمية المؤشر' : 'Metric Label / Caption'}
             valueEn={metrics.stat2_text_en}
             valueAr={metrics.stat2_text_ar}
             onChangeEn={(v) => setContent({ ...content, home: { ...content.home, metrics: { ...metrics, stat2_text_en: v } } })}
@@ -150,11 +158,15 @@ export default function MetricsEditorPage() {
         {/* Metric 3 */}
         <div className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 space-y-4">
           <div className="flex items-center justify-between border-b border-white/10 pb-3">
-            <span className="text-xs font-mono font-bold text-purple-400">METRIC 03 (TALENT)</span>
+            <span className="text-xs font-mono font-bold text-purple-400">
+              {isAr ? 'المؤشر 03 (فريق العمل والكفاءات)' : 'METRIC 03 (TALENT)'}
+            </span>
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-zinc-300">Metric Value / Number</label>
+            <label className="text-xs font-bold text-zinc-300">
+              {isAr ? 'قيمة المؤشر / الرقم' : 'Metric Value / Number'}
+            </label>
             <input
               type="text"
               value={metrics.stat3_num}
@@ -164,7 +176,7 @@ export default function MetricsEditorPage() {
           </div>
 
           <BilingualInput
-            label="Metric Label / Caption"
+            label={isAr ? 'عنوان وتسمية المؤشر' : 'Metric Label / Caption'}
             valueEn={metrics.stat3_text_en}
             valueAr={metrics.stat3_text_ar}
             onChangeEn={(v) => setContent({ ...content, home: { ...content.home, metrics: { ...metrics, stat3_text_en: v } } })}
@@ -175,11 +187,15 @@ export default function MetricsEditorPage() {
         {/* Metric 4 */}
         <div className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 space-y-4">
           <div className="flex items-center justify-between border-b border-white/10 pb-3">
-            <span className="text-xs font-mono font-bold text-amber-400">METRIC 04 (SECTORS)</span>
+            <span className="text-xs font-mono font-bold text-amber-400">
+              {isAr ? 'المؤشر 04 (القطاعات المتكاملة)' : 'METRIC 04 (SECTORS)'}
+            </span>
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-zinc-300">Metric Value / Number</label>
+            <label className="text-xs font-bold text-zinc-300">
+              {isAr ? 'قيمة المؤشر / الرقم' : 'Metric Value / Number'}
+            </label>
             <input
               type="text"
               value={metrics.stat4_num}
@@ -189,7 +205,7 @@ export default function MetricsEditorPage() {
           </div>
 
           <BilingualInput
-            label="Metric Label / Caption"
+            label={isAr ? 'عنوان وتسمية المؤشر' : 'Metric Label / Caption'}
             valueEn={metrics.stat4_text_en}
             valueAr={metrics.stat4_text_ar}
             onChangeEn={(v) => setContent({ ...content, home: { ...content.home, metrics: { ...metrics, stat4_text_en: v } } })}

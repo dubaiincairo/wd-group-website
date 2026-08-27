@@ -166,11 +166,11 @@ export default function ManufacturingSectorAdminPage() {
               <button
                 type="button"
                 onClick={() => setDeletingId(fact.id)}
-                className="text-zinc-500 hover:text-rose-400 transition-colors p-2 rounded-xl hover:bg-white/5 flex items-center gap-1.5 text-xs"
-                aria-label="Delete factory"
+                className="text-zinc-500 hover:text-rose-400 transition-colors p-2 rounded-xl hover:bg-white/5 flex items-center gap-1.5 text-xs cursor-pointer"
+                aria-label={isAr ? 'حذف المصنع' : 'Delete factory'}
               >
                 <Trash2 className="w-4 h-4" />
-                <span className="hidden sm:inline">Remove</span>
+                <span className="hidden sm:inline">{isAr ? 'حذف' : 'Remove'}</span>
               </button>
             </div>
 
@@ -178,8 +178,8 @@ export default function ManufacturingSectorAdminPage() {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
               <div className="lg:col-span-6 space-y-4">
                 <BilingualInput
-                  label="Factory Title & Scope"
-                  description="Facility title and primary production line"
+                  label={isAr ? 'اسم المصنع ومجال الإنتاج' : 'Factory Title & Scope'}
+                  description={isAr ? 'اسم المنشأة وخط الإنتاج الأساسي' : 'Facility title and primary production line'}
                   valueEn={fact.title_en}
                   valueAr={fact.title_ar}
                   onChangeEn={(v) => {
@@ -195,8 +195,8 @@ export default function ManufacturingSectorAdminPage() {
                 />
 
                 <BilingualInput
-                  label="Location & Industrial Zone"
-                  description="Geographical hub (e.g. Riyadh Industrial City, Najran)"
+                  label={isAr ? 'الموقع والمدينة الصناعية' : 'Location & Industrial Zone'}
+                  description={isAr ? 'المنطقة الجغرافية (مثل: المدينة الصناعية بالرياض، نجران)' : 'Geographical hub (e.g. Riyadh Industrial City, Najran)'}
                   valueEn={fact.location_en}
                   valueAr={fact.location_ar}
                   onChangeEn={(v) => {
@@ -214,8 +214,8 @@ export default function ManufacturingSectorAdminPage() {
 
               <div className="lg:col-span-6">
                 <BilingualInput
-                  label="Production Capabilities & Machinery Scope"
-                  description="Detailed specifications of joinery, CNC cutting, finishing, or metal fabrication"
+                  label={isAr ? 'القدرات التصنيعية والمعدات وخطوط الإنتاج' : 'Production Capabilities & Machinery Scope'}
+                  description={isAr ? 'مواصفات أعمال النجارة، قص CNC، الدهانات، أو تصنيع المعادن' : 'Detailed specifications of joinery, CNC cutting, finishing, or metal fabrication'}
                   isTextarea
                   rows={5}
                   valueEn={fact.desc_en}
@@ -239,9 +239,9 @@ export default function ManufacturingSectorAdminPage() {
 
       <ConfirmationModal
         isOpen={Boolean(deletingId)}
-        title="Remove Factory"
-        message="Are you sure you want to remove this factory entry? Remember to click 'Save & Publish' afterwards."
-        confirmLabel="Remove"
+        title={isAr ? 'حذف المصنع' : 'Remove Factory'}
+        message={isAr ? 'هل أنت متأكد من رغبتك في حذف هذا المصنع؟ تذكر النقر على حفظ ونشر بعد الحذف.' : "Are you sure you want to remove this factory entry? Remember to click 'Save & Publish' afterwards."}
+        confirmLabel={isAr ? 'حذف' : 'Remove'}
         onConfirm={() => deletingId && handleDeleteFactory(deletingId)}
         onClose={() => setDeletingId(null)}
       />

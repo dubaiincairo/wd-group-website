@@ -195,7 +195,17 @@ export default function StaffUsersAdminPage() {
 
                 <td className="py-4 px-4">
                   <span className="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full border bg-blue-500/20 text-blue-300 border-blue-500/40 uppercase">
-                    {user.role}
+                    {user.role === 'owner' 
+                      ? (isAr ? 'المالك' : 'Owner') 
+                      : user.role === 'admin' 
+                      ? (isAr ? 'مدير عام' : 'Admin') 
+                      : user.role === 'editor' 
+                      ? (isAr ? 'محرر محتوى' : 'Editor') 
+                      : user.role === 'crm' 
+                      ? (isAr ? 'علاقات العملاء' : 'CRM') 
+                      : user.role === 'hr' 
+                      ? (isAr ? 'الموارد البشرية' : 'HR') 
+                      : (isAr ? 'مستعرض' : 'Viewer')}
                   </span>
                 </td>
 
@@ -205,26 +215,26 @@ export default function StaffUsersAdminPage() {
                       ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40' 
                       : 'bg-rose-500/20 text-rose-300 border-rose-500/40'
                   }`}>
-                    {user.is_active ? 'ACTIVE' : 'DEACTIVATED'}
+                    {user.is_active ? (isAr ? 'نشط' : 'ACTIVE') : (isAr ? 'معطل' : 'DEACTIVATED')}
                   </span>
                 </td>
 
-                <td className="py-4 px-4 text-zinc-500 font-mono text-[11px]">
-                  {user.last_login_at ? new Date(user.last_login_at).toLocaleString('en-US') : 'Never logged in'}
+                <td className="py-4 px-4 text-zinc-500 font-mono text-[11px]" dir="ltr">
+                  {user.last_login_at ? new Date(user.last_login_at).toLocaleString(isAr ? 'ar-SA' : 'en-US') : (isAr ? 'لم يسجل دخول بعد' : 'Never logged in')}
                 </td>
 
-                <td className="py-4 px-6 text-right">
+                <td className="py-4 px-6 text-end">
                   <div className="flex items-center justify-end gap-2">
                     <button
                       onClick={() => handleToggleActive(user)}
-                      className="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-zinc-300 text-[11px] font-semibold"
+                      className="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-zinc-300 text-[11px] font-semibold cursor-pointer"
                     >
-                      {user.is_active ? 'Deactivate' : 'Activate'}
+                      {user.is_active ? (isAr ? 'تعطيل' : 'Deactivate') : (isAr ? 'تفعيل' : 'Activate')}
                     </button>
                     <button
                       onClick={() => handleOpenEdit(user)}
-                      className="p-1.5 rounded-lg bg-white/5 hover:bg-blue-600 hover:text-white text-zinc-400 transition-colors"
-                      title="Edit user"
+                      className="p-1.5 rounded-lg bg-white/5 hover:bg-blue-600 hover:text-white text-zinc-400 transition-colors cursor-pointer"
+                      title={isAr ? 'تعديل الحساب' : 'Edit user'}
                     >
                       <Edit3 className="w-3.5 h-3.5" />
                     </button>
@@ -244,13 +254,17 @@ export default function StaffUsersAdminPage() {
             <div className="flex items-center justify-between border-b border-white/10 pb-4">
               <div>
                 <h3 className="text-lg font-bold text-white">
-                  {editingUser.id ? 'Edit Staff Account' : 'New Staff Account'}
+                  {editingUser.id 
+                    ? (isAr ? 'تعديل حساب المشرف' : 'Edit Staff Account') 
+                    : (isAr ? 'إضافة عضو جديد للفريق' : 'New Staff Account')}
                 </h3>
-                <p className="text-xs text-zinc-400">Configure role authorities and credentials</p>
+                <p className="text-xs text-zinc-400">
+                  {isAr ? 'تحديد وتخصيص الصلاحيات والبيانات الإدارية' : 'Configure role authorities and credentials'}
+                </p>
               </div>
               <button
                 onClick={() => setModalOpen(false)}
-                className="w-8 h-8 rounded-xl bg-white/5 hover:bg-white/10 flex items-center justify-center text-zinc-400 hover:text-white"
+                className="w-8 h-8 rounded-xl bg-white/5 hover:bg-white/10 flex items-center justify-center text-zinc-400 hover:text-white cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -258,19 +272,23 @@ export default function StaffUsersAdminPage() {
 
             <form onSubmit={handleSaveUser} className="space-y-4">
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-zinc-300">Full Name *</label>
+                <label className="text-xs font-bold text-zinc-300">
+                  {isAr ? 'الاسم الكامل *' : 'Full Name *'}
+                </label>
                 <input
                   type="text"
                   required
                   value={editingUser.full_name || ''}
                   onChange={(e) => setEditingUser({ ...editingUser, full_name: e.target.value })}
-                  placeholder="e.g. Eng. Khalid Al-Otaibi"
+                  placeholder={isAr ? 'مثال: م. خالد العتيبي' : 'e.g. Eng. Khalid Al-Otaibi'}
                   className="w-full bg-[#08090C] border border-white/15 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-white focus:outline-none focus:border-blue-500"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-zinc-300">Email Address *</label>
+                <label className="text-xs font-bold text-zinc-300">
+                  {isAr ? 'البريد الإلكتروني *' : 'Email Address *'}
+                </label>
                 <input
                   type="email"
                   required
@@ -283,7 +301,9 @@ export default function StaffUsersAdminPage() {
 
               <div className="space-y-1.5">
                 <label className="text-xs font-bold text-zinc-300">
-                  {editingUser.id ? 'Change Password (leave blank to keep current)' : 'Password * (min 8 chars)'}
+                  {editingUser.id 
+                    ? (isAr ? 'تغيير كلمة المرور (اتركها فارغة للإبقاء على الحالية)' : 'Change Password (leave blank to keep current)') 
+                    : (isAr ? 'كلمة المرور * (8 أحرف على الأقل)' : 'Password * (min 8 chars)')}
                 </label>
                 <input
                   type="password"
@@ -295,21 +315,23 @@ export default function StaffUsersAdminPage() {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-zinc-300">Role & Access Level</label>
+                <label className="text-xs font-bold text-zinc-300">
+                  {isAr ? 'الدور ومستوى الصلاحيات' : 'Role & Access Level'}
+                </label>
                 <div className="relative">
                   <select
                     value={editingUser.role || 'editor'}
                     onChange={(e) => setEditingUser({ ...editingUser, role: e.target.value as AdminRole })}
-                    className="w-full appearance-none bg-[#08090C] border border-white/15 text-white text-xs font-semibold rounded-xl pl-4 pr-10 py-2.5 focus:outline-none focus:border-blue-500 cursor-pointer"
+                    className={`w-full appearance-none bg-[#08090C] border border-white/15 text-white text-xs font-semibold rounded-xl ${isAr ? 'pr-4 pl-10' : 'pl-4 pr-10'} py-2.5 focus:outline-none focus:border-blue-500 cursor-pointer`}
                   >
-                    <option value="owner">Owner (Full System Access)</option>
-                    <option value="admin">Administrator (Operations & Staff)</option>
-                    <option value="editor">Content Editor (CMS & Media)</option>
-                    <option value="crm">CRM Specialist (Leads & Inquiries)</option>
-                    <option value="hr">HR / Recruiter (Careers & ATS)</option>
-                    <option value="viewer">Viewer / Auditor (Read Only)</option>
+                    <option value="owner">{isAr ? 'المالك (صلاحيات كاملة وشاملة)' : 'Owner (Full System Access)'}</option>
+                    <option value="admin">{isAr ? 'مدير عام (إدارة العمليات والموظفين)' : 'Administrator (Operations & Staff)'}</option>
+                    <option value="editor">{isAr ? 'محرر محتوى (إدارة الصفحات والوسائط)' : 'Content Editor (CMS & Media)'}</option>
+                    <option value="crm">{isAr ? 'مسؤول علاقات عملاء (الطلبات والاستفسارات)' : 'CRM Specialist (Leads & Inquiries)'}</option>
+                    <option value="hr">{isAr ? 'مسؤول موارد بشرية (التوظيف والـ CVs)' : 'HR / Recruiter (Careers & ATS)'}</option>
+                    <option value="viewer">{isAr ? 'مستعرض / مدقق (قراءة فقط)' : 'Viewer / Auditor (Read Only)'}</option>
                   </select>
-                  <ChevronDown className="w-4 h-4 text-zinc-400 pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2" />
+                  <ChevronDown className={`w-4 h-4 text-zinc-400 pointer-events-none absolute ${isAr ? 'left-3.5' : 'right-3.5'} top-1/2 -translate-y-1/2`} />
                 </div>
               </div>
 
@@ -318,16 +340,16 @@ export default function StaffUsersAdminPage() {
                   type="button"
                   onClick={() => setModalOpen(false)}
                   disabled={savingUser}
-                  className="px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-zinc-400 hover:text-white"
+                  className="px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-zinc-400 hover:text-white cursor-pointer"
                 >
-                  Cancel
+                  {isAr ? 'إلغاء' : 'Cancel'}
                 </button>
                 <button
                   type="submit"
                   disabled={savingUser}
-                  className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition-all shadow-glow-blue disabled:opacity-50"
+                  className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition-all shadow-glow-blue disabled:opacity-50 cursor-pointer"
                 >
-                  {savingUser ? 'Saving…' : 'Save Account'}
+                  {savingUser ? (isAr ? 'جارٍ الحفظ…' : 'Saving…') : (isAr ? 'حفظ الحساب' : 'Save Account')}
                 </button>
               </div>
             </form>

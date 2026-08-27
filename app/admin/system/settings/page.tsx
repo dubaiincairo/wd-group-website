@@ -100,11 +100,13 @@ export default function GlobalSettingsAdminPage() {
         <div className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 space-y-4 shadow-xl">
           <h3 className="text-xs font-mono font-bold text-blue-400 uppercase tracking-wider border-b border-white/10 pb-3 flex items-center gap-2">
             <Building className="w-4 h-4" />
-            <span>LEGAL IDENTITY & CREDENTIALS</span>
+            <span>{isAr ? 'الهوية القانونية وبيانات التراخيص' : 'LEGAL IDENTITY & CREDENTIALS'}</span>
           </h3>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-zinc-300">Commercial Registration (CR)</label>
+            <label className="text-xs font-bold text-zinc-300">
+              {isAr ? 'رقم السجل التجاري (CR)' : 'Commercial Registration (CR)'}
+            </label>
             <input
               type="text"
               value={s.cr_number || ''}
@@ -115,7 +117,9 @@ export default function GlobalSettingsAdminPage() {
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-zinc-300">VAT / Tax Identification Number</label>
+            <label className="text-xs font-bold text-zinc-300">
+              {isAr ? 'الرقم الضريبي للقيمة المضافة (VAT)' : 'VAT / Tax Identification Number'}
+            </label>
             <input
               type="text"
               value={s.vat_number || ''}
@@ -126,7 +130,7 @@ export default function GlobalSettingsAdminPage() {
           </div>
 
           <BilingualInput
-            label="Headquarters Address"
+            label={isAr ? 'عنوان المقر الرئيسي' : 'Headquarters Address'}
             valueEn={s.headquarters_en}
             valueAr={s.headquarters_ar}
             onChangeEn={(v) => setContent({ ...content, settings: { ...s, headquarters_en: v } })}
@@ -138,12 +142,14 @@ export default function GlobalSettingsAdminPage() {
         <div className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 space-y-4 shadow-xl">
           <h3 className="text-xs font-mono font-bold text-emerald-400 uppercase tracking-wider border-b border-white/10 pb-3 flex items-center gap-2">
             <Phone className="w-4 h-4" />
-            <span>OFFICIAL COMMUNICATION CHANNELS</span>
+            <span>{isAr ? 'قنوات الاتصال الرسمية' : 'OFFICIAL COMMUNICATION CHANNELS'}</span>
           </h3>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-zinc-300">Primary Phone</label>
+              <label className="text-xs font-bold text-zinc-300">
+                {isAr ? 'رقم الهاتف الرئيسي' : 'Primary Phone'}
+              </label>
               <input
                 type="text"
                 value={s.primary_phone || ''}
@@ -154,7 +160,9 @@ export default function GlobalSettingsAdminPage() {
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-zinc-300">Secondary Phone</label>
+              <label className="text-xs font-bold text-zinc-300">
+                {isAr ? 'رقم الهاتف الثانوي' : 'Secondary Phone'}
+              </label>
               <input
                 type="text"
                 value={s.secondary_phone || ''}
@@ -167,7 +175,9 @@ export default function GlobalSettingsAdminPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-zinc-300">General Inquiries Email</label>
+              <label className="text-xs font-bold text-zinc-300">
+                {isAr ? 'البريد الإلكتروني العام للاستفسارات' : 'General Inquiries Email'}
+              </label>
               <input
                 type="email"
                 value={s.general_email || ''}
@@ -178,7 +188,9 @@ export default function GlobalSettingsAdminPage() {
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-zinc-300">Secondary / Watan Designs Email</label>
+              <label className="text-xs font-bold text-zinc-300">
+                {isAr ? 'بريد وطن للتصميم والمقاولات' : 'Secondary / Watan Designs Email'}
+              </label>
               <input
                 type="email"
                 value={s.secondary_email || ''}
@@ -190,7 +202,9 @@ export default function GlobalSettingsAdminPage() {
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-zinc-300">Official WhatsApp Dispatch Number</label>
+            <label className="text-xs font-bold text-zinc-300">
+              {isAr ? 'رقم الواتساب الرسمي المعتمد' : 'Official WhatsApp Dispatch Number'}
+            </label>
             <input
               type="text"
               value={s.whatsapp_phone || ''}
@@ -216,19 +230,19 @@ export default function GlobalSettingsAdminPage() {
               </div>
               <div>
                 <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                  <span>Public Maintenance & Launching Soon Mode</span>
+                  <span>{isAr ? 'وضع الصيانة وإشعار التدشين القريب' : 'Public Maintenance & Launching Soon Mode'}</span>
                   {s.maintenance_mode_enabled ? (
                     <span className="text-[10px] bg-amber-500/20 border border-amber-500/30 text-amber-300 font-mono px-2 py-0.5 rounded-full font-bold">
-                      ACTIVE · PUBLIC SITE HIDDEN
+                      {isAr ? 'مفعل · الموقع العام محجوب' : 'ACTIVE · PUBLIC SITE HIDDEN'}
                     </span>
                   ) : (
                     <span className="text-[10px] bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 font-mono px-2 py-0.5 rounded-full font-bold">
-                      DISABLED · PUBLIC SITE LIVE
+                      {isAr ? 'معطل · الموقع العام منشور' : 'DISABLED · PUBLIC SITE LIVE'}
                     </span>
                   )}
                 </h3>
                 <p className="text-xs text-zinc-400 mt-0.5">
-                  When active, public visitors to wdgroup.online see the luxury Maintenance screen. Staff can always access /admin.
+                  {isAr ? 'عند التفعيل، سيرى زوار الموقع العام شاشة الصيانة الفاخرة. ويبقى بإمكان المشرفين الدخول إلى /admin دائماً.' : 'When active, public visitors to wdgroup.online see the luxury Maintenance screen. Staff can always access /admin.'}
                 </p>
               </div>
             </div>
@@ -248,8 +262,8 @@ export default function GlobalSettingsAdminPage() {
           {s.maintenance_mode_enabled && (
             <div className="space-y-4 pt-2 animate-in fade-in duration-200">
               <BilingualInput
-                label="Maintenance Headline"
-                description="Displayed prominently above the message"
+                label={isAr ? 'عنوان الصيانة الرئيسي' : 'Maintenance Headline'}
+                description={isAr ? 'يظهر بخط بارز أعلى الرسالة' : 'Displayed prominently above the message'}
                 valueEn={s.maintenance_headline_en || 'Platform Under Scheduled Maintenance'}
                 valueAr={s.maintenance_headline_ar || 'المنصة تحت الصيانة والتطوير'}
                 onChangeEn={(v) => setContent({ ...content, settings: { ...s, maintenance_headline_en: v } })}
@@ -257,8 +271,8 @@ export default function GlobalSettingsAdminPage() {
               />
 
               <BilingualInput
-                label="Maintenance Message / Notice"
-                description="Paragraph explaining the upgrade"
+                label={isAr ? 'نص رسالة الصيانة' : 'Maintenance Message / Notice'}
+                description={isAr ? 'فقرة توضيحية تشرح أعمال الترقية والتدشين' : 'Paragraph explaining the upgrade'}
                 isTextarea
                 rows={2}
                 valueEn={s.maintenance_message_en || 'We are currently preparing and upgrading the official digital platform for WD Group. We look forward to welcoming you soon.'}
@@ -268,12 +282,14 @@ export default function GlobalSettingsAdminPage() {
               />
 
               <div className="space-y-1.5 max-w-xs">
-                <label className="text-xs font-bold text-zinc-300">Estimated Launch / Return Date</label>
+                <label className="text-xs font-bold text-zinc-300">
+                  {isAr ? 'الموعد المتوقع للتدشين / العودة' : 'Estimated Launch / Return Date'}
+                </label>
                 <input
                   type="text"
                   value={s.maintenance_estimated_date || 'Q3 2026'}
                   onChange={(e) => setContent({ ...content, settings: { ...s, maintenance_estimated_date: e.target.value } })}
-                  placeholder="e.g. Q3 2026 or September 2026"
+                  placeholder={isAr ? 'مثال: الربع الثالث 2026 أو سبتمبر 2026' : 'e.g. Q3 2026 or September 2026'}
                   className="w-full bg-[#08090C] border border-white/15 rounded-xl px-4 py-2 text-xs font-mono text-white focus:outline-none focus:border-amber-500"
                 />
               </div>

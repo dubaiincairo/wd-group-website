@@ -244,7 +244,7 @@ export default function AdminSidebar({
           </div>
           <div className="border-l rtl:border-l-0 rtl:border-r border-white/15 pl-3 rtl:pl-0 rtl:pr-3">
             <span className="text-[10px] font-mono text-blue-400 block tracking-widest uppercase">
-              WD GROUP
+              {isAr ? 'مجموعة دبليو دي للأعمال' : 'WD GROUP'}
             </span>
             <span className="text-[11px] font-bold text-white block -mt-0.5 whitespace-nowrap">
               {isAr ? 'لوحة التحكم' : 'Admin Console'}

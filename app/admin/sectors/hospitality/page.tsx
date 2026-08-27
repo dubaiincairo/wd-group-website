@@ -165,20 +165,20 @@ export default function HospitalitySectorAdminPage() {
           >
             <div className="flex items-center justify-between border-b border-white/10 pb-3">
               <span className="text-xs font-mono font-bold text-sky-400">
-                PROPERTY 0{idx + 1}
+                {isAr ? `المنشأة الفندقية #${idx + 1}` : `PROPERTY 0${idx + 1}`}
               </span>
               <button
                 type="button"
                 onClick={() => setDeletingId(prop.id)}
-                className="text-zinc-500 hover:text-rose-400 transition-colors p-1"
-                aria-label="Delete property"
+                className="text-zinc-500 hover:text-rose-400 transition-colors p-1 cursor-pointer"
+                aria-label={isAr ? 'حذف المنشأة' : 'Delete property'}
               >
                 <Trash2 className="w-4 h-4" />
               </button>
             </div>
 
             <BilingualInput
-              label="Property Name"
+              label={isAr ? 'اسم المنشأة الفندقية' : 'Property Name'}
               valueEn={prop.name_en}
               valueAr={prop.name_ar}
               onChangeEn={(v) => {
@@ -194,7 +194,7 @@ export default function HospitalitySectorAdminPage() {
             />
 
             <BilingualInput
-              label="City & District"
+              label={isAr ? 'المدينة والحي' : 'City & District'}
               valueEn={prop.city_en}
               valueAr={prop.city_ar}
               onChangeEn={(v) => {
@@ -210,7 +210,7 @@ export default function HospitalitySectorAdminPage() {
             />
 
             <BilingualInput
-              label="Description & Highlights"
+              label={isAr ? 'الوصف وأبرز المميزات' : 'Description & Highlights'}
               isTextarea
               rows={2}
               valueEn={prop.desc_en}
@@ -229,7 +229,7 @@ export default function HospitalitySectorAdminPage() {
 
             <div className="space-y-1.5">
               <label className="text-xs font-bold text-zinc-300 flex items-center justify-between">
-                <span>Google Review / Booking URL</span>
+                <span>{isAr ? 'رابط تقييمات جوجل / الحجز المباشر' : 'Google Review / Booking URL'}</span>
                 <ExternalLink className="w-3.5 h-3.5 text-zinc-500" />
               </label>
               <input
@@ -250,9 +250,9 @@ export default function HospitalitySectorAdminPage() {
 
       <ConfirmationModal
         isOpen={Boolean(deletingId)}
-        title="Remove Property"
-        message="Are you sure you want to remove this property from the SwissBlue portfolio? Remember to save changes afterwards."
-        confirmLabel="Remove"
+        title={isAr ? 'حذف المنشأة الفندقية' : 'Remove Property'}
+        message={isAr ? 'هل أنت متأكد من رغبتك في حذف هذه المنشأة من محفظة فنادق سويس بلو؟ تذكر النقر على حفظ ونشر بعد الحذف.' : 'Are you sure you want to remove this property from the SwissBlue portfolio? Remember to save changes afterwards.'}
+        confirmLabel={isAr ? 'حذف' : 'Remove'}
         onConfirm={() => deletingId && handleDeleteProperty(deletingId)}
         onClose={() => setDeletingId(null)}
       />

@@ -1,7 +1,6 @@
-'use client';
-
 import React, { useEffect, useRef } from 'react';
 import { AlertTriangle, X } from 'lucide-react';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface ConfirmationModalProps {
   isOpen: boolean;
@@ -19,13 +18,19 @@ export default function ConfirmationModal({
   isOpen,
   title,
   message,
-  confirmLabel = 'Confirm',
-  cancelLabel = 'Cancel',
+  confirmLabel,
+  cancelLabel,
   isDestructive = true,
   isLoading = false,
   onConfirm,
   onClose,
 }: ConfirmationModalProps) {
+  const { lang } = useLanguage();
+  const isAr = lang === 'ar';
+
+  const defaultConfirmLabel = confirmLabel || (isAr ? 'تأكيد' : 'Confirm');
+  const defaultCancelLabel = cancelLabel || (isAr ? 'إلغاء' : 'Cancel');
+
   const confirmButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
@@ -70,9 +75,9 @@ export default function ConfirmationModal({
             type="button"
             onClick={onClose}
             disabled={isLoading}
-            className="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-zinc-400 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 transition-colors disabled:opacity-50"
+            className="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-zinc-400 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 transition-colors disabled:opacity-50 cursor-pointer"
           >
-            {cancelLabel}
+            {defaultCancelLabel}
           </button>
 
           <button
@@ -80,13 +85,13 @@ export default function ConfirmationModal({
             type="button"
             onClick={onConfirm}
             disabled={isLoading}
-            className={`px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-white transition-all shadow-lg disabled:opacity-50 ${
+            className={`px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-white transition-all shadow-lg disabled:opacity-50 cursor-pointer ${
               isDestructive
                 ? 'bg-rose-600 hover:bg-rose-500 shadow-rose-900/30'
                 : 'bg-blue-600 hover:bg-blue-500 shadow-blue-900/30'
             }`}
           >
-            {isLoading ? 'Processing…' : confirmLabel}
+            {isLoading ? (isAr ? 'جارٍ المعالجة…' : 'Processing…') : defaultConfirmLabel}
           </button>
         </div>
       </div>

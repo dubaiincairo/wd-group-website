@@ -121,12 +121,12 @@ export default function SEOAdminPage() {
       {/* Navigation Sub-Tabs */}
       <div className="flex items-center gap-2 overflow-x-auto pb-2 border-b border-white/10 no-scrollbar">
         {[
-          { id: 'google', label: 'Google Search & Verification', icon: Key },
-          { id: 'analytics', label: 'GA4 & Tag Manager', icon: Activity },
-          { id: 'meta', label: 'Meta Titles & Keywords', icon: Globe },
-          { id: 'social', label: 'Social & Open Graph', icon: Share2 },
-          { id: 'schema', label: 'Schema.org JSON-LD', icon: FileCode2 },
-          { id: 'robots', label: 'Robots & Indexing', icon: Bot },
+          { id: 'google', label: isAr ? 'التحقق ومحركات البحث' : 'Google Search & Verification', icon: Key },
+          { id: 'analytics', label: isAr ? 'إحصائيات جوجل GA4 و GTM' : 'GA4 & Tag Manager', icon: Activity },
+          { id: 'meta', label: isAr ? 'عناوين الميتا والكلمات الدلالية' : 'Meta Titles & Keywords', icon: Globe },
+          { id: 'social', label: isAr ? 'المشاركة والسوشيال ميديا' : 'Social & Open Graph', icon: Share2 },
+          { id: 'schema', label: isAr ? 'البيانات المنظمة Schema.org' : 'Schema.org JSON-LD', icon: FileCode2 },
+          { id: 'robots', label: isAr ? 'الأرشفة وملف Robots.txt' : 'Robots & Indexing', icon: Bot },
         ].map((tab) => {
           const Icon = tab.icon;
           return (

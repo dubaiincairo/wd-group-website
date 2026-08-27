@@ -148,20 +148,20 @@ export default function ContractingSectorAdminPage() {
           >
             <div className="flex items-center justify-between border-b border-white/10 pb-3">
               <span className="text-xs font-mono font-bold text-amber-400">
-                SERVICE 0{idx + 1}
+                {isAr ? `الخدمة #${idx + 1}` : `SERVICE 0${idx + 1}`}
               </span>
               <button
                 type="button"
                 onClick={() => setDeletingId(serv.id)}
-                className="text-zinc-500 hover:text-rose-400 transition-colors p-1"
-                aria-label="Delete service"
+                className="text-zinc-500 hover:text-rose-400 transition-colors p-1 cursor-pointer"
+                aria-label={isAr ? 'حذف الخدمة' : 'Delete service'}
               >
                 <Trash2 className="w-4 h-4" />
               </button>
             </div>
 
             <BilingualInput
-              label="Service Title"
+              label={isAr ? 'عنوان الخدمة' : 'Service Title'}
               valueEn={serv.title_en}
               valueAr={serv.title_ar}
               onChangeEn={(v) => {
@@ -177,7 +177,7 @@ export default function ContractingSectorAdminPage() {
             />
 
             <BilingualInput
-              label="Service Scope & Deliverables"
+              label={isAr ? 'نطاق الخدمة ومخرجاتها' : 'Service Scope & Deliverables'}
               isTextarea
               rows={3}
               valueEn={serv.desc_en}
@@ -199,9 +199,9 @@ export default function ContractingSectorAdminPage() {
 
       <ConfirmationModal
         isOpen={Boolean(deletingId)}
-        title="Remove Service"
-        message="Are you sure you want to remove this contracting service? Remember to click 'Save & Publish' afterwards."
-        confirmLabel="Remove"
+        title={isAr ? 'حذف الخدمة' : 'Remove Service'}
+        message={isAr ? 'هل أنت متأكد من رغبتك في حذف هذه الخدمة؟ تذكر النقر على حفظ ونشر بعد الحذف.' : "Are you sure you want to remove this contracting service? Remember to click 'Save & Publish' afterwards."}
+        confirmLabel={isAr ? 'حذف' : 'Remove'}
         onConfirm={() => deletingId && handleDeleteService(deletingId)}
         onClose={() => setDeletingId(null)}
       />
