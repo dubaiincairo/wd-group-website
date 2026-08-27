@@ -229,7 +229,8 @@ export const translations = {
         body: "Download our corporate profile or contact our team to discuss a strategic partnership.",
         primaryCta: "Download Corporate Profile",
         secondaryCta: "Contact Our Team",
-      }
+      },
+      corporate_profile_pdf: "/corporate-profile.pdf",
     },
     hospitality: {
       hero_image: "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=2400&q=85",
@@ -709,7 +710,8 @@ export const translations = {
         body: "حمّل الملف التعريفي للمجموعة أو تواصل مع فريقنا لمناقشة فرص الشراكة الاستراتيجية.",
         primaryCta: "تحميل الملف التعريفي",
         secondaryCta: "تواصل مع فريقنا",
-      }
+      },
+      corporate_profile_pdf: "/corporate-profile.pdf",
     },
     hospitality: {
       hero_image: "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=2400&q=85",

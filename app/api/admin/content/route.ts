@@ -155,6 +155,7 @@ function getDefaultContent() {
       story_body_ar: ar.about.story.body,
       governance_statement_en: en.about.governance.statement,
       governance_statement_ar: ar.about.governance.statement,
+      corporate_profile_pdf: en.about.corporate_profile_pdf || '',
     },
     hospitality: {
       hero_title_en: en.hospitality.hero.title,

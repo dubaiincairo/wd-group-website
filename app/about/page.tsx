@@ -2,7 +2,6 @@
 
 import React from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { useLanguage } from '@/context/LanguageContext';
 import { 
   Building2, 
@@ -16,11 +15,14 @@ import {
   FileText, 
   Award,
   Sparkles,
-  Quote
+  Download
 } from 'lucide-react';
 
 export default function AboutPage() {
   const { lang, dict } = useLanguage();
+  const isAr = lang === 'ar';
+
+  const profilePdf = (dict.about as any)?.corporate_profile_pdf || '';
 
   return (
     <div className="min-h-screen bg-brand-dark text-white pt-28 pb-20 px-4 sm:px-6 lg:px-8">
@@ -50,14 +52,27 @@ export default function AboutPage() {
               <ArrowRight className="w-4 h-4 rtl:rotate-180" />
             </Link>
 
-            <button
-              disabled
-              title={lang === 'ar' ? 'الملف التعريفي قيد الاعتماد الرسمي' : 'Official profile PDF pending client approval'}
-              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl text-xs sm:text-sm font-bold text-zinc-400 bg-white/5 border border-white/10 cursor-not-allowed opacity-75"
-            >
-              <FileText className="w-4 h-4" />
-              <span>{dict.about.hero.secondaryCta}</span>
-            </button>
+            {profilePdf ? (
+              <a
+                href={profilePdf}
+                target="_blank"
+                rel="noopener noreferrer"
+                download
+                className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl text-xs sm:text-sm font-bold text-white bg-white/10 hover:bg-white/15 border border-white/15 hover:border-blue-500/50 shadow-lg transition-all cursor-pointer"
+              >
+                <Download className="w-4 h-4 text-blue-400" />
+                <span>{dict.about.hero.secondaryCta}</span>
+              </a>
+            ) : (
+              <button
+                disabled
+                title={isAr ? 'الملف التعريفي قيد الاعتماد الرسمي' : 'Official profile PDF pending client approval'}
+                className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl text-xs sm:text-sm font-bold text-zinc-400 bg-white/5 border border-white/10 cursor-not-allowed opacity-75"
+              >
+                <FileText className="w-4 h-4" />
+                <span>{dict.about.hero.secondaryCta}</span>
+              </button>
+            )}
           </div>
         </section>
 
@@ -65,7 +80,7 @@ export default function AboutPage() {
         <section className="glass-card rounded-3xl p-8 sm:p-12 border border-white/10 relative overflow-hidden bg-brand-surface/80">
           <div className="max-w-3xl space-y-4">
             <div className="text-xs font-mono font-bold text-blue-400 uppercase tracking-wider">
-              {lang === 'ar' ? 'مسيرة المجموعة' : 'GROUP HERITAGE'}
+              {isAr ? 'مسيرة المجموعة' : 'GROUP HERITAGE'}
             </div>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
               {dict.about.story.heading}
@@ -76,38 +91,11 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* 3. CEO Statement & Governance */}
-        <section className="glass-card rounded-3xl p-8 sm:p-12 border border-blue-500/30 relative overflow-hidden bg-brand-surface/90">
-          <div className="max-w-3xl space-y-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-bold text-blue-400 bg-blue-500/10 border border-blue-500/20">
-              <Quote className="w-3.5 h-3.5" />
-              <span>{dict.about.governance.label}</span>
-            </div>
-
-            <blockquote className="text-lg sm:text-xl text-zinc-100 font-medium leading-relaxed">
-              &ldquo;{dict.about.governance.statement}&rdquo;
-            </blockquote>
-
-            <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed border-t border-white/10 pt-4">
-              {dict.about.governance.support}
-            </p>
-
-            <div className="pt-2">
-              <div className="text-base font-bold text-white">
-                {dict.about.leadership.name}
-              </div>
-              <div className="text-xs text-blue-400 font-semibold">
-                {dict.about.leadership.role}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* 4. Vision 2030 Alignment (3 Pillars) */}
+        {/* 3. Vision 2030 Alignment (3 Pillars) */}
         <section className="space-y-8">
           <div className="text-center max-w-2xl mx-auto space-y-2">
             <div className="text-xs font-mono font-bold text-blue-400 uppercase tracking-wider">
-              {lang === 'ar' ? 'مواكبة الرؤية الوطنية' : 'NATIONAL ALIGNMENT'}
+              {isAr ? 'مواكبة الرؤية الوطنية' : 'NATIONAL ALIGNMENT'}
             </div>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
               {dict.about.vision2030.heading}
@@ -119,7 +107,7 @@ export default function AboutPage() {
               <div key={idx} className="glass-card rounded-3xl p-7 border border-white/10 hover:border-blue-500/50 hover:shadow-glow-blue transition-all space-y-4 bg-brand-surface/80 group">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-mono font-bold text-blue-400 bg-blue-500/10 px-2.5 py-1 rounded-md border border-blue-500/20">
-                    {lang === 'ar' ? `الركيزة 0${idx + 1}` : `PILLAR 0${idx + 1}`}
+                    {isAr ? `الركيزة 0${idx + 1}` : `PILLAR 0${idx + 1}`}
                   </span>
                   <div className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-blue-400 group-hover:scale-110 transition-transform">
                     {idx === 0 ? <Award className="w-4 h-4" /> : idx === 1 ? <Users className="w-4 h-4" /> : <ShieldCheck className="w-4 h-4" />}
@@ -136,11 +124,11 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* 5. Geographic Footprint (Saudi Arabia) */}
+        {/* 4. Geographic Footprint (Saudi Arabia) */}
         <section className="glass-card rounded-3xl p-8 sm:p-12 border border-white/10 space-y-8 bg-brand-surface/80">
           <div className="max-w-2xl space-y-2">
             <div className="text-xs font-mono font-bold text-blue-400 uppercase tracking-wider">
-              {lang === 'ar' ? 'الانتشار الوطني' : 'NATIONAL REACH'}
+              {isAr ? 'الانتشار الوطني' : 'NATIONAL REACH'}
             </div>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
               {dict.about.footprint.heading}
@@ -165,7 +153,7 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* 6. Corporate Profile Download CTA */}
+        {/* 5. Corporate Profile Download CTA */}
         <section id="profile" className="glass-card rounded-3xl p-8 sm:p-12 border border-white/15 text-center space-y-6 bg-brand-surface/90">
           <div className="max-w-2xl mx-auto space-y-3">
             <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
@@ -177,18 +165,31 @@ export default function AboutPage() {
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
-            <button
-              disabled
-              title={lang === 'ar' ? 'الملف التعريفي قيد الاعتماد الرسمي' : 'Official profile PDF pending client approval'}
-              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl text-xs sm:text-sm font-bold text-zinc-400 bg-white/5 border border-white/10 cursor-not-allowed opacity-75"
-            >
-              <FileText className="w-4 h-4" />
-              <span>{dict.about.profileCta.primaryCta}</span>
-            </button>
+            {profilePdf ? (
+              <a
+                href={profilePdf}
+                target="_blank"
+                rel="noopener noreferrer"
+                download
+                className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl text-xs sm:text-sm font-bold text-white bg-blue-600 hover:bg-blue-500 shadow-glow-blue transition-all cursor-pointer"
+              >
+                <Download className="w-4 h-4" />
+                <span>{dict.about.profileCta.primaryCta}</span>
+              </a>
+            ) : (
+              <button
+                disabled
+                title={isAr ? 'الملف التعريفي قيد الاعتماد الرسمي' : 'Official profile PDF pending client approval'}
+                className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl text-xs sm:text-sm font-bold text-zinc-400 bg-white/5 border border-white/10 cursor-not-allowed opacity-75"
+              >
+                <FileText className="w-4 h-4" />
+                <span>{dict.about.profileCta.primaryCta}</span>
+              </button>
+            )}
 
             <Link
               href="/contact"
-              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl text-xs sm:text-sm font-bold text-white bg-blue-600 hover:bg-blue-500 shadow-glow-blue transition-all"
+              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl text-xs sm:text-sm font-bold text-zinc-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 transition-all"
             >
               <span>{dict.about.profileCta.secondaryCta}</span>
               <ArrowRight className="w-4 h-4 rtl:rotate-180" />

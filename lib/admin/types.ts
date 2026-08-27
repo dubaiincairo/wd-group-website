@@ -241,6 +241,7 @@ export interface SiteContentPayload {
     story_body_ar: string;
     governance_statement_en: string;
     governance_statement_ar: string;
+    corporate_profile_pdf?: string;
   };
   hospitality: {
     hero_title_en: string;

@@ -23,7 +23,7 @@ interface MediaFieldUploaderProps {
   value?: string;
   onChange: (url: string) => void;
   accept?: 'image' | 'video' | 'any';
-  bucket?: 'photos' | 'videos' | 'documents';
+  bucket?: 'photos' | 'videos' | 'documents' | 'assets';
   aspectRatio?: '1:1' | '16:9' | 'auto';
 }
 

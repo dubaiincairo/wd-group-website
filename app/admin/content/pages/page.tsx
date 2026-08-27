@@ -23,7 +23,8 @@ import {
   Award,
   Users,
   Quote,
-  Handshake
+  Handshake,
+  FileText
 } from 'lucide-react';
 import BilingualInput from '@/components/admin/BilingualInput';
 import MediaFieldUploader from '@/components/admin/MediaFieldUploader';
@@ -181,6 +182,7 @@ function createDefaultContent(): SiteContentPayload {
       story_body_ar: ar.about.story.body,
       governance_statement_en: en.about.governance.statement,
       governance_statement_ar: ar.about.governance.statement,
+      corporate_profile_pdf: en.about.corporate_profile_pdf || '',
     },
     hospitality: {
       hero_title_en: en.hospitality.hero.title,
@@ -1225,6 +1227,30 @@ export default function PagesContentEditor() {
               onChangeEn={(v) => setContent({ ...content, about: { ...content.about, governance_statement_en: v } })}
               onChangeAr={(v) => setContent({ ...content, about: { ...content.about, governance_statement_ar: v } })}
             />
+
+            {/* Downloadable Corporate Profile PDF Attachment */}
+            <div className="pt-5 border-t border-white/10 space-y-3">
+              <div className="flex items-center gap-2">
+                <FileText className="w-4 h-4 text-[#C9A86A]" />
+                <span className="text-xs font-mono font-bold text-[#C9A86A] uppercase tracking-wider">
+                  {isAr ? 'الملف التعريفي للشركة (PDF)' : 'OFFICIAL CORPORATE PROFILE PDF'}
+                </span>
+              </div>
+              <p className="text-[11px] text-zinc-400">
+                {isAr ? 'ارفع أو حدد ملف الـ PDF الذي يمكن للزوار تحميله عند النقر على "تحميل الملف التعريفي" في صفحة عنّا.' : 'Upload or specify the official corporate PDF document for visitors to download in the About page.'}
+              </p>
+              <MediaFieldUploader
+                label={isAr ? 'ملف الـ PDF التعريفي للمجموعة' : 'Corporate Profile PDF Attachment'}
+                bucket="assets"
+                accept="any"
+                value={content.about.corporate_profile_pdf || content.branding?.corporate_profile_pdf || ''}
+                onChange={(url) => setContent({ 
+                  ...content, 
+                  about: { ...content.about, corporate_profile_pdf: url },
+                  branding: { ...(content.branding || {}), corporate_profile_pdf: url }
+                })}
+              />
+            </div>
           </div>
 
         </div>
