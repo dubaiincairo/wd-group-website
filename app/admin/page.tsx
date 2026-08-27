@@ -218,7 +218,7 @@ export default function AdminDashboardPage() {
             {isAr ? 'لوحة القيادة والمؤشرات' : 'Dashboard Overview'}
           </h1>
           <p className="text-xs sm:text-sm text-zinc-400 mt-1">
-            {isAr ? 'إدارة فورية لعمليات الضيافة والتصنيع والمقاولات في مجموعة دبليو دي' : 'Real-time management for WD Group hospitality, manufacturing, and contracting operations.'}
+            {isAr ? 'إدارة فورية لعمليات الضيافة والتصنيع والمقاولات في مجموعة دبليو دي للأعمال' : 'Real-time management for WD Group hospitality, manufacturing, and contracting operations.'}
           </p>
         </div>
 

@@ -138,7 +138,7 @@ export default function WireframesHub() {
 
           <p className="text-sm sm:text-base text-zinc-400 leading-relaxed max-w-2xl mx-auto">
             {lang === 'ar'
-              ? 'استعرض الهيكل الكامل وتوزيع الأقسام والمحتوى لكل صفحة من صفحات الموقع القابض لمجموعة دبليو دي.'
+              ? 'استعرض الهيكل الكامل وتوزيع الأقسام والمحتوى لكل صفحة من صفحات الموقع القابض لمجموعة دبليو دي للأعمال.'
               : 'Explore the complete structural layout, section breakdown, and content flow across all WD Group website pages.'}
           </p>
         </div>

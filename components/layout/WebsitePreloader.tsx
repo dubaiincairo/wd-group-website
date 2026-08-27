@@ -118,7 +118,7 @@ export default function WebsitePreloader() {
         {/* Corporate Brand Identity Text */}
         <div className="space-y-1.5 mb-8">
           <h2 className="text-xl sm:text-2xl font-extrabold tracking-tight text-white flex items-center justify-center gap-2">
-            <span>{isAr ? 'مجموعة وتين القابضة' : 'WD GROUP HOLDING'}</span>
+            <span>{isAr ? 'مجموعة دبليو دي للأعمال' : 'WD GROUP HOLDING'}</span>
             <Sparkles className="w-4 h-4 text-[#C9A86A] animate-spin-slow" />
           </h2>
           <p className="text-xs sm:text-sm font-mono tracking-widest text-[#C9A86A]/80 uppercase">

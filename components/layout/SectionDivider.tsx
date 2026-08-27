@@ -30,7 +30,7 @@ export default function SectionDivider({ label, badge, className = '' }: Section
           
           {/* Left Blueprint Crosshair */}
           <div className="text-zinc-500 font-mono text-[10px] hidden sm:block tracking-widest uppercase">
-            {lang === 'ar' ? '+ مجموعة دبليو دي // السعودية' : '+ WD // KSA'}
+            {lang === 'ar' ? '+ مجموعة دبليو دي للأعمال // السعودية' : '+ WD // KSA'}
           </div>
 
           {/* Central Hairline Rule with Monogram / Badge Pill */}
