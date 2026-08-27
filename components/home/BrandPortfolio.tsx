@@ -164,7 +164,7 @@ export default function BrandPortfolio() {
                 {/* Bottom Bar: Action link */}
                 <div className="relative z-10 pt-4 mt-4 border-t border-white/5 flex items-center justify-between text-xs text-zinc-400 group-hover:text-white transition-colors">
                   <span className="text-[11px] font-mono text-zinc-500 group-hover:text-zinc-300">{brand.category}</span>
-                  <span className="text-[11px] font-bold text-[#C9A86A]">{lang === 'ar' ? 'عرض القطاع ←' : 'Explore →'}</span>
+                  <span className="text-[11px] font-bold text-[#C9A86A] whitespace-nowrap">{lang === 'ar' ? 'عرض القطاع ←' : 'Explore →'}</span>
                 </div>
               </Link>
             );
