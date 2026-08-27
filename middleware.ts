@@ -1,10 +1,53 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { SITE_ACCESS_COOKIE_NAME, getSiteAccessToken } from '@/lib/site-access';
 
-export function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+export async function middleware(request: NextRequest) {
+  const { pathname, search } = request.nextUrl;
 
-  // Only run on /admin UI routes
+  // ---------------------------------------------------------------------------
+  // 1. SITE-WIDE PASSWORD GATE (Configured via SITE_PASSWORD environment var)
+  // ---------------------------------------------------------------------------
+  const sitePassword = process.env.SITE_PASSWORD?.trim();
+
+  if (sitePassword) {
+    // Exempt public static assets and auth endpoints
+    const isExempt =
+      pathname.startsWith('/_next') ||
+      pathname.startsWith('/brand') ||
+      pathname.startsWith('/videos') ||
+      pathname.startsWith('/api/site-access') ||
+      pathname === '/site-access' ||
+      pathname === '/favicon.ico' ||
+      pathname === '/robots.txt' ||
+      pathname === '/sitemap.xml' ||
+      pathname.match(/\.(png|jpg|jpeg|gif|svg|webp|ico|mp4|webm|woff|woff2|ttf|eot|css|js)$/i);
+
+    if (!isExempt) {
+      const siteAccessCookie = request.cookies.get(SITE_ACCESS_COOKIE_NAME);
+      const expectedToken = await getSiteAccessToken(sitePassword);
+
+      if (!siteAccessCookie || siteAccessCookie.value !== expectedToken) {
+        if (pathname.startsWith('/api/')) {
+          return NextResponse.json(
+            { error: 'Site access password required' },
+            { status: 401 }
+          );
+        }
+
+        const accessUrl = new URL('/site-access', request.url);
+        const returnDestination = pathname + (search || '');
+        if (returnDestination !== '/' && returnDestination !== '') {
+          accessUrl.searchParams.set('returnUrl', returnDestination);
+        }
+        return NextResponse.redirect(accessUrl);
+      }
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // 2. ADMIN PORTAL PROTECTION (/admin routes)
+  // ---------------------------------------------------------------------------
   if (pathname.startsWith('/admin')) {
     // Allow public login and password recovery pages
     if (
@@ -26,7 +69,9 @@ export function middleware(request: NextRequest) {
     }
   }
 
-  // Handle protected API routes
+  // ---------------------------------------------------------------------------
+  // 3. ADMIN API ROUTES PROTECTION (/api/admin routes)
+  // ---------------------------------------------------------------------------
   if (pathname.startsWith('/api/admin')) {
     // All auth routes under /api/admin/auth/ are public
     if (pathname.startsWith('/api/admin/auth')) {
@@ -45,5 +90,6 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/admin/:path*', '/api/admin/:path*'],
+  // Run on all paths except static Next.js chunks and image optimization
+  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
 };
