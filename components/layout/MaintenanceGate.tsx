@@ -16,6 +16,7 @@ export default function MaintenanceGate({ children }: MaintenanceGateProps) {
   const { dynamicContent } = useLanguage();
   
   const [settings, setSettings] = useState<SiteSettings | null>(null);
+  const [isTestDomain, setIsTestDomain] = useState(false);
   const [isAdminBypassed, setIsAdminBypassed] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -31,10 +32,27 @@ export default function MaintenanceGate({ children }: MaintenanceGateProps) {
       return;
     }
 
-    // Check if visitor has an active admin bypass session (logged-in admin or preview token)
+    // Check if visitor has an active admin bypass session, or is on a test/staging/preview domain
     if (typeof window !== 'undefined') {
+      const hostname = window.location.hostname.toLowerCase();
+      const isStaging = 
+        hostname.startsWith('test.') ||
+        hostname.startsWith('staging.') ||
+        hostname.startsWith('dev.') ||
+        hostname.startsWith('preview.') ||
+        hostname.includes('test.wdgroup') ||
+        hostname.endsWith('.vercel.app') ||
+        hostname === 'localhost' ||
+        hostname === '127.0.0.1';
+
+      if (isStaging) {
+        setIsTestDomain(true);
+        setIsAdminBypassed(true);
+      }
+
       const cookies = document.cookie || '';
       const hasAdminCookie = 
+        cookies.includes('wdgroup_admin_session') || 
         cookies.includes('wd_admin_session') || 
         cookies.includes('wd_session') || 
         cookies.includes('wd_admin_bypass');
@@ -76,7 +94,7 @@ export default function MaintenanceGate({ children }: MaintenanceGateProps) {
   const activeSettings = settings || (dynamicContent?.settings as SiteSettings | undefined);
   const isMaintenanceActive = activeSettings?.maintenance_mode_enabled ?? true;
 
-  // 3. If maintenance mode is active and user is NOT an authorized admin bypass
+  // 3. If maintenance mode is active and user is NOT on test domain / authorized admin bypass
   if (isMaintenanceActive && !isAdminBypassed) {
     return <MaintenanceView settings={activeSettings} />;
   }
@@ -90,15 +108,15 @@ export default function MaintenanceGate({ children }: MaintenanceGateProps) {
     );
   }
 
-  // 5. Normal public browsing OR Admin Preview
+  // 5. Normal public browsing OR Staging/Admin Preview
   return (
     <>
-      {isMaintenanceActive && isAdminBypassed && (
+      {isMaintenanceActive && isAdminBypassed && !isTestDomain && (
         <div className="bg-amber-500/90 text-black px-4 py-1.5 text-xs font-mono font-bold text-center fixed top-0 inset-x-0 z-[99999] shadow-lg flex items-center justify-center gap-2">
           <span>⚠️ MAINTENANCE MODE IS ACTIVE ON LIVE SITE — YOU ARE VIEWING ADMIN PREVIEW</span>
         </div>
       )}
-      <div className={isMaintenanceActive && isAdminBypassed ? 'pt-8' : ''}>
+      <div className={isMaintenanceActive && isAdminBypassed && !isTestDomain ? 'pt-8' : ''}>
         {children}
       </div>
     </>
