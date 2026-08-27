@@ -8,7 +8,16 @@ export const dynamic = 'force-dynamic';
 export async function GET() {
   try {
     const data = await getSiteContent();
-    return NextResponse.json({ success: true, data: data || null });
+    return NextResponse.json(
+      { success: true, data: data || null },
+      {
+        headers: {
+          'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0',
+          'CDN-Cache-Control': 'no-store',
+          'Vercel-CDN-Cache-Control': 'no-store',
+        },
+      }
+    );
   } catch (error: any) {
     return NextResponse.json({ success: false, data: null }, { status: 500 });
   }

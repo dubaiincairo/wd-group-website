@@ -48,7 +48,13 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     // Fetch dynamic published CMS content
     async function loadDynamicContent() {
       try {
-        const res = await fetch('/api/content');
+        const res = await fetch(`/api/content?t=${Date.now()}`, { 
+          cache: 'no-store',
+          headers: {
+            'Pragma': 'no-cache',
+            'Cache-Control': 'no-cache'
+          }
+        });
         if (res.ok) {
           const d = await res.json();
           if (d.data) {
@@ -233,7 +239,12 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
         },
         governance: {
           ...baseDict.about.governance,
-          statement: resolveField(isAr, c.about?.governance_statement_ar, c.about?.governance_statement_en, arDict.about.governance.statement, enDict.about.governance.statement),
+          statement: resolveField(isAr, c.about?.governance_statement_ar || c.home?.ceo?.quote_ar, c.about?.governance_statement_en || c.home?.ceo?.quote_en, arDict.about.governance.statement, enDict.about.governance.statement),
+        },
+        leadership: {
+          ...baseDict.about.leadership,
+          name: resolveField(isAr, c.home?.ceo?.name_ar, c.home?.ceo?.name_en, arDict.about.leadership.name, enDict.about.leadership.name),
+          role: resolveField(isAr, c.home?.ceo?.title_ar, c.home?.ceo?.title_en, arDict.about.leadership.role, enDict.about.leadership.role),
         },
       },
       hospitality: {

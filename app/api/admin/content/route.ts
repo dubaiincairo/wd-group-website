@@ -323,7 +323,16 @@ export async function GET(req: NextRequest) {
       seo: { ...defaultContent.seo, ...(dbContent?.seo || {}) },
     };
 
-    return NextResponse.json({ success: true, data: merged });
+    return NextResponse.json(
+      { success: true, data: merged },
+      {
+        headers: {
+          'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0',
+          'CDN-Cache-Control': 'no-store',
+          'Vercel-CDN-Cache-Control': 'no-store',
+        },
+      }
+    );
   } catch (error: any) {
     console.error('Error fetching content:', error);
     return NextResponse.json(

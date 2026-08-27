@@ -153,6 +153,7 @@ function createDefaultState() {
         name_ar: ar.home.ceo.name,
         title_en: en.home.ceo.title,
         title_ar: ar.home.ceo.title,
+        photo_url: '',
       },
       partnership: {
         heading_en: en.home.partnership.heading,
@@ -374,6 +375,7 @@ export default function LiveEditorDock() {
                   quote_ar: getArabicField(server.home?.ceo?.quote_ar, defaults.home.ceo.quote_ar),
                   name_ar: getArabicField(server.home?.ceo?.name_ar, defaults.home.ceo.name_ar),
                   title_ar: getArabicField(server.home?.ceo?.title_ar, defaults.home.ceo.title_ar),
+                  photo_url: server.home?.ceo?.photo_url || server.home?.media?.ceo_photo || '',
                 },
                 partnership: {
                   ...defaults.home.partnership,
@@ -1280,6 +1282,26 @@ export default function LiveEditorDock() {
                         className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"
                       />
                     </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] text-zinc-400 mb-1 flex items-center justify-between">
+                      <span>{isAr ? 'الصورة الشخصية للرئيس التنفيذي (رابط الصورة المباشر أو من السحابة)' : 'CEO Portrait / Photo (Direct Image URL)'}</span>
+                      {localEdits?.home?.ceo?.photo_url && (
+                        <span className="text-[10px] text-emerald-400 font-mono">✓ {isAr ? 'الصورة محددة' : 'Active Photo'}</span>
+                      )}
+                    </label>
+                    <input
+                      type="text"
+                      dir="ltr"
+                      placeholder="https://fqkbgfdasfwnryekkgqz.supabase.co/..."
+                      value={localEdits?.home?.ceo?.photo_url || localEdits?.home?.media?.ceo_photo || ''}
+                      onChange={(e) => {
+                        updateField(['home', 'ceo', 'photo_url'], e.target.value);
+                        updateField(['home', 'media', 'ceo_photo'], e.target.value);
+                      }}
+                      className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white font-mono text-xs placeholder:text-zinc-600 focus:outline-none focus:border-[#C9A86A]"
+                    />
                   </div>
                 </div>
 
