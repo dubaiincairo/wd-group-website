@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
-import { Globe } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface BilingualInputProps {
   label: string;
@@ -27,10 +27,18 @@ export default function BilingualInput({
   isTextarea = false,
   rows = 3,
   placeholderEn = 'English text…',
-  placeholderAr = 'النص العربي…',
+  placeholderAr = 'أدخل النص العربي…',
   required = false,
 }: BilingualInputProps) {
-  const [activeTab, setActiveTab] = useState<'both' | 'en' | 'ar'>('en');
+  const { lang } = useLanguage();
+  const isAr = lang === 'ar';
+
+  const [activeTab, setActiveTab] = useState<'both' | 'en' | 'ar'>(isAr ? 'ar' : 'en');
+
+  // Keep default active tab synchronized with the admin console language
+  useEffect(() => {
+    setActiveTab(isAr ? 'ar' : 'en');
+  }, [isAr]);
 
   const isEnComplete = Boolean(valueEn?.trim());
   const isArComplete = Boolean(valueAr?.trim());
@@ -48,43 +56,85 @@ export default function BilingualInput({
           )}
         </div>
 
-        {/* Locale tabs (English is default) */}
-        <div className="flex items-center gap-1 bg-black/40 border border-white/10 rounded-xl p-0.5">
-          <button
-            type="button"
-            onClick={() => setActiveTab('en')}
-            className={`px-2.5 py-1 rounded-lg text-[11px] font-bold flex items-center gap-1 transition-all cursor-pointer ${
-              activeTab === 'en'
-                ? 'bg-blue-600 text-white shadow-sm'
-                : 'text-zinc-400 hover:text-white'
-            }`}
-          >
-            <span>English</span>
-            <span className={`w-1.5 h-1.5 rounded-full ${isEnComplete ? 'bg-emerald-400' : 'bg-amber-400'}`} />
-          </button>
-          <button
-            type="button"
-            onClick={() => setActiveTab('ar')}
-            className={`px-2.5 py-1 rounded-lg text-[11px] font-bold flex items-center gap-1 transition-all cursor-pointer ${
-              activeTab === 'ar'
-                ? 'bg-blue-600 text-white shadow-sm'
-                : 'text-zinc-400 hover:text-white'
-            }`}
-          >
-            <span>Arabic</span>
-            <span className={`w-1.5 h-1.5 rounded-full ${isArComplete ? 'bg-emerald-400' : 'bg-amber-400'}`} />
-          </button>
-          <button
-            type="button"
-            onClick={() => setActiveTab('both')}
-            className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
-              activeTab === 'both'
-                ? 'bg-blue-600 text-white shadow-sm'
-                : 'text-zinc-400 hover:text-white'
-            }`}
-          >
-            Side-by-Side
-          </button>
+        {/* Locale tabs (Arabic is default in Arabic mode, English is default in English mode) */}
+        <div className="flex items-center gap-1 bg-black/40 border border-white/10 rounded-xl p-0.5" dir={isAr ? 'rtl' : 'ltr'}>
+          {isAr ? (
+            <>
+              <button
+                type="button"
+                onClick={() => setActiveTab('ar')}
+                className={`px-2.5 py-1 rounded-lg text-[11px] font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
+                  activeTab === 'ar'
+                    ? 'bg-blue-600 text-white shadow-sm'
+                    : 'text-zinc-400 hover:text-white'
+                }`}
+              >
+                <span>العربية</span>
+                <span className={`w-1.5 h-1.5 rounded-full ${isArComplete ? 'bg-emerald-400' : 'bg-amber-400'}`} />
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveTab('en')}
+                className={`px-2.5 py-1 rounded-lg text-[11px] font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
+                  activeTab === 'en'
+                    ? 'bg-blue-600 text-white shadow-sm'
+                    : 'text-zinc-400 hover:text-white'
+                }`}
+              >
+                <span>الإنجليزية</span>
+                <span className={`w-1.5 h-1.5 rounded-full ${isEnComplete ? 'bg-emerald-400' : 'bg-amber-400'}`} />
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveTab('both')}
+                className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
+                  activeTab === 'both'
+                    ? 'bg-blue-600 text-white shadow-sm'
+                    : 'text-zinc-400 hover:text-white'
+                }`}
+              >
+                عرض مزدوج
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                type="button"
+                onClick={() => setActiveTab('en')}
+                className={`px-2.5 py-1 rounded-lg text-[11px] font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
+                  activeTab === 'en'
+                    ? 'bg-blue-600 text-white shadow-sm'
+                    : 'text-zinc-400 hover:text-white'
+                }`}
+              >
+                <span>English</span>
+                <span className={`w-1.5 h-1.5 rounded-full ${isEnComplete ? 'bg-emerald-400' : 'bg-amber-400'}`} />
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveTab('ar')}
+                className={`px-2.5 py-1 rounded-lg text-[11px] font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
+                  activeTab === 'ar'
+                    ? 'bg-blue-600 text-white shadow-sm'
+                    : 'text-zinc-400 hover:text-white'
+                }`}
+              >
+                <span>Arabic</span>
+                <span className={`w-1.5 h-1.5 rounded-full ${isArComplete ? 'bg-emerald-400' : 'bg-amber-400'}`} />
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveTab('both')}
+                className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
+                  activeTab === 'both'
+                    ? 'bg-blue-600 text-white shadow-sm'
+                    : 'text-zinc-400 hover:text-white'
+                }`}
+              >
+                Side-by-Side
+              </button>
+            </>
+          )}
         </div>
       </div>
 
@@ -93,8 +143,8 @@ export default function BilingualInput({
         {(activeTab === 'both' || activeTab === 'ar') && (
           <div className="space-y-1">
             <div className="flex items-center justify-between text-[11px] font-mono text-zinc-400">
-              <span className="font-bold text-sky-400">Arabic (RTL)</span>
-              <span>{valueAr?.length || 0} chars</span>
+              <span className="font-bold text-sky-400">{isAr ? 'الحقل العربي (RTL)' : 'Arabic (RTL)'}</span>
+              <span>{valueAr?.length || 0} {isAr ? 'حرف' : 'chars'}</span>
             </div>
             {isTextarea ? (
               <textarea
@@ -122,8 +172,8 @@ export default function BilingualInput({
         {(activeTab === 'both' || activeTab === 'en') && (
           <div className="space-y-1">
             <div className="flex items-center justify-between text-[11px] font-mono text-zinc-400">
-              <span className="font-bold text-blue-400">English (LTR)</span>
-              <span>{valueEn?.length || 0} chars</span>
+              <span className="font-bold text-blue-400">{isAr ? 'الحقل الإنجليزي (LTR)' : 'English (LTR)'}</span>
+              <span>{valueEn?.length || 0} {isAr ? 'حرف' : 'chars'}</span>
             </div>
             {isTextarea ? (
               <textarea

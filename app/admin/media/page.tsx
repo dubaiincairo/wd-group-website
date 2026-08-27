@@ -19,10 +19,14 @@ import {
 import MediaUploader from '@/components/admin/MediaUploader';
 import ConfirmationModal from '@/components/admin/ConfirmationModal';
 import { useToast } from '@/components/admin/ToastProvider';
+import { useLanguage } from '@/context/LanguageContext';
 import type { MediaMetaRecord } from '@/lib/admin/types';
 
 export default function MediaLibraryAdminPage() {
   const { showToast } = useToast();
+  const { lang } = useLanguage();
+  const isAr = lang === 'ar';
+
   const [media, setMedia] = useState<MediaMetaRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [bucketFilter, setBucketFilter] = useState('all');
@@ -92,31 +96,31 @@ export default function MediaLibraryAdminPage() {
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-mono font-bold mb-2">
             <ImageIcon className="w-3.5 h-3.5" />
-            <span>CLOUD STORAGE REPOSITORY</span>
+            <span>{isAr ? 'مستودع التخزين السحابي' : 'CLOUD STORAGE REPOSITORY'}</span>
           </div>
           <h1 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
-            Media Library & Assets
+            {isAr ? 'مكتبة الوسائط والملفات' : 'Media Library & Assets'}
           </h1>
           <p className="text-xs sm:text-sm text-zinc-400 mt-1">
-            Browse, upload, and tag high-resolution photography, videos, and PDF documents stored on Supabase.
+            {isAr ? 'استعراض ورفع وتصنيف الصور عالية الدقة والفيديوهات والملفات المخزنة سحابياً.' : 'Browse, upload, and tag high-resolution photography, videos, and PDF documents stored on Supabase.'}
           </p>
         </div>
 
         <div className="flex items-center gap-3">
           <button
             onClick={fetchMedia}
-            className="p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-400 hover:text-white transition-colors"
-            title="Refresh assets"
+            className="p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-400 hover:text-white transition-colors cursor-pointer"
+            title={isAr ? 'تحديث الملفات' : 'Refresh assets'}
           >
             <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
           </button>
 
           <button
             onClick={() => setUploadModalOpen(true)}
-            className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs sm:text-sm font-bold transition-all shadow-glow-blue"
+            className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs sm:text-sm font-bold transition-all shadow-glow-blue cursor-pointer"
           >
             <Plus className="w-4 h-4" />
-            <span>Upload New Asset</span>
+            <span>{isAr ? 'رفع ملف جديد' : 'Upload New Asset'}</span>
           </button>
         </div>
       </div>
@@ -124,13 +128,13 @@ export default function MediaLibraryAdminPage() {
       {/* Filter & Search Bar */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-[#0F1117]/90 border border-white/10 rounded-2xl p-4">
         <div className="sm:col-span-2 relative">
-          <Search className="w-4 h-4 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <Search className={`w-4 h-4 text-zinc-500 absolute ${isAr ? 'right-3.5' : 'left-3.5'} top-1/2 -translate-y-1/2`} />
           <input
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Search by file name, tag, or alt-text description…"
-            className="w-full bg-[#08090C] border border-white/15 focus:border-blue-500 rounded-xl pl-10 pr-4 py-2.5 text-xs sm:text-sm text-white placeholder:text-zinc-600 focus:outline-none"
+            placeholder={isAr ? 'البحث باسم الملف أو الوصف التوضيحي…' : 'Search by file name, tag, or alt-text description…'}
+            className={`w-full bg-[#08090C] border border-white/15 focus:border-blue-500 rounded-xl ${isAr ? 'pr-10 pl-4' : 'pl-10 pr-4'} py-2.5 text-xs sm:text-sm text-white placeholder:text-zinc-600 focus:outline-none`}
           />
         </div>
 
@@ -138,14 +142,14 @@ export default function MediaLibraryAdminPage() {
           <select
             value={bucketFilter}
             onChange={(e) => setBucketFilter(e.target.value)}
-            className="w-full appearance-none bg-[#08090C] border border-white/15 text-white text-xs font-semibold rounded-xl pl-3.5 pr-9 py-2.5 focus:outline-none focus:border-blue-500 cursor-pointer"
+            className={`w-full appearance-none bg-[#08090C] border border-white/15 text-white text-xs font-semibold rounded-xl ${isAr ? 'pr-3.5 pl-9' : 'pl-3.5 pr-9'} py-2.5 focus:outline-none focus:border-blue-500 cursor-pointer`}
           >
-            <option value="all">All Storage Buckets</option>
-            <option value="photos">Photos & Images (photos)</option>
-            <option value="videos">Cinematic Videos (videos)</option>
-            <option value="assets">PDFs & Documents (assets)</option>
+            <option value="all">{isAr ? 'جميع وحدات التخزين' : 'All Storage Buckets'}</option>
+            <option value="photos">{isAr ? 'الصور واللقطات (photos)' : 'Photos & Images (photos)'}</option>
+            <option value="videos">{isAr ? 'الفيديوهات السينمائية (videos)' : 'Cinematic Videos (videos)'}</option>
+            <option value="assets">{isAr ? 'المستندات والملفات (assets)' : 'PDFs & Documents (assets)'}</option>
           </select>
-          <ChevronDown className="w-4 h-4 text-zinc-400 pointer-events-none absolute right-3 top-1/2 -translate-y-1/2" />
+          <ChevronDown className={`w-4 h-4 text-zinc-400 pointer-events-none absolute ${isAr ? 'left-3' : 'right-3'} top-1/2 -translate-y-1/2`} />
         </div>
       </div>
 
@@ -153,13 +157,13 @@ export default function MediaLibraryAdminPage() {
       {loading ? (
         <div className="p-12 text-center text-zinc-500 font-mono">
           <RefreshCw className="w-6 h-6 animate-spin mx-auto text-blue-500 mb-2" />
-          Loading media library…
+          <span>{isAr ? 'جارٍ تحميل مكتبة الوسائط…' : 'Loading media library…'}</span>
         </div>
       ) : filteredMedia.length === 0 ? (
         <div className="p-12 text-center bg-[#0F1117]/90 border border-dashed border-white/10 rounded-3xl space-y-3">
           <UploadCloud className="w-10 h-10 text-zinc-600 mx-auto" />
-          <h3 className="text-base font-bold text-white">No assets found</h3>
-          <p className="text-xs text-zinc-400">Click &ldquo;Upload New Asset&rdquo; to add photography or video to Supabase.</p>
+          <h3 className="text-base font-bold text-white">{isAr ? 'لا توجد وسائط مطابقة' : 'No assets found'}</h3>
+          <p className="text-xs text-zinc-400">{isAr ? 'انقر على "رفع ملف جديد" لإضافة صور أو فيديوهات إلى التخزين السحابي.' : 'Click "Upload New Asset" to add photography or video to Supabase.'}</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -177,12 +181,12 @@ export default function MediaLibraryAdminPage() {
                   {isVideo ? (
                     <div className="flex flex-col items-center gap-1.5 text-zinc-400">
                       <Video className="w-8 h-8 text-sky-400" />
-                      <span className="text-[10px] font-mono">VIDEO ASSET</span>
+                      <span className="text-[10px] font-mono">{isAr ? 'ملف فيديو' : 'VIDEO ASSET'}</span>
                     </div>
                   ) : isDoc ? (
                     <div className="flex flex-col items-center gap-1.5 text-zinc-400">
                       <FileText className="w-8 h-8 text-blue-400" />
-                      <span className="text-[10px] font-mono">PDF DOCUMENT</span>
+                      <span className="text-[10px] font-mono">{isAr ? 'مستند PDF' : 'PDF DOCUMENT'}</span>
                     </div>
                   ) : (
                     <img
@@ -193,7 +197,7 @@ export default function MediaLibraryAdminPage() {
                     />
                   )}
 
-                  <span className="absolute top-2 left-2 text-[9px] font-mono font-bold px-2 py-0.5 rounded-full bg-black/70 border border-white/15 text-zinc-300 uppercase">
+                  <span className={`absolute top-2 ${isAr ? 'right-2' : 'left-2'} text-[9px] font-mono font-bold px-2 py-0.5 rounded-full bg-black/70 border border-white/15 text-zinc-300 uppercase`}>
                     {item.bucket_id}
                   </span>
                 </div>
@@ -222,11 +226,11 @@ export default function MediaLibraryAdminPage() {
                   <div className="pt-3 border-t border-white/5 flex items-center justify-between gap-1.5">
                     <button
                       onClick={() => handleCopyUrl(item.id, item.file_url)}
-                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-zinc-300 text-[11px] font-semibold transition-colors"
-                      title="Copy CDN Link"
+                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-zinc-300 text-[11px] font-semibold transition-colors cursor-pointer"
+                      title={isAr ? 'نسخ الرابط المباشر' : 'Copy CDN Link'}
                     >
                       {copiedId === item.id ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                      <span>{copiedId === item.id ? 'Copied' : 'Copy URL'}</span>
+                      <span>{copiedId === item.id ? (isAr ? 'تم النسخ' : 'Copied') : (isAr ? 'نسخ الرابط' : 'Copy URL')}</span>
                     </button>
 
                     <div className="flex items-center gap-1">
@@ -235,15 +239,15 @@ export default function MediaLibraryAdminPage() {
                         target="_blank"
                         rel="noopener noreferrer"
                         className="p-1 rounded-lg hover:bg-white/10 text-zinc-400 hover:text-white transition-colors"
-                        title="Open asset"
+                        title={isAr ? 'فتح الملف' : 'Open asset'}
                       >
                         <ExternalLink className="w-3.5 h-3.5" />
                       </a>
 
                       <button
                         onClick={() => setDeletingId(item.id)}
-                        className="p-1 rounded-lg hover:bg-rose-500/20 text-zinc-500 hover:text-rose-400 transition-colors"
-                        title="Delete asset"
+                        className="p-1 rounded-lg hover:bg-rose-500/20 text-zinc-500 hover:text-rose-400 transition-colors cursor-pointer"
+                        title={isAr ? 'حذف الملف' : 'Delete asset'}
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>
@@ -273,9 +277,9 @@ export default function MediaLibraryAdminPage() {
 
       <ConfirmationModal
         isOpen={Boolean(deletingId)}
-        title="Delete Media Record"
-        message="Are you sure you want to delete this media metadata entry? (Files in storage must be deleted from storage if no longer used)."
-        confirmLabel="Delete"
+        title={isAr ? 'حذف سجل الوسائط' : 'Delete Media Record'}
+        message={isAr ? 'هل أنت متأكد من رغبتك في حذف هذا الملف من سجل الوسائط؟' : 'Are you sure you want to delete this media metadata entry? (Files in storage must be deleted from storage if no longer used).'}
+        confirmLabel={isAr ? 'حذف' : 'Delete'}
         onConfirm={() => deletingId && handleDelete(deletingId)}
         onClose={() => setDeletingId(null)}
       />

@@ -504,16 +504,14 @@ export default function PagesContentEditor() {
             </button>
           );
         })}
-      </div>
-
-      {/* ─── TAB 1: HOMEPAGE (COMPACT ACCORDION MODULES) ─── */}
+      </div>      {/* ─── TAB 1: HOMEPAGE (COMPACT ACCORDION MODULES) ─── */}
       {activeTab === 'home' && (
         <div className="space-y-4 animate-in fade-in duration-200">
           
           {/* Quick Accordion Expand / Collapse Controls */}
           <div className="flex items-center justify-between px-2 py-1">
             <span className="text-xs font-mono text-zinc-400 font-bold">
-              HOMEPAGE CONTENT MODULES (8 SECTIONS)
+              {isAr ? 'أقسام محتوى الصفحة الرئيسية (8 أقسام)' : 'HOMEPAGE CONTENT MODULES (8 SECTIONS)'}
             </span>
             <div className="flex items-center gap-2">
               <button
@@ -522,7 +520,7 @@ export default function PagesContentEditor() {
                 className="inline-flex items-center gap-1.5 text-[11px] font-mono text-blue-400 hover:text-blue-300 px-3 py-1.5 rounded-xl bg-blue-500/10 border border-blue-500/20 transition-all cursor-pointer"
               >
                 <Maximize2 className="w-3 h-3" />
-                <span>Expand All</span>
+                <span>{isAr ? 'توسيع الكل' : 'Expand All'}</span>
               </button>
               <button
                 type="button"
@@ -530,7 +528,7 @@ export default function PagesContentEditor() {
                 className="inline-flex items-center gap-1.5 text-[11px] font-mono text-zinc-400 hover:text-white px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 transition-all cursor-pointer"
               >
                 <Minimize2 className="w-3 h-3" />
-                <span>Collapse All</span>
+                <span>{isAr ? 'طي الكل' : 'Collapse All'}</span>
               </button>
             </div>
           </div>
@@ -547,16 +545,16 @@ export default function PagesContentEditor() {
                 </div>
                 <div>
                   <span className="text-xs font-mono font-bold text-blue-400 uppercase tracking-wider block">
-                    CINEMATIC HERO SECTION & HEADER CTA
+                    {isAr ? 'القسم الرئيسي للواجهة وزر التواصل' : 'CINEMATIC HERO SECTION & HEADER CTA'}
                   </span>
                   <span className="text-[10px] text-zinc-500 block -mt-0.5">
-                    Eyebrow, 3-line slogan, subtitle narrative & top-right contact button
+                    {isAr ? 'العنوان الترويجي، الشعار من 3 أسطر، النص التوضيحي وزر التواصل العلوي' : 'Eyebrow, 3-line slogan, subtitle narrative & top-right contact button'}
                   </span>
                 </div>
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-[10px] font-mono text-zinc-500 group-hover:text-zinc-300">
-                  {openSections.hero ? 'Collapse' : 'Expand'}
+                  {openSections.hero ? (isAr ? 'طي' : 'Collapse') : (isAr ? 'توسيع' : 'Expand')}
                 </span>
                 {openSections.hero ? <ChevronUp className="w-4 h-4 text-zinc-400" /> : <ChevronDown className="w-4 h-4 text-zinc-400" />}
               </div>
@@ -565,7 +563,7 @@ export default function PagesContentEditor() {
             {openSections.hero && (
               <div className="space-y-5 pt-5 border-t border-white/10 mt-4 animate-in fade-in duration-150">
                 <BilingualInput
-                  label="Hero Eyebrow / Tag"
+                  label={isAr ? 'العنوان الترويجي العلوي' : 'Hero Eyebrow / Tag'}
                   valueEn={content.home.hero.eyebrow_en}
                   valueAr={content.home.hero.eyebrow_ar}
                   onChangeEn={(v) => setContent({ ...content, home: { ...content.home, hero: { ...content.home.hero, eyebrow_en: v } } })}
@@ -574,7 +572,7 @@ export default function PagesContentEditor() {
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <BilingualInput
-                    label="Headline Line 1"
+                    label={isAr ? 'السطر الرئيسي 1' : 'Headline Line 1'}
                     valueEn={content.home.hero.title_line1_en || 'Solid Vision.'}
                     valueAr={content.home.hero.title_line1_ar || 'رؤية راسخة.'}
                     onChangeEn={(v) => setContent({ ...content, home: { ...content.home, hero: { ...content.home.hero, title_line1_en: v } } })}
@@ -582,7 +580,7 @@ export default function PagesContentEditor() {
                   />
 
                   <BilingualInput
-                    label="Headline Line 2 [Accent]"
+                    label={isAr ? 'السطر الرئيسي 2 [المميز بالذهبي]' : 'Headline Line 2 [Accent]'}
                     valueEn={content.home.hero.title_line2_en || 'Diverse Sectors.'}
                     valueAr={content.home.hero.title_line2_ar || 'قطاعات متعددة.'}
                     onChangeEn={(v) => setContent({ ...content, home: { ...content.home, hero: { ...content.home.hero, title_line2_en: v } } })}
@@ -590,7 +588,7 @@ export default function PagesContentEditor() {
                   />
 
                   <BilingualInput
-                    label="Headline Line 3"
+                    label={isAr ? 'السطر الرئيسي 3' : 'Headline Line 3'}
                     valueEn={content.home.hero.title_line3_en || 'Promising Future.'}
                     valueAr={content.home.hero.title_line3_ar || 'مستقبل واعد.'}
                     onChangeEn={(v) => setContent({ ...content, home: { ...content.home, hero: { ...content.home.hero, title_line3_en: v } } })}
@@ -599,7 +597,7 @@ export default function PagesContentEditor() {
                 </div>
 
                 <BilingualInput
-                  label="Hero Subtitle / Narrative Body"
+                  label={isAr ? 'النص التعريفي / التوضيحي' : 'Hero Subtitle / Narrative Body'}
                   isTextarea
                   rows={3}
                   valueEn={content.home.hero.body_en}
@@ -609,7 +607,7 @@ export default function PagesContentEditor() {
                 />
 
                 <BilingualInput
-                  label="Hero Kicker / Secondary Tag"
+                  label={isAr ? 'الشعار الفرعي للقطاعات' : 'Hero Kicker / Secondary Tag'}
                   valueEn={content.home.hero.kicker_en || 'Integrated Hospitality, Manufacturing & Contracting'}
                   valueAr={content.home.hero.kicker_ar || 'منظومة متكاملة في الضيافة والتصنيع والمقاولات'}
                   onChangeEn={(v) => setContent({ ...content, home: { ...content.home, hero: { ...content.home.hero, kicker_en: v } } })}
@@ -617,7 +615,7 @@ export default function PagesContentEditor() {
                 />
 
                 <BilingualInput
-                  label="Header Navigation CTA Button (Top Right Corner)"
+                  label={isAr ? 'زر التواصل في القائمة العلوية (أعلى الزاوية)' : 'Header Navigation CTA Button (Top Right Corner)'}
                   valueEn={content.settings.nav_cta_en || 'Contact Us'}
                   valueAr={content.settings.nav_cta_ar || 'تواصل معنا'}
                   onChangeEn={(v) => setContent({ ...content, settings: { ...content.settings, nav_cta_en: v } })}
@@ -639,16 +637,16 @@ export default function PagesContentEditor() {
                 </div>
                 <div>
                   <span className="text-xs font-mono font-bold text-[#C9A86A] uppercase tracking-wider block">
-                    FLOATING SECTOR SWITCHER DOCK & BADGES
+                    {isAr ? 'الشريط العائم للتنقل بين القطاعات' : 'FLOATING SECTOR SWITCHER DOCK & BADGES'}
                   </span>
                   <span className="text-[10px] text-zinc-500 block -mt-0.5">
-                    Interactive switcher tab labels & counter badges
+                    {isAr ? 'تسميات تبويبات التنقل التفاعلية وشارات العدادات' : 'Interactive switcher tab labels & counter badges'}
                   </span>
                 </div>
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-[10px] font-mono text-zinc-500 group-hover:text-zinc-300">
-                  {openSections.dock ? 'Collapse' : 'Expand'}
+                  {openSections.dock ? (isAr ? 'طي' : 'Collapse') : (isAr ? 'توسيع' : 'Expand')}
                 </span>
                 {openSections.dock ? <ChevronUp className="w-4 h-4 text-zinc-400" /> : <ChevronDown className="w-4 h-4 text-zinc-400" />}
               </div>
@@ -657,17 +655,17 @@ export default function PagesContentEditor() {
             {openSections.dock && (
               <div className="space-y-4 pt-5 border-t border-white/10 mt-4 animate-in fade-in duration-150">
                 <div className="p-4 rounded-2xl bg-black/40 border border-sky-500/20 space-y-3">
-                  <span className="text-xs font-mono font-bold text-sky-400 uppercase">Sector 1: Hospitality Switcher Dock</span>
+                  <span className="text-xs font-mono font-bold text-sky-400 uppercase">{isAr ? 'القطاع 1: شريط الضيافة' : 'Sector 1: Hospitality Switcher Dock'}</span>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <BilingualInput
-                      label="Hospitality Tab Label"
+                      label={isAr ? 'اسم تبويب الضيافة' : 'Hospitality Tab Label'}
                       valueEn={content.home.hero.dock_hospitality_label_en || 'Hospitality (SwissBlue)'}
                       valueAr={content.home.hero.dock_hospitality_label_ar || 'الضيافة (SwissBlue)'}
                       onChangeEn={(v) => setContent({ ...content, home: { ...content.home, hero: { ...content.home.hero, dock_hospitality_label_en: v } } })}
                       onChangeAr={(v) => setContent({ ...content, home: { ...content.home, hero: { ...content.home.hero, dock_hospitality_label_ar: v } } })}
                     />
                     <BilingualInput
-                      label="Hospitality Badge / Count"
+                      label={isAr ? 'شارة العداد / عدد الفنادق' : 'Hospitality Badge / Count'}
                       valueEn={content.home.hero.dock_hospitality_badge_en || '6 Properties'}
                       valueAr={content.home.hero.dock_hospitality_badge_ar || '6 منشآت'}
                       onChangeEn={(v) => setContent({ ...content, home: { ...content.home, hero: { ...content.home.hero, dock_hospitality_badge_en: v } } })}
@@ -677,17 +675,17 @@ export default function PagesContentEditor() {
                 </div>
 
                 <div className="p-4 rounded-2xl bg-black/40 border border-emerald-500/20 space-y-3">
-                  <span className="text-xs font-mono font-bold text-emerald-400 uppercase">Sector 2: Manufacturing Switcher Dock</span>
+                  <span className="text-xs font-mono font-bold text-emerald-400 uppercase">{isAr ? 'القطاع 2: شريط التصنيع' : 'Sector 2: Manufacturing Switcher Dock'}</span>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <BilingualInput
-                      label="Manufacturing Tab Label"
+                      label={isAr ? 'اسم تبويب التصنيع' : 'Manufacturing Tab Label'}
                       valueEn={content.home.hero.dock_manufacturing_label_en || 'Manufacturing (GreenWood)'}
                       valueAr={content.home.hero.dock_manufacturing_label_ar || 'التصنيع والأثاث (GreenWood)'}
                       onChangeEn={(v) => setContent({ ...content, home: { ...content.home, hero: { ...content.home.hero, dock_manufacturing_label_en: v } } })}
                       onChangeAr={(v) => setContent({ ...content, home: { ...content.home, hero: { ...content.home.hero, dock_manufacturing_label_ar: v } } })}
                     />
                     <BilingualInput
-                      label="Manufacturing Badge / Count"
+                      label={isAr ? 'شارة العداد / عدد المصانع' : 'Manufacturing Badge / Count'}
                       valueEn={content.home.hero.dock_manufacturing_badge_en || '3 Factories'}
                       valueAr={content.home.hero.dock_manufacturing_badge_ar || '3 مصانع'}
                       onChangeEn={(v) => setContent({ ...content, home: { ...content.home, hero: { ...content.home.hero, dock_manufacturing_badge_en: v } } })}
@@ -697,17 +695,17 @@ export default function PagesContentEditor() {
                 </div>
 
                 <div className="p-4 rounded-2xl bg-black/40 border border-amber-500/20 space-y-3">
-                  <span className="text-xs font-mono font-bold text-amber-400 uppercase">Sector 3: Contracting Switcher Dock</span>
+                  <span className="text-xs font-mono font-bold text-amber-400 uppercase">{isAr ? 'القطاع 3: شريط المقاولات' : 'Sector 3: Contracting Switcher Dock'}</span>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <BilingualInput
-                      label="Contracting Tab Label"
+                      label={isAr ? 'اسم تبويب المقاولات' : 'Contracting Tab Label'}
                       valueEn={content.home.hero.dock_contracting_label_en || 'Contracting (Projects)'}
                       valueAr={content.home.hero.dock_contracting_label_ar || 'المقاولات والتميز الهندسي'}
                       onChangeEn={(v) => setContent({ ...content, home: { ...content.home, hero: { ...content.home.hero, dock_contracting_label_en: v } } })}
                       onChangeAr={(v) => setContent({ ...content, home: { ...content.home, hero: { ...content.home.hero, dock_contracting_label_ar: v } } })}
                     />
                     <BilingualInput
-                      label="Contracting Badge / Status"
+                      label={isAr ? 'شارة الحالة / التنفيذ' : 'Contracting Badge / Status'}
                       valueEn={content.home.hero.dock_contracting_badge_en || 'Turnkey Execution'}
                       valueAr={content.home.hero.dock_contracting_badge_ar || 'تنفيذ شامل'}
                       onChangeEn={(v) => setContent({ ...content, home: { ...content.home, hero: { ...content.home.hero, dock_contracting_badge_en: v } } })}
@@ -717,7 +715,7 @@ export default function PagesContentEditor() {
                 </div>
 
                 <BilingualInput
-                  label="Scroll Cue Indicator Text"
+                  label={isAr ? 'نص مؤشر التمرير للأسفل' : 'Scroll Cue Indicator Text'}
                   valueEn={content.home.hero.scroll_cue_en || 'Scroll to explore'}
                   valueAr={content.home.hero.scroll_cue_ar || 'استكشف المنظومة القابضة'}
                   onChangeEn={(v) => setContent({ ...content, home: { ...content.home, hero: { ...content.home.hero, scroll_cue_en: v } } })}
@@ -739,16 +737,16 @@ export default function PagesContentEditor() {
                 </div>
                 <div>
                   <span className="text-xs font-mono font-bold text-amber-400 uppercase tracking-wider block">
-                    HERO BACKGROUND VIDEOS
+                    {isAr ? 'الفيديوهات الخلفية التفاعلية للقطاعات' : 'HERO BACKGROUND VIDEOS'}
                   </span>
                   <span className="text-[10px] text-zinc-500 block -mt-0.5">
-                    Hospitality, Manufacturing, and Contracting background video stream URLs
+                    {isAr ? 'فيديوهات خلفيات أقسام الضيافة، التصنيع، والمقاولات' : 'Hospitality, Manufacturing, and Contracting background video stream URLs'}
                   </span>
                 </div>
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-[10px] font-mono text-zinc-500 group-hover:text-zinc-300">
-                  {openSections.videos ? 'Collapse' : 'Expand'}
+                  {openSections.videos ? (isAr ? 'طي' : 'Collapse') : (isAr ? 'توسيع' : 'Expand')}
                 </span>
                 {openSections.videos ? <ChevronUp className="w-4 h-4 text-zinc-400" /> : <ChevronDown className="w-4 h-4 text-zinc-400" />}
               </div>
@@ -757,7 +755,7 @@ export default function PagesContentEditor() {
             {openSections.videos && (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-5 border-t border-white/10 mt-4 animate-in fade-in duration-150">
                 <MediaFieldUploader
-                  label="SwissBlue Hospitality Video"
+                  label={isAr ? 'فيديو قطاع الضيافة' : 'SwissBlue Hospitality Video'}
                   accept="video"
                   bucket="videos"
                   value={content.home.media?.hero_video_hospitality || '/videos/hospitality.mp4'}
@@ -765,7 +763,7 @@ export default function PagesContentEditor() {
                 />
 
                 <MediaFieldUploader
-                  label="GreenWood Manufacturing Video"
+                  label={isAr ? 'فيديو قطاع التصنيع' : 'GreenWood Manufacturing Video'}
                   accept="video"
                   bucket="videos"
                   value={content.home.media?.hero_video_manufacturing || '/videos/manufacturing.mp4'}
@@ -773,7 +771,7 @@ export default function PagesContentEditor() {
                 />
 
                 <MediaFieldUploader
-                  label="Contracting & Fit-Out Video"
+                  label={isAr ? 'فيديو قطاع المقاولات' : 'Contracting & Fit-Out Video'}
                   accept="video"
                   bucket="videos"
                   value={content.home.media?.hero_video_contracting || '/videos/contracting.mp4'}
@@ -795,16 +793,16 @@ export default function PagesContentEditor() {
                 </div>
                 <div>
                   <span className="text-xs font-mono font-bold text-sky-400 uppercase tracking-wider block">
-                    STRATEGIC SECTORS PHOTO CARDS
+                    {isAr ? 'صور وبطاقات القطاعات الاستراتيجية' : 'STRATEGIC SECTORS PHOTO CARDS'}
                   </span>
                   <span className="text-[10px] text-zinc-500 block -mt-0.5">
-                    Cover photos for Hospitality, Manufacturing & Contracting sector cards
+                    {isAr ? 'صور بطاقات قطاعات الضيافة، التصنيع، والمقاولات بالصفحة الرئيسية' : 'Cover photos for Hospitality, Manufacturing & Contracting sector cards'}
                   </span>
                 </div>
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-[10px] font-mono text-zinc-500 group-hover:text-zinc-300">
-                  {openSections.sectors ? 'Collapse' : 'Expand'}
+                  {openSections.sectors ? (isAr ? 'طي' : 'Collapse') : (isAr ? 'توسيع' : 'Expand')}
                 </span>
                 {openSections.sectors ? <ChevronUp className="w-4 h-4 text-zinc-400" /> : <ChevronDown className="w-4 h-4 text-zinc-400" />}
               </div>
@@ -813,21 +811,21 @@ export default function PagesContentEditor() {
             {openSections.sectors && (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-5 border-t border-white/10 mt-4 animate-in fade-in duration-150">
                 <MediaFieldUploader
-                  label="Hospitality Sector Card Photo"
+                  label={isAr ? 'صورة بطاقة الضيافة' : 'Hospitality Sector Card Photo'}
                   bucket="photos"
                   value={content.home.media?.sector_photo_hospitality || ''}
                   onChange={(url) => setContent({ ...content, home: { ...content.home, media: { ...(content.home.media || {}), sector_photo_hospitality: url } } })}
                 />
 
                 <MediaFieldUploader
-                  label="Manufacturing Sector Card Photo"
+                  label={isAr ? 'صورة بطاقة التصنيع' : 'Manufacturing Sector Card Photo'}
                   bucket="photos"
                   value={content.home.media?.sector_photo_manufacturing || ''}
                   onChange={(url) => setContent({ ...content, home: { ...content.home, media: { ...(content.home.media || {}), sector_photo_manufacturing: url } } })}
                 />
 
                 <MediaFieldUploader
-                  label="Contracting Sector Card Photo"
+                  label={isAr ? 'صورة بطاقة المقاولات' : 'Contracting Sector Card Photo'}
                   bucket="photos"
                   value={content.home.media?.sector_photo_contracting || ''}
                   onChange={(url) => setContent({ ...content, home: { ...content.home, media: { ...(content.home.media || {}), sector_photo_contracting: url } } })}
@@ -848,16 +846,16 @@ export default function PagesContentEditor() {
                 </div>
                 <div>
                   <span className="text-xs font-mono font-bold text-emerald-400 uppercase tracking-wider block">
-                    INTEGRATED VALUE CHAIN SYNERGY
+                    {isAr ? 'تكامل سلاسل القيمة المضافة' : 'INTEGRATED VALUE CHAIN SYNERGY'}
                   </span>
                   <span className="text-[10px] text-zinc-500 block -mt-0.5">
-                    Holding lifecycle synergy: Manufacture, Build, Operate
+                    {isAr ? 'سلسلة القيمة المضافة للمنظومة القابضة: نصنّع، نبني، نشغّل' : 'Holding lifecycle synergy: Manufacture, Build, Operate'}
                   </span>
                 </div>
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-[10px] font-mono text-zinc-500 group-hover:text-zinc-300">
-                  {openSections.synergy ? 'Collapse' : 'Expand'}
+                  {openSections.synergy ? (isAr ? 'طي' : 'Collapse') : (isAr ? 'توسيع' : 'Expand')}
                 </span>
                 {openSections.synergy ? <ChevronUp className="w-4 h-4 text-zinc-400" /> : <ChevronDown className="w-4 h-4 text-zinc-400" />}
               </div>
@@ -866,7 +864,7 @@ export default function PagesContentEditor() {
             {openSections.synergy && (
               <div className="space-y-5 pt-5 border-t border-white/10 mt-4 animate-in fade-in duration-150">
                 <BilingualInput
-                  label="Synergy Heading"
+                  label={isAr ? 'عنوان التكامل وسلاسل القيمة' : 'Synergy Heading'}
                   valueEn={content.home.synergy.heading_en}
                   valueAr={content.home.synergy.heading_ar}
                   onChangeEn={(v) => setContent({ ...content, home: { ...content.home, synergy: { ...content.home.synergy, heading_en: v } } })}
@@ -874,7 +872,7 @@ export default function PagesContentEditor() {
                 />
 
                 <BilingualInput
-                  label="Synergy Intro Description"
+                  label={isAr ? 'مقدمة التكامل والمنظومة' : 'Synergy Intro Description'}
                   isTextarea
                   rows={3}
                   valueEn={content.home.synergy.intro_en}
@@ -885,16 +883,16 @@ export default function PagesContentEditor() {
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
                   <div className="p-4 rounded-2xl bg-black/40 border border-emerald-500/20 space-y-3">
-                    <span className="text-xs font-mono font-bold text-emerald-400">Step 01: Manufacturing</span>
+                    <span className="text-xs font-mono font-bold text-emerald-400">{isAr ? 'المرحلة 01: التصنيع' : 'Step 01: Manufacturing'}</span>
                     <BilingualInput
-                      label="Step 1 Title"
+                      label={isAr ? 'عنوان المرحلة 1' : 'Step 1 Title'}
                       valueEn={content.home.synergy.step1_title_en || 'Manufacture'}
                       valueAr={content.home.synergy.step1_title_ar || 'التصنيع والإنتاج'}
                       onChangeEn={(v) => setContent({ ...content, home: { ...content.home, synergy: { ...content.home.synergy, step1_title_en: v } } })}
                       onChangeAr={(v) => setContent({ ...content, home: { ...content.home, synergy: { ...content.home.synergy, step1_title_ar: v } } })}
                     />
                     <BilingualInput
-                      label="Step 1 Narrative"
+                      label={isAr ? 'نص المرحلة 1' : 'Step 1 Narrative'}
                       isTextarea
                       rows={3}
                       valueEn={content.home.synergy.step1_text_en || ''}
@@ -905,16 +903,16 @@ export default function PagesContentEditor() {
                   </div>
 
                   <div className="p-4 rounded-2xl bg-black/40 border border-amber-500/20 space-y-3">
-                    <span className="text-xs font-mono font-bold text-amber-400">Step 02: Fit-Out & Contracting</span>
+                    <span className="text-xs font-mono font-bold text-amber-400">{isAr ? 'المرحلة 02: المقاولات والتجهيز' : 'Step 02: Fit-Out & Contracting'}</span>
                     <BilingualInput
-                      label="Step 2 Title"
+                      label={isAr ? 'عنوان المرحلة 2' : 'Step 2 Title'}
                       valueEn={content.home.synergy.step2_title_en || 'Build & Fit Out'}
                       valueAr={content.home.synergy.step2_title_ar || 'التنفيذ والتجهيز المعماري'}
                       onChangeEn={(v) => setContent({ ...content, home: { ...content.home, synergy: { ...content.home.synergy, step2_title_en: v } } })}
                       onChangeAr={(v) => setContent({ ...content, home: { ...content.home, synergy: { ...content.home.synergy, step2_title_ar: v } } })}
                     />
                     <BilingualInput
-                      label="Step 2 Narrative"
+                      label={isAr ? 'نص المرحلة 2' : 'Step 2 Narrative'}
                       isTextarea
                       rows={3}
                       valueEn={content.home.synergy.step2_text_en || ''}
@@ -925,16 +923,16 @@ export default function PagesContentEditor() {
                   </div>
 
                   <div className="p-4 rounded-2xl bg-black/40 border border-sky-500/20 space-y-3">
-                    <span className="text-xs font-mono font-bold text-sky-400">Step 03: Hospitality Operations</span>
+                    <span className="text-xs font-mono font-bold text-sky-400">{isAr ? 'المرحلة 03: التشغيل الفندقي' : 'Step 03: Hospitality Operations'}</span>
                     <BilingualInput
-                      label="Step 3 Title"
+                      label={isAr ? 'عنوان المرحلة 3' : 'Step 3 Title'}
                       valueEn={content.home.synergy.step3_title_en || 'Operate'}
                       valueAr={content.home.synergy.step3_title_ar || 'التشغيل الفندقي وإدارة الأصول'}
                       onChangeEn={(v) => setContent({ ...content, home: { ...content.home, synergy: { ...content.home.synergy, step3_title_en: v } } })}
                       onChangeAr={(v) => setContent({ ...content, home: { ...content.home, synergy: { ...content.home.synergy, step3_title_ar: v } } })}
                     />
                     <BilingualInput
-                      label="Step 3 Narrative"
+                      label={isAr ? 'نص المرحلة 3' : 'Step 3 Narrative'}
                       isTextarea
                       rows={3}
                       valueEn={content.home.synergy.step3_text_en || ''}
@@ -960,16 +958,16 @@ export default function PagesContentEditor() {
                 </div>
                 <div>
                   <span className="text-xs font-mono font-bold text-purple-400 uppercase tracking-wider block">
-                    IDENTITY, VISION, MISSION & VALUES
+                    {isAr ? 'الهوية المؤسسية، الرؤية والرسالة والقيم' : 'IDENTITY, VISION, MISSION & VALUES'}
                   </span>
                   <span className="text-[10px] text-zinc-500 block -mt-0.5">
-                    Vision narrative, mission principles & corporate values
+                    {isAr ? 'نصوص الرؤية، مبادئ الرسالة وقيم المنظومة القابضة' : 'Vision narrative, mission principles & corporate values'}
                   </span>
                 </div>
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-[10px] font-mono text-zinc-500 group-hover:text-zinc-300">
-                  {openSections.identity ? 'Collapse' : 'Expand'}
+                  {openSections.identity ? (isAr ? 'طي' : 'Collapse') : (isAr ? 'توسيع' : 'Expand')}
                 </span>
                 {openSections.identity ? <ChevronUp className="w-4 h-4 text-zinc-400" /> : <ChevronDown className="w-4 h-4 text-zinc-400" />}
               </div>
@@ -979,14 +977,14 @@ export default function PagesContentEditor() {
               <div className="space-y-5 pt-5 border-t border-white/10 mt-4 animate-in fade-in duration-150">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <BilingualInput
-                    label="Vision Title"
+                    label={isAr ? 'عنوان الرؤية' : 'Vision Title'}
                     valueEn={content.home.identity.vision_title_en || 'Vision'}
                     valueAr={content.home.identity.vision_title_ar || 'الرؤية'}
                     onChangeEn={(v) => setContent({ ...content, home: { ...content.home, identity: { ...content.home.identity, vision_title_en: v } } })}
                     onChangeAr={(v) => setContent({ ...content, home: { ...content.home, identity: { ...content.home.identity, vision_title_ar: v } } })}
                   />
                   <BilingualInput
-                    label="Mission Title"
+                    label={isAr ? 'عنوان الرسالة' : 'Mission Title'}
                     valueEn={content.home.identity.mission_title_en || 'Mission'}
                     valueAr={content.home.identity.mission_title_ar || 'الرسالة'}
                     onChangeEn={(v) => setContent({ ...content, home: { ...content.home, identity: { ...content.home.identity, mission_title_en: v } } })}
@@ -995,7 +993,7 @@ export default function PagesContentEditor() {
                 </div>
 
                 <BilingualInput
-                  label="Vision Statement"
+                  label={isAr ? 'بيان الرؤية' : 'Vision Statement'}
                   isTextarea
                   rows={3}
                   valueEn={content.home.identity.vision_desc_en || ''}
@@ -1005,7 +1003,7 @@ export default function PagesContentEditor() {
                 />
 
                 <BilingualInput
-                  label="Mission Statement"
+                  label={isAr ? 'بيان الرسالة' : 'Mission Statement'}
                   isTextarea
                   rows={3}
                   valueEn={content.home.identity.mission_desc_en || ''}
@@ -1029,16 +1027,16 @@ export default function PagesContentEditor() {
                 </div>
                 <div>
                   <span className="text-xs font-mono font-bold text-[#C9A86A] uppercase tracking-wider block">
-                    CEO LEADERSHIP QUOTE & 1:1 PORTRAIT
+                    {isAr ? 'الرسالة التنفيذية وصورة الرئيس التنفيذي' : 'CEO LEADERSHIP QUOTE & 1:1 PORTRAIT'}
                   </span>
                   <span className="text-[10px] text-zinc-500 block -mt-0.5">
-                    Executive statement, leader name, title & 1:1 photo uploader
+                    {isAr ? 'الرسالة التنفيذية، الاسم، المنصب، وصورة شخصية بنسبة 1:1' : 'Executive statement, leader name, title & 1:1 photo uploader'}
                   </span>
                 </div>
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-[10px] font-mono text-zinc-500 group-hover:text-zinc-300">
-                  {openSections.ceo ? 'Collapse' : 'Expand'}
+                  {openSections.ceo ? (isAr ? 'طي' : 'Collapse') : (isAr ? 'توسيع' : 'Expand')}
                 </span>
                 {openSections.ceo ? <ChevronUp className="w-4 h-4 text-zinc-400" /> : <ChevronDown className="w-4 h-4 text-zinc-400" />}
               </div>
@@ -1047,8 +1045,8 @@ export default function PagesContentEditor() {
             {openSections.ceo && (
               <div className="space-y-5 pt-5 border-t border-white/10 mt-4 animate-in fade-in duration-150">
                 <MediaFieldUploader
-                  label="CEO Executive Portrait / Photo (1:1 Ratio)"
-                  description="Square 1:1 aspect ratio recommended for leadership portrait"
+                  label={isAr ? 'صورة الرئيس التنفيذي (مربعة 1:1)' : 'CEO Executive Portrait / Photo (1:1 Ratio)'}
+                  description={isAr ? 'يوصى بصورة مربعة بنسبة 1:1 للحصول على أفضل وضوح' : 'Square 1:1 aspect ratio recommended for leadership portrait'}
                   aspectRatio="1:1"
                   bucket="photos"
                   value={content.home.ceo.photo_url || content.home.media?.ceo_photo || ''}
@@ -1063,7 +1061,7 @@ export default function PagesContentEditor() {
                 />
 
                 <BilingualInput
-                  label="Quote Statement"
+                  label={isAr ? 'نص الرسالة التنفيذية' : 'Quote Statement'}
                   isTextarea
                   rows={3}
                   valueEn={content.home.ceo.quote_en}
@@ -1074,14 +1072,14 @@ export default function PagesContentEditor() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <BilingualInput
-                    label="Leader Name"
+                    label={isAr ? 'اسم الرئيس التنفيذي' : 'Leader Name'}
                     valueEn={content.home.ceo.name_en}
                     valueAr={content.home.ceo.name_ar}
                     onChangeEn={(v) => setContent({ ...content, home: { ...content.home, ceo: { ...content.home.ceo, name_en: v } } })}
                     onChangeAr={(v) => setContent({ ...content, home: { ...content.home, ceo: { ...content.home.ceo, name_ar: v } } })}
                   />
                   <BilingualInput
-                    label="Leader Title / Role"
+                    label={isAr ? 'المنصب والصفة' : 'Leader Title / Role'}
                     valueEn={content.home.ceo.title_en}
                     valueAr={content.home.ceo.title_ar}
                     onChangeEn={(v) => setContent({ ...content, home: { ...content.home, ceo: { ...content.home.ceo, title_en: v } } })}
@@ -1104,16 +1102,16 @@ export default function PagesContentEditor() {
                 </div>
                 <div>
                   <span className="text-xs font-mono font-bold text-blue-400 uppercase tracking-wider block">
-                    STRATEGIC PARTNERSHIP & CONTACT CTA
+                    {isAr ? 'قسم الشراكات الاستراتيجية والتواصل' : 'STRATEGIC PARTNERSHIP & CONTACT CTA'}
                   </span>
                   <span className="text-[10px] text-zinc-500 block -mt-0.5">
-                    Inquiry headline, narrative & custom CTA action buttons
+                    {isAr ? 'عنوان الاستفسارات والشراكات، النص الترويجي وأزرار الإجراءات' : 'Inquiry headline, narrative & custom CTA action buttons'}
                   </span>
                 </div>
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-[10px] font-mono text-zinc-500 group-hover:text-zinc-300">
-                  {openSections.partnership ? 'Collapse' : 'Expand'}
+                  {openSections.partnership ? (isAr ? 'طي' : 'Collapse') : (isAr ? 'توسيع' : 'Expand')}
                 </span>
                 {openSections.partnership ? <ChevronUp className="w-4 h-4 text-zinc-400" /> : <ChevronDown className="w-4 h-4 text-zinc-400" />}
               </div>
@@ -1122,7 +1120,7 @@ export default function PagesContentEditor() {
             {openSections.partnership && (
               <div className="space-y-5 pt-5 border-t border-white/10 mt-4 animate-in fade-in duration-150">
                 <BilingualInput
-                  label="Banner Heading"
+                  label={isAr ? 'عنوان البانر الرئيسي' : 'Banner Heading'}
                   valueEn={content.home.partnership?.heading_en || 'Interested in Building a Partnership With Us?'}
                   valueAr={content.home.partnership?.heading_ar || 'هل ترغب في بناء شراكة استراتيجية معنا؟'}
                   onChangeEn={(v) => setContent({ ...content, home: { ...content.home, partnership: { ...(content.home.partnership || {}), heading_en: v } } })}
@@ -1130,7 +1128,7 @@ export default function PagesContentEditor() {
                 />
 
                 <BilingualInput
-                  label="Banner Narrative"
+                  label={isAr ? 'النص الترويجي للبانر' : 'Banner Narrative'}
                   isTextarea
                   rows={3}
                   valueEn={content.home.partnership?.body_en || ''}
@@ -1141,14 +1139,14 @@ export default function PagesContentEditor() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <BilingualInput
-                    label="Primary CTA Button Label"
+                    label={isAr ? 'نص زر الإجراء الرئيسي' : 'Primary CTA Button Label'}
                     valueEn={content.home.partnership?.primary_cta_en || 'Start a Partnership'}
                     valueAr={content.home.partnership?.primary_cta_ar || 'ابدأ شراكة جديدة'}
                     onChangeEn={(v) => setContent({ ...content, home: { ...content.home, partnership: { ...(content.home.partnership || {}), primary_cta_en: v } } })}
                     onChangeAr={(v) => setContent({ ...content, home: { ...content.home, partnership: { ...(content.home.partnership || {}), primary_cta_ar: v } } })}
                   />
                   <BilingualInput
-                    label="Secondary CTA Button Label"
+                    label={isAr ? 'نص زر الإجراء الثانوي' : 'Secondary CTA Button Label'}
                     valueEn={content.home.partnership?.secondary_cta_en || 'Join Our Team'}
                     valueAr={content.home.partnership?.secondary_cta_ar || 'انضم إلى فريقنا'}
                     onChangeEn={(v) => setContent({ ...content, home: { ...content.home, partnership: { ...(content.home.partnership || {}), secondary_cta_en: v } } })}
@@ -1169,26 +1167,26 @@ export default function PagesContentEditor() {
           <div className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 space-y-5">
             <div className="flex items-center justify-between border-b border-white/10 pb-3">
               <span className="text-xs font-mono font-bold text-blue-400 uppercase tracking-wider">
-                ABOUT US HERO IMAGE & STORY
+                {isAr ? 'صور وقصة ورسالة صفحة عنّا' : 'ABOUT US HERO IMAGE & STORY'}
               </span>
             </div>
 
             <MediaFieldUploader
-              label="About Us Hero Background Image"
+              label={isAr ? 'صورة الغلاف لصفحة عنّا' : 'About Us Hero Background Image'}
               bucket="photos"
               value={content.about.hero_image || ''}
               onChange={(url) => setContent({ ...content, about: { ...content.about, hero_image: url } })}
             />
 
             <MediaFieldUploader
-              label="About Us Heritage & Story Photo"
+              label={isAr ? 'صورة التراث ومسيرة المجموعة' : 'About Us Heritage & Story Photo'}
               bucket="photos"
               value={content.about.story_image || ''}
               onChange={(url) => setContent({ ...content, about: { ...content.about, story_image: url } })}
             />
 
             <BilingualInput
-              label="Story Heading"
+              label={isAr ? 'عنوان القصة والمسيرة' : 'Story Heading'}
               valueEn={content.about.story_heading_en}
               valueAr={content.about.story_heading_ar}
               onChangeEn={(v) => setContent({ ...content, about: { ...content.about, story_heading_en: v } })}
@@ -1196,7 +1194,7 @@ export default function PagesContentEditor() {
             />
 
             <BilingualInput
-              label="Story Narrative Body"
+              label={isAr ? 'نص القصة والمسيرة' : 'Story Narrative Body'}
               isTextarea
               rows={4}
               valueEn={content.about.story_body_en}
@@ -1206,7 +1204,7 @@ export default function PagesContentEditor() {
             />
 
             <BilingualInput
-              label="Governance & Purpose Statement"
+              label={isAr ? 'بيان الحوكمة والغاية المؤسسية' : 'Governance & Purpose Statement'}
               isTextarea
               rows={4}
               valueEn={content.about.governance_statement_en}
@@ -1226,19 +1224,19 @@ export default function PagesContentEditor() {
           <div className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 space-y-5">
             <div className="flex items-center justify-between border-b border-white/10 pb-3">
               <span className="text-xs font-mono font-bold text-sky-400 uppercase tracking-wider">
-                SWISSBLUE HOSPITALITY HERO & PHOTOS
+                {isAr ? 'الواجهة وصور قطاع الضيافة (فنادق سويس بلو)' : 'SWISSBLUE HOSPITALITY HERO & PHOTOS'}
               </span>
             </div>
 
             <MediaFieldUploader
-              label="Hospitality Hero Background Photo"
+              label={isAr ? 'صورة غلاف قطاع الضيافة' : 'Hospitality Hero Background Photo'}
               bucket="photos"
               value={content.hospitality.hero_image || ''}
               onChange={(url) => setContent({ ...content, hospitality: { ...content.hospitality, hero_image: url } })}
             />
 
             <BilingualInput
-              label="Hospitality Page Title"
+              label={isAr ? 'عنوان صفحة الضيافة' : 'Hospitality Page Title'}
               valueEn={content.hospitality.hero_title_en}
               valueAr={content.hospitality.hero_title_ar}
               onChangeEn={(v) => setContent({ ...content, hospitality: { ...content.hospitality, hero_title_en: v } })}
@@ -1246,7 +1244,7 @@ export default function PagesContentEditor() {
             />
 
             <BilingualInput
-              label="Hospitality Subtitle / Intro"
+              label={isAr ? 'النص التعريفي لقطاع الضيافة' : 'Hospitality Subtitle / Intro'}
               isTextarea
               rows={3}
               valueEn={content.hospitality.hero_body_en}

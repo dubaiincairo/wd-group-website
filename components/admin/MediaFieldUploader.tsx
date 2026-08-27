@@ -15,6 +15,7 @@ import {
   AlertCircle
 } from 'lucide-react';
 import { useToast } from './ToastProvider';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface MediaFieldUploaderProps {
   label: string;
@@ -37,6 +38,9 @@ export default function MediaFieldUploader({
 }: MediaFieldUploaderProps) {
   const inputId = useId();
   const { showToast } = useToast();
+  const { lang } = useLanguage();
+  const isAr = lang === 'ar';
+
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
   const [dragOver, setDragOver] = useState(false);
@@ -53,7 +57,7 @@ export default function MediaFieldUploader({
 
     // File size limits (50MB)
     if (file.size > 50 * 1024 * 1024) {
-      showToast('File exceeds 50MB limit', 'error');
+      showToast(isAr ? 'حجم الملف يتجاوز الحد الأقصى (50 ميجابايت)' : 'File exceeds 50MB limit', 'error');
       return;
     }
 
@@ -78,7 +82,7 @@ export default function MediaFieldUploader({
 
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
-        throw new Error(err.message || 'Storage upload failed');
+        throw new Error(err.message || (isAr ? 'فشل رفع الملف إلى السحابة' : 'Storage upload failed'));
       }
 
       const fileUrl = `${supabaseUrl}/storage/v1/object/public/${targetBucket}/${cleanFileName}`;
@@ -103,10 +107,15 @@ export default function MediaFieldUploader({
       }
 
       onChange(fileUrl);
-      showToast(`${accept === 'video' ? 'Video' : 'Photo'} uploaded successfully!`, 'success');
+      showToast(
+        isAr 
+          ? `تم رفع ${accept === 'video' ? 'الفيديو' : 'الصورة'} بنجاح!`
+          : `${accept === 'video' ? 'Video' : 'Photo'} uploaded successfully!`, 
+        'success'
+      );
     } catch (err: any) {
       console.error('Upload error:', err);
-      showToast(err.message || 'Upload failed', 'error');
+      showToast(err.message || (isAr ? 'فشل الرفع' : 'Upload failed'), 'error');
     } finally {
       setUploading(false);
     }
@@ -139,10 +148,10 @@ export default function MediaFieldUploader({
           <button
             type="button"
             onClick={() => onChange('')}
-            className="text-[11px] text-rose-400 hover:text-rose-300 flex items-center gap-1 transition-colors"
+            className="text-[11px] text-rose-400 hover:text-rose-300 flex items-center gap-1 transition-colors cursor-pointer"
           >
             <Trash2 className="w-3 h-3" />
-            <span>Remove</span>
+            <span>{isAr ? 'إزالة' : 'Remove'}</span>
           </button>
         )}
       </div>
@@ -193,7 +202,7 @@ export default function MediaFieldUploader({
               className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white text-xs gap-1 transition-opacity backdrop-blur-xs font-semibold"
             >
               <Eye className="w-3.5 h-3.5" />
-              <span>Preview</span>
+              <span>{isAr ? 'معاينة' : 'Preview'}</span>
             </a>
           )}
         </div>
@@ -227,16 +236,18 @@ export default function MediaFieldUploader({
             {uploading ? (
               <div className="flex items-center justify-center gap-2 text-xs text-blue-400 font-mono">
                 <RefreshCw className="w-3.5 h-3.5 animate-spin shrink-0" />
-                <span>Uploading to Cloud Storage…</span>
+                <span>{isAr ? 'جارٍ الرفع إلى التخزين السحابي…' : 'Uploading to Cloud Storage…'}</span>
               </div>
             ) : (
               <div className="flex items-center justify-center gap-2 text-xs text-zinc-300 whitespace-nowrap overflow-hidden">
                 <UploadCloud className="w-4 h-4 text-blue-400 shrink-0" />
                 <span className="font-semibold text-white">
-                  Upload {accept === 'video' ? 'Video' : 'Photo'}
+                  {isAr 
+                    ? (accept === 'video' ? 'رفع مقطع فيديو' : 'رفع صورة جديدة')
+                    : `Upload ${accept === 'video' ? 'Video' : 'Photo'}`}
                 </span>
                 <span className="text-[11px] text-zinc-500 font-normal">
-                  (or drag & drop)
+                  {isAr ? '(أو اسحب الملف هنا)' : '(or drag & drop)'}
                 </span>
               </div>
             )}
@@ -246,9 +257,10 @@ export default function MediaFieldUploader({
           <div className="flex items-center gap-2">
             <input
               type="text"
+              dir="ltr"
               value={value}
               onChange={(e) => onChange(e.target.value)}
-              placeholder="Or paste image/video URL…"
+              placeholder={isAr ? 'أو الصق رابط الصورة / الفيديو المباشر…' : 'Or paste image/video URL…'}
               className="w-full px-3 py-1.5 rounded-lg bg-black/50 border border-white/10 text-white text-xs font-mono placeholder:text-zinc-600 focus:outline-none focus:border-blue-500"
             />
           </div>

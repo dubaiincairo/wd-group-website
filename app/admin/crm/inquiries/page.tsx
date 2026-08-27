@@ -19,10 +19,14 @@ import {
 } from 'lucide-react';
 import LeadDetailDrawer from '@/components/admin/LeadDetailDrawer';
 import { useToast } from '@/components/admin/ToastProvider';
+import { useLanguage } from '@/context/LanguageContext';
 import type { CRMInquiry, CRMInquiryStatus } from '@/lib/admin/types';
 
 export default function CRMInquiriesPage() {
   const { showToast } = useToast();
+  const { lang } = useLanguage();
+  const isAr = lang === 'ar';
+
   const [inquiries, setInquiries] = useState<CRMInquiry[]>([]);
   const [loading, setLoading] = useState(true);
   const [totalCount, setTotalCount] = useState(0);
@@ -133,31 +137,31 @@ export default function CRMInquiriesPage() {
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-mono font-bold mb-2">
             <MessageSquare className="w-3.5 h-3.5" />
-            <span>LEADS & CRM OPERATIONS</span>
+            <span>{isAr ? 'إدارة العملاء وطلبات الشراكة' : 'LEADS & CRM OPERATIONS'}</span>
           </div>
           <h1 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
-            Inquiries & Sector RFPs
+            {isAr ? 'الاستفسارات والطلبات التجارية' : 'Inquiries & Sector RFPs'}
           </h1>
           <p className="text-xs sm:text-sm text-zinc-400 mt-1">
-            Track, assign, and manage commercial proposals and customer submissions.
+            {isAr ? 'متابعة وإسناد وإدارة العروض التجارية واستفسارات العملاء والشركاء.' : 'Track, assign, and manage commercial proposals and customer submissions.'}
           </p>
         </div>
 
         <div className="flex items-center gap-3">
           <button
             onClick={fetchInquiries}
-            className="p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-400 hover:text-white transition-colors"
-            title="Refresh list"
+            className="p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-400 hover:text-white transition-colors cursor-pointer"
+            title={isAr ? 'تحديث القائمة' : 'Refresh list'}
           >
             <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
           </button>
 
           <button
             onClick={handleExportCsv}
-            className="inline-flex items-center gap-2 px-4 py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white text-xs sm:text-sm font-bold transition-all"
+            className="inline-flex items-center gap-2 px-4 py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white text-xs sm:text-sm font-bold transition-all cursor-pointer"
           >
             <Download className="w-4 h-4 text-emerald-400" />
-            <span>Export CSV</span>
+            <span>{isAr ? 'تصدير كملف CSV' : 'Export CSV'}</span>
           </button>
         </div>
       </div>
@@ -167,7 +171,7 @@ export default function CRMInquiriesPage() {
         
         {/* Search */}
         <div className="sm:col-span-2 relative">
-          <Search className="w-4 h-4 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <Search className={`w-4 h-4 text-zinc-500 absolute ${isAr ? 'right-3.5' : 'left-3.5'} top-1/2 -translate-y-1/2`} />
           <input
             type="text"
             value={searchTerm}
@@ -175,8 +179,8 @@ export default function CRMInquiriesPage() {
               setSearchTerm(e.target.value);
               setPage(0);
             }}
-            placeholder="Search by name, email, company, or keywords…"
-            className="w-full bg-[#08090C] border border-white/15 focus:border-blue-500 rounded-xl pl-10 pr-4 py-2.5 text-xs sm:text-sm text-white placeholder:text-zinc-600 focus:outline-none"
+            placeholder={isAr ? 'البحث بالاسم، البريد، الشركة أو الكلمات الدلالية…' : 'Search by name, email, company, or keywords…'}
+            className={`w-full bg-[#08090C] border border-white/15 focus:border-blue-500 rounded-xl ${isAr ? 'pr-10 pl-4' : 'pl-10 pr-4'} py-2.5 text-xs sm:text-sm text-white placeholder:text-zinc-600 focus:outline-none`}
           />
         </div>
 
@@ -188,17 +192,17 @@ export default function CRMInquiriesPage() {
               setSectorFilter(e.target.value);
               setPage(0);
             }}
-            className="w-full appearance-none bg-[#08090C] border border-white/15 text-white text-xs font-semibold rounded-xl pl-3.5 pr-9 py-2.5 focus:outline-none focus:border-blue-500 cursor-pointer"
+            className={`w-full appearance-none bg-[#08090C] border border-white/15 text-white text-xs font-semibold rounded-xl ${isAr ? 'pr-3.5 pl-9' : 'pl-3.5 pr-9'} py-2.5 focus:outline-none focus:border-blue-500 cursor-pointer`}
           >
-            <option value="all">All Sectors & Types</option>
-            <option value="general">General Inquiry</option>
-            <option value="hospitality">SwissBlue Hospitality</option>
-            <option value="manufacturing">GreenWood Manufacturing</option>
-            <option value="contracting">Contracting & Fit-Out</option>
-            <option value="partnership">Strategic Partnership</option>
-            <option value="tender">Tender / RFP</option>
+            <option value="all">{isAr ? 'جميع القطاعات والتصنيفات' : 'All Sectors & Types'}</option>
+            <option value="general">{isAr ? 'استفسار عام' : 'General Inquiry'}</option>
+            <option value="hospitality">{isAr ? 'ضيافة سويس بلو' : 'SwissBlue Hospitality'}</option>
+            <option value="manufacturing">{isAr ? 'تصنيع جرين وود' : 'GreenWood Manufacturing'}</option>
+            <option value="contracting">{isAr ? 'المقاولات والتجهيز الداخلي' : 'Contracting & Fit-Out'}</option>
+            <option value="partnership">{isAr ? 'شراكة استراتيجية' : 'Strategic Partnership'}</option>
+            <option value="tender">{isAr ? 'مناقصة / كراسة شروط' : 'Tender / RFP'}</option>
           </select>
-          <ChevronDown className="w-4 h-4 text-zinc-400 pointer-events-none absolute right-3 top-1/2 -translate-y-1/2" />
+          <ChevronDown className={`w-4 h-4 text-zinc-400 pointer-events-none absolute ${isAr ? 'left-3' : 'right-3'} top-1/2 -translate-y-1/2`} />
         </div>
 
         {/* Status Filter */}
@@ -209,16 +213,16 @@ export default function CRMInquiriesPage() {
               setStatusFilter(e.target.value);
               setPage(0);
             }}
-            className="w-full appearance-none bg-[#08090C] border border-white/15 text-white text-xs font-semibold rounded-xl pl-3.5 pr-9 py-2.5 focus:outline-none focus:border-blue-500 cursor-pointer"
+            className={`w-full appearance-none bg-[#08090C] border border-white/15 text-white text-xs font-semibold rounded-xl ${isAr ? 'pr-3.5 pl-9' : 'pl-3.5 pr-9'} py-2.5 focus:outline-none focus:border-blue-500 cursor-pointer`}
           >
-            <option value="all">All Pipeline Stages</option>
-            <option value="new">New Leads</option>
-            <option value="contacted">Contacted</option>
-            <option value="in_review">In Review / Proposal</option>
-            <option value="won">Won / Closed Deal</option>
-            <option value="closed">Archived</option>
+            <option value="all">{isAr ? 'جميع مراحل المعالجة' : 'All Pipeline Stages'}</option>
+            <option value="new">{isAr ? 'طلبات جديدة' : 'New Leads'}</option>
+            <option value="contacted">{isAr ? 'تم التواصل' : 'Contacted'}</option>
+            <option value="in_review">{isAr ? 'قيد المراجعة / إعداد العرض' : 'In Review / Proposal'}</option>
+            <option value="won">{isAr ? 'صفقة مؤكدة' : 'Won / Closed Deal'}</option>
+            <option value="closed">{isAr ? 'مؤرشف' : 'Archived'}</option>
           </select>
-          <ChevronDown className="w-4 h-4 text-zinc-400 pointer-events-none absolute right-3 top-1/2 -translate-y-1/2" />
+          <ChevronDown className={`w-4 h-4 text-zinc-400 pointer-events-none absolute ${isAr ? 'left-3' : 'right-3'} top-1/2 -translate-y-1/2`} />
         </div>
 
       </div>
@@ -226,15 +230,15 @@ export default function CRMInquiriesPage() {
       {/* Inquiries Table */}
       <div className="bg-[#0F1117]/90 border border-white/10 rounded-3xl overflow-hidden shadow-xl">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
+          <table className="w-full text-start text-xs">
             <thead className="bg-black/40 border-b border-white/10 text-zinc-400 font-mono">
               <tr>
-                <th className="py-4 px-6 font-semibold">Contact / Company</th>
-                <th className="py-4 px-4 font-semibold">Sector & Subject</th>
-                <th className="py-4 px-4 font-semibold">Status</th>
-                <th className="py-4 px-4 font-semibold">Notes</th>
-                <th className="py-4 px-4 font-semibold">Date</th>
-                <th className="py-4 px-6 text-right font-semibold">Action</th>
+                <th className="py-4 px-6 font-semibold">{isAr ? 'جهة الاتصال / الشركة' : 'Contact / Company'}</th>
+                <th className="py-4 px-4 font-semibold">{isAr ? 'القطاع والموضوع' : 'Sector & Subject'}</th>
+                <th className="py-4 px-4 font-semibold">{isAr ? 'الحالة' : 'Status'}</th>
+                <th className="py-4 px-4 font-semibold">{isAr ? 'الملاحظات' : 'Notes'}</th>
+                <th className="py-4 px-4 font-semibold">{isAr ? 'التاريخ' : 'Date'}</th>
+                <th className="py-4 px-6 text-end font-semibold">{isAr ? 'الإجراء' : 'Action'}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
@@ -242,13 +246,13 @@ export default function CRMInquiriesPage() {
                 <tr>
                   <td colSpan={6} className="py-12 text-center text-zinc-500 font-mono">
                     <RefreshCw className="w-6 h-6 animate-spin mx-auto text-blue-500 mb-2" />
-                    Loading submissions…
+                    <span>{isAr ? 'جارٍ تحميل البيانات…' : 'Loading submissions…'}</span>
                   </td>
                 </tr>
               ) : inquiries.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="py-12 text-center text-zinc-500">
-                    No inquiries matching the current criteria.
+                    {isAr ? 'لا توجد استفسارات تطابق معايير البحث الحالية.' : 'No inquiries matching the current criteria.'}
                   </td>
                 </tr>
               ) : (
@@ -262,14 +266,14 @@ export default function CRMInquiriesPage() {
                       <div className="font-bold text-white group-hover:text-blue-400 transition-colors">
                         {inq.name}
                       </div>
-                      <div className="text-[11px] text-zinc-400">{inq.email}</div>
+                      <div className="text-[11px] text-zinc-400" dir="ltr">{inq.email}</div>
                       {inq.company && (
                         <div className="text-[10px] text-blue-400 font-medium">{inq.company}</div>
                       )}
                     </td>
 
                     <td className="py-4 px-4">
-                      <div className="capitalize text-zinc-200 font-semibold">{inq.sector || 'General'}</div>
+                      <div className="capitalize text-zinc-200 font-semibold">{inq.sector || (isAr ? 'عام' : 'General')}</div>
                       <div className="text-[11px] text-zinc-400 truncate max-w-[200px]">
                         {inq.subject || inq.message}
                       </div>
@@ -287,7 +291,12 @@ export default function CRMInquiriesPage() {
                           ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
                           : 'bg-zinc-500/20 text-zinc-400 border-zinc-500/40'
                       }`}>
-                        {(inq.status || 'new').toUpperCase()}
+                        {isAr ? (
+                          inq.status === 'new' ? 'جديد' :
+                          inq.status === 'contacted' ? 'تم التواصل' :
+                          inq.status === 'in_review' ? 'قيد المراجعة' :
+                          inq.status === 'won' ? 'مؤكد' : 'مؤرشف'
+                        ) : (inq.status || 'new').toUpperCase()}
                       </span>
                     </td>
 
@@ -295,19 +304,19 @@ export default function CRMInquiriesPage() {
                       {inq.internal_notes?.length || 0}
                     </td>
 
-                    <td className="py-4 px-4 text-zinc-500 font-mono text-[11px]">
+                    <td className="py-4 px-4 text-zinc-500 font-mono text-[11px]" dir="ltr">
                       {new Date(inq.created_at).toLocaleDateString()}
                     </td>
 
-                    <td className="py-4 px-6 text-right">
+                    <td className="py-4 px-6 text-end">
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
                           setSelectedInquiry(inq);
                         }}
-                        className="px-3.5 py-1.5 rounded-xl bg-white/5 group-hover:bg-blue-600 group-hover:text-white text-zinc-300 text-xs font-bold transition-all"
+                        className="px-3.5 py-1.5 rounded-xl bg-white/5 group-hover:bg-blue-600 group-hover:text-white text-zinc-300 text-xs font-bold transition-all cursor-pointer"
                       >
-                        Inspect
+                        {isAr ? 'معاينة' : 'Inspect'}
                       </button>
                     </td>
                   </tr>
@@ -321,21 +330,23 @@ export default function CRMInquiriesPage() {
         {totalPages > 1 && (
           <div className="p-4 border-t border-white/10 flex items-center justify-between text-xs text-zinc-400 bg-black/30">
             <div>
-              Showing {page * pageSize + 1}–{Math.min((page + 1) * pageSize, totalCount)} of {totalCount} leads
+              {isAr 
+                ? `عرض ${page * pageSize + 1}–${Math.min((page + 1) * pageSize, totalCount)} من إجمالي ${totalCount} طلبات`
+                : `Showing ${page * pageSize + 1}–${Math.min((page + 1) * pageSize, totalCount)} of ${totalCount} leads`}
             </div>
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setPage((p) => Math.max(0, p - 1))}
                 disabled={page === 0}
-                className="p-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 disabled:opacity-40"
+                className="p-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 disabled:opacity-40 cursor-pointer"
               >
                 <ChevronLeft className="w-4 h-4 rtl:rotate-180" />
               </button>
-              <span className="font-mono">Page {page + 1} of {totalPages}</span>
+              <span className="font-mono">{isAr ? `صفحة ${page + 1} من ${totalPages}` : `Page ${page + 1} of ${totalPages}`}</span>
               <button
                 onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
                 disabled={page >= totalPages - 1}
-                className="p-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 disabled:opacity-40"
+                className="p-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 disabled:opacity-40 cursor-pointer"
               >
                 <ChevronRight className="w-4 h-4 rtl:rotate-180" />
               </button>

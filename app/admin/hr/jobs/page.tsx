@@ -16,10 +16,14 @@ import {
 } from 'lucide-react';
 import ConfirmationModal from '@/components/admin/ConfirmationModal';
 import { useToast } from '@/components/admin/ToastProvider';
+import { useLanguage } from '@/context/LanguageContext';
 import type { JobListing } from '@/lib/types/database';
 
 export default function JobOpeningsAdminPage() {
   const { showToast } = useToast();
+  const { lang } = useLanguage();
+  const isAr = lang === 'ar';
+
   const [jobs, setJobs] = useState<JobListing[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -140,31 +144,31 @@ export default function JobOpeningsAdminPage() {
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-mono font-bold mb-2">
             <Briefcase className="w-3.5 h-3.5" />
-            <span>TALENT RECRUITMENT</span>
+            <span>{isAr ? 'إدارة الوظائف والاستقطاب' : 'TALENT RECRUITMENT'}</span>
           </div>
           <h1 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
-            Job Openings & Vacancies
+            {isAr ? 'الوظائف الشاغرة وفرص العمل' : 'Job Openings & Vacancies'}
           </h1>
           <p className="text-xs sm:text-sm text-zinc-400 mt-1">
-            Publish, edit, and order corporate career opportunities on the public careers portal.
+            {isAr ? 'نشر وتعديل وترتيب الفرص الوظيفية في بوابة التوظيف العامة للمجموعة.' : 'Publish, edit, and order corporate career opportunities on the public careers portal.'}
           </p>
         </div>
 
         <div className="flex items-center gap-3">
           <button
             onClick={fetchJobs}
-            className="p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-400 hover:text-white transition-colors"
-            title="Refresh jobs"
+            className="p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-400 hover:text-white transition-colors cursor-pointer"
+            title={isAr ? 'تحديث الوظائف' : 'Refresh jobs'}
           >
             <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
           </button>
 
           <button
             onClick={handleOpenCreate}
-            className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs sm:text-sm font-bold transition-all shadow-glow-blue"
+            className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs sm:text-sm font-bold transition-all shadow-glow-blue cursor-pointer"
           >
             <Plus className="w-4 h-4" />
-            <span>Post New Vacancy</span>
+            <span>{isAr ? 'إضافة وظيفة شاغرة' : 'Post New Vacancy'}</span>
           </button>
         </div>
       </div>
@@ -174,13 +178,13 @@ export default function JobOpeningsAdminPage() {
         {loading ? (
           <div className="p-12 text-center text-zinc-500 font-mono">
             <RefreshCw className="w-6 h-6 animate-spin mx-auto text-blue-500 mb-2" />
-            Loading job postings…
+            <span>{isAr ? 'جارٍ تحميل الوظائف…' : 'Loading job postings…'}</span>
           </div>
         ) : jobs.length === 0 ? (
           <div className="p-12 text-center bg-[#0F1117]/90 border border-dashed border-white/10 rounded-3xl space-y-3">
             <Briefcase className="w-10 h-10 text-zinc-600 mx-auto" />
-            <h3 className="text-base font-bold text-white">No active job listings</h3>
-            <p className="text-xs text-zinc-400">Click &ldquo;Post New Vacancy&rdquo; to add your first job opening.</p>
+            <h3 className="text-base font-bold text-white">{isAr ? 'لا توجد وظائف شاغرة حالياً' : 'No active job listings'}</h3>
+            <p className="text-xs text-zinc-400">{isAr ? 'انقر على "إضافة وظيفة شاغرة" لنشر أول فرصة وظيفية.' : 'Click "Post New Vacancy" to add your first job opening.'}</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
@@ -201,7 +205,7 @@ export default function JobOpeningsAdminPage() {
                           ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40' 
                           : 'bg-zinc-500/20 text-zinc-400 border-zinc-500/40'
                       }`}>
-                        {job.published ? 'LIVE ON SITE' : 'DRAFT / ARCHIVED'}
+                        {job.published ? (isAr ? 'منشور على الموقع' : 'LIVE ON SITE') : (isAr ? 'مسودة / مؤرشف' : 'DRAFT / ARCHIVED')}
                       </span>
                       {job.experience && (
                         <span className="text-[10px] font-mono text-zinc-400 bg-white/5 border border-white/10 px-2.5 py-0.5 rounded-full whitespace-nowrap shrink-0 inline-flex items-center">
@@ -219,24 +223,24 @@ export default function JobOpeningsAdminPage() {
                   <div className="flex items-center gap-1.5 shrink-0">
                     <button
                       onClick={() => handleTogglePublished(job)}
-                      className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white transition-colors"
-                      title={job.published ? 'Unpublish job' : 'Publish job'}
+                      className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white transition-colors cursor-pointer"
+                      title={job.published ? (isAr ? 'إلغاء النشر' : 'Unpublish job') : (isAr ? 'نشر الوظيفة' : 'Publish job')}
                     >
                       {job.published ? <Eye className="w-4 h-4 text-emerald-400" /> : <EyeOff className="w-4 h-4" />}
                     </button>
 
                     <button
                       onClick={() => handleOpenEdit(job)}
-                      className="p-2 rounded-xl bg-white/5 hover:bg-blue-600 text-zinc-400 hover:text-white transition-colors"
-                      title="Edit job details"
+                      className="p-2 rounded-xl bg-white/5 hover:bg-blue-600 text-zinc-400 hover:text-white transition-colors cursor-pointer"
+                      title={isAr ? 'تعديل التفاصيل' : 'Edit job details'}
                     >
                       <Edit3 className="w-4 h-4" />
                     </button>
 
                     <button
                       onClick={() => setDeletingId(job.id)}
-                      className="p-2 rounded-xl bg-white/5 hover:bg-rose-600 text-zinc-400 hover:text-white transition-colors"
-                      title="Delete job"
+                      className="p-2 rounded-xl bg-white/5 hover:bg-rose-600 text-zinc-400 hover:text-white transition-colors cursor-pointer"
+                      title={isAr ? 'حذف الوظيفة' : 'Delete job'}
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
@@ -250,8 +254,8 @@ export default function JobOpeningsAdminPage() {
                 )}
 
                 <div className="pt-2 border-t border-white/5 flex items-center justify-between text-[11px] text-zinc-500 font-mono">
-                  <span>Order: #{job.sort_order || 0}</span>
-                  <span>Posted: {new Date(job.created_at || '').toLocaleDateString()}</span>
+                  <span>{isAr ? `الترتيب: #${job.sort_order || 0}` : `Order: #${job.sort_order || 0}`}</span>
+                  <span dir="ltr">{isAr ? `تاريخ النشر: ${new Date(job.created_at || '').toLocaleDateString()}` : `Posted: ${new Date(job.created_at || '').toLocaleDateString()}`}</span>
                 </div>
               </div>
             ))}
@@ -267,13 +271,17 @@ export default function JobOpeningsAdminPage() {
             <div className="flex items-center justify-between border-b border-white/10 pb-4">
               <div>
                 <h3 className="text-lg font-bold text-white">
-                  {editingJob.id ? 'Edit Job Opening' : 'Post New Career Vacancy'}
+                  {editingJob.id 
+                    ? (isAr ? 'تعديل بيانات الوظيفة' : 'Edit Job Opening') 
+                    : (isAr ? 'إضافة فرصة وظيفية جديدة' : 'Post New Career Vacancy')}
                 </h3>
-                <p className="text-xs text-zinc-400">Position specs will display on /careers</p>
+                <p className="text-xs text-zinc-400">
+                  {isAr ? 'ستظهر تفاصيل الوظيفة في صفحة الوظائف /careers' : 'Position specs will display on /careers'}
+                </p>
               </div>
               <button
                 onClick={() => setModalOpen(false)}
-                className="w-8 h-8 rounded-xl bg-white/5 hover:bg-white/10 flex items-center justify-center text-zinc-400 hover:text-white"
+                className="w-8 h-8 rounded-xl bg-white/5 hover:bg-white/10 flex items-center justify-center text-zinc-400 hover:text-white cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -281,31 +289,37 @@ export default function JobOpeningsAdminPage() {
 
             <form onSubmit={handleSaveJob} className="space-y-4">
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-zinc-300">Job Title *</label>
+                <label className="text-xs font-bold text-zinc-300">
+                  {isAr ? 'المسمى الوظيفي *' : 'Job Title *'}
+                </label>
                 <input
                   type="text"
                   required
                   value={editingJob.title || ''}
                   onChange={(e) => setEditingJob({ ...editingJob, title: e.target.value })}
-                  placeholder="e.g. Senior Odoo ERP Implementor"
+                  placeholder={isAr ? 'مثال: مهندس موقع رئيسي' : 'e.g. Senior Odoo ERP Implementor'}
                   className="w-full bg-[#08090C] border border-white/15 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-white focus:outline-none focus:border-blue-500"
                 />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-zinc-300">Experience Requirement</label>
+                  <label className="text-xs font-bold text-zinc-300">
+                    {isAr ? 'سنوات الخبرة المطلوبة' : 'Experience Requirement'}
+                  </label>
                   <input
                     type="text"
                     value={editingJob.experience || ''}
                     onChange={(e) => setEditingJob({ ...editingJob, experience: e.target.value })}
-                    placeholder="e.g. 5+ Years"
+                    placeholder={isAr ? 'مثال: 5+ سنوات' : 'e.g. 5+ Years'}
                     className="w-full bg-[#08090C] border border-white/15 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500"
                   />
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-zinc-300">Display Sort Order</label>
+                  <label className="text-xs font-bold text-zinc-300">
+                    {isAr ? 'ترتيب العرض' : 'Display Sort Order'}
+                  </label>
                   <input
                     type="number"
                     value={editingJob.sort_order ?? 1}
@@ -316,34 +330,40 @@ export default function JobOpeningsAdminPage() {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-zinc-300">Role Overview</label>
+                <label className="text-xs font-bold text-zinc-300">
+                  {isAr ? 'نبذة عن الدور والمهام' : 'Role Overview'}
+                </label>
                 <textarea
                   rows={3}
                   value={editingJob.role_overview || ''}
                   onChange={(e) => setEditingJob({ ...editingJob, role_overview: e.target.value })}
-                  placeholder="Summary of responsibilities and mission of this role…"
+                  placeholder={isAr ? 'ملخص للمسؤوليات والهدف الأساسي من هذا الدور الوظيفي…' : 'Summary of responsibilities and mission of this role…'}
                   className="w-full bg-[#08090C] border border-white/15 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500 leading-relaxed"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-zinc-300">Key Responsibilities (One per line)</label>
+                <label className="text-xs font-bold text-zinc-300">
+                  {isAr ? 'المسؤوليات الرئيسية (مسؤولية في كل سطر)' : 'Key Responsibilities (One per line)'}
+                </label>
                 <textarea
                   rows={3}
                   value={editingJob.responsibilities || ''}
                   onChange={(e) => setEditingJob({ ...editingJob, responsibilities: e.target.value })}
-                  placeholder="Lead architecture design&#10;Coordinate cross-sector ERP integration&#10;Mentor junior staff"
+                  placeholder={isAr ? 'إدارة المخططات الهندسية\nالتنسيق مع فرق التنفيذ\nمتابعة الجودة والسلامة' : 'Lead architecture design\nCoordinate cross-sector ERP integration\nMentor junior staff'}
                   className="w-full bg-[#08090C] border border-white/15 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500 leading-relaxed"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-zinc-300">Qualifications & Skills</label>
+                <label className="text-xs font-bold text-zinc-300">
+                  {isAr ? 'المؤهلات والمهارات المطلوبة' : 'Qualifications & Skills'}
+                </label>
                 <textarea
                   rows={3}
                   value={editingJob.requirements || ''}
                   onChange={(e) => setEditingJob({ ...editingJob, requirements: e.target.value })}
-                  placeholder="Bachelor degree in Engineering / CS&#10;Hands-on PostgreSQL & Python experience"
+                  placeholder={isAr ? 'بكالوريوس هندسة أو ما يعادله\nخبرة عملية موثقة في نفس المجال' : 'Bachelor degree in Engineering / CS\nHands-on PostgreSQL & Python experience'}
                   className="w-full bg-[#08090C] border border-white/15 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500 leading-relaxed"
                 />
               </div>
@@ -357,7 +377,7 @@ export default function JobOpeningsAdminPage() {
                   className="w-4 h-4 rounded text-blue-600 bg-[#08090C] border-white/20 focus:ring-0 cursor-pointer"
                 />
                 <label htmlFor="job-published" className="text-xs font-bold text-zinc-200 cursor-pointer">
-                  Publish vacancy immediately on live careers portal
+                  {isAr ? 'نشر الوظيفة مباشرة على بوابة التوظيف' : 'Publish vacancy immediately on live careers portal'}
                 </label>
               </div>
 
@@ -366,16 +386,16 @@ export default function JobOpeningsAdminPage() {
                   type="button"
                   onClick={() => setModalOpen(false)}
                   disabled={savingJob}
-                  className="px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-zinc-400 hover:text-white"
+                  className="px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-zinc-400 hover:text-white cursor-pointer"
                 >
-                  Cancel
+                  {isAr ? 'إلغاء' : 'Cancel'}
                 </button>
                 <button
                   type="submit"
                   disabled={savingJob}
-                  className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition-all shadow-glow-blue disabled:opacity-50"
+                  className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition-all shadow-glow-blue disabled:opacity-50 cursor-pointer"
                 >
-                  {savingJob ? 'Saving…' : 'Save Vacancy'}
+                  {savingJob ? (isAr ? 'جارٍ الحفظ…' : 'Saving…') : (isAr ? 'حفظ الوظيفة' : 'Save Vacancy')}
                 </button>
               </div>
             </form>
@@ -385,9 +405,9 @@ export default function JobOpeningsAdminPage() {
 
       <ConfirmationModal
         isOpen={Boolean(deletingId)}
-        title="Delete Job Vacancy"
-        message="Are you sure you want to permanently delete this job opening? This action cannot be undone."
-        confirmLabel="Delete Vacancy"
+        title={isAr ? 'حذف الوظيفة الشاغرة' : 'Delete Job Vacancy'}
+        message={isAr ? 'هل أنت متأكد من رغبتك في حذف هذه الفرصة الوظيفية نهائياً؟ لا يمكن التراجع عن هذا الإجراء.' : 'Are you sure you want to permanently delete this job opening? This action cannot be undone.'}
+        confirmLabel={isAr ? 'حذف الوظيفة' : 'Delete Vacancy'}
         onConfirm={() => deletingId && handleDeleteJob(deletingId)}
         onClose={() => setDeletingId(null)}
       />
