@@ -238,7 +238,7 @@ export default function HeroSection() {
               {/* Metric 1: Hospitality */}
               <div className="flex flex-col items-center text-center px-4">
                 <div className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-sky-400 mb-1 font-mono">
-                  <AnimatedCounter target={6} />
+                  <AnimatedCounter target={6} delay={100} duration={1100} />
                 </div>
                 <div className="text-xs font-medium text-zinc-300 leading-snug">
                   {dict.home.metrics.stat1_text}
@@ -248,7 +248,7 @@ export default function HeroSection() {
               {/* Metric 2: Factories */}
               <div className="flex flex-col items-center text-center px-4 border-s border-white/10">
                 <div className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-emerald-400 mb-1 font-mono">
-                  <AnimatedCounter target={3} />
+                  <AnimatedCounter target={3} delay={250} duration={1100} />
                 </div>
                 <div className="text-xs font-medium text-zinc-300 leading-snug">
                   {dict.home.metrics.stat2_text}
@@ -258,7 +258,7 @@ export default function HeroSection() {
               {/* Metric 3: Employees */}
               <div className="flex flex-col items-center text-center px-4 md:border-s border-white/10">
                 <div className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[#C9A86A] mb-1 font-mono">
-                  <AnimatedCounter target={80} suffix="+" />
+                  <AnimatedCounter target={80} suffix="+" delay={400} duration={1400} />
                 </div>
                 <div className="text-xs font-medium text-zinc-300 leading-snug">
                   {dict.home.metrics.stat3_text}
@@ -268,7 +268,7 @@ export default function HeroSection() {
               {/* Metric 4: Sectors */}
               <div className="flex flex-col items-center text-center px-4 border-s border-white/10">
                 <div className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-zinc-100 mb-1 font-mono">
-                  <AnimatedCounter target={3} />
+                  <AnimatedCounter target={3} delay={550} duration={1100} />
                 </div>
                 <div className="text-xs font-medium text-zinc-300 leading-snug">
                   {dict.home.metrics.stat4_text}

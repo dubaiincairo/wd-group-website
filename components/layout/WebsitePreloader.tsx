@@ -50,6 +50,9 @@ export default function WebsitePreloader({ forced = false }: { forced?: boolean 
         setProgress(100);
         setTimeout(() => {
           setFadingOut(true);
+          if (typeof window !== 'undefined') {
+            window.dispatchEvent(new CustomEvent('website_preloader_done'));
+          }
           setTimeout(() => {
             setLoading(false);
           }, 450);
