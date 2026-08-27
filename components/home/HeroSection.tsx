@@ -88,6 +88,16 @@ export default function HeroSection() {
     },
   ];
 
+  // Force reload and play when dynamic video URLs change from CMS
+  useEffect(() => {
+    Object.values(videoRefs.current).forEach((v) => {
+      if (v) {
+        v.load();
+        v.play().catch(() => {});
+      }
+    });
+  }, [mediaConfig.hero_video_hospitality, mediaConfig.hero_video_manufacturing, mediaConfig.hero_video_contracting]);
+
   const activeSectorConfig = dynamicHeroVideos.find(s => s.id === selectedSector) || dynamicHeroVideos[0];
 
   return (
@@ -106,6 +116,7 @@ export default function HeroSection() {
               }`}
             >
               <video
+                key={`${item.id}-${item.video}`}
                 ref={(el) => { videoRefs.current[item.id] = el; }}
                 src={item.video}
                 poster={item.poster}

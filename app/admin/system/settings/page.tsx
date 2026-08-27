@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Settings, Save, RefreshCw, Building, Phone, Mail, AlertTriangle, Wrench } from 'lucide-react';
 import BilingualInput from '@/components/admin/BilingualInput';
 import { useToast } from '@/components/admin/ToastProvider';
+import AdminLoadingState from '@/components/admin/AdminLoadingState';
 import { useLanguage } from '@/context/LanguageContext';
 import type { SiteContentPayload } from '@/lib/admin/types';
 
@@ -56,12 +57,7 @@ export default function GlobalSettingsAdminPage() {
   };
 
   if (loading || !content) {
-    return (
-      <div className="p-12 text-center space-y-3">
-        <RefreshCw className="w-8 h-8 text-blue-500 animate-spin mx-auto" />
-        <p className="text-xs text-zinc-400 font-mono">{isAr ? 'جارٍ تحميل إعدادات النظام العامة…' : 'Loading global system settings…'}</p>
-      </div>
-    );
+    return <AdminLoadingState message={isAr ? 'جارٍ تحميل إعدادات المنظومة العامة…' : 'Loading global system settings…'} />;
   }
 
   const s = content.settings;

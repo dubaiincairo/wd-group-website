@@ -28,6 +28,7 @@ import {
 import BilingualInput from '@/components/admin/BilingualInput';
 import MediaFieldUploader from '@/components/admin/MediaFieldUploader';
 import { useToast } from '@/components/admin/ToastProvider';
+import AdminLoadingState from '@/components/admin/AdminLoadingState';
 import { useLanguage } from '@/context/LanguageContext';
 import { translations } from '@/lib/translations';
 import type { SiteContentPayload } from '@/lib/admin/types';
@@ -425,12 +426,7 @@ export default function PagesContentEditor() {
   };
 
   if (loading || !content) {
-    return (
-      <div className="p-12 text-center space-y-3">
-        <RefreshCw className="w-8 h-8 text-blue-500 animate-spin mx-auto" />
-        <p className="text-xs text-zinc-400 font-mono">{isAr ? 'جارٍ تحميل محتوى النظام…' : 'Loading multilingual CMS schemas…'}</p>
-      </div>
-    );
+    return <AdminLoadingState message={isAr ? 'جارٍ تحميل محتوى النظام والصفحات…' : 'Loading multilingual CMS content…'} />;
   }
 
   return (

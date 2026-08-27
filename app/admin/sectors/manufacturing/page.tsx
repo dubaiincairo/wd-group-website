@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Factory, Plus, Trash2, Save, RefreshCw, Layers } from 'lucide-react';
 import BilingualInput from '@/components/admin/BilingualInput';
 import ConfirmationModal from '@/components/admin/ConfirmationModal';
+import AdminLoadingState from '@/components/admin/AdminLoadingState';
 import { useToast } from '@/components/admin/ToastProvider';
 import { useLanguage } from '@/context/LanguageContext';
 import type { SiteContentPayload } from '@/lib/admin/types';
@@ -90,12 +91,7 @@ export default function ManufacturingSectorAdminPage() {
   };
 
   if (loading || !content) {
-    return (
-      <div className="p-12 text-center space-y-3">
-        <RefreshCw className="w-8 h-8 text-emerald-500 animate-spin mx-auto" />
-        <p className="text-xs text-zinc-400 font-mono">{isAr ? 'جارٍ تحميل مواصفات مصانع جرين وود…' : 'Loading GreenWood manufacturing specs…'}</p>
-      </div>
-    );
+    return <AdminLoadingState message={isAr ? 'جارٍ تحميل مواصفات مصانع جرين وود…' : 'Loading GreenWood manufacturing specs…'} />;
   }
 
   const factories = content.manufacturing.factories || [];

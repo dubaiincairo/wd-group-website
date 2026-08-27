@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import BilingualInput from '@/components/admin/BilingualInput';
 import ConfirmationModal from '@/components/admin/ConfirmationModal';
+import AdminLoadingState from '@/components/admin/AdminLoadingState';
 import { useToast } from '@/components/admin/ToastProvider';
 import { useLanguage } from '@/context/LanguageContext';
 import type { SiteContentPayload } from '@/lib/admin/types';
@@ -106,12 +107,7 @@ export default function HospitalitySectorAdminPage() {
   };
 
   if (loading || !content) {
-    return (
-      <div className="p-12 text-center space-y-3">
-        <RefreshCw className="w-8 h-8 text-sky-500 animate-spin mx-auto" />
-        <p className="text-xs text-zinc-400 font-mono">{isAr ? 'جارٍ تحميل محفظة منشآت سويس بلو الفندقية…' : 'Loading SwissBlue properties portfolio…'}</p>
-      </div>
-    );
+    return <AdminLoadingState message={isAr ? 'جارٍ تحميل محفظة منشآت سويس بلو الفندقية…' : 'Loading SwissBlue properties portfolio…'} />;
   }
 
   const properties = content.hospitality.properties || [];

@@ -6,6 +6,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useLanguage } from '@/context/LanguageContext';
 import AdminSidebar from './AdminSidebar';
 import AdminHeader from './AdminHeader';
+import AdminLoadingState from './AdminLoadingState';
 import { ToastProvider } from './ToastProvider';
 import type { AdminRole } from '@/lib/admin/types';
 
@@ -69,7 +70,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   }
 
   if (loading) {
-    return <div className="min-h-screen bg-[#08090C]" />;
+    return <AdminLoadingState fullScreen />;
   }
 
   return (
