@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
+import { useLanguage } from '@/context/LanguageContext';
 import AdminSidebar from './AdminSidebar';
 import AdminHeader from './AdminHeader';
 import { ToastProvider } from './ToastProvider';
@@ -81,9 +82,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     );
   }
 
+  const { lang } = useLanguage();
+
   return (
     <ToastProvider>
-      <div className="min-h-screen bg-[#08090C] text-white flex flex-col lg:flex-row font-sans selection:bg-blue-600 selection:text-white relative">
+      <div dir={lang === 'ar' ? 'rtl' : 'ltr'} lang={lang} className="min-h-screen bg-[#08090C] text-white flex flex-col lg:flex-row font-sans selection:bg-blue-600 selection:text-white relative">
         
         {/* Background Video Backdrop with Hero Section Overlay Style */}
         <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">

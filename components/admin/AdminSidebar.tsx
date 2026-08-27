@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
+import { useLanguage } from '@/context/LanguageContext';
 import { 
   LayoutDashboard, 
   FileText, 
@@ -219,14 +220,20 @@ export default function AdminSidebar({
   onCloseMobile,
 }: AdminSidebarProps) {
   const pathname = usePathname();
+  const { lang } = useLanguage();
+  const isAr = lang === 'ar';
 
   const sidebarContent = (
-    <div className="flex flex-col h-full bg-[#08090C] border-r rtl:border-r-0 rtl:border-l border-white/10 select-none">
+    <div className="flex flex-col h-full bg-[#08090C]/95 border-r rtl:border-r-0 rtl:border-l border-white/10 backdrop-blur-2xl">
       
       {/* Brand Header */}
       <div className="p-5 border-b border-white/10 flex items-center justify-between">
-        <Link href="/admin" className="flex items-center gap-3.5 group">
-          <div className="relative h-9 w-28 shrink-0 transition-transform group-hover:scale-105">
+        <Link 
+          href="/admin" 
+          onClick={onCloseMobile}
+          className="flex items-center gap-3 group"
+        >
+          <div className="relative h-9 w-28 transition-transform group-hover:scale-105">
             <Image 
               src="/brand/wd-group-logo-white.png" 
               alt="WD Group" 
@@ -235,12 +242,12 @@ export default function AdminSidebar({
               priority
             />
           </div>
-          <div className="border-l border-white/10 pl-2.5 rtl:border-l-0 rtl:border-r rtl:pl-0 rtl:pr-2.5">
-            <span className="text-[10px] font-mono font-extrabold uppercase tracking-widest text-blue-400 block">
+          <div className="border-l rtl:border-l-0 rtl:border-r border-white/15 pl-3 rtl:pl-0 rtl:pr-3">
+            <span className="text-[10px] font-mono text-blue-400 block tracking-widest uppercase">
               WD GROUP
             </span>
             <span className="text-[11px] font-bold text-white block -mt-0.5 whitespace-nowrap">
-              Admin Console
+              {isAr ? 'لوحة التحكم' : 'Admin Console'}
             </span>
           </div>
         </Link>
@@ -262,7 +269,7 @@ export default function AdminSidebar({
             <div key={group.groupName} className="space-y-1.5">
               <div className="px-3 flex items-center gap-2 text-[10px] font-mono font-bold uppercase tracking-wider text-zinc-500">
                 <span className={`w-1.5 h-1.5 rounded-full ${group.accentDot}`} />
-                <span>{group.groupName}</span>
+                <span>{isAr ? group.groupNameAr : group.groupName}</span>
               </div>
 
               {visibleItems.map((item) => {
@@ -280,7 +287,7 @@ export default function AdminSidebar({
                         : 'text-zinc-400 hover:text-white hover:bg-white/5 border border-transparent'
                     }`}
                   >
-                    <div className="flex items-center gap-2.5 min-w-0 pr-2">
+                    <div className="flex items-center gap-2.5 min-w-0 pr-2 rtl:pr-0 rtl:pl-2">
                       <div className={`w-7 h-7 rounded-lg flex items-center justify-center border transition-all shrink-0 ${
                         isActive 
                           ? 'bg-blue-500 text-white border-blue-400 shadow-[0_0_12px_rgba(59,130,246,0.5)]' 
@@ -288,7 +295,7 @@ export default function AdminSidebar({
                       }`}>
                         <Icon className="w-3.5 h-3.5 shrink-0" />
                       </div>
-                      <span className="truncate">{item.label}</span>
+                      <span className="truncate">{isAr ? item.labelAr : item.label}</span>
                     </div>
 
                     {isActive && (
@@ -311,7 +318,7 @@ export default function AdminSidebar({
         >
           <div className="flex items-center gap-2">
             <Globe className="w-3.5 h-3.5 text-blue-400" />
-            <span>Public Website</span>
+            <span>{isAr ? 'معاينة الموقع' : 'Public Website'}</span>
           </div>
           <ExternalLink className="w-3.5 h-3.5" />
         </Link>
