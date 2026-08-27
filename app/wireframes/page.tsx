@@ -21,7 +21,7 @@ export default function WireframesHub() {
   const PAGES_MAP = [
     {
       id: '01',
-      title: lang === 'ar' ? 'الصفحة الرئيسية (Homepage)' : 'Homepage (/)',
+      title: lang === 'ar' ? 'الصفحة الرئيسية' : 'Homepage (/)',
       route: '/',
       status: lang === 'ar' ? 'مكتملة ومباشرة' : 'Live & Enhanced',
       statusColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40',
@@ -29,13 +29,13 @@ export default function WireframesHub() {
       iconColor: 'text-blue-400',
       sectionsCount: 6,
       sections: lang === 'ar' 
-        ? ['الترويسة السينمائية بالفيديو', 'شريط الإحصائيات (٤ أرقام)', 'قطاعات المجموعة (٣ بطاقات)', 'سلسلة القيمة وسينرجي المجموعة', 'الرؤية والرسالة ومواكبة ٢٠٣٠', 'كلمة الرئيس التنفيذي وبوابة التواصل']
+        ? ['الترويسة السينمائية بالفيديو', 'شريط الإحصائيات (4 أرقام)', 'قطاعات المجموعة (3 بطاقات)', 'سلسلة القيمة وتكامل المنظومة', 'الرؤية والرسالة ومواكبة 2030', 'كلمة الرئيس التنفيذي وبوابة التواصل']
         : ['Cinematic Video Hero', '4-Metric Statistics Bar', 'Strategic Sectors Hub', 'Value Chain Synergy Flow', 'Vision, Mission & 2030', 'CEO Quote & Contact CTA'],
       desc: lang === 'ar' ? 'الواجهة القابضة المتكاملة للمجموعة.' : 'The sovereign holding showcase and ecosystem overview.',
     },
     {
       id: '02',
-      title: lang === 'ar' ? 'من نحن والحوكمة (About Us & Governance)' : 'About Us & Governance (/about)',
+      title: lang === 'ar' ? 'من نحن والحوكمة' : 'About Us & Governance (/about)',
       route: '/about',
       status: lang === 'ar' ? 'مخطط الهيكل جاهز' : 'Wireframe Ready',
       statusColor: 'bg-blue-500/20 text-blue-300 border-blue-500/40',
@@ -43,13 +43,13 @@ export default function WireframesHub() {
       iconColor: 'text-blue-400',
       sectionsCount: 6,
       sections: lang === 'ar'
-        ? ['ترويسة الهوية المؤسسية', 'كلمة رئيس مجلس الإدارة', 'محاور الرؤية ومواكبة ٢٠٣٠', 'الهيكل التنظيمي والقيادة', 'الانتشار الجغرافي (المملكة وتونس)', 'تحميل الملف التعريفي والاتصال']
+        ? ['ترويسة الهوية المؤسسية', 'كلمة رئيس مجلس الإدارة', 'محاور الرؤية ومواكبة 2030', 'الهيكل التنظيمي والقيادة', 'الانتشار الجغرافي (المملكة وتونس)', 'تحميل الملف التعريفي والاتصال']
         : ['Holding Heritage Hero', "Chairman's Statement", 'Vision & 2030 Alignment', 'Leadership Structure', 'Geographic Footprint (KSA/Tunisia)', 'Corporate Profile Download'],
       desc: lang === 'ar' ? 'تاريخ المجموعة، القيادة، ومواكبة الرؤية الوطنية.' : 'Holding history, executive board, and strategic national vision.',
     },
     {
       id: '03',
-      title: lang === 'ar' ? 'قطاع الضيافة (SwissBlue Hospitality)' : 'Hospitality Sector (/sectors/hospitality)',
+      title: lang === 'ar' ? 'قطاع الضيافة (سويس بلو)' : 'Hospitality Sector (/sectors/hospitality)',
       route: '/sectors/hospitality',
       status: lang === 'ar' ? 'مخطط الهيكل جاهز' : 'Wireframe Ready',
       statusColor: 'bg-sky-500/20 text-sky-300 border-sky-500/40',
@@ -57,13 +57,13 @@ export default function WireframesHub() {
       iconColor: 'text-sky-400',
       sectionsCount: 4,
       sections: lang === 'ar'
-        ? ['ترويسة قطاع الضيافة', 'محفظة الفنادق (٦ منشآت)', 'خدمات إدارة وتشغيل الفنادق', 'طلب استثمار وتطوير فندقي']
+        ? ['ترويسة قطاع الضيافة', 'محفظة الفنادق (6 منشآت)', 'خدمات إدارة وتشغيل الفنادق', 'طلب استثمار وتطوير فندقي']
         : ['Hospitality Sector Hero', 'Properties Portfolio (6 Properties)', 'Asset Management Services', 'Hotel Investment & Operator RFP'],
       desc: lang === 'ar' ? 'علامة سويس بلو وإدارة الأصول الفندقية.' : 'SwissBlue luxury suites, properties portfolio, and operator model.',
     },
     {
       id: '04',
-      title: lang === 'ar' ? 'قطاع التصنيع والأثاث (GreenWood Manufacturing)' : 'Manufacturing & Furniture (/sectors/manufacturing)',
+      title: lang === 'ar' ? 'قطاع التصنيع والأثاث (جرين وود)' : 'Manufacturing & Furniture (/sectors/manufacturing)',
       route: '/sectors/manufacturing',
       status: lang === 'ar' ? 'مخطط الهيكل جاهز' : 'Wireframe Ready',
       statusColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40',
@@ -71,13 +71,13 @@ export default function WireframesHub() {
       iconColor: 'text-emerald-400',
       sectionsCount: 4,
       sections: lang === 'ar'
-        ? ['ترويسة قطاع التصنيع', 'المصانع الثلاثة المتخصصة', 'القدرات ومكائن CNC الآلية', 'طلب توريد أثاث ومناقصات']
+        ? ['ترويسة قطاع التصنيع', 'المصانع الثلاثة المتخصصة', 'القدرات ومكائن التحكم الرقمي الآلية', 'طلب توريد أثاث ومناقصات']
         : ['Manufacturing Sector Hero', '3 Specialized Factories Breakdown', 'CNC Automation & Specifications', 'B2B Procurement Tender RFP'],
-      desc: lang === 'ar' ? '٣ مصانع للأخشاب والألمنيوم وتوريد الأثاث الفندقي.' : '3 specialized factories for wood, metal, and hotel FF&E production.',
+      desc: lang === 'ar' ? '3 مصانع للأخشاب والألمنيوم وتوريد الأثاث الفندقي.' : '3 specialized factories for wood, metal, and hotel FF&E production.',
     },
     {
       id: '05',
-      title: lang === 'ar' ? 'قطاع المقاولات والتشطيب (Projects Contracting)' : 'Contracting & Fit-Out (/sectors/contracting)',
+      title: lang === 'ar' ? 'قطاع المقاولات والتجهيز الداخلي (تصاميم الوطن)' : 'Contracting & Fit-Out (/sectors/contracting)',
       route: '/sectors/contracting',
       status: lang === 'ar' ? 'مخطط الهيكل جاهز' : 'Wireframe Ready',
       statusColor: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
@@ -91,7 +91,7 @@ export default function WireframesHub() {
     },
     {
       id: '06',
-      title: lang === 'ar' ? 'التوظيف وبناء الكفاءات (Careers & Talent)' : 'Careers & Talent (/careers)',
+      title: lang === 'ar' ? 'التوظيف وبناء الكفاءات' : 'Careers & Talent (/careers)',
       route: '/careers',
       status: lang === 'ar' ? 'مخطط الهيكل جاهز' : 'Wireframe Ready',
       statusColor: 'bg-blue-500/20 text-blue-300 border-blue-500/40',
@@ -105,7 +105,7 @@ export default function WireframesHub() {
     },
     {
       id: '07',
-      title: lang === 'ar' ? 'اتصل بنا وبوابة المناقصات (Contact & Inquiries)' : 'Contact Us & Tender Portal (/contact)',
+      title: lang === 'ar' ? 'اتصل بنا وبوابة المناقصات' : 'Contact Us & Tender Portal (/contact)',
       route: '/contact',
       status: lang === 'ar' ? 'مخطط الهيكل جاهز' : 'Wireframe Ready',
       statusColor: 'bg-blue-500/20 text-blue-300 border-blue-500/40',
@@ -164,7 +164,7 @@ export default function WireframesHub() {
                         <Icon className={`w-5 h-5 ${p.iconColor}`} />
                       </div>
                       <span className="font-mono text-xs font-bold text-zinc-400">
-                        PAGE // {p.id}
+                        {lang === 'ar' ? `صفحة // ${p.id}` : `PAGE // ${p.id}`}
                       </span>
                     </div>
 

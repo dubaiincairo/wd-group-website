@@ -106,7 +106,7 @@ export default function ContractingPage() {
         <section className="space-y-8">
           <div className="text-center max-w-2xl mx-auto space-y-2">
             <div className="text-xs font-mono font-bold text-amber-400 uppercase tracking-wider">
-              {lang === 'ar' ? 'الخدمات الهندسية' : 'CORE SERVICES'}
+              {lang === 'ar' ? 'حلول المقاولات والتجهيز الداخلي' : 'CORE SERVICES'}
             </div>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
               {dict.contracting.services.heading}
@@ -156,7 +156,7 @@ export default function ContractingPage() {
         <section id="lifecycle" className="glass-card rounded-3xl p-8 sm:p-12 border border-white/10 space-y-8 bg-brand-surface/80">
           <div className="max-w-2xl space-y-2">
             <div className="text-xs font-mono font-bold text-amber-400 uppercase tracking-wider">
-              {lang === 'ar' ? 'منهجية العمل' : 'PROJECT LIFECYCLE'}
+              {lang === 'ar' ? 'منهجية العمل وإدارة المشاريع' : 'PROJECT LIFECYCLE'}
             </div>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
               {dict.contracting.lifecycle.heading}
@@ -167,7 +167,7 @@ export default function ContractingPage() {
             {dict.contracting.lifecycle.stages.map((stage, idx) => (
               <div key={idx} className="p-5 rounded-2xl bg-black/40 border border-white/10 hover:border-amber-500/40 hover:bg-black/60 transition-all space-y-3 group">
                 <span className="text-xs font-mono font-bold text-amber-300 bg-amber-500/15 px-2.5 py-1 rounded-md border border-amber-500/30 inline-block">
-                  STAGE {stage.num}
+                  {lang === 'ar' ? `المرحلة ${stage.num}` : `STAGE ${stage.num}`}
                 </span>
                 <h4 className="text-base font-bold text-white group-hover:text-amber-300 transition-colors">
                   {stage.title}
@@ -259,7 +259,7 @@ export default function ContractingPage() {
                   </label>
                   <input
                     type="text"
-                    placeholder="e.g. 2,500 sqm"
+                    placeholder={lang === 'ar' ? 'مثال: 2,500 متر مربع' : 'e.g. 2,500 sqm'}
                     value={formData.estimatedArea}
                     onChange={(e) => setFormData({ ...formData, estimatedArea: e.target.value })}
                     className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-amber-500"

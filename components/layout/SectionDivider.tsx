@@ -9,8 +9,18 @@ interface SectionDividerProps {
   className?: string;
 }
 
+const LABEL_TRANSLATIONS: Record<string, string> = {
+  'STRATEGIC SECTORS': 'القطاعات الاستراتيجية',
+  'PORTFOLIO BRANDS': 'العلامات التجارية',
+  'HOLDING SYNERGY': 'تكامل المنظومة القابضة',
+  'VISION & VALUES': 'الرؤية والرسالة والقيم',
+  'EXECUTIVE GOVERNANCE': 'الحوكمة والقيادة',
+  'PARTNERSHIP & INQUIRIES': 'الشراكة والتواصل',
+};
+
 export default function SectionDivider({ label, badge, className = '' }: SectionDividerProps) {
   const { lang } = useLanguage();
+  const displayLabel = lang === 'ar' && label && LABEL_TRANSLATIONS[label] ? LABEL_TRANSLATIONS[label] : label;
 
   return (
     <div className={`relative w-full py-6 sm:py-8 overflow-hidden bg-transparent select-none pointer-events-none ${className}`}>
@@ -20,7 +30,7 @@ export default function SectionDivider({ label, badge, className = '' }: Section
           
           {/* Left Blueprint Crosshair */}
           <div className="text-zinc-500 font-mono text-[10px] hidden sm:block tracking-widest uppercase">
-            + WD // KSA
+            {lang === 'ar' ? '+ مجموعة دبليو دي // السعودية' : '+ WD // KSA'}
           </div>
 
           {/* Central Hairline Rule with Monogram / Badge Pill */}
@@ -31,10 +41,10 @@ export default function SectionDivider({ label, badge, className = '' }: Section
             <div className="absolute px-3.5 py-1 rounded-full bg-[#0F1117]/95 border border-[#C9A86A]/30 text-[9px] sm:text-[10px] font-mono font-bold tracking-widest text-[#C9A86A] uppercase flex items-center gap-2 backdrop-blur-md shadow-glow-camel">
               <span className="w-1.5 h-1.5 rounded-full bg-[#C9A86A] animate-pulse"></span>
               <span>{badge || (lang === 'ar' ? 'مجموعة دبليو دي للأعمال' : 'WD GROUP FOR BUSINESS')}</span>
-              {label && (
+              {displayLabel && (
                 <>
                   <span className="text-zinc-600">/</span>
-                  <span className="text-zinc-300 font-semibold">{label}</span>
+                  <span className="text-zinc-300 font-semibold">{displayLabel}</span>
                 </>
               )}
             </div>
@@ -42,7 +52,7 @@ export default function SectionDivider({ label, badge, className = '' }: Section
 
           {/* Right Blueprint Crosshair */}
           <div className="text-zinc-500 font-mono text-[10px] hidden sm:block tracking-widest uppercase">
-            + VISION 2030
+            {lang === 'ar' ? '+ رؤية المملكة 2030' : '+ VISION 2030'}
           </div>
 
         </div>

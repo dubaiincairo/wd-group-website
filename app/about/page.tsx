@@ -119,7 +119,7 @@ export default function AboutPage() {
               <div key={idx} className="glass-card rounded-3xl p-7 border border-white/10 hover:border-blue-500/50 hover:shadow-glow-blue transition-all space-y-4 bg-brand-surface/80 group">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-mono font-bold text-blue-400 bg-blue-500/10 px-2.5 py-1 rounded-md border border-blue-500/20">
-                    PILLAR 0{idx + 1}
+                    {lang === 'ar' ? `الركيزة 0${idx + 1}` : `PILLAR 0${idx + 1}`}
                   </span>
                   <div className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-blue-400 group-hover:scale-110 transition-transform">
                     {idx === 0 ? <Award className="w-4 h-4" /> : idx === 1 ? <Users className="w-4 h-4" /> : <ShieldCheck className="w-4 h-4" />}

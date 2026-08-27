@@ -201,9 +201,9 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
           ...baseDict.hospitality.portfolio,
           properties: Array.isArray(c.hospitality?.properties) && c.hospitality.properties.length > 0
             ? c.hospitality.properties.map((p: any, idx: number) => ({
-                name: (isAr ? p.name_ar : p.name_en) || p.name_en,
-                city: (isAr ? p.city_ar : p.city_en) || p.city_en,
-                desc: (isAr ? p.desc_ar : p.desc_en) || p.desc_en,
+                name: (isAr ? p.name_ar : p.name_en) || (isAr ? baseDict.hospitality.portfolio.properties[idx]?.name : p.name_en) || p.name_en,
+                city: (isAr ? p.city_ar : p.city_en) || (isAr ? baseDict.hospitality.portfolio.properties[idx]?.city : p.city_en) || p.city_en,
+                desc: (isAr ? p.desc_ar : p.desc_en) || (isAr ? baseDict.hospitality.portfolio.properties[idx]?.desc : p.desc_en) || p.desc_en,
                 image_url: p.image_url || (baseDict.hospitality.portfolio.properties[idx] as any)?.image_url,
               }))
             : baseDict.hospitality.portfolio.properties,
@@ -223,8 +223,8 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
           ...baseDict.manufacturing.factories,
           list: Array.isArray(c.manufacturing?.factories) && c.manufacturing.factories.length > 0
             ? c.manufacturing.factories.map((f: any, idx: number) => ({
-                title: (isAr ? f.title_ar : f.title_en) || f.title_en,
-                desc: (isAr ? f.desc_ar : f.desc_en) || f.desc_en,
+                title: (isAr ? f.title_ar : f.title_en) || (isAr ? baseDict.manufacturing.factories.list[idx]?.title : f.title_en) || f.title_en,
+                desc: (isAr ? f.desc_ar : f.desc_en) || (isAr ? baseDict.manufacturing.factories.list[idx]?.desc : f.desc_en) || f.desc_en,
                 image_url: f.image_url || (baseDict.manufacturing.factories.list[idx] as any)?.image_url,
               }))
             : baseDict.manufacturing.factories.list,
@@ -244,8 +244,8 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
           ...baseDict.contracting.services,
           list: Array.isArray(c.contracting?.services) && c.contracting.services.length > 0
             ? c.contracting.services.map((s: any, idx: number) => ({
-                title: (isAr ? s.title_ar : s.title_en) || s.title_en,
-                desc: (isAr ? s.desc_ar : s.desc_en) || s.desc_en,
+                title: (isAr ? s.title_ar : s.title_en) || (isAr ? baseDict.contracting.services.list[idx]?.title : s.title_en) || s.title_en,
+                desc: (isAr ? s.desc_ar : s.desc_en) || (isAr ? baseDict.contracting.services.list[idx]?.desc : s.desc_en) || s.desc_en,
                 image_url: s.image_url || (baseDict.contracting.services.list[idx] as any)?.image_url,
               }))
             : baseDict.contracting.services.list,

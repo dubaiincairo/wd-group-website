@@ -138,7 +138,7 @@ export default function ManufacturingPage() {
 
                   <div className="flex items-center justify-between mb-4">
                     <span className="text-xs font-mono font-bold px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
-                      FACTORY 0{idx + 1}
+                      {lang === 'ar' ? `المصنع 0${idx + 1}` : `FACTORY 0${idx + 1}`}
                     </span>
                     <div className="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 group-hover:scale-110 transition-transform">
                       <Factory className="w-5 h-5" />
@@ -155,8 +155,8 @@ export default function ManufacturingPage() {
                 </div>
 
                 <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between text-[11px] font-mono text-zinc-500">
-                  <span>Riyadh & Najran</span>
-                  <span className="text-emerald-400 font-semibold">GreenWood</span>
+                  <span>{lang === 'ar' ? 'الرياض ونجران' : 'Riyadh & Najran'}</span>
+                  <span className="text-emerald-400 font-semibold">{lang === 'ar' ? 'جرين وود' : 'GreenWood'}</span>
                 </div>
               </div>
             ))}
@@ -288,7 +288,7 @@ export default function ManufacturingPage() {
                   </label>
                   <input
                     type="text"
-                    placeholder="e.g. 100 hotel rooms / 500 panels"
+                    placeholder={lang === 'ar' ? 'مثال: 100 غرفة فندقية / 500 لوح' : 'e.g. 100 hotel rooms / 500 panels'}
                     value={formData.estimatedQuantity}
                     onChange={(e) => setFormData({ ...formData, estimatedQuantity: e.target.value })}
                     className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-emerald-500"

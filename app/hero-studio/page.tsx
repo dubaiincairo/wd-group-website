@@ -46,15 +46,15 @@ export default function HeroStudioPage() {
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-xs font-extrabold uppercase tracking-widest text-blue-400">
-                  VISUAL HERO STUDIO
+                  {lang === 'ar' ? 'استوديو النماذج البصرية' : 'VISUAL HERO STUDIO'}
                 </span>
                 <span className="text-[10px] bg-sky-500/20 text-sky-300 border border-sky-500/40 px-2 py-0.5 rounded-full font-mono">
-                  3 PHOTO STYLES
+                  {lang === 'ar' ? '3 نماذج بصرية' : '3 PHOTO STYLES'}
                 </span>
               </div>
               <p className="text-[11px] text-zinc-400 font-medium">
                 {lang === 'ar' 
-                  ? '٣ نماذج بصرية تفاعلية مدعومة بالصور الفوتوغرافية الفاخرة للقطاعات' 
+                  ? '3 نماذج بصرية تفاعلية مدعومة بالصور الفوتوغرافية الفاخرة للقطاعات' 
                   : '3 interactive visual styles with rich sector photography'}
               </p>
             </div>
@@ -290,10 +290,10 @@ export default function HeroStudioPage() {
                           <div className="space-y-2">
                             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-sky-500/30 text-sky-200 backdrop-blur-md border border-sky-400/40">
                               <Building2 className="w-3.5 h-3.5" />
-                              <span>SwissBlue Hospitality Portfolio</span>
+                              <span>{lang === 'ar' ? 'محفظة فنادق سويس بلو' : 'SwissBlue Hospitality Portfolio'}</span>
                             </div>
                             <h3 className="text-xl sm:text-2xl font-extrabold text-white">
-                              {lang === 'ar' ? '٦ منشآت فندقية بالمملكة وتونس' : '6 Premium Hotel Properties in KSA & Tunisia'}
+                              {lang === 'ar' ? '6 منشآت فندقية بالمملكة' : '6 Premium Hotel Properties in KSA & Tunisia'}
                             </h3>
                             <p className="text-xs text-zinc-300 line-clamp-2">
                               {dict.home.sectors.hospitality.desc}
@@ -305,10 +305,10 @@ export default function HeroStudioPage() {
                           <div className="space-y-2">
                             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/30 text-emerald-200 backdrop-blur-md border border-emerald-400/40">
                               <Factory className="w-3.5 h-3.5" />
-                              <span>GreenWood Furniture & Manufacturing</span>
+                              <span>{lang === 'ar' ? 'مصانع جرين وود للأثاث والتصنيع' : 'GreenWood Furniture & Manufacturing'}</span>
                             </div>
                             <h3 className="text-xl sm:text-2xl font-extrabold text-white">
-                              {lang === 'ar' ? '٣ مصانع متخصصة في الأخشاب والألومنيوم والديكور' : '3 Specialized Factories in Woodcraft & Architectural Metal'}
+                              {lang === 'ar' ? '3 مصانع متخصصة في الأخشاب والألومنيوم والديكور' : '3 Specialized Factories in Woodcraft & Architectural Metal'}
                             </h3>
                             <p className="text-xs text-zinc-300 line-clamp-2">
                               {dict.home.sectors.manufacturing.desc}
@@ -320,7 +320,7 @@ export default function HeroStudioPage() {
                           <div className="space-y-2">
                             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-500/30 text-amber-200 backdrop-blur-md border border-amber-400/40">
                               <HardHat className="w-3.5 h-3.5" />
-                              <span>Turnkey Fit-out Contracting</span>
+                              <span>{lang === 'ar' ? 'المقاولات والتجهيز الداخلي' : 'Turnkey Fit-out Contracting'}</span>
                             </div>
                             <h3 className="text-xl sm:text-2xl font-extrabold text-white">
                               {lang === 'ar' ? 'تنفيذ متكامل لمشروعات الديكور والأثاث والمقاولات' : 'Turnkey Interior Fit-out & Project Implementation'}
@@ -395,12 +395,12 @@ export default function HeroStudioPage() {
                     <div className="relative z-10 space-y-2">
                       <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-sky-500/30 text-sky-200 border border-sky-400/40 backdrop-blur-md">
                         <Building2 className="w-3.5 h-3.5" />
-                        <span>SwissBlue</span>
+                        <span>{lang === 'ar' ? 'سويس بلو' : 'SwissBlue'}</span>
                       </span>
                       <h3 className="text-2xl font-extrabold text-white">{dict.home.sectors.hospitality.title}</h3>
                       <p className="text-xs text-zinc-300 line-clamp-2">{dict.home.sectors.hospitality.desc}</p>
                       <div className="text-xs font-mono font-bold text-sky-300 pt-2 flex items-center justify-between">
-                        <span>6 {lang === 'ar' ? 'فنادق بالمملكة وتونس' : 'Hotels in KSA & Tunisia'}</span>
+                        <span>6 {lang === 'ar' ? 'فنادق بالمملكة' : 'Hotels in KSA & Tunisia'}</span>
                         <ArrowRight className="w-4 h-4 rtl:rotate-180" />
                       </div>
                     </div>
@@ -422,7 +422,7 @@ export default function HeroStudioPage() {
                     <div className="relative z-10 space-y-2">
                       <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/30 text-emerald-200 border border-emerald-400/40 backdrop-blur-md">
                         <Factory className="w-3.5 h-3.5" />
-                        <span>GreenWood</span>
+                        <span>{lang === 'ar' ? 'جرين وود' : 'GreenWood'}</span>
                       </span>
                       <h3 className="text-2xl font-extrabold text-white">{dict.home.sectors.manufacturing.title}</h3>
                       <p className="text-xs text-zinc-300 line-clamp-2">{dict.home.sectors.manufacturing.desc}</p>
@@ -449,7 +449,7 @@ export default function HeroStudioPage() {
                     <div className="relative z-10 space-y-2">
                       <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-500/30 text-amber-200 border border-amber-400/40 backdrop-blur-md">
                         <HardHat className="w-3.5 h-3.5" />
-                        <span>Contracting & Fit-out</span>
+                        <span>{lang === 'ar' ? 'المقاولات والتجهيز الداخلي' : 'Contracting & Fit-out'}</span>
                       </span>
                       <h3 className="text-2xl font-extrabold text-white">{dict.home.sectors.contracting.title}</h3>
                       <p className="text-xs text-zinc-300 line-clamp-2">{dict.home.sectors.contracting.desc}</p>
@@ -530,7 +530,7 @@ export default function HeroStudioPage() {
                     }`}
                   >
                     <Building2 className="w-4 h-4 text-sky-400" />
-                    <span>{dict.nav.hospitality} (SwissBlue)</span>
+                    <span>{lang === 'ar' ? 'الضيافة (سويس بلو)' : `${dict.nav.hospitality} (SwissBlue)`}</span>
                   </button>
 
                   <button
@@ -542,7 +542,7 @@ export default function HeroStudioPage() {
                     }`}
                   >
                     <Factory className="w-4 h-4 text-emerald-400" />
-                    <span>{dict.nav.manufacturing} (GreenWood)</span>
+                    <span>{lang === 'ar' ? 'التصنيع والأثاث (جرين وود)' : `${dict.nav.manufacturing} (GreenWood)`}</span>
                   </button>
 
                   <button
@@ -554,7 +554,7 @@ export default function HeroStudioPage() {
                     }`}
                   >
                     <HardHat className="w-4 h-4 text-amber-400" />
-                    <span>{dict.nav.contracting} (Fit-out)</span>
+                    <span>{lang === 'ar' ? 'المقاولات والتنفيذ الشامل' : `${dict.nav.contracting} (Fit-out)`}</span>
                   </button>
                 </div>
 

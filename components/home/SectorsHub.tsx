@@ -166,7 +166,7 @@ export default function SectorsHub() {
                   lang === 'ar' ? 'أعمال النجارة والأثاث المخصص' : 'Custom Woodworking & Joinery',
                   lang === 'ar' ? 'حلول الألومنيوم والمعادن المعمارية' : 'Architectural Aluminum & Metal',
                   lang === 'ar' ? 'أثاث المشروعات والمفروشات والتنجيد' : 'Contract Furniture & Upholstery',
-                  lang === 'ar' ? 'إدارة قوائم المواد بنظام Odoo ERP' : 'Odoo ERP Production Control',
+                  lang === 'ar' ? 'إدارة الإنتاج وتخطيط الموارد (ERP)' : 'Odoo ERP Production Control',
                 ].map((cap, idx) => (
                   <div key={idx} className="flex items-center gap-2">
                     <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
@@ -237,7 +237,7 @@ export default function SectorsHub() {
               <div className="space-y-1.5 mb-6 text-xs text-zinc-400 border-t border-white/5 pt-4">
                 {[
                   lang === 'ar' ? 'التشطيبات المعمارية الفاخرة' : 'Turnkey Architectural Fit-Out',
-                  lang === 'ar' ? 'الأعمال الكهروميكانيكية (MEP)' : 'MEP Infrastructure Engineering',
+                  lang === 'ar' ? 'الأعمال الكهروميكانيكية المتكاملة' : 'MEP Infrastructure Engineering',
                   lang === 'ar' ? 'تجهيز الفنادق والمنشآت التجارية' : 'Commercial & Hotel Fit-Out',
                   lang === 'ar' ? 'إشراف هندسي وضمان الجودة' : 'QA/QC Engineering Supervision',
                 ].map((cap, idx) => (

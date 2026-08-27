@@ -174,9 +174,9 @@ export default function HeroSection() {
             }`}
           >
             <Building2 className="w-4 h-4 text-sky-400 shrink-0" />
-            <span>{(dict.home.hero as any).dock?.hospitality_label || `${dict.nav.hospitality} (SwissBlue)`}</span>
+            <span>{(dict.home.hero as any).dock?.hospitality_label || (lang === 'ar' ? 'الضيافة (سويس بلو)' : `${dict.nav.hospitality} (SwissBlue)`)}</span>
             <span className="text-[10px] bg-sky-500/25 px-2 py-0.5 rounded-full text-sky-200 font-mono">
-              {(dict.home.hero as any).dock?.hospitality_badge || `6 ${lang === 'ar' ? 'منشآت' : 'Properties'}`}
+              {(dict.home.hero as any).dock?.hospitality_badge || (lang === 'ar' ? '6 منشآت' : '6 Properties')}
             </span>
           </button>
 
@@ -190,9 +190,9 @@ export default function HeroSection() {
             }`}
           >
             <Factory className="w-4 h-4 text-emerald-400 shrink-0" />
-            <span>{(dict.home.hero as any).dock?.manufacturing_label || `${dict.nav.manufacturing} (GreenWood)`}</span>
+            <span>{(dict.home.hero as any).dock?.manufacturing_label || (lang === 'ar' ? 'التصنيع والأثاث (جرين وود)' : `${dict.nav.manufacturing} (GreenWood)`)}</span>
             <span className="text-[10px] bg-emerald-500/25 px-2 py-0.5 rounded-full text-emerald-200 font-mono">
-              {(dict.home.hero as any).dock?.manufacturing_badge || `3 ${lang === 'ar' ? 'مصانع' : 'Factories'}`}
+              {(dict.home.hero as any).dock?.manufacturing_badge || (lang === 'ar' ? '3 مصانع' : '3 Factories')}
             </span>
           </button>
 
@@ -206,7 +206,7 @@ export default function HeroSection() {
             }`}
           >
             <HardHat className="w-4 h-4 text-amber-400 shrink-0" />
-            <span>{(dict.home.hero as any).dock?.contracting_label || `${dict.nav.contracting} (Projects)`}</span>
+            <span>{(dict.home.hero as any).dock?.contracting_label || (lang === 'ar' ? 'المقاولات والتميز الهندسي' : `${dict.nav.contracting} (Projects)`)}</span>
             <span className="text-[10px] bg-amber-500/25 px-2 py-0.5 rounded-full text-amber-200 font-mono">
               {(dict.home.hero as any).dock?.contracting_badge || (lang === 'ar' ? 'تنفيذ شامل' : 'Turnkey')}
             </span>

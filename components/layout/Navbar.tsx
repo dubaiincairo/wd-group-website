@@ -117,7 +117,7 @@ export default function Navbar() {
                     {lang === 'ar' ? 'القطاعات الاستراتيجية' : 'STRATEGIC SECTORS'}
                   </div>
 
-                  <div className="space-y-1">
+                    <div className="space-y-1">
                     <Link 
                       href="/sectors/hospitality" 
                       onClick={() => setSectorsOpen(false)}
@@ -133,11 +133,13 @@ export default function Navbar() {
                           <span className="text-xs font-semibold text-zinc-200 group-hover/item:text-white block">
                             {dict.nav.hospitality}
                           </span>
-                          <span className="text-[10px] text-zinc-400">SwissBlue Hotels & Suites</span>
+                          <span className="text-[10px] text-zinc-400">
+                            {lang === 'ar' ? 'فنادق ومنتجعات سويس بلو' : 'SwissBlue Hotels & Suites'}
+                          </span>
                         </div>
                       </div>
                       <span className="text-[10px] font-semibold text-sky-400 bg-sky-500/10 px-2 py-0.5 rounded-full border border-sky-500/20 font-mono">
-                        6 Props
+                        {lang === 'ar' ? '6 منشآت' : '6 Props'}
                       </span>
                     </Link>
 
@@ -156,11 +158,13 @@ export default function Navbar() {
                           <span className="text-xs font-semibold text-zinc-200 group-hover/item:text-white block">
                             {dict.nav.manufacturing}
                           </span>
-                          <span className="text-[10px] text-zinc-400">GreenWood & Factories</span>
+                          <span className="text-[10px] text-zinc-400">
+                            {lang === 'ar' ? 'مصانع جرين وود الوطنية' : 'GreenWood & Factories'}
+                          </span>
                         </div>
                       </div>
                       <span className="text-[10px] font-semibold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20 font-mono">
-                        3 Factories
+                        {lang === 'ar' ? '3 مصانع' : '3 Factories'}
                       </span>
                     </Link>
 
@@ -179,11 +183,13 @@ export default function Navbar() {
                           <span className="text-xs font-semibold text-zinc-200 group-hover/item:text-white block">
                             {dict.nav.contracting}
                           </span>
-                          <span className="text-[10px] text-zinc-400">Engineering & Turnkey</span>
+                          <span className="text-[10px] text-zinc-400">
+                            {lang === 'ar' ? 'المقاولات والتنفيذ الشامل' : 'Engineering & Turnkey'}
+                          </span>
                         </div>
                       </div>
                       <span className="text-[10px] font-semibold text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20 font-mono">
-                        Turnkey
+                        {lang === 'ar' ? 'تنفيذ شامل' : 'Turnkey'}
                       </span>
                     </Link>
                   </div>
@@ -278,7 +284,9 @@ export default function Navbar() {
               className="px-3 py-2 rounded-xl text-sm font-semibold text-sky-400 hover:bg-white/5 flex items-center justify-between"
             >
               <span>{dict.nav.hospitality}</span>
-              <span className="text-xs bg-sky-500/10 px-2 py-0.5 rounded-full">SwissBlue</span>
+              <span className="text-xs bg-sky-500/10 px-2 py-0.5 rounded-full">
+                {lang === 'ar' ? 'سويس بلو' : 'SwissBlue'}
+              </span>
             </Link>
             <Link 
               href="/sectors/manufacturing"
@@ -286,7 +294,9 @@ export default function Navbar() {
               className="px-3 py-2 rounded-xl text-sm font-semibold text-emerald-400 hover:bg-white/5 flex items-center justify-between"
             >
               <span>{dict.nav.manufacturing}</span>
-              <span className="text-xs bg-emerald-500/10 px-2 py-0.5 rounded-full">GreenWood</span>
+              <span className="text-xs bg-emerald-500/10 px-2 py-0.5 rounded-full">
+                {lang === 'ar' ? 'جرين وود' : 'GreenWood'}
+              </span>
             </Link>
             <Link 
               href="/sectors/contracting"
@@ -294,7 +304,9 @@ export default function Navbar() {
               className="px-3 py-2 rounded-xl text-sm font-semibold text-amber-400 hover:bg-white/5 flex items-center justify-between"
             >
               <span>{dict.nav.contracting}</span>
-              <span className="text-xs bg-amber-500/10 px-2 py-0.5 rounded-full">Projects</span>
+              <span className="text-xs bg-amber-500/10 px-2 py-0.5 rounded-full">
+                {lang === 'ar' ? 'مشاريع متكاملة' : 'Projects'}
+              </span>
             </Link>
             <Link 
               href="/careers"

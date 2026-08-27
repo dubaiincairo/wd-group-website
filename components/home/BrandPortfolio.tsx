@@ -67,7 +67,7 @@ export default function BrandPortfolio() {
       name: 'WatanDesign',
       nameAr: 'تصاميم الوطن',
       badge: lang === 'ar' ? 'تنفيذ شامل' : 'Turnkey Execution',
-      category: lang === 'ar' ? 'المقاولات والتجهيز' : 'Contracting & Fit-Out',
+      category: lang === 'ar' ? 'المقاولات والتجهيز الداخلي' : 'Contracting & Fit-Out',
       fullName: lang === 'ar' ? 'شركة تصاميم الوطن المحدودة' : 'Watan Designs Ltd.',
       desc: lang === 'ar' ? 'المقاولات المتكاملة، الهندسة المعمارية، والتجهيز الداخلي الفندقي والتجاري' : 'Turnkey contracting, architectural fit-out, and joinery engineering.',
       link: '/sectors/contracting',
@@ -148,7 +148,7 @@ export default function BrandPortfolio() {
                   <div>
                     <h3 className="text-lg font-black text-white group-hover:text-[#C9A86A] transition-colors flex items-center gap-1.5">
                       <span>{lang === 'ar' ? brand.nameAr : brand.name}</span>
-                      <ArrowUpRight className="w-3.5 h-3.5 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all text-[#C9A86A]" />
+                      <ArrowUpRight className="w-3.5 h-3.5 opacity-0 -translate-x-1 rtl:translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all text-[#C9A86A]" />
                     </h3>
                     <div className="text-[11px] font-semibold text-zinc-300">
                       {brand.fullName}
@@ -164,7 +164,7 @@ export default function BrandPortfolio() {
                 {/* Bottom Bar: Action link */}
                 <div className="relative z-10 pt-4 mt-4 border-t border-white/5 flex items-center justify-between text-xs text-zinc-400 group-hover:text-white transition-colors">
                   <span className="text-[11px] font-mono text-zinc-500 group-hover:text-zinc-300">{brand.category}</span>
-                  <span className="text-[11px] font-bold text-[#C9A86A]">{lang === 'ar' ? 'عرض القطاع' : 'Explore'} →</span>
+                  <span className="text-[11px] font-bold text-[#C9A86A]">{lang === 'ar' ? 'عرض القطاع ←' : 'Explore →'}</span>
                 </div>
               </Link>
             );

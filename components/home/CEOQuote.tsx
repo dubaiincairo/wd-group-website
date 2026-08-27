@@ -37,7 +37,7 @@ export default function CEOQuote() {
                 ) : (
                   <div className="w-full h-full rounded-full bg-[#08090C] flex flex-col items-center justify-center text-center p-3 border border-white/10">
                     <span className="text-2xl sm:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#E3C58A] to-[#C9A86A] font-mono tracking-tight">WD</span>
-                    <span className="text-[9px] font-mono text-zinc-400 uppercase tracking-widest mt-0.5 font-bold">LEADERSHIP</span>
+                    <span className="text-[9px] font-mono text-zinc-400 uppercase tracking-widest mt-0.5 font-bold">{lang === 'ar' ? 'القيادة' : 'LEADERSHIP'}</span>
                   </div>
                 )}
               </div>

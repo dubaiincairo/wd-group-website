@@ -35,9 +35,9 @@ export default function NotFound() {
             404
           </div>
           
-          <div className="absolute -top-3 -right-3 rtl:-right-auto rtl:-left-3 px-3 py-1 rounded-full bg-[#0F1117] border border-[#C9A86A]/40 text-[#C9A86A] text-[10px] font-mono font-bold tracking-widest uppercase shadow-glow-camel flex items-center gap-1.5">
+          <div className="absolute -top-3 -right-3 rtl:right-auto rtl:left-3 px-3 py-1 rounded-full bg-[#0F1117] border border-[#C9A86A]/40 text-[#C9A86A] text-[10px] font-mono font-bold tracking-widest uppercase shadow-glow-camel flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-[#C9A86A] animate-pulse"></span>
-            <span>NOT FOUND</span>
+            <span>{isAr ? 'غير متوفرة' : 'NOT FOUND'}</span>
           </div>
         </div>
 
@@ -83,7 +83,7 @@ export default function NotFound() {
               className="p-3 rounded-xl bg-[#0F1117]/80 border border-sky-500/20 hover:border-sky-500/50 hover:bg-sky-500/10 transition-all flex items-center justify-center gap-2 text-xs text-sky-300 font-semibold group"
             >
               <Building2 className="w-3.5 h-3.5 text-sky-400 group-hover:scale-110 transition-transform" />
-              <span>{isAr ? 'الضيافة (SwissBlue)' : 'Hospitality'}</span>
+              <span>{isAr ? 'الضيافة (سويس بلو)' : 'Hospitality'}</span>
             </Link>
 
             <Link
@@ -91,7 +91,7 @@ export default function NotFound() {
               className="p-3 rounded-xl bg-[#0F1117]/80 border border-emerald-500/20 hover:border-emerald-500/50 hover:bg-emerald-500/10 transition-all flex items-center justify-center gap-2 text-xs text-emerald-300 font-semibold group"
             >
               <Factory className="w-3.5 h-3.5 text-emerald-400 group-hover:scale-110 transition-transform" />
-              <span>{isAr ? 'التصنيع (GreenWood)' : 'Manufacturing'}</span>
+              <span>{isAr ? 'التصنيع (جرين وود)' : 'Manufacturing'}</span>
             </Link>
 
             <Link
@@ -99,7 +99,7 @@ export default function NotFound() {
               className="p-3 rounded-xl bg-[#0F1117]/80 border border-amber-500/20 hover:border-amber-500/50 hover:bg-amber-500/10 transition-all flex items-center justify-center gap-2 text-xs text-amber-300 font-semibold group"
             >
               <HardHat className="w-3.5 h-3.5 text-amber-400 group-hover:scale-110 transition-transform" />
-              <span>{isAr ? 'المقاولات (WatanDesign)' : 'Contracting'}</span>
+              <span>{isAr ? 'المقاولات (تصاميم الوطن)' : 'Contracting'}</span>
             </Link>
           </div>
         </div>

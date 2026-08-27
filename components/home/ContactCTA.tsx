@@ -246,7 +246,7 @@ export default function ContactCTA() {
                     ></textarea>
                   </div>
 
-                  <div className="pt-2">
+                    <div className="pt-2">
                     <button
                       type="submit"
                       disabled={loading}
@@ -255,7 +255,7 @@ export default function ContactCTA() {
                       {loading ? (
                         <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                       ) : null}
-                      <span>{loading ? (lang === 'ar' ? 'جارٍ الإرسال…' : 'Submitting…') : (dict.forms.placeholders.name ? dict.common.submitInquiry : 'Submit')}</span>
+                      <span>{loading ? (lang === 'ar' ? 'جارٍ الإرسال…' : 'Submitting…') : (lang === 'ar' ? 'إرسال الاستفسار' : 'Submit Inquiry')}</span>
                     </button>
                   </div>
                 </form>

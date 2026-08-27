@@ -171,7 +171,7 @@ export default function HospitalityPage() {
                 </div>
 
                 <div className="pt-3 border-t border-white/5 flex items-center justify-between text-xs text-sky-400 font-semibold">
-                  <span>SwissBlue Portfolio</span>
+                  <span>{lang === 'ar' ? 'محفظة فنادق سويس بلو' : 'SwissBlue Portfolio'}</span>
                   <Building2 className="w-4 h-4 opacity-60" />
                 </div>
               </div>
@@ -183,7 +183,7 @@ export default function HospitalityPage() {
         <section className="glass-card rounded-3xl p-8 sm:p-12 border border-white/10 space-y-8 bg-brand-surface/80">
           <div className="max-w-2xl space-y-2">
             <div className="text-xs font-mono font-bold text-sky-400 uppercase tracking-wider">
-              {lang === 'ar' ? 'خدمات إدارة الأصول' : 'OPERATOR SERVICES'}
+              {lang === 'ar' ? 'خدمات إدارة وتشغيل المنشآت' : 'OPERATOR SERVICES'}
             </div>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
               {dict.hospitality.services.heading}
@@ -287,7 +287,7 @@ export default function HospitalityPage() {
                   </label>
                   <input
                     type="text"
-                    placeholder="e.g. 60 units"
+                    placeholder={lang === 'ar' ? 'مثال: 60 وحدة' : 'e.g. 60 units'}
                     value={formData.roomCount}
                     onChange={(e) => setFormData({ ...formData, roomCount: e.target.value })}
                     className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-sky-500"

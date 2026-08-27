@@ -75,7 +75,7 @@ export default function HoldingSynergy() {
                   {/* Step Badge */}
                   <div className="flex items-center justify-between mb-6">
                     <span className={`text-xs font-mono font-bold px-2.5 py-1 rounded-md border ${item.badgeBg}`}>
-                      STEP {item.step}
+                      {lang === 'ar' ? `المرحلة ${item.step}` : `STEP ${item.step}`}
                     </span>
                     <div className={`w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center ${item.color} group-hover:scale-110 transition-transform`}>
                       <Icon className="w-5 h-5" />
@@ -97,7 +97,7 @@ export default function HoldingSynergy() {
                 <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between text-[11px] font-mono text-zinc-500">
                   <div className="flex items-center gap-1.5 text-zinc-400">
                     <span className="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
-                    <span>INTEGRATED SYNERGY</span>
+                    <span>{lang === 'ar' ? 'سلسلة القيمة المتكاملة' : 'INTEGRATED SYNERGY'}</span>
                   </div>
                   <span className="text-zinc-500">0{idx + 1} / 03</span>
                 </div>

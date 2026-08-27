@@ -286,9 +286,9 @@ export default function LiveEditorDock() {
   const PAGE_OPTIONS = [
     { id: 'home', label: lang === 'ar' ? 'الرئيسية (/)' : 'Homepage (/)', icon: Home },
     { id: 'about', label: lang === 'ar' ? 'من نحن (/about)' : 'About Us (/about)', icon: Info },
-    { id: 'hospitality', label: lang === 'ar' ? 'الضيافة (SwissBlue)' : 'Hospitality (SwissBlue)', icon: Building2 },
-    { id: 'manufacturing', label: lang === 'ar' ? 'التصنيع (GreenWood)' : 'Manufacturing (GreenWood)', icon: Factory },
-    { id: 'contracting', label: lang === 'ar' ? 'المقاولات (WatanDesign)' : 'Contracting (Fit-Out)', icon: HardHat },
+    { id: 'hospitality', label: lang === 'ar' ? 'الضيافة (سويس بلو)' : 'Hospitality (SwissBlue)', icon: Building2 },
+    { id: 'manufacturing', label: lang === 'ar' ? 'التصنيع (جرين وود)' : 'Manufacturing (GreenWood)', icon: Factory },
+    { id: 'contracting', label: lang === 'ar' ? 'المقاولات (تصاميم الوطن)' : 'Contracting (Fit-Out)', icon: HardHat },
     { id: 'careers', label: lang === 'ar' ? 'الوظائف (/careers)' : 'Careers (/careers)', icon: Briefcase },
     { id: 'contact', label: lang === 'ar' ? 'تواصل معنا (/contact)' : 'Contact Us (/contact)', icon: Mail },
   ];
@@ -314,7 +314,7 @@ export default function LiveEditorDock() {
           </span>
           {hasUnsavedChanges && (
             <span className="text-[10px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full border border-amber-500/30 font-mono font-bold">
-              Unsaved
+              {lang === 'ar' ? 'تعديلات غير محفوظة' : 'Unsaved'}
             </span>
           )}
         </button>
