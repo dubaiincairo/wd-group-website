@@ -76,10 +76,25 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     <ToastProvider>
       <div dir={lang === 'ar' ? 'rtl' : 'ltr'} lang={lang} className="min-h-screen bg-[#08090C] text-white flex flex-col lg:flex-row font-sans selection:bg-blue-600 selection:text-white relative">
         
-        {/* Lightweight High-Performance Luxury Dark Backdrop */}
-        <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-0 right-1/4 w-[600px] h-[600px] bg-radial from-[#C9A86A]/5 via-blue-600/5 to-transparent blur-[100px]" />
-          <div className="absolute bottom-0 left-1/4 w-[500px] h-[500px] bg-radial from-blue-500/5 via-[#C9A86A]/5 to-transparent blur-[100px]" />
+        {/* GPU-Accelerated Zero-Lag Luxury Video Backdrop */}
+        <div 
+          className="fixed inset-0 z-0 overflow-hidden pointer-events-none" 
+          style={{ transform: 'translate3d(0,0,0)', willChange: 'transform', contain: 'strict' }}
+        >
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="metadata"
+            poster="https://cdn.sanity.io/images/uoj8zwj3/production/00b20cc6cb3d8c613964965da5556e8396305950-2400x1792.jpg"
+            className="absolute inset-0 w-full h-full object-cover opacity-30"
+            style={{ transform: 'translateZ(0)' }}
+          >
+            <source src="/videos/hospitality.mp4" type="video/mp4" />
+          </video>
+          {/* Static zero-cost dark gradient scrim (no expensive CSS backdrop-blur) */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#08090C]/90 via-[#08090C]/80 to-[#08090C]/95" />
           <div className="absolute inset-0 bg-dot-matrix opacity-15" />
         </div>
 
