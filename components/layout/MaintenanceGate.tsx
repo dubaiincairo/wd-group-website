@@ -112,11 +112,11 @@ export default function MaintenanceGate({ children }: MaintenanceGateProps) {
   return (
     <>
       {isMaintenanceActive && isAdminBypassed && !isTestDomain && (
-        <div className="bg-amber-500/90 text-black px-4 py-1.5 text-xs font-mono font-bold text-center fixed top-0 inset-x-0 z-[99999] shadow-lg flex items-center justify-center gap-2">
+        <div className="bg-amber-500 text-black px-4 py-1.5 text-[11px] font-mono font-bold text-center relative z-40 shadow-sm flex items-center justify-center gap-2">
           <span>⚠️ MAINTENANCE MODE IS ACTIVE ON LIVE SITE — YOU ARE VIEWING ADMIN PREVIEW</span>
         </div>
       )}
-      <div className={isMaintenanceActive && isAdminBypassed && !isTestDomain ? 'pt-8' : ''}>
+      <div>
         {children}
       </div>
     </>

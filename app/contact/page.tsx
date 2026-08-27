@@ -189,12 +189,15 @@ export default function ContactPage() {
               )}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-zinc-300 font-semibold mb-1">
+                  <label htmlFor="contact-fullName" className="block text-zinc-300 font-semibold mb-1">
                     {dict.forms.fullName} *
                   </label>
                   <input
+                    id="contact-fullName"
+                    name="fullName"
                     type="text"
                     required
+                    autoComplete="name"
                     placeholder={dict.forms.placeholders.name}
                     value={formData.fullName}
                     onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
@@ -202,11 +205,14 @@ export default function ContactPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-zinc-300 font-semibold mb-1">
+                  <label htmlFor="contact-company" className="block text-zinc-300 font-semibold mb-1">
                     {dict.forms.company} ({lang === 'ar' ? 'اختياري' : 'Optional'})
                   </label>
                   <input
+                    id="contact-company"
+                    name="company"
                     type="text"
+                    autoComplete="organization"
                     placeholder={dict.forms.placeholders.company}
                     value={formData.company}
                     onChange={(e) => setFormData({ ...formData, company: e.target.value })}
@@ -217,12 +223,15 @@ export default function ContactPage() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-zinc-300 font-semibold mb-1">
+                  <label htmlFor="contact-email" className="block text-zinc-300 font-semibold mb-1">
                     {dict.forms.email} *
                   </label>
                   <input
+                    id="contact-email"
+                    name="email"
                     type="email"
                     required
+                    autoComplete="email"
                     placeholder={dict.forms.placeholders.email}
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -230,12 +239,15 @@ export default function ContactPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-zinc-300 font-semibold mb-1">
+                  <label htmlFor="contact-phone" className="block text-zinc-300 font-semibold mb-1">
                     {dict.forms.phone} *
                   </label>
                   <input
+                    id="contact-phone"
+                    name="phone"
                     type="tel"
                     required
+                    autoComplete="tel"
                     placeholder={dict.forms.placeholders.phone}
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
@@ -246,11 +258,13 @@ export default function ContactPage() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-zinc-300 font-semibold mb-1">
+                  <label htmlFor="contact-sector" className="block text-zinc-300 font-semibold mb-1">
                     {dict.forms.sector} *
                   </label>
                   <div className="relative">
                     <select
+                      id="contact-sector"
+                      name="sector"
                       value={formData.sector}
                       onChange={(e) => setFormData({ ...formData, sector: e.target.value })}
                       className="w-full appearance-none px-3.5 pr-10 rtl:pr-3.5 rtl:pl-10 py-2.5 rounded-xl bg-[#1A1D27] border border-white/10 text-white focus:outline-none focus:border-blue-500 cursor-pointer"
@@ -268,10 +282,12 @@ export default function ContactPage() {
                   </div>
                 </div>
                 <div>
-                  <label className="block text-zinc-300 font-semibold mb-1">
+                  <label htmlFor="contact-subject" className="block text-zinc-300 font-semibold mb-1">
                     {dict.forms.subject} *
                   </label>
                   <input
+                    id="contact-subject"
+                    name="subject"
                     type="text"
                     required
                     placeholder={dict.forms.placeholders.subject}
@@ -283,10 +299,12 @@ export default function ContactPage() {
               </div>
 
               <div>
-                <label className="block text-zinc-300 font-semibold mb-1">
+                <label htmlFor="contact-message" className="block text-zinc-300 font-semibold mb-1">
                   {dict.forms.message} *
                 </label>
                 <textarea
+                  id="contact-message"
+                  name="message"
                   required
                   rows={4}
                   placeholder={dict.forms.placeholders.message}

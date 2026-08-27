@@ -207,10 +207,12 @@ export default function ContractingPage() {
             <form onSubmit={handleSubmit} className="max-w-2xl mx-auto space-y-4 text-xs">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-zinc-300 font-semibold mb-1">
+                  <label htmlFor="rfp-projectName" className="block text-zinc-300 font-semibold mb-1">
                     {lang === 'ar' ? 'اسم المشروع *' : 'Project Name *'}
                   </label>
                   <input
+                    id="rfp-projectName"
+                    name="projectName"
                     type="text"
                     required
                     placeholder={lang === 'ar' ? 'اسم المشروع' : 'Project name'}
@@ -220,10 +222,12 @@ export default function ContractingPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-zinc-300 font-semibold mb-1">
+                  <label htmlFor="rfp-projectCity" className="block text-zinc-300 font-semibold mb-1">
                     {lang === 'ar' ? 'المدينة *' : 'Project City *'}
                   </label>
                   <input
+                    id="rfp-projectCity"
+                    name="projectCity"
                     type="text"
                     required
                     placeholder={lang === 'ar' ? 'الرياض، جدة، نجران…' : 'Riyadh, Jeddah, Najran…'}
@@ -236,11 +240,13 @@ export default function ContractingPage() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-zinc-300 font-semibold mb-1">
+                  <label htmlFor="rfp-projectType" className="block text-zinc-300 font-semibold mb-1">
                     {lang === 'ar' ? 'نوع المشروع *' : 'Project Type *'}
                   </label>
                   <div className="relative">
                     <select
+                      id="rfp-projectType"
+                      name="projectType"
                       value={formData.projectType}
                       onChange={(e) => setFormData({ ...formData, projectType: e.target.value })}
                       className="w-full appearance-none px-3.5 pr-10 rtl:pr-3.5 rtl:pl-10 py-2.5 rounded-xl bg-[#1A1D27] border border-white/10 text-white focus:outline-none focus:border-amber-500 cursor-pointer"
@@ -254,10 +260,12 @@ export default function ContractingPage() {
                   </div>
                 </div>
                 <div>
-                  <label className="block text-zinc-300 font-semibold mb-1">
+                  <label htmlFor="rfp-estimatedArea" className="block text-zinc-300 font-semibold mb-1">
                     {lang === 'ar' ? 'المساحة التقديرية (اختياري)' : 'Estimated Area (Optional)'}
                   </label>
                   <input
+                    id="rfp-estimatedArea"
+                    name="estimatedArea"
                     type="text"
                     placeholder={lang === 'ar' ? 'مثال: 2,500 متر مربع' : 'e.g. 2,500 sqm'}
                     value={formData.estimatedArea}
@@ -268,10 +276,12 @@ export default function ContractingPage() {
               </div>
 
               <div>
-                <label className="block text-zinc-300 font-semibold mb-1">
+                <label htmlFor="rfp-scope" className="block text-zinc-300 font-semibold mb-1">
                   {lang === 'ar' ? 'نطاق العمل المطلوب *' : 'Required Scope *'}
                 </label>
                 <textarea
+                  id="rfp-scope"
+                  name="scope"
                   required
                   rows={3}
                   placeholder={lang === 'ar' ? 'صف نطاق المقاولات، التشطيب، والجداول الزمنية المطلوبة…' : 'Describe scope of works, finishes, and target schedule…'}
@@ -283,12 +293,15 @@ export default function ContractingPage() {
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-zinc-300 font-semibold mb-1">
+                  <label htmlFor="rfp-contactName" className="block text-zinc-300 font-semibold mb-1">
                     {dict.forms.fullName} *
                   </label>
                   <input
+                    id="rfp-contactName"
+                    name="contactName"
                     type="text"
                     required
+                    autoComplete="name"
                     placeholder={dict.forms.placeholders.name}
                     value={formData.contactName}
                     onChange={(e) => setFormData({ ...formData, contactName: e.target.value })}
@@ -296,12 +309,15 @@ export default function ContractingPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-zinc-300 font-semibold mb-1">
+                  <label htmlFor="rfp-contactEmail" className="block text-zinc-300 font-semibold mb-1">
                     {dict.forms.email} *
                   </label>
                   <input
+                    id="rfp-contactEmail"
+                    name="contactEmail"
                     type="email"
                     required
+                    autoComplete="email"
                     placeholder={dict.forms.placeholders.email}
                     value={formData.contactEmail}
                     onChange={(e) => setFormData({ ...formData, contactEmail: e.target.value })}
@@ -309,12 +325,15 @@ export default function ContractingPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-zinc-300 font-semibold mb-1">
+                  <label htmlFor="rfp-contactPhone" className="block text-zinc-300 font-semibold mb-1">
                     {dict.forms.phone} *
                   </label>
                   <input
+                    id="rfp-contactPhone"
+                    name="contactPhone"
                     type="tel"
                     required
+                    autoComplete="tel"
                     placeholder={dict.forms.placeholders.phone}
                     value={formData.contactPhone}
                     onChange={(e) => setFormData({ ...formData, contactPhone: e.target.value })}
