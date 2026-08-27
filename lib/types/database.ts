@@ -31,11 +31,17 @@ export interface JobApplication {
 export interface JobListing {
   id: string;
   title: string;
+  title_ar?: string | null;
   role_overview?: string | null;
+  role_overview_ar?: string | null;
   responsibilities?: string | null;
+  responsibilities_ar?: string | null;
   requirements?: string | null;
+  requirements_ar?: string | null;
   notes?: string | null;
+  notes_ar?: string | null;
   experience?: string | null;
+  experience_ar?: string | null;
   sort_order?: number;
   published: boolean;
   created_at?: string;

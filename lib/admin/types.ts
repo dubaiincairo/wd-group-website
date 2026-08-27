@@ -218,6 +218,8 @@ export interface SiteContentPayload {
       title_en: string;
       title_ar: string;
       photo_url?: string;
+      photo_url_ar?: string;
+      photo_url_en?: string;
     };
     partnership?: {
       label_en?: string;
@@ -242,6 +244,8 @@ export interface SiteContentPayload {
     governance_statement_en: string;
     governance_statement_ar: string;
     corporate_profile_pdf?: string;
+    corporate_profile_pdf_ar?: string;
+    corporate_profile_pdf_en?: string;
   };
   hospitality: {
     hero_title_en: string;

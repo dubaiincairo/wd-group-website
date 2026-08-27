@@ -99,21 +99,37 @@ export default function LeadershipEditorPage() {
           <span>{isAr ? 'كلمة وصورة الرئيس التنفيذي' : 'CHIEF EXECUTIVE OFFICER STATEMENT & PORTRAIT'}</span>
         </div>
 
-        <MediaFieldUploader
-          label={isAr ? 'الصورة الشخصية للرئيس التنفيذي (مربعة 1:1)' : 'CEO Executive Portrait / Photo (1:1 Ratio)'}
-          description={isAr ? 'يُفضل نسبة أبعاد مربعة 1:1 لصورة القيادة' : 'Square 1:1 aspect ratio recommended for leadership portrait'}
-          aspectRatio="1:1"
-          bucket="photos"
-          value={ceo.photo_url || content.home.media?.ceo_photo || ''}
-          onChange={(url) => setContent({
-            ...content,
-            home: {
-              ...content.home,
-              ceo: { ...ceo, photo_url: url },
-              media: { ...(content.home.media || {}), ceo_photo: url }
-            }
-          })}
-        />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <MediaFieldUploader
+            label={isAr ? 'صورة الرئيس التنفيذي للنسخة العربية (RTL Posture)' : 'CEO Portrait - Arabic / RTL Posture'}
+            description={isAr ? 'الصورة الشخصية للنسخة العربية تراعي توجيه الجسد نحو اليمين/الوسط' : 'Body posture oriented for RTL / Arabic layout'}
+            aspectRatio="1:1"
+            bucket="photos"
+            value={ceo.photo_url_ar || ceo.photo_url || ''}
+            onChange={(url) => setContent({
+              ...content,
+              home: {
+                ...content.home,
+                ceo: { ...ceo, photo_url_ar: url, photo_url: url }
+              }
+            })}
+          />
+
+          <MediaFieldUploader
+            label={isAr ? 'صورة الرئيس التنفيذي للنسخة الإنجليزية (LTR Posture)' : 'CEO Portrait - English / LTR Posture'}
+            description={isAr ? 'الصورة الشخصية للنسخة الإنجليزية تراعي توجيه الجسد نحو اليسار/الوسط' : 'Body posture oriented for LTR / English layout'}
+            aspectRatio="1:1"
+            bucket="photos"
+            value={ceo.photo_url_en || ceo.photo_url || ''}
+            onChange={(url) => setContent({
+              ...content,
+              home: {
+                ...content.home,
+                ceo: { ...ceo, photo_url_en: url, photo_url: ceo.photo_url || url }
+              }
+            })}
+          />
+        </div>
 
         <BilingualInput
           label={isAr ? 'نص كلمة / رسالة الرئيس التنفيذي' : 'CEO Official Quote / Message'}

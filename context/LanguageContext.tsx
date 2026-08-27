@@ -218,7 +218,9 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
           quote: resolveField(isAr, c.home?.ceo?.quote_ar, c.home?.ceo?.quote_en, arDict.home.ceo.quote, enDict.home.ceo.quote),
           name: resolveField(isAr, c.home?.ceo?.name_ar, c.home?.ceo?.name_en, arDict.home.ceo.name, enDict.home.ceo.name),
           title: resolveField(isAr, c.home?.ceo?.title_ar, c.home?.ceo?.title_en, arDict.home.ceo.title, enDict.home.ceo.title),
-          photo_url: c.home?.ceo?.photo_url || c.home?.media?.ceo_photo || (baseDict.home.ceo as any)?.photo_url || '',
+          photo_url: isAr 
+            ? (c.home?.ceo?.photo_url_ar || c.home?.ceo?.photo_url || c.home?.media?.ceo_photo || (baseDict.home.ceo as any)?.photo_url || '')
+            : (c.home?.ceo?.photo_url_en || c.home?.ceo?.photo_url || c.home?.media?.ceo_photo || (baseDict.home.ceo as any)?.photo_url || ''),
         },
         partnership: {
           ...baseDict.home.partnership,
@@ -238,7 +240,10 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
           body: resolveField(isAr, c.about?.hero_body_ar, c.about?.hero_body_en, arDict.about.hero.body, enDict.about.hero.body),
         },
         hero_image: c.about?.hero_image || (baseDict.about as any).hero_image,
-        corporate_profile_pdf: c.about?.corporate_profile_pdf || c.branding?.corporate_profile_pdf || (baseDict.about as any).corporate_profile_pdf || '',
+        story_image: c.about?.story_image || (baseDict.about as any).story_image,
+        corporate_profile_pdf: isAr
+          ? (c.about?.corporate_profile_pdf_ar || c.about?.corporate_profile_pdf || c.branding?.corporate_profile_pdf || (baseDict.about as any).corporate_profile_pdf || '')
+          : (c.about?.corporate_profile_pdf_en || c.about?.corporate_profile_pdf || c.branding?.corporate_profile_pdf || (baseDict.about as any).corporate_profile_pdf || ''),
         story: {
           ...baseDict.about.story,
           heading: resolveField(isAr, c.about?.story_heading_ar, c.about?.story_heading_en, arDict.about.story.heading, enDict.about.story.heading),

@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useLanguage } from '@/context/LanguageContext';
 import { 
   Building2, 
@@ -22,6 +23,8 @@ export default function AboutPage() {
   const { lang, dict } = useLanguage();
   const isAr = lang === 'ar';
 
+  const heroImage = (dict.about as any)?.hero_image || '';
+  const storyImage = (dict.about as any)?.story_image || '';
   const profilePdf = (dict.about as any)?.corporate_profile_pdf || '';
 
   return (
@@ -29,65 +32,95 @@ export default function AboutPage() {
       <div className="max-w-6xl mx-auto space-y-20">
         
         {/* 1. About Hero */}
-        <section className="text-center max-w-3xl mx-auto space-y-6 pt-6">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide uppercase bg-brand-surface border border-brand-border text-blue-400 shadow-glow-card">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>{dict.about.hero.eyebrow}</span>
-          </div>
+        <section className="relative rounded-3xl p-8 sm:p-14 overflow-hidden border border-white/10 bg-brand-surface/80">
+          {/* Background Hero Banner Image (if configured in Admin) */}
+          {heroImage && (
+            <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+              <Image
+                src={heroImage}
+                alt="WD Group"
+                fill
+                className="object-cover opacity-20 filter brightness-75 scale-105"
+                priority
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/85 to-brand-dark/60" />
+            </div>
+          )}
 
-          <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-white leading-tight">
-            {dict.about.hero.title}
-          </h1>
+          <div className="relative z-10 text-center max-w-3xl mx-auto space-y-6">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide uppercase bg-brand-surface border border-brand-border text-blue-400 shadow-glow-card">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>{dict.about.hero.eyebrow}</span>
+            </div>
 
-          <p className="text-base sm:text-lg text-zinc-300 leading-relaxed font-normal">
-            {dict.about.hero.body}
-          </p>
+            <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-white leading-tight">
+              {dict.about.hero.title}
+            </h1>
 
-          <div className="flex flex-wrap items-center justify-center gap-3.5 pt-2">
-            <Link
-              href="/#sectors"
-              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl text-xs sm:text-sm font-bold text-white bg-blue-600 hover:bg-blue-500 shadow-glow-blue transition-all"
-            >
-              <span>{dict.about.hero.primaryCta}</span>
-              <ArrowRight className="w-4 h-4 rtl:rotate-180" />
-            </Link>
+            <p className="text-base sm:text-lg text-zinc-300 leading-relaxed font-normal">
+              {dict.about.hero.body}
+            </p>
 
-            {profilePdf ? (
-              <a
-                href={profilePdf}
-                target="_blank"
-                rel="noopener noreferrer"
-                download
-                className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl text-xs sm:text-sm font-bold text-white bg-white/10 hover:bg-white/15 border border-white/15 hover:border-blue-500/50 shadow-lg transition-all cursor-pointer"
+            <div className="flex flex-wrap items-center justify-center gap-3.5 pt-2">
+              <Link
+                href="/#sectors"
+                className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl text-xs sm:text-sm font-bold text-white bg-blue-600 hover:bg-blue-500 shadow-glow-blue transition-all"
               >
-                <Download className="w-4 h-4 text-blue-400" />
-                <span>{dict.about.hero.secondaryCta}</span>
-              </a>
-            ) : (
-              <button
-                disabled
-                title={isAr ? 'الملف التعريفي قيد الاعتماد الرسمي' : 'Official profile PDF pending client approval'}
-                className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl text-xs sm:text-sm font-bold text-zinc-400 bg-white/5 border border-white/10 cursor-not-allowed opacity-75"
-              >
-                <FileText className="w-4 h-4" />
-                <span>{dict.about.hero.secondaryCta}</span>
-              </button>
-            )}
+                <span>{dict.about.hero.primaryCta}</span>
+                <ArrowRight className="w-4 h-4 rtl:rotate-180" />
+              </Link>
+
+              {profilePdf ? (
+                <a
+                  href={profilePdf}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  download
+                  className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl text-xs sm:text-sm font-bold text-white bg-white/10 hover:bg-white/15 border border-white/15 hover:border-blue-500/50 shadow-lg transition-all cursor-pointer"
+                >
+                  <Download className="w-4 h-4 text-blue-400" />
+                  <span>{dict.about.hero.secondaryCta}</span>
+                </a>
+              ) : (
+                <button
+                  disabled
+                  title={isAr ? 'الملف التعريفي قيد الاعتماد الرسمي' : 'Official profile PDF pending client approval'}
+                  className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl text-xs sm:text-sm font-bold text-zinc-400 bg-white/5 border border-white/10 cursor-not-allowed opacity-75"
+                >
+                  <FileText className="w-4 h-4" />
+                  <span>{dict.about.hero.secondaryCta}</span>
+                </button>
+              )}
+            </div>
           </div>
         </section>
 
-        {/* 2. Our Story */}
+        {/* 2. Our Story & Heritage (with Story Image) */}
         <section className="glass-card rounded-3xl p-8 sm:p-12 border border-white/10 relative overflow-hidden bg-brand-surface/80">
-          <div className="max-w-3xl space-y-4">
-            <div className="text-xs font-mono font-bold text-blue-400 uppercase tracking-wider">
-              {isAr ? 'مسيرة المجموعة' : 'GROUP HERITAGE'}
+          <div className={`grid grid-cols-1 ${storyImage ? 'lg:grid-cols-12' : ''} gap-8 items-center`}>
+            <div className={`${storyImage ? 'lg:col-span-7' : 'max-w-3xl'} space-y-4`}>
+              <div className="text-xs font-mono font-bold text-blue-400 uppercase tracking-wider">
+                {isAr ? 'مسيرة المجموعة' : 'GROUP HERITAGE'}
+              </div>
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
+                {dict.about.story.heading}
+              </h2>
+              <p className="text-sm sm:text-base text-zinc-300 leading-relaxed">
+                {dict.about.story.body}
+              </p>
             </div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
-              {dict.about.story.heading}
-            </h2>
-            <p className="text-sm sm:text-base text-zinc-300 leading-relaxed">
-              {dict.about.story.body}
-            </p>
+
+            {storyImage && (
+              <div className="lg:col-span-5 relative h-64 sm:h-80 w-full rounded-2xl overflow-hidden border border-white/15 shadow-2xl group">
+                <Image
+                  src={storyImage}
+                  alt={dict.about.story.heading || 'WD Group Heritage'}
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-700"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20" />
+              </div>
+            )}
           </div>
         </section>
 

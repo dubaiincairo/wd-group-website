@@ -1059,21 +1059,37 @@ export default function PagesContentEditor() {
 
             {openSections.ceo && (
               <div className="space-y-5 pt-5 border-t border-white/10 mt-4 animate-in fade-in duration-150">
-                <MediaFieldUploader
-                  label={isAr ? 'صورة الرئيس التنفيذي (مربعة 1:1)' : 'CEO Executive Portrait / Photo (1:1 Ratio)'}
-                  description={isAr ? 'يوصى بصورة مربعة بنسبة 1:1 للحصول على أفضل وضوح' : 'Square 1:1 aspect ratio recommended for leadership portrait'}
-                  aspectRatio="1:1"
-                  bucket="photos"
-                  value={content.home.ceo.photo_url || content.home.media?.ceo_photo || ''}
-                  onChange={(url) => setContent({
-                    ...content,
-                    home: {
-                      ...content.home,
-                      ceo: { ...content.home.ceo, photo_url: url },
-                      media: { ...(content.home.media || {}), ceo_photo: url }
-                    }
-                  })}
-                />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <MediaFieldUploader
+                    label={isAr ? 'صورة الرئيس التنفيذي للنسخة العربية (RTL Posture)' : 'CEO Portrait - Arabic / RTL Posture'}
+                    description={isAr ? 'الصورة الشخصية للنسخة العربية تراعي توجيه الجسد نحو اليمين/الوسط' : 'Body posture oriented for RTL / Arabic layout'}
+                    aspectRatio="1:1"
+                    bucket="photos"
+                    value={content.home.ceo.photo_url_ar || content.home.ceo.photo_url || ''}
+                    onChange={(url) => setContent({
+                      ...content,
+                      home: {
+                        ...content.home,
+                        ceo: { ...content.home.ceo, photo_url_ar: url, photo_url: url }
+                      }
+                    })}
+                  />
+
+                  <MediaFieldUploader
+                    label={isAr ? 'صورة الرئيس التنفيذي للنسخة الإنجليزية (LTR Posture)' : 'CEO Portrait - English / LTR Posture'}
+                    description={isAr ? 'الصورة الشخصية للنسخة الإنجليزية تراعي توجيه الجسد نحو اليسار/الوسط' : 'Body posture oriented for LTR / English layout'}
+                    aspectRatio="1:1"
+                    bucket="photos"
+                    value={content.home.ceo.photo_url_en || content.home.ceo.photo_url || ''}
+                    onChange={(url) => setContent({
+                      ...content,
+                      home: {
+                        ...content.home,
+                        ceo: { ...content.home.ceo, photo_url_en: url, photo_url: content.home.ceo.photo_url || url }
+                      }
+                    })}
+                  />
+                </div>
 
                 <BilingualInput
                   label={isAr ? 'نص الرسالة التنفيذية' : 'Quote Statement'}
@@ -1228,8 +1244,8 @@ export default function PagesContentEditor() {
               onChangeAr={(v) => setContent({ ...content, about: { ...content.about, governance_statement_ar: v } })}
             />
 
-            {/* Downloadable Corporate Profile PDF Attachment */}
-            <div className="pt-5 border-t border-white/10 space-y-3">
+            {/* Downloadable Corporate Profile PDF Attachment (Bilingual) */}
+            <div className="pt-5 border-t border-white/10 space-y-4">
               <div className="flex items-center gap-2">
                 <FileText className="w-4 h-4 text-[#C9A86A]" />
                 <span className="text-xs font-mono font-bold text-[#C9A86A] uppercase tracking-wider">
@@ -1237,19 +1253,36 @@ export default function PagesContentEditor() {
                 </span>
               </div>
               <p className="text-[11px] text-zinc-400">
-                {isAr ? 'ارفع أو حدد ملف الـ PDF الذي يمكن للزوار تحميله عند النقر على "تحميل الملف التعريفي" في صفحة عنّا.' : 'Upload or specify the official corporate PDF document for visitors to download in the About page.'}
+                {isAr ? 'ارفع أو حدد ملف الـ PDF الخاص بالنسخة العربية والنسخة الإنجليزية، ليتمكن الزوار من تحميل الملف المناسب للغتهم.' : 'Upload official PDF profiles for both Arabic and English visitors.'}
               </p>
-              <MediaFieldUploader
-                label={isAr ? 'ملف الـ PDF التعريفي للمجموعة' : 'Corporate Profile PDF Attachment'}
-                bucket="assets"
-                accept="any"
-                value={content.about.corporate_profile_pdf || content.branding?.corporate_profile_pdf || ''}
-                onChange={(url) => setContent({ 
-                  ...content, 
-                  about: { ...content.about, corporate_profile_pdf: url },
-                  branding: { ...(content.branding || {}), corporate_profile_pdf: url }
-                })}
-              />
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <MediaFieldUploader
+                  label={isAr ? 'الملف التعريفي باللغة العربية (PDF - Arabic)' : 'Corporate Profile PDF (Arabic Version)'}
+                  description={isAr ? 'الملف الذي سيتم تحميله عند تصفح الموقع باللغة العربية' : 'Downloaded when visitor is on Arabic version'}
+                  bucket="assets"
+                  accept="any"
+                  value={content.about.corporate_profile_pdf_ar || content.about.corporate_profile_pdf || ''}
+                  onChange={(url) => setContent({ 
+                    ...content, 
+                    about: { ...content.about, corporate_profile_pdf_ar: url, corporate_profile_pdf: url },
+                    branding: { ...(content.branding || {}), corporate_profile_pdf: url }
+                  })}
+                />
+
+                <MediaFieldUploader
+                  label={isAr ? 'الملف التعريفي باللغة الإنجليزية (PDF - English)' : 'Corporate Profile PDF (English Version)'}
+                  description={isAr ? 'الملف الذي سيتم تحميله عند تصفح الموقع باللغة الإنجليزية' : 'Downloaded when visitor is on English version'}
+                  bucket="assets"
+                  accept="any"
+                  value={content.about.corporate_profile_pdf_en || content.about.corporate_profile_pdf || ''}
+                  onChange={(url) => setContent({ 
+                    ...content, 
+                    about: { ...content.about, corporate_profile_pdf_en: url, corporate_profile_pdf: content.about.corporate_profile_pdf || url },
+                    branding: { ...(content.branding || {}), corporate_profile_pdf: content.branding?.corporate_profile_pdf || url }
+                  })}
+                />
+              </div>
             </div>
           </div>
 

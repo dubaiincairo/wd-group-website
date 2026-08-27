@@ -62,16 +62,35 @@ export default function CareersPage() {
   }, []);
 
   const handleSelectJob = (job: JobListing) => {
+    const resolvedTitle = lang === 'ar' ? (job.title_ar || job.title) : job.title;
     setFormData((prev) => ({
       ...prev,
       jobId: job.id,
-      jobTitle: job.title,
+      jobTitle: resolvedTitle,
     }));
     const talentSection = document.getElementById('talent-pool');
     if (talentSection) {
       talentSection.scrollIntoView({ behavior: 'smooth' });
     }
   };
+
+  // Filter jobs based on active filter button (0 = all)
+  const filteredJobs = jobs.filter((job) => {
+    if (activeFilter === 0) return true;
+    const filterText = (dict.careers.jobs.filters[activeFilter] || '').toLowerCase();
+    const titleMatch = (job.title + ' ' + (job.title_ar || '') + ' ' + (job.role_overview || '') + ' ' + (job.role_overview_ar || '')).toLowerCase();
+    
+    if (filterText.includes('تقني') || filterText.includes('tech') || filterText.includes('برمج') || filterText.includes('تصنيع')) {
+      return titleMatch.includes('developer') || titleMatch.includes('odoo') || titleMatch.includes('ai') || titleMatch.includes('مطور') || titleMatch.includes('أودو') || titleMatch.includes('ذكاء');
+    }
+    if (filterText.includes('تصميم') || filterText.includes('design') || filterText.includes('فيديو') || filterText.includes('video')) {
+      return titleMatch.includes('designer') || titleMatch.includes('editor') || titleMatch.includes('مصمم') || titleMatch.includes('محرر') || titleMatch.includes('موشن');
+    }
+    if (filterText.includes('تسويق') || filterText.includes('marketing') || filterText.includes('مبيعات') || filterText.includes('business')) {
+      return titleMatch.includes('marketing') || titleMatch.includes('ads') || titleMatch.includes('account') || titleMatch.includes('تسويق') || titleMatch.includes('حسابات') || titleMatch.includes('أعمال');
+    }
+    return true;
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -99,22 +118,6 @@ export default function CareersPage() {
       setLoading(false);
     }
   };
-
-  // Filter jobs based on active filter button (0 = all, 1 = tech/strategy, etc.)
-  const filteredJobs = jobs.filter((job) => {
-    if (activeFilter === 0) return true;
-    const filterText = dict.careers.jobs.filters[activeFilter]?.toLowerCase() || '';
-    if (filterText.includes('تقني') || filterText.includes('tech')) {
-      return job.title.toLowerCase().includes('developer') || job.title.toLowerCase().includes('odoo') || job.title.toLowerCase().includes('ai');
-    }
-    if (filterText.includes('تصميم') || filterText.includes('design')) {
-      return job.title.toLowerCase().includes('designer') || job.title.toLowerCase().includes('editor');
-    }
-    if (filterText.includes('تسويق') || filterText.includes('marketing')) {
-      return job.title.toLowerCase().includes('marketing') || job.title.toLowerCase().includes('ads') || job.title.toLowerCase().includes('account');
-    }
-    return true;
-  });
 
   return (
     <div className="min-h-screen bg-brand-dark text-white pt-28 pb-20 px-4 sm:px-6 lg:px-8">
@@ -232,6 +235,12 @@ export default function CareersPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {filteredJobs.map((job) => {
                 const isExpanded = expandedJobId === job.id;
+                const jobTitle = lang === 'ar' ? (job.title_ar || job.title) : job.title;
+                const jobOverview = lang === 'ar' ? (job.role_overview_ar || job.role_overview) : job.role_overview;
+                const jobResponsibilities = lang === 'ar' ? (job.responsibilities_ar || job.responsibilities) : job.responsibilities;
+                const jobRequirements = lang === 'ar' ? (job.requirements_ar || job.requirements) : job.requirements;
+                const jobExperience = lang === 'ar' ? (job.experience_ar || job.experience) : job.experience;
+
                 return (
                   <div
                     key={job.id}
@@ -240,44 +249,44 @@ export default function CareersPage() {
                     <div className="space-y-2.5">
                       <div className="flex items-start justify-between gap-2">
                         <h3 className="text-base font-bold text-white leading-snug">
-                          {job.title}
+                          {jobTitle}
                         </h3>
-                        {job.experience && (
+                        {jobExperience && (
                           <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-mono bg-blue-500/10 text-blue-300 border border-blue-500/20 shrink-0">
                             <Clock className="w-3 h-3" />
-                            <span>{job.experience}</span>
+                            <span>{jobExperience}</span>
                           </span>
                         )}
                       </div>
 
-                      {job.role_overview && (
+                      {jobOverview && (
                         <p className="text-xs text-zinc-400 line-clamp-2 leading-relaxed">
-                          {job.role_overview}
+                          {jobOverview}
                         </p>
                       )}
 
                       {isExpanded && (
                         <div className="pt-3 border-t border-white/10 space-y-3 text-xs text-zinc-300 animate-in fade-in duration-200">
-                          {job.responsibilities && (
+                          {jobResponsibilities && (
                             <div>
                               <h4 className="font-bold text-white text-[11px] uppercase tracking-wider mb-1">
                                 {lang === 'ar' ? 'المسؤوليات والمهام:' : 'Responsibilities:'}
                               </h4>
                               <ul className="list-disc list-inside space-y-1 text-zinc-400 leading-relaxed text-[11px]">
-                                {job.responsibilities.split('\n').filter(Boolean).map((line, i) => (
+                                {jobResponsibilities.split('\n').filter(Boolean).map((line, i) => (
                                   <li key={i}>{line.replace(/^-\s*/, '')}</li>
                                 ))}
                               </ul>
                             </div>
                           )}
 
-                          {job.requirements && (
+                          {jobRequirements && (
                             <div>
                               <h4 className="font-bold text-white text-[11px] uppercase tracking-wider mb-1">
                                 {lang === 'ar' ? 'المتطلبات والشروط:' : 'Requirements:'}
                               </h4>
                               <ul className="list-disc list-inside space-y-1 text-zinc-400 leading-relaxed text-[11px]">
-                                {job.requirements.split('\n').filter(Boolean).map((line, i) => (
+                                {jobRequirements.split('\n').filter(Boolean).map((line, i) => (
                                   <li key={i}>{line.replace(/^-\s*/, '')}</li>
                                 ))}
                               </ul>
