@@ -76,7 +76,7 @@ export default function HospitalitySectorAdminPage() {
       stars: 4,
       desc_en: 'Premium serviced residence providing modern hospitality excellence.',
       desc_ar: 'وحدات سكنية فندقية راقية تقدم تجربة ضيافة عصرية متميزة.',
-      image_url: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80',
+      image_url: '',
       google_maps_url: 'https://maps.google.com',
       review_url: '',
       website_url: 'https://new.swissbluehotels.com',
