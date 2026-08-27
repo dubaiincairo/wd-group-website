@@ -2086,7 +2086,7 @@ export default function LiveEditorDock() {
             
             <div className="flex items-center gap-2.5">
               <Link
-                href="/admin/dashboard"
+                href="/admin"
                 className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-blue-600/20 hover:bg-blue-600 text-blue-300 hover:text-white border border-blue-500/40 hover:border-blue-500 transition-all font-mono text-[11px] font-bold shadow-sm cursor-pointer"
               >
                 <LayoutDashboard className="w-3.5 h-3.5" />

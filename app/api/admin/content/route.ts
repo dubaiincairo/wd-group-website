@@ -282,15 +282,43 @@ export async function GET(req: NextRequest) {
     const dbContent = await getSiteContent();
     const defaultContent = getDefaultContent();
     
-    // Deep merge to guarantee all sections exist
+    // Deep merge to guarantee all sections and sub-arrays exist
     const merged = {
       ...defaultContent,
       ...(dbContent || {}),
-      home: { ...defaultContent.home, ...(dbContent?.home || {}) },
+      home: { 
+        ...defaultContent.home, 
+        ...(dbContent?.home || {}),
+        hero: { ...defaultContent.home.hero, ...(dbContent?.home?.hero || {}) },
+        metrics: { ...defaultContent.home.metrics, ...(dbContent?.home?.metrics || {}) },
+        synergy: { ...defaultContent.home.synergy, ...(dbContent?.home?.synergy || {}) },
+        identity: { ...defaultContent.home.identity, ...(dbContent?.home?.identity || {}) },
+        ceo: { ...defaultContent.home.ceo, ...(dbContent?.home?.ceo || {}) },
+        partnership: { ...defaultContent.home.partnership, ...(dbContent?.home?.partnership || {}) },
+        media: { ...defaultContent.home.media, ...(dbContent?.home?.media || {}) },
+      },
       about: { ...defaultContent.about, ...(dbContent?.about || {}) },
-      hospitality: { ...defaultContent.hospitality, ...(dbContent?.hospitality || {}) },
-      manufacturing: { ...defaultContent.manufacturing, ...(dbContent?.manufacturing || {}) },
-      contracting: { ...defaultContent.contracting, ...(dbContent?.contracting || {}) },
+      hospitality: { 
+        ...defaultContent.hospitality, 
+        ...(dbContent?.hospitality || {}),
+        properties: Array.isArray(dbContent?.hospitality?.properties) && dbContent.hospitality.properties.length > 0
+          ? dbContent.hospitality.properties
+          : defaultContent.hospitality.properties,
+      },
+      manufacturing: { 
+        ...defaultContent.manufacturing, 
+        ...(dbContent?.manufacturing || {}),
+        factories: Array.isArray(dbContent?.manufacturing?.factories) && dbContent.manufacturing.factories.length > 0
+          ? dbContent.manufacturing.factories
+          : defaultContent.manufacturing.factories,
+      },
+      contracting: { 
+        ...defaultContent.contracting, 
+        ...(dbContent?.contracting || {}),
+        services: Array.isArray(dbContent?.contracting?.services) && dbContent.contracting.services.length > 0
+          ? dbContent.contracting.services
+          : defaultContent.contracting.services,
+      },
       settings: { ...defaultContent.settings, ...(dbContent?.settings || {}) },
       seo: { ...defaultContent.seo, ...(dbContent?.seo || {}) },
     };

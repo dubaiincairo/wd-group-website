@@ -28,12 +28,287 @@ import {
 import BilingualInput from '@/components/admin/BilingualInput';
 import MediaFieldUploader from '@/components/admin/MediaFieldUploader';
 import { useToast } from '@/components/admin/ToastProvider';
+import { useLanguage } from '@/context/LanguageContext';
+import { translations } from '@/lib/translations';
 import type { SiteContentPayload } from '@/lib/admin/types';
+
+function createDefaultContent(): SiteContentPayload {
+  const en = translations.en;
+  const ar = translations.ar;
+
+  return {
+    home: {
+      hero: {
+        eyebrow_en: en.home.hero.eyebrow,
+        eyebrow_ar: ar.home.hero.eyebrow,
+        kicker_en: en.home.hero.kicker,
+        kicker_ar: ar.home.hero.kicker,
+        title_en: en.home.hero.title,
+        title_ar: ar.home.hero.title,
+        title_line1_en: en.home.hero.title_line1,
+        title_line1_ar: ar.home.hero.title_line1,
+        title_line2_en: en.home.hero.title_line2,
+        title_line2_ar: ar.home.hero.title_line2,
+        title_line3_en: en.home.hero.title_line3,
+        title_line3_ar: ar.home.hero.title_line3,
+        body_en: en.home.hero.body,
+        body_ar: ar.home.hero.body,
+        primary_cta_en: en.home.hero.primaryCta,
+        primary_cta_ar: ar.home.hero.primaryCta,
+        secondary_cta_en: en.home.hero.secondaryCta,
+        secondary_cta_ar: ar.home.hero.secondaryCta,
+        dock_hospitality_label_en: en.home.hero.dock?.hospitality_label || 'Hospitality (SwissBlue)',
+        dock_hospitality_label_ar: ar.home.hero.dock?.hospitality_label || 'الضيافة (SwissBlue)',
+        dock_hospitality_badge_en: en.home.hero.dock?.hospitality_badge || '6 Properties',
+        dock_hospitality_badge_ar: ar.home.hero.dock?.hospitality_badge || '6 منشآت',
+        dock_manufacturing_label_en: en.home.hero.dock?.manufacturing_label || 'Manufacturing (GreenWood)',
+        dock_manufacturing_label_ar: ar.home.hero.dock?.manufacturing_label || 'التصنيع والأثاث (GreenWood)',
+        dock_manufacturing_badge_en: en.home.hero.dock?.manufacturing_badge || '3 Factories',
+        dock_manufacturing_badge_ar: ar.home.hero.dock?.manufacturing_badge || '3 مصانع',
+        dock_contracting_label_en: en.home.hero.dock?.contracting_label || 'Contracting (Projects)',
+        dock_contracting_label_ar: ar.home.hero.dock?.contracting_label || 'المقاولات والتميز الهندسي',
+        dock_contracting_badge_en: en.home.hero.dock?.contracting_badge || 'Turnkey Execution',
+        dock_contracting_badge_ar: ar.home.hero.dock?.contracting_badge || 'تنفيذ شامل',
+        scroll_cue_en: en.home.hero.scroll_cue || 'Scroll to explore',
+        scroll_cue_ar: ar.home.hero.scroll_cue || 'استكشف المنظومة القابضة',
+      },
+      media: {
+        hero_video_hospitality: '/videos/hospitality.mp4',
+        hero_poster_hospitality: 'https://cdn.sanity.io/images/uoj8zwj3/production/00b20cc6cb3d8c613964965da5556e8396305950-2400x1792.jpg',
+        hero_video_manufacturing: '/videos/manufacturing.mp4',
+        hero_poster_manufacturing: 'https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=2400&q=85',
+        hero_video_contracting: '/videos/contracting.mp4',
+        hero_poster_contracting: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2400&q=85',
+        sector_photo_hospitality: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1600&q=80',
+        sector_photo_manufacturing: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=1600&q=80',
+        sector_photo_contracting: 'https://images.unsplash.com/photo-1541888946425-d0fbb180c5f7?auto=format&fit=crop&w=1600&q=80',
+      },
+      metrics: {
+        stat1_num: en.home.metrics.stat1_num,
+        stat1_text_en: en.home.metrics.stat1_text,
+        stat1_text_ar: ar.home.metrics.stat1_text,
+        stat2_num: en.home.metrics.stat2_num,
+        stat2_text_en: en.home.metrics.stat2_text,
+        stat2_text_ar: ar.home.metrics.stat2_text,
+        stat3_num: en.home.metrics.stat3_num,
+        stat3_text_en: en.home.metrics.stat3_text,
+        stat3_text_ar: ar.home.metrics.stat3_text,
+        stat4_num: en.home.metrics.stat4_num,
+        stat4_text_en: en.home.metrics.stat4_text,
+        stat4_text_ar: ar.home.metrics.stat4_text,
+      },
+      synergy: {
+        label_en: en.home.synergy.label,
+        label_ar: ar.home.synergy.label,
+        heading_en: en.home.synergy.heading,
+        heading_ar: ar.home.synergy.heading,
+        intro_en: en.home.synergy.intro,
+        intro_ar: ar.home.synergy.intro,
+        step1_title_en: en.home.synergy.step1_title,
+        step1_title_ar: ar.home.synergy.step1_title,
+        step1_text_en: en.home.synergy.step1_text,
+        step1_text_ar: ar.home.synergy.step1_text,
+        step2_title_en: en.home.synergy.step2_title,
+        step2_title_ar: ar.home.synergy.step2_title,
+        step2_text_en: en.home.synergy.step2_text,
+        step2_text_ar: ar.home.synergy.step2_text,
+        step3_title_en: en.home.synergy.step3_title,
+        step3_title_ar: ar.home.synergy.step3_title,
+        step3_text_en: en.home.synergy.step3_text,
+        step3_text_ar: ar.home.synergy.step3_text,
+      },
+      identity: {
+        label_en: en.home.identity.label,
+        label_ar: ar.home.identity.label,
+        vision_title_en: en.home.identity.vision_title,
+        vision_title_ar: ar.home.identity.vision_title,
+        vision_desc_en: en.home.identity.vision_desc,
+        vision_desc_ar: ar.home.identity.vision_desc,
+        mission_title_en: en.home.identity.mission_title,
+        mission_title_ar: ar.home.identity.mission_title,
+        mission_desc_en: en.home.identity.mission_desc,
+        mission_desc_ar: ar.home.identity.mission_desc,
+        values_title_en: en.home.identity.values_title,
+        values_title_ar: ar.home.identity.values_title,
+        val1_title_en: en.home.identity.values[0]?.title || '',
+        val1_title_ar: ar.home.identity.values[0]?.title || '',
+        val1_desc_en: en.home.identity.values[0]?.desc || '',
+        val1_desc_ar: ar.home.identity.values[0]?.desc || '',
+        val2_title_en: en.home.identity.values[1]?.title || '',
+        val2_title_ar: ar.home.identity.values[1]?.title || '',
+        val2_desc_en: en.home.identity.values[1]?.desc || '',
+        val2_desc_ar: ar.home.identity.values[1]?.desc || '',
+        val3_title_en: en.home.identity.values[2]?.title || '',
+        val3_title_ar: ar.home.identity.values[2]?.title || '',
+        val3_desc_en: en.home.identity.values[2]?.desc || '',
+        val3_desc_ar: ar.home.identity.values[2]?.desc || '',
+        val4_title_en: en.home.identity.values[3]?.title || '',
+        val4_title_ar: ar.home.identity.values[3]?.title || '',
+        val4_desc_en: en.home.identity.values[3]?.desc || '',
+        val4_desc_ar: ar.home.identity.values[3]?.desc || '',
+      },
+      ceo: {
+        label_en: en.home.ceo.label,
+        label_ar: ar.home.ceo.label,
+        quote_en: en.home.ceo.quote,
+        quote_ar: ar.home.ceo.quote,
+        name_en: en.home.ceo.name,
+        name_ar: ar.home.ceo.name,
+        title_en: en.home.ceo.title,
+        title_ar: ar.home.ceo.title,
+        photo_url: '',
+      },
+      partnership: {
+        label_en: en.home.partnership.label,
+        label_ar: ar.home.partnership.label,
+        heading_en: en.home.partnership.heading,
+        heading_ar: ar.home.partnership.heading,
+        body_en: en.home.partnership.body,
+        body_ar: ar.home.partnership.body,
+        primary_cta_en: en.home.partnership.primaryCta,
+        primary_cta_ar: ar.home.partnership.primaryCta,
+        secondary_cta_en: en.home.partnership.secondaryCta,
+        secondary_cta_ar: ar.home.partnership.secondaryCta,
+      },
+    },
+    about: {
+      hero_image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=2400&q=85',
+      story_image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=1200&q=80',
+      story_heading_en: en.about.story.heading,
+      story_heading_ar: ar.about.story.heading,
+      story_body_en: en.about.story.body,
+      story_body_ar: ar.about.story.body,
+      governance_statement_en: en.about.governance.statement,
+      governance_statement_ar: ar.about.governance.statement,
+    },
+    hospitality: {
+      hero_title_en: en.hospitality.hero.title,
+      hero_title_ar: ar.hospitality.hero.title,
+      hero_body_en: en.hospitality.hero.body,
+      hero_body_ar: ar.hospitality.hero.body,
+      hero_image: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=2400&q=85',
+      properties: en.hospitality.portfolio.properties.map((p, idx) => ({
+        id: `prop_${idx + 1}`,
+        name_en: p.name,
+        name_ar: ar.hospitality.portfolio.properties[idx]?.name || p.name,
+        city_en: p.city,
+        city_ar: ar.hospitality.portfolio.properties[idx]?.city || p.city,
+        desc_en: p.desc,
+        desc_ar: ar.hospitality.portfolio.properties[idx]?.desc || p.desc,
+        image_url: [
+          'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80',
+          'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80',
+          'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=800&q=80',
+          'https://images.unsplash.com/photo-1564501049412-61c2a3083791?auto=format&fit=crop&w=800&q=80',
+          'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=800&q=80',
+          'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=800&q=80',
+        ][idx % 6],
+        review_url: '',
+        website_url: 'https://new.swissbluehotels.com',
+      })),
+    },
+    manufacturing: {
+      hero_title_en: en.manufacturing.hero.title,
+      hero_title_ar: ar.manufacturing.hero.title,
+      hero_body_en: en.manufacturing.hero.body,
+      hero_body_ar: ar.manufacturing.hero.body,
+      hero_image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=2400&q=85',
+      factories: en.manufacturing.factories.list.map((f, idx) => ({
+        id: `factory_${idx + 1}`,
+        title_en: f.title,
+        title_ar: ar.manufacturing.factories.list[idx]?.title || f.title,
+        desc_en: f.desc,
+        desc_ar: ar.manufacturing.factories.list[idx]?.desc || f.desc,
+        location_en: 'Najran & Riyadh',
+        location_ar: 'نجران والرياض',
+        image_url: [
+          'https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=800&q=80',
+          'https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?auto=format&fit=crop&w=800&q=80',
+          'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80',
+        ][idx % 3],
+      })),
+    },
+    contracting: {
+      hero_title_en: en.contracting.hero.title,
+      hero_title_ar: ar.contracting.hero.title,
+      hero_body_en: en.contracting.hero.body,
+      hero_body_ar: ar.contracting.hero.body,
+      hero_image: 'https://images.unsplash.com/photo-1541888946425-d0fbb180c5f7?auto=format&fit=crop&w=2400&q=85',
+      services: en.contracting.services.list.map((s, idx) => ({
+        id: `service_${idx + 1}`,
+        title_en: s.title,
+        title_ar: ar.contracting.services.list[idx]?.title || s.title,
+        desc_en: s.desc,
+        desc_ar: ar.contracting.services.list[idx]?.desc || s.desc,
+        image_url: [
+          'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80',
+          'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=800&q=80',
+          'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80',
+        ][idx % 3],
+      })),
+    },
+    branding: {
+      logo_dark: '/brand/wd-logo-white.svg',
+      logo_light: '/brand/wd-logo-dark.svg',
+      favicon: '/favicon.ico',
+      corporate_profile_pdf: '/corporate-profile.pdf',
+    },
+    settings: {
+      company_name_ar: 'شركة تصاميم الوطن المحدودة / مجموعة دبليو دي للأعمال',
+      company_name_en: 'WD Group for Business / Watan Designs Ltd.',
+      cr_number: '5950011057',
+      vat_number: '300865965100003',
+      headquarters_ar: 'طريق الملك عبدالعزيز، حي الخالدية، نجران، المملكة العربية السعودية',
+      headquarters_en: 'King Abdulaziz Road, Al Khalidiya, Najran, Kingdom of Saudi Arabia',
+      general_email: 'ceo@wdgroup.online',
+      secondary_email: 'ceo@wdgroup.online',
+      primary_phone: '+966 50 572 5070',
+      secondary_phone: '+966 53 397 9797',
+      whatsapp_phone: '+966505725070',
+      emergency_notice_enabled: false,
+      emergency_notice_ar: '',
+      emergency_notice_en: '',
+      maintenance_mode_enabled: true,
+      maintenance_headline_ar: 'المنصة تحت الصيانة والتطوير',
+      maintenance_headline_en: 'Platform Under Scheduled Maintenance',
+      maintenance_message_ar: 'نعمل حالياً على تطوير وتجهيز المنصة الرقمية لمجموعة دبليو دي للأعمال. سنكون معكم قريباً.',
+      maintenance_message_en: 'We are currently preparing the new digital platform for WD Group. We look forward to launching soon.',
+      maintenance_estimated_date: 'Q3 2026',
+    },
+    seo: {
+      global_title_en: 'WD Group | Integrated Hospitality, Manufacturing & Contracting',
+      global_title_ar: 'مجموعة دبليو دي للأعمال | منظومة متكاملة في الضيافة والتصنيع والمقاولات',
+      global_description_en: 'WD Group is a premier Saudi business group creating sustainable value across hospitality, specialized manufacturing, and turnkey contracting.',
+      global_description_ar: 'مجموعة أعمال سعودية رائدة تصنع قيمة مستدامة عبر قطاعات الضيافة، التصنيع المتخصص، والمقاولات والتجهيز الداخلي المتكامل.',
+      keywords_en: 'WD Group, Saudi Holding Company, SwissBlue Hotels, GreenWood Manufacturing, WatanDesign Contracting, Vision 2030, Saudi Arabia',
+      keywords_ar: 'مجموعة دبليو دي, شركة قابضة سعودية, فنادق سويس بلو, مصانع جرين وود, شركة تصاميم الوطن, رؤية 2030, المملكة العربية السعودية',
+      canonical_base: 'https://wdgroup.online',
+      og_image_url: 'https://fqkbgfdasfwnryekkgqz.supabase.co/storage/v1/object/public/photos/og-preview.jpg',
+      twitter_card: 'summary_large_image',
+      twitter_handle: '@wdgroup',
+      google_site_verification: '',
+      bing_site_verification: '',
+      google_analytics_id: 'G-FVBW70B8H5',
+      google_tag_manager_id: '',
+      robots_index: true,
+      sitemap_url: 'https://wdgroup.online/sitemap.xml',
+      schema_org_type: 'Corporation',
+      schema_legal_name_ar: 'مجموعة دبليو دي للأعمال',
+      schema_legal_name_en: 'WD Group for Business',
+      schema_phone: '+966 50 572 5070',
+      schema_email: 'ceo@wdgroup.online',
+    },
+    version: 1,
+  };
+}
 
 export default function PagesContentEditor() {
   const { showToast } = useToast();
+  const { lang } = useLanguage();
+  const isAr = lang === 'ar';
+
   const [activeTab, setActiveTab] = useState<'home' | 'about' | 'hospitality' | 'manufacturing' | 'contracting'>('home');
-  const [content, setContent] = useState<SiteContentPayload | null>(null);
+  const [content, setContent] = useState<SiteContentPayload>(createDefaultContent());
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -85,11 +360,51 @@ export default function PagesContentEditor() {
       const res = await fetch('/api/admin/content');
       if (res.ok) {
         const d = await res.json();
-        setContent(d.data);
+        if (d.data) {
+          const defaults = createDefaultContent();
+          setContent({
+            ...defaults,
+            ...d.data,
+            home: {
+              ...defaults.home,
+              ...(d.data.home || {}),
+              hero: { ...defaults.home.hero, ...(d.data.home?.hero || {}) },
+              metrics: { ...defaults.home.metrics, ...(d.data.home?.metrics || {}) },
+              synergy: { ...defaults.home.synergy, ...(d.data.home?.synergy || {}) },
+              identity: { ...defaults.home.identity, ...(d.data.home?.identity || {}) },
+              ceo: { ...defaults.home.ceo, ...(d.data.home?.ceo || {}) },
+              partnership: { ...defaults.home.partnership, ...(d.data.home?.partnership || {}) },
+              media: { ...defaults.home.media, ...(d.data.home?.media || {}) },
+            },
+            about: { ...defaults.about, ...(d.data.about || {}) },
+            hospitality: {
+              ...defaults.hospitality,
+              ...(d.data.hospitality || {}),
+              properties: Array.isArray(d.data.hospitality?.properties) && d.data.hospitality.properties.length > 0
+                ? d.data.hospitality.properties
+                : defaults.hospitality.properties,
+            },
+            manufacturing: {
+              ...defaults.manufacturing,
+              ...(d.data.manufacturing || {}),
+              factories: Array.isArray(d.data.manufacturing?.factories) && d.data.manufacturing.factories.length > 0
+                ? d.data.manufacturing.factories
+                : defaults.manufacturing.factories,
+            },
+            contracting: {
+              ...defaults.contracting,
+              ...(d.data.contracting || {}),
+              services: Array.isArray(d.data.contracting?.services) && d.data.contracting.services.length > 0
+                ? d.data.contracting.services
+                : defaults.contracting.services,
+            },
+            settings: { ...defaults.settings, ...(d.data.settings || {}) },
+            seo: { ...defaults.seo, ...(d.data.seo || {}) },
+          });
+        }
       }
     } catch (e) {
       console.error('Failed to load content:', e);
-      showToast('Failed to load content', 'error');
     } finally {
       setLoading(false);
     }
@@ -141,13 +456,13 @@ export default function PagesContentEditor() {
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-mono font-bold mb-2">
             <Globe className="w-3.5 h-3.5" />
-            <span>UNIFIED DUAL-LOCALE & MEDIA CMS</span>
+            <span>{isAr ? 'نظام إدارة المحتوى والوسائط الثنائي' : 'UNIFIED DUAL-LOCALE & MEDIA CMS'}</span>
           </div>
           <h1 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
-            Pages, Media & Sections Editor
+            {isAr ? 'محرر الصفحات والوسائط والأقسام' : 'Pages, Media & Sections Editor'}
           </h1>
           <p className="text-xs sm:text-sm text-zinc-400 mt-1">
-            Manage headlines, narratives, photos, and videos across all sectors with instant live sync.
+            {isAr ? 'إدارة العناوين والنصوص والصور والفيديوهات في جميع القطاعات مع المزامنة الفورية.' : 'Manage headlines, narratives, photos, and videos across all sectors with instant live sync.'}
           </p>
         </div>
 
@@ -158,7 +473,7 @@ export default function PagesContentEditor() {
             className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white text-xs sm:text-sm font-bold transition-all shadow-glow-blue cursor-pointer whitespace-nowrap shrink-0 leading-none"
           >
             <Save className="w-4 h-4 shrink-0" />
-            <span className="whitespace-nowrap leading-none">{saving ? 'Publishing…' : 'Save & Publish All'}</span>
+            <span className="whitespace-nowrap leading-none">{saving ? (isAr ? 'جارٍ الحفظ…' : 'Publishing…') : (isAr ? 'حفظ ونشر الكل' : 'Save & Publish All')}</span>
           </button>
         </div>
       </div>
@@ -166,11 +481,11 @@ export default function PagesContentEditor() {
       {/* Page Tabs */}
       <div className="flex flex-wrap items-center gap-2 p-1.5 rounded-2xl bg-[#0F1117] border border-white/10">
         {[
-          { id: 'home', label: 'Home', icon: Home },
-          { id: 'about', label: 'About Us', icon: Compass },
-          { id: 'hospitality', label: 'SwissBlue Hospitality', icon: Building2 },
-          { id: 'manufacturing', label: 'GreenWood Manufacturing', icon: Factory },
-          { id: 'contracting', label: 'Contracting & Fit-Out', icon: HardHat },
+          { id: 'home', label: isAr ? 'الرئيسية' : 'Home', icon: Home },
+          { id: 'about', label: isAr ? 'عنّا' : 'About Us', icon: Compass },
+          { id: 'hospitality', label: isAr ? 'الضيافة' : 'SwissBlue Hospitality', icon: Building2 },
+          { id: 'manufacturing', label: isAr ? 'التصنيع' : 'GreenWood Manufacturing', icon: Factory },
+          { id: 'contracting', label: isAr ? 'المقاولات' : 'Contracting & Fit-Out', icon: HardHat },
         ].map((tab) => {
           const Icon = tab.icon;
           return (
@@ -944,23 +1259,23 @@ export default function PagesContentEditor() {
           {/* Properties Photo List */}
           <div className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 space-y-5">
             <span className="text-xs font-mono font-bold text-sky-400 uppercase tracking-wider">
-              HOSPITALITY PROPERTIES PHOTOS & DETAILS
+              {isAr ? 'صور وتفاصيل فنادق سويس بلو' : 'HOSPITALITY PROPERTIES PHOTOS & DETAILS'}
             </span>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {content.hospitality.properties.map((prop, idx) => (
+              {(content.hospitality?.properties || []).map((prop, idx) => (
                 <div key={prop.id || idx} className="p-4 rounded-2xl bg-black/40 border border-white/10 space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-white">{prop.name_en}</span>
-                    <span className="text-[10px] font-mono text-sky-400">{prop.city_en}</span>
+                    <span className="text-xs font-bold text-white">{isAr ? prop.name_ar : prop.name_en}</span>
+                    <span className="text-[10px] font-mono text-sky-400">{isAr ? prop.city_ar : prop.city_en}</span>
                   </div>
 
                   <MediaFieldUploader
-                    label={`Property Photo: ${prop.name_en}`}
+                    label={isAr ? `صورة المنشأة: ${prop.name_ar || prop.name_en}` : `Property Photo: ${prop.name_en}`}
                     bucket="photos"
                     value={prop.image_url || ''}
                     onChange={(url) => {
-                      const updated = [...content.hospitality.properties];
+                      const updated = [...(content.hospitality?.properties || [])];
                       updated[idx] = { ...updated[idx], image_url: url };
                       setContent({ ...content, hospitality: { ...content.hospitality, properties: updated } });
                     }}
@@ -980,31 +1295,31 @@ export default function PagesContentEditor() {
           <div className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 space-y-5">
             <div className="flex items-center justify-between border-b border-white/10 pb-3">
               <span className="text-xs font-mono font-bold text-emerald-400 uppercase tracking-wider">
-                GREENWOOD MANUFACTURING HERO & ASSETS
+                {isAr ? 'بيانات وصور قطاع التصنيع والأثاث (جرين وود)' : 'GREENWOOD MANUFACTURING HERO & ASSETS'}
               </span>
             </div>
 
             <MediaFieldUploader
-              label="Manufacturing Hero Background Photo"
+              label={isAr ? 'صورة الغلاف لقطاع التصنيع' : 'Manufacturing Hero Background Photo'}
               bucket="photos"
-              value={content.manufacturing.hero_image || ''}
+              value={content.manufacturing?.hero_image || ''}
               onChange={(url) => setContent({ ...content, manufacturing: { ...content.manufacturing, hero_image: url } })}
             />
 
             <BilingualInput
-              label="Manufacturing Page Title"
-              valueEn={content.manufacturing.hero_title_en}
-              valueAr={content.manufacturing.hero_title_ar}
+              label={isAr ? 'عنوان صفحة التصنيع' : 'Manufacturing Page Title'}
+              valueEn={content.manufacturing?.hero_title_en}
+              valueAr={content.manufacturing?.hero_title_ar}
               onChangeEn={(v) => setContent({ ...content, manufacturing: { ...content.manufacturing, hero_title_en: v } })}
               onChangeAr={(v) => setContent({ ...content, manufacturing: { ...content.manufacturing, hero_title_ar: v } })}
             />
 
             <BilingualInput
-              label="Manufacturing Subtitle / Intro"
+              label={isAr ? 'النص التعريفي لقطاع التصنيع' : 'Manufacturing Subtitle / Intro'}
               isTextarea
               rows={3}
-              valueEn={content.manufacturing.hero_body_en}
-              valueAr={content.manufacturing.hero_body_ar}
+              valueEn={content.manufacturing?.hero_body_en}
+              valueAr={content.manufacturing?.hero_body_ar}
               onChangeEn={(v) => setContent({ ...content, manufacturing: { ...content.manufacturing, hero_body_en: v } })}
               onChangeAr={(v) => setContent({ ...content, manufacturing: { ...content.manufacturing, hero_body_ar: v } })}
             />
@@ -1013,20 +1328,20 @@ export default function PagesContentEditor() {
           {/* Factories List */}
           <div className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 space-y-5">
             <span className="text-xs font-mono font-bold text-emerald-400 uppercase tracking-wider">
-              3 SPECIALIZED FACTORIES PHOTOS
+              {isAr ? 'صور المصانع الثلاثة المتخصصة' : '3 SPECIALIZED FACTORIES PHOTOS'}
             </span>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {content.manufacturing.factories.map((fac, idx) => (
+              {(content.manufacturing?.factories || []).map((fac, idx) => (
                 <div key={fac.id || idx} className="p-4 rounded-2xl bg-black/40 border border-white/10 space-y-3">
-                  <span className="text-xs font-bold text-white block">{fac.title_en}</span>
+                  <span className="text-xs font-bold text-white block">{isAr ? fac.title_ar : fac.title_en}</span>
 
                   <MediaFieldUploader
-                    label={`Factory Photo: ${fac.title_en}`}
+                    label={isAr ? `صورة المصنع: ${fac.title_ar || fac.title_en}` : `Factory Photo: ${fac.title_en}`}
                     bucket="photos"
                     value={fac.image_url || ''}
                     onChange={(url) => {
-                      const updated = [...content.manufacturing.factories];
+                      const updated = [...(content.manufacturing?.factories || [])];
                       updated[idx] = { ...updated[idx], image_url: url };
                       setContent({ ...content, manufacturing: { ...content.manufacturing, factories: updated } });
                     }}
@@ -1046,31 +1361,31 @@ export default function PagesContentEditor() {
           <div className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 space-y-5">
             <div className="flex items-center justify-between border-b border-white/10 pb-3">
               <span className="text-xs font-mono font-bold text-amber-400 uppercase tracking-wider">
-                CONTRACTING & FIT-OUT HERO & PROJECT MEDIA
+                {isAr ? 'بيانات وصور قطاع المقاولات والتجهيز الداخلي' : 'CONTRACTING & FIT-OUT HERO & PROJECT MEDIA'}
               </span>
             </div>
 
             <MediaFieldUploader
-              label="Contracting Hero Background Photo"
+              label={isAr ? 'صورة الغلاف لقطاع المقاولات' : 'Contracting Hero Background Photo'}
               bucket="photos"
-              value={content.contracting.hero_image || ''}
+              value={content.contracting?.hero_image || ''}
               onChange={(url) => setContent({ ...content, contracting: { ...content.contracting, hero_image: url } })}
             />
 
             <BilingualInput
-              label="Contracting Page Title"
-              valueEn={content.contracting.hero_title_en}
-              valueAr={content.contracting.hero_title_ar}
+              label={isAr ? 'عنوان صفحة المقاولات' : 'Contracting Page Title'}
+              valueEn={content.contracting?.hero_title_en}
+              valueAr={content.contracting?.hero_title_ar}
               onChangeEn={(v) => setContent({ ...content, contracting: { ...content.contracting, hero_title_en: v } })}
               onChangeAr={(v) => setContent({ ...content, contracting: { ...content.contracting, hero_title_ar: v } })}
             />
 
             <BilingualInput
-              label="Contracting Subtitle / Intro"
+              label={isAr ? 'النص التعريفي لقطاع المقاولات' : 'Contracting Subtitle / Intro'}
               isTextarea
               rows={3}
-              valueEn={content.contracting.hero_body_en}
-              valueAr={content.contracting.hero_body_ar}
+              valueEn={content.contracting?.hero_body_en}
+              valueAr={content.contracting?.hero_body_ar}
               onChangeEn={(v) => setContent({ ...content, contracting: { ...content.contracting, hero_body_en: v } })}
               onChangeAr={(v) => setContent({ ...content, contracting: { ...content.contracting, hero_body_ar: v } })}
             />
@@ -1079,20 +1394,20 @@ export default function PagesContentEditor() {
           {/* Contracting Services / Showcase Photos */}
           <div className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 space-y-5">
             <span className="text-xs font-mono font-bold text-amber-400 uppercase tracking-wider">
-              CONTRACTING & FIT-OUT SERVICES SHOWCASE PHOTOS
+              {isAr ? 'صور مجالات وخدمات المقاولات' : 'CONTRACTING & FIT-OUT SERVICES SHOWCASE PHOTOS'}
             </span>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {content.contracting.services.map((srv, idx) => (
+              {(content.contracting?.services || []).map((srv, idx) => (
                 <div key={srv.id || idx} className="p-4 rounded-2xl bg-black/40 border border-white/10 space-y-3">
-                  <span className="text-xs font-bold text-white block">{srv.title_en}</span>
+                  <span className="text-xs font-bold text-white block">{isAr ? srv.title_ar : srv.title_en}</span>
 
                   <MediaFieldUploader
-                    label={`Project Showcase: ${srv.title_en}`}
+                    label={isAr ? `معرض المشروع: ${srv.title_ar || srv.title_en}` : `Project Showcase: ${srv.title_en}`}
                     bucket="photos"
                     value={srv.image_url || ''}
                     onChange={(url) => {
-                      const updated = [...content.contracting.services];
+                      const updated = [...(content.contracting?.services || [])];
                       updated[idx] = { ...updated[idx], image_url: url };
                       setContent({ ...content, contracting: { ...content.contracting, services: updated } });
                     }}
