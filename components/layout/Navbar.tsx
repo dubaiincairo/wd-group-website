@@ -33,7 +33,7 @@ export default function Navbar() {
 
   const logoSrc = lang === 'ar' ? '/brand/wd-group-logo-ar-white.png' : '/brand/wd-group-logo-white.png';
 
-  if (pathname?.startsWith('/admin')) {
+  if (pathname?.startsWith('/admin') || pathname === '/maintenance') {
     return null;
   }
 

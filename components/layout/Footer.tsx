@@ -12,7 +12,7 @@ export default function Footer() {
   const { lang, dict } = useLanguage();
   const currentYear = new Date().getFullYear();
 
-  if (pathname?.startsWith('/admin')) {
+  if (pathname?.startsWith('/admin') || pathname === '/maintenance') {
     return null;
   }
 

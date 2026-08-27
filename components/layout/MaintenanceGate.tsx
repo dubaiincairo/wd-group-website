@@ -20,11 +20,12 @@ export default function MaintenanceGate({ children }: MaintenanceGateProps) {
   const [isAdminBypassed, setIsAdminBypassed] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  // Admin routes, login, API endpoints, and static assets are always exempt
+  // Admin routes, login, API endpoints, static assets, and direct /maintenance preview
   const isAdminRoute = 
     pathname?.startsWith('/admin') || 
     pathname?.startsWith('/api/') || 
-    pathname?.startsWith('/site-access');
+    pathname?.startsWith('/site-access') ||
+    pathname === '/maintenance';
 
   useEffect(() => {
     if (isAdminRoute) {

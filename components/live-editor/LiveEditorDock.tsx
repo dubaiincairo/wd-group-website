@@ -290,7 +290,7 @@ export default function LiveEditorDock() {
   }, [pathname]);
 
   // Suppress completely on admin routes
-  if (pathname?.startsWith('/admin')) {
+  if (pathname?.startsWith('/admin') || pathname === '/maintenance') {
     return null;
   }
 
