@@ -14,7 +14,7 @@ interface AdminLoadingStateProps {
 export default function AdminLoadingState({
   message,
   fullScreen = false,
-  minHeight = 'min-h-[420px]',
+  minHeight = 'min-h-[70vh]',
 }: AdminLoadingStateProps) {
   const { lang } = useLanguage();
   const isAr = lang === 'ar';
@@ -26,7 +26,7 @@ export default function AdminLoadingState({
   const content = (
     <div className="relative z-10 flex flex-col items-center max-w-sm w-full px-6 text-center select-none animate-in fade-in duration-300">
       {/* Ambient Luxury Lighting Backdrops */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] bg-radial from-[#C9A86A]/15 via-blue-600/10 to-transparent blur-[90px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[420px] h-[420px] bg-radial from-[#C9A86A]/15 via-blue-600/10 to-transparent blur-[100px] pointer-events-none" />
 
       {/* Real Brand Logo with Luxury Pulse */}
       <div className="relative mb-5 flex items-center justify-center">
@@ -81,7 +81,7 @@ export default function AdminLoadingState({
     <div
       dir={isAr ? 'rtl' : 'ltr'}
       lang={lang}
-      className={`w-full ${minHeight} flex flex-col items-center justify-center relative overflow-hidden rounded-3xl bg-[#08090C]/40 border border-white/5`}
+      className={`w-full ${minHeight} flex-1 flex flex-col items-center justify-center relative overflow-hidden py-12`}
     >
       {content}
     </div>

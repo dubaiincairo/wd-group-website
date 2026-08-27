@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import MediaUploader from '@/components/admin/MediaUploader';
 import ConfirmationModal from '@/components/admin/ConfirmationModal';
+import AdminLoadingState from '@/components/admin/AdminLoadingState';
 import { useToast } from '@/components/admin/ToastProvider';
 import { useLanguage } from '@/context/LanguageContext';
 import type { MediaMetaRecord } from '@/lib/admin/types';
@@ -173,10 +174,7 @@ export default function MediaLibraryAdminPage() {
 
       {/* Media Grid */}
       {loading ? (
-        <div className="p-16 text-center text-zinc-500 font-mono">
-          <RefreshCw className="w-8 h-8 animate-spin mx-auto text-blue-500 mb-3" />
-          <span>{isAr ? 'جارٍ تحميل مكتبة الوسائط…' : 'Loading media library…'}</span>
-        </div>
+        <AdminLoadingState minHeight="min-h-[50vh]" message={isAr ? 'جارٍ تحميل وسائط التخزين السحابي والفيديوهات…' : 'Loading cloud media & video library…'} />
       ) : filteredMedia.length === 0 ? (
         <div className="p-12 text-center bg-[#0F1117]/90 border border-dashed border-white/10 rounded-3xl space-y-3">
           <UploadCloud className="w-10 h-10 text-zinc-600 mx-auto" />
