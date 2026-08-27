@@ -900,48 +900,6 @@ export default function LiveEditorDock() {
                     </div>
                   </div>
 
-                  {/* Primary & Secondary Hero CTAs */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
-                    <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'زر الحث الأساسي (عربي / إنجليزي)' : 'Primary CTA Button (AR / EN)'}</label>
-                      <div className="grid grid-cols-2 gap-2">
-                        <input
-                          type="text"
-                          dir="rtl"
-                          value={localEdits?.home?.hero?.primary_cta_ar || 'تعرّف على المجموعة'}
-                          onChange={(e) => updateField(['home', 'hero', 'primary_cta_ar'], e.target.value)}
-                          className="w-full px-2.5 py-1.5 rounded-lg bg-black/50 border border-white/15 text-xs"
-                        />
-                        <input
-                          type="text"
-                          dir="ltr"
-                          value={localEdits?.home?.hero?.primary_cta_en || 'Discover Our Group'}
-                          onChange={(e) => updateField(['home', 'hero', 'primary_cta_en'], e.target.value)}
-                          className="w-full px-2.5 py-1.5 rounded-lg bg-black/50 border border-white/15 text-xs"
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <label className="block text-[11px] text-zinc-400 mb-1">{isAr ? 'زر الحث الثانوي (عربي / إنجليزي)' : 'Secondary CTA Button (AR / EN)'}</label>
-                      <div className="grid grid-cols-2 gap-2">
-                        <input
-                          type="text"
-                          dir="rtl"
-                          value={localEdits?.home?.hero?.secondary_cta_ar || 'استكشف قطاعاتنا'}
-                          onChange={(e) => updateField(['home', 'hero', 'secondary_cta_ar'], e.target.value)}
-                          className="w-full px-2.5 py-1.5 rounded-lg bg-black/50 border border-white/15 text-xs"
-                        />
-                        <input
-                          type="text"
-                          dir="ltr"
-                          value={localEdits?.home?.hero?.secondary_cta_en || 'Explore Our Sectors'}
-                          onChange={(e) => updateField(['home', 'hero', 'secondary_cta_en'], e.target.value)}
-                          className="w-full px-2.5 py-1.5 rounded-lg bg-black/50 border border-white/15 text-xs"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
                 </div>
 
                 {/* 2. 4-Metric Statistics Bar */}

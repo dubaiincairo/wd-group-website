@@ -226,25 +226,6 @@ export default function HeroSection() {
           </button>
         </div>
 
-        {/* Hero Action CTAs */}
-        <div className="flex flex-wrap items-center justify-center gap-3.5 mb-8">
-          <Link
-            href="/about"
-            className="h-11 px-6 rounded-xl text-xs sm:text-sm font-bold text-[#08090C] bg-gradient-to-r from-[#C9A86A] via-[#DFBA73] to-[#C9A86A] border border-[#E3C58A]/60 hover:border-[#E3C58A] shadow-[0_0_20px_rgba(201,168,106,0.35)] hover:scale-105 active:scale-95 transition-all inline-flex items-center justify-center gap-2 cursor-pointer"
-          >
-            <span>{dict.home.hero.primaryCta}</span>
-            <ArrowUpRight className="w-4 h-4 rtl:rotate-270 shrink-0 text-[#08090C]" />
-          </Link>
-
-          <Link
-            href="#sectors"
-            className="h-11 px-6 rounded-xl text-xs sm:text-sm font-semibold text-zinc-200 hover:text-white bg-white/5 hover:bg-white/10 border border-white/15 hover:border-white/30 backdrop-blur-xl transition-all inline-flex items-center justify-center gap-2 cursor-pointer"
-          >
-            <span>{dict.home.hero.secondaryCta}</span>
-            <ChevronDown className="w-4 h-4 text-[#C9A86A] shrink-0" />
-          </Link>
-        </div>
-
         {/* 4-Column Statistics Bar — Clean Custom Separators */}
         <div className="max-w-5xl mx-auto mb-6 w-full">
           <div className="glass-card rounded-3xl p-6 sm:p-8 shadow-glow-card relative overflow-hidden border border-[#C9A86A]/20 bg-[#0F1117]/90 backdrop-blur-xl">

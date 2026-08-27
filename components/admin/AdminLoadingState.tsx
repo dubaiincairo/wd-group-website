@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useLanguage } from '@/context/LanguageContext';
 import { Sparkles } from 'lucide-react';
@@ -18,6 +18,37 @@ export default function AdminLoadingState({
 }: AdminLoadingStateProps) {
   const { lang } = useLanguage();
   const isAr = lang === 'ar';
+
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    let startTime: number | null = null;
+    let animationFrameId: number;
+    const duration = 1400; // 1.4s elegant duration
+
+    const step = (timestamp: number) => {
+      if (!startTime) startTime = timestamp;
+      const elapsed = timestamp - startTime;
+      const t = Math.min(1, elapsed / duration);
+      
+      // Smooth cubic ease-out
+      const eased = 1 - Math.pow(1 - t, 3);
+      const currentProgress = Math.min(100, Math.round(eased * 100));
+      setProgress(currentProgress);
+
+      if (t < 1) {
+        animationFrameId = requestAnimationFrame(step);
+      } else {
+        setProgress(100);
+      }
+    };
+
+    animationFrameId = requestAnimationFrame(step);
+
+    return () => {
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
+    };
+  }, []);
 
   const logoSrc = isAr ? '/brand/wd-group-logo-ar-white.png' : '/brand/wd-group-logo-white.png';
   const logoAlt = isAr ? 'مجموعة دبليو دي للأعمال' : 'WD Group';
@@ -61,11 +92,21 @@ export default function AdminLoadingState({
         </p>
       </div>
 
-      {/* Precision 2px Hairline Progress Track */}
-      <div className="w-full max-w-xs space-y-3">
-        <div className="w-48 sm:w-56 mx-auto h-[2px] bg-white/10 rounded-full overflow-hidden">
-          <div className="h-full bg-gradient-to-r from-[#C9A86A] via-[#E3C58A] to-[#C9A86A] rounded-full animate-pulse shadow-[0_0_10px_#C9A86A] w-full" />
+      {/* Minimal Precision Digital Progress Counter & Hairline Bar */}
+      <div className="w-full max-w-xs space-y-3 mb-2">
+        <div className="text-center font-mono text-2xl sm:text-3xl font-extrabold text-[#C9A86A] tracking-tighter">
+          {String(progress).padStart(2, '0')}
+          <span className="text-xs text-zinc-500 ml-1 rtl:mr-1 rtl:ml-0 font-normal">%</span>
         </div>
+
+        {/* Precision 2px Hairline Track */}
+        <div className="w-48 sm:w-56 mx-auto h-[2px] bg-white/10 rounded-full overflow-hidden">
+          <div
+            className="h-full bg-gradient-to-r from-[#C9A86A] via-[#E3C58A] to-[#C9A86A] shadow-[0_0_10px_#C9A86A]"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+
         <p className="text-[10px] font-mono text-zinc-500 tracking-widest uppercase">
           {message || defaultMsg}
         </p>
