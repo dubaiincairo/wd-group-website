@@ -7,6 +7,7 @@ import { ToastProvider } from '@/components/admin/ToastProvider';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import LiveEditorDock from '@/components/live-editor/LiveEditorDock';
+import { Analytics } from '@vercel/analytics/next';
 
 import MaintenanceGate from '@/components/layout/MaintenanceGate';
 import DynamicHeadSEO from '@/components/seo/DynamicHeadSEO';
@@ -88,6 +89,7 @@ export default function RootLayout({
             </MaintenanceGate>
           </ToastProvider>
         </LanguageProvider>
+        <Analytics />
       </body>
     </html>
   );
