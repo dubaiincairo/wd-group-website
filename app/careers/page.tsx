@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { useLanguage } from '@/context/LanguageContext';
 import { 
   Users, 
@@ -124,7 +125,12 @@ export default function CareersPage() {
       <div className="max-w-6xl mx-auto space-y-20">
         
         {/* 1. Careers Hero */}
-        <section className="text-center max-w-3xl mx-auto space-y-6 pt-6">
+        <motion.section 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          className="text-center max-w-3xl mx-auto space-y-6 pt-6"
+        >
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide uppercase bg-blue-500/10 border border-blue-500/30 text-blue-400">
             <Users className="w-3.5 h-3.5" />
             <span>{dict.careers.hero.eyebrow}</span>
@@ -159,10 +165,16 @@ export default function CareersPage() {
               <span>{dict.careers.hero.primaryCta}</span>
             </a>
           </div>
-        </section>
+        </motion.section>
 
         {/* 2. Employee Value Proposition (4 Pillars) */}
-        <section className="space-y-8">
+        <motion.section 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.6 }}
+          className="space-y-8"
+        >
           <div className="text-center max-w-2xl mx-auto space-y-2">
             <div className="text-xs font-mono font-bold text-blue-400 uppercase tracking-wider">
               {lang === 'ar' ? 'بيئة العمل والتطوير' : 'VALUE PROPOSITION'}
@@ -176,8 +188,12 @@ export default function CareersPage() {
             {dict.careers.pillars.list.map((pillar, idx) => {
               const Icon = PILLAR_ICONS[idx % PILLAR_ICONS.length];
               return (
-                <div
+                <motion.div
                   key={idx}
+                  initial={{ opacity: 0, y: 25 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: '-40px' }}
+                  transition={{ duration: 0.55, delay: idx * 0.08, ease: [0.22, 1, 0.36, 1] }}
                   className="glass-card rounded-3xl p-6 border border-white/10 hover:border-blue-500/50 hover:shadow-glow-blue transition-all flex flex-col justify-between bg-brand-surface/80 group"
                 >
                   <div className="space-y-3">
@@ -191,14 +207,21 @@ export default function CareersPage() {
                       {pillar.desc}
                     </p>
                   </div>
-                </div>
+                </motion.div>
               );
             })}
           </div>
-        </section>
+        </motion.section>
 
         {/* 3. Open Positions Directory (Filterable with Live Supabase Jobs) */}
-        <section id="positions" className="glass-card rounded-3xl p-8 sm:p-12 border border-white/10 space-y-8 bg-brand-surface/80">
+        <motion.section 
+          id="positions" 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          className="glass-card rounded-3xl p-8 sm:p-12 border border-white/10 space-y-8 bg-brand-surface/80"
+        >
           <div className="max-w-2xl space-y-2">
             <div className="text-xs font-mono font-bold text-blue-400 uppercase tracking-wider">
               {lang === 'ar' ? 'الوظائف المتاحة' : 'OPPORTUNITIES'}
@@ -334,10 +357,17 @@ export default function CareersPage() {
               </a>
             </div>
           )}
-        </section>
+        </motion.section>
 
         {/* 4. Talent Pool CV Submission Form */}
-        <section id="talent-pool" className="glass-card rounded-3xl p-8 sm:p-12 border border-blue-500/30 bg-brand-surface/90">
+        <motion.section 
+          id="talent-pool" 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          className="glass-card rounded-3xl p-8 sm:p-12 border border-blue-500/30 bg-brand-surface/90"
+        >
           <div className="max-w-2xl mx-auto text-center space-y-3 mb-8">
             <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
               {dict.careers.talentPool.heading}
@@ -537,7 +567,7 @@ export default function CareersPage() {
               </div>
             </form>
           )}
-        </section>
+        </motion.section>
 
       </div>
     </div>

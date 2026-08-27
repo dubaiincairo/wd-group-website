@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { motion } from 'framer-motion';
 import { useLanguage } from '@/context/LanguageContext';
 import { 
   Building2, 
@@ -32,7 +33,12 @@ export default function AboutPage() {
       <div className="max-w-6xl mx-auto space-y-20">
         
         {/* 1. About Hero */}
-        <section className="relative rounded-3xl p-8 sm:p-14 overflow-hidden border border-white/10 bg-brand-surface/80">
+        <motion.section 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          className="relative rounded-3xl p-8 sm:p-14 overflow-hidden border border-white/10 bg-brand-surface/80 shadow-2xl"
+        >
           {/* Background Hero Banner Image (if configured in Admin) */}
           {heroImage && (
             <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
@@ -93,10 +99,16 @@ export default function AboutPage() {
               )}
             </div>
           </div>
-        </section>
+        </motion.section>
 
         {/* 2. Our Story & Heritage (with Story Image) */}
-        <section className="glass-card rounded-3xl p-8 sm:p-12 border border-white/10 relative overflow-hidden bg-brand-surface/80">
+        <motion.section 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          className="glass-card rounded-3xl p-8 sm:p-12 border border-white/10 relative overflow-hidden bg-brand-surface/80"
+        >
           <div className={`grid grid-cols-1 ${storyImage ? 'lg:grid-cols-12' : ''} gap-8 items-center`}>
             <div className={`${storyImage ? 'lg:col-span-7' : 'max-w-3xl'} space-y-4`}>
               <div className="text-xs font-mono font-bold text-blue-400 uppercase tracking-wider">
@@ -122,10 +134,16 @@ export default function AboutPage() {
               </div>
             )}
           </div>
-        </section>
+        </motion.section>
 
         {/* 3. Vision 2030 Alignment (3 Pillars) */}
-        <section className="space-y-8">
+        <motion.section 
+          initial={{ opacity: 0, y: 25 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.6 }}
+          className="space-y-8"
+        >
           <div className="text-center max-w-2xl mx-auto space-y-2">
             <div className="text-xs font-mono font-bold text-blue-400 uppercase tracking-wider">
               {isAr ? 'مواكبة الرؤية الوطنية' : 'NATIONAL ALIGNMENT'}
@@ -137,7 +155,14 @@ export default function AboutPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {dict.about.vision2030.pillars.map((pillar, idx) => (
-              <div key={idx} className="glass-card rounded-3xl p-7 border border-white/10 hover:border-blue-500/50 hover:shadow-glow-blue transition-all space-y-4 bg-brand-surface/80 group">
+              <motion.div 
+                key={idx} 
+                initial={{ opacity: 0, y: 25 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-50px' }}
+                transition={{ duration: 0.55, delay: idx * 0.12, ease: [0.22, 1, 0.36, 1] }}
+                className="glass-card rounded-3xl p-7 border border-white/10 hover:border-blue-500/50 hover:shadow-glow-blue transition-all space-y-4 bg-brand-surface/80 group"
+              >
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-mono font-bold text-blue-400 bg-blue-500/10 px-2.5 py-1 rounded-md border border-blue-500/20">
                     {isAr ? `الركيزة 0${idx + 1}` : `PILLAR 0${idx + 1}`}
@@ -152,13 +177,19 @@ export default function AboutPage() {
                 <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed">
                   {pillar.desc}
                 </p>
-              </div>
+              </motion.div>
             ))}
           </div>
-        </section>
+        </motion.section>
 
         {/* 4. Geographic Footprint (Saudi Arabia) */}
-        <section className="glass-card rounded-3xl p-8 sm:p-12 border border-white/10 space-y-8 bg-brand-surface/80">
+        <motion.section 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          className="glass-card rounded-3xl p-8 sm:p-12 border border-white/10 space-y-8 bg-brand-surface/80"
+        >
           <div className="max-w-2xl space-y-2">
             <div className="text-xs font-mono font-bold text-blue-400 uppercase tracking-wider">
               {isAr ? 'الانتشار الوطني' : 'NATIONAL REACH'}
@@ -173,7 +204,14 @@ export default function AboutPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {dict.about.footprint.locations.map((loc, idx) => (
-              <div key={idx} className="p-5 rounded-2xl bg-black/40 border border-white/10 hover:border-blue-500/40 hover:bg-black/60 transition-all space-y-2 group">
+              <motion.div 
+                key={idx} 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{ duration: 0.5, delay: idx * 0.08, ease: [0.22, 1, 0.36, 1] }}
+                className="p-5 rounded-2xl bg-black/40 border border-white/10 hover:border-blue-500/40 hover:bg-black/60 transition-all space-y-2 group"
+              >
                 <div className="flex items-center gap-2 text-blue-400 font-bold text-sm">
                   <MapPin className="w-4 h-4 text-blue-400 shrink-0 group-hover:scale-110 transition-transform" />
                   <span>{loc.city}</span>
@@ -181,13 +219,20 @@ export default function AboutPage() {
                 <p className="text-xs text-zinc-400 leading-relaxed">
                   {loc.desc}
                 </p>
-              </div>
+              </motion.div>
             ))}
           </div>
-        </section>
+        </motion.section>
 
         {/* 5. Corporate Profile Download CTA */}
-        <section id="profile" className="glass-card rounded-3xl p-8 sm:p-12 border border-white/15 text-center space-y-6 bg-brand-surface/90">
+        <motion.section 
+          id="profile" 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          className="glass-card rounded-3xl p-8 sm:p-12 border border-white/15 text-center space-y-6 bg-brand-surface/90"
+        >
           <div className="max-w-2xl mx-auto space-y-3">
             <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
               {dict.about.profileCta.heading}
@@ -228,7 +273,7 @@ export default function AboutPage() {
               <ArrowRight className="w-4 h-4 rtl:rotate-180" />
             </Link>
           </div>
-        </section>
+        </motion.section>
 
       </div>
     </div>

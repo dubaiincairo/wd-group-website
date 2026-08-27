@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import { useLanguage } from '@/context/LanguageContext';
 import { 
   MessageSquare, 
@@ -61,7 +62,12 @@ export default function ContactPage() {
       <div className="max-w-6xl mx-auto space-y-16">
         
         {/* 1. Contact Hero */}
-        <section className="text-center max-w-3xl mx-auto space-y-6 pt-6">
+        <motion.section 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          className="text-center max-w-3xl mx-auto space-y-6 pt-6"
+        >
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide uppercase bg-blue-500/10 border border-blue-500/30 text-blue-400">
             <MessageSquare className="w-3.5 h-3.5" />
             <span>{dict.contact.hero.eyebrow}</span>
@@ -74,13 +80,25 @@ export default function ContactPage() {
           <p className="text-base sm:text-lg text-zinc-300 leading-relaxed font-normal">
             {dict.contact.hero.body}
           </p>
-        </section>
+        </motion.section>
 
         {/* 2. Official Contact Cards (Najran HQ, Emails, Phones) */}
-        <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <motion.section 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.6 }}
+          className="grid grid-cols-1 md:grid-cols-3 gap-6"
+        >
           
           {/* Card 1: Headquarters */}
-          <div className="glass-card rounded-3xl p-7 border border-white/10 hover:border-blue-500/50 hover:shadow-glow-blue transition-all space-y-3 bg-brand-surface/80 group">
+          <motion.div 
+            initial={{ opacity: 0, y: 25 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-40px' }}
+            transition={{ duration: 0.55, delay: 0, ease: [0.22, 1, 0.36, 1] }}
+            className="glass-card rounded-3xl p-7 border border-white/10 hover:border-blue-500/50 hover:shadow-glow-blue transition-all space-y-3 bg-brand-surface/80 group"
+          >
             <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400 group-hover:scale-110 transition-transform">
               <MapPin className="w-5 h-5" />
             </div>
@@ -90,10 +108,16 @@ export default function ContactPage() {
             <p className="text-xs text-zinc-400 leading-relaxed">
               {dict.contact.cards.hq_address}
             </p>
-          </div>
+          </motion.div>
 
           {/* Card 2: Email Channels */}
-          <div className="glass-card rounded-3xl p-7 border border-white/10 hover:border-blue-500/50 hover:shadow-glow-blue transition-all space-y-3 bg-brand-surface/80 group">
+          <motion.div 
+            initial={{ opacity: 0, y: 25 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-40px' }}
+            transition={{ duration: 0.55, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+            className="glass-card rounded-3xl p-7 border border-white/10 hover:border-blue-500/50 hover:shadow-glow-blue transition-all space-y-3 bg-brand-surface/80 group"
+          >
             <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400 group-hover:scale-110 transition-transform">
               <Mail className="w-5 h-5" />
             </div>
@@ -112,10 +136,16 @@ export default function ContactPage() {
                 </a>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Card 3: Phones */}
-          <div className="glass-card rounded-3xl p-7 border border-white/10 hover:border-blue-500/50 hover:shadow-glow-blue transition-all space-y-3 bg-brand-surface/80 group">
+          <motion.div 
+            initial={{ opacity: 0, y: 25 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-40px' }}
+            transition={{ duration: 0.55, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+            className="glass-card rounded-3xl p-7 border border-white/10 hover:border-blue-500/50 hover:shadow-glow-blue transition-all space-y-3 bg-brand-surface/80 group"
+          >
             <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400 group-hover:scale-110 transition-transform">
               <Phone className="w-5 h-5" />
             </div>
@@ -134,12 +164,18 @@ export default function ContactPage() {
                 </a>
               </div>
             </div>
-          </div>
+          </motion.div>
 
-        </section>
+        </motion.section>
 
         {/* 3. Integrated Multi-Sector Inquiry Form */}
-        <section className="glass-card rounded-3xl p-8 sm:p-12 border border-blue-500/30 bg-brand-surface/90">
+        <motion.section 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          className="glass-card rounded-3xl p-8 sm:p-12 border border-blue-500/30 bg-brand-surface/90"
+        >
           <div className="max-w-2xl mx-auto text-center space-y-3 mb-8">
             <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
               {dict.contact.form.heading}
@@ -352,10 +388,16 @@ export default function ContactPage() {
               </div>
             </form>
           )}
-        </section>
+        </motion.section>
 
         {/* 4. Legal Identity & Headquarters Verification Panel */}
-        <section className="glass-card rounded-3xl p-8 border border-white/10 bg-brand-surface/80">
+        <motion.section 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          className="glass-card rounded-3xl p-8 border border-white/10 bg-brand-surface/80"
+        >
           <div className="flex items-center gap-2 text-xs font-mono font-bold text-blue-400 uppercase tracking-wider mb-4">
             <ShieldCheck className="w-4 h-4" />
             <span>{lang === 'ar' ? '// البيانات الرسمية والنظامية' : '// OFFICIAL CORPORATE IDENTITY'}</span>
@@ -375,7 +417,7 @@ export default function ContactPage() {
               <span className="font-bold text-white block" dir="ltr">{dict.contact.legal.vat}</span>
             </div>
           </div>
-        </section>
+        </motion.section>
 
       </div>
     </div>

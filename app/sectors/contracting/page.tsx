@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
+import { motion } from 'framer-motion';
 import { useLanguage } from '@/context/LanguageContext';
 import { 
   HardHat, 
@@ -70,7 +71,12 @@ export default function ContractingPage() {
       <div className="max-w-6xl mx-auto space-y-20">
         
         {/* 1. Sector Hero */}
-        <section className="text-center max-w-3xl mx-auto space-y-6 pt-6">
+        <motion.section 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          className="text-center max-w-3xl mx-auto space-y-6 pt-6"
+        >
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide uppercase bg-amber-500/10 border border-amber-500/30 text-amber-400">
             <HardHat className="w-3.5 h-3.5" />
             <span>{dict.contracting.hero.eyebrow}</span>
@@ -100,10 +106,16 @@ export default function ContractingPage() {
               <span>{dict.contracting.hero.secondaryCta}</span>
             </a>
           </div>
-        </section>
+        </motion.section>
 
         {/* 2. Core Services */}
-        <section className="space-y-8">
+        <motion.section 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.6 }}
+          className="space-y-8"
+        >
           <div className="text-center max-w-2xl mx-auto space-y-2">
             <div className="text-xs font-mono font-bold text-amber-400 uppercase tracking-wider">
               {lang === 'ar' ? 'حلول المقاولات والتجهيز الداخلي' : 'CORE SERVICES'}
@@ -115,8 +127,12 @@ export default function ContractingPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {dict.contracting.services.list.map((serv, idx) => (
-              <div
+              <motion.div
                 key={idx}
+                initial={{ opacity: 0, y: 25 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{ duration: 0.55, delay: idx * 0.1, ease: [0.22, 1, 0.36, 1] }}
                 className="glass-card rounded-3xl p-7 border border-amber-500/20 hover:border-amber-400/60 hover:shadow-[0_0_35px_rgba(251,191,36,0.2)] transition-all flex flex-col justify-between bg-brand-surface/80 group"
               >
                 <div>
@@ -147,13 +163,20 @@ export default function ContractingPage() {
                     </div>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
-        </section>
+        </motion.section>
 
         {/* 3. Project Lifecycle (4 Stages) */}
-        <section id="lifecycle" className="glass-card rounded-3xl p-8 sm:p-12 border border-white/10 space-y-8 bg-brand-surface/80">
+        <motion.section 
+          id="lifecycle" 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          className="glass-card rounded-3xl p-8 sm:p-12 border border-white/10 space-y-8 bg-brand-surface/80"
+        >
           <div className="max-w-2xl space-y-2">
             <div className="text-xs font-mono font-bold text-amber-400 uppercase tracking-wider">
               {lang === 'ar' ? 'منهجية العمل وإدارة المشاريع' : 'PROJECT LIFECYCLE'}
@@ -165,7 +188,14 @@ export default function ContractingPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {dict.contracting.lifecycle.stages.map((stage, idx) => (
-              <div key={idx} className="p-5 rounded-2xl bg-black/40 border border-white/10 hover:border-amber-500/40 hover:bg-black/60 transition-all space-y-3 group">
+              <motion.div 
+                key={idx} 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{ duration: 0.5, delay: idx * 0.08, ease: [0.22, 1, 0.36, 1] }}
+                className="p-5 rounded-2xl bg-black/40 border border-white/10 hover:border-amber-500/40 hover:bg-black/60 transition-all space-y-3 group"
+              >
                 <span className="text-xs font-mono font-bold text-amber-300 bg-amber-500/15 px-2.5 py-1 rounded-md border border-amber-500/30 inline-block">
                   {lang === 'ar' ? `المرحلة ${stage.num}` : `STAGE ${stage.num}`}
                 </span>
@@ -175,13 +205,20 @@ export default function ContractingPage() {
                 <p className="text-xs text-zinc-400 leading-relaxed">
                   {stage.desc}
                 </p>
-              </div>
+              </motion.div>
             ))}
           </div>
-        </section>
+        </motion.section>
 
         {/* 4. Contracting Tender / RFP Form */}
-        <section id="tender" className="glass-card rounded-3xl p-8 sm:p-12 border border-amber-500/30 bg-brand-surface/90">
+        <motion.section 
+          id="tender" 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          className="glass-card rounded-3xl p-8 sm:p-12 border border-amber-500/30 bg-brand-surface/90"
+        >
           <div className="max-w-2xl mx-auto text-center space-y-3 mb-8">
             <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
               {dict.contracting.rfp.heading}
@@ -360,7 +397,7 @@ export default function ContractingPage() {
               </div>
             </form>
           )}
-        </section>
+        </motion.section>
 
       </div>
     </div>

@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
+import { motion } from 'framer-motion';
 import { useLanguage } from '@/context/LanguageContext';
 import { 
   Factory, 
@@ -69,7 +70,12 @@ export default function ManufacturingPage() {
       <div className="max-w-6xl mx-auto space-y-20">
         
         {/* 1. Sector Hero */}
-        <section className="text-center max-w-3xl mx-auto space-y-6 pt-6">
+        <motion.section 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          className="text-center max-w-3xl mx-auto space-y-6 pt-6"
+        >
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide uppercase bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
             <Factory className="w-3.5 h-3.5" />
             <span>{dict.manufacturing.hero.eyebrow}</span>
@@ -103,10 +109,16 @@ export default function ManufacturingPage() {
               <span>{dict.manufacturing.hero.secondaryCta}</span>
             </a>
           </div>
-        </section>
+        </motion.section>
 
         {/* 2. 3 Specialized Production Centers */}
-        <section className="space-y-8">
+        <motion.section 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.6 }}
+          className="space-y-8"
+        >
           <div className="text-center max-w-2xl mx-auto space-y-2">
             <div className="text-xs font-mono font-bold text-emerald-400 uppercase tracking-wider">
               {lang === 'ar' ? 'المراكز الصناعية' : 'PRODUCTION HUBS'}
@@ -118,8 +130,12 @@ export default function ManufacturingPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {dict.manufacturing.factories.list.map((fact, idx) => (
-              <div
+              <motion.div
                 key={idx}
+                initial={{ opacity: 0, y: 25 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{ duration: 0.55, delay: idx * 0.1, ease: [0.22, 1, 0.36, 1] }}
                 className="glass-card rounded-3xl p-7 border border-emerald-500/20 hover:border-emerald-400/60 hover:shadow-[0_0_35px_rgba(52,211,153,0.2)] transition-all flex flex-col justify-between group bg-brand-surface/80"
               >
                 <div>
@@ -158,13 +174,20 @@ export default function ManufacturingPage() {
                   <span>{lang === 'ar' ? 'الرياض ونجران' : 'Riyadh & Najran'}</span>
                   <span className="text-emerald-400 font-semibold">{lang === 'ar' ? 'جرين وود' : 'GreenWood'}</span>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
-        </section>
+        </motion.section>
 
         {/* 3. Modern Production Capabilities (7 Capabilities) */}
-        <section id="capabilities" className="glass-card rounded-3xl p-8 sm:p-12 border border-white/10 space-y-8 bg-brand-surface/80">
+        <motion.section 
+          id="capabilities" 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          className="glass-card rounded-3xl p-8 sm:p-12 border border-white/10 space-y-8 bg-brand-surface/80"
+        >
           <div className="max-w-2xl space-y-2">
             <div className="text-xs font-mono font-bold text-emerald-400 uppercase tracking-wider">
               {lang === 'ar' ? 'القدرات والتقنيات' : 'AUTOMATION & WORKFLOW'}
@@ -176,7 +199,14 @@ export default function ManufacturingPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {dict.manufacturing.capabilities.list.map((cap, idx) => (
-              <div key={idx} className="p-5 rounded-2xl bg-black/40 border border-white/5 space-y-2">
+              <motion.div 
+                key={idx} 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{ duration: 0.5, delay: idx * 0.06, ease: [0.22, 1, 0.36, 1] }}
+                className="p-5 rounded-2xl bg-black/40 border border-white/5 space-y-2"
+              >
                 <div className="flex items-center gap-2 text-emerald-400 font-bold text-sm">
                   <CheckCircle2 className="w-4 h-4" />
                   <span>{cap.title}</span>
@@ -184,13 +214,19 @@ export default function ManufacturingPage() {
                 <p className="text-xs text-zinc-400 leading-relaxed">
                   {cap.desc}
                 </p>
-              </div>
+              </motion.div>
             ))}
           </div>
-        </section>
+        </motion.section>
 
         {/* 4. B2B Sectors Served */}
-        <section className="glass-card rounded-3xl p-8 sm:p-12 border border-white/10 space-y-6 bg-brand-surface/80">
+        <motion.section 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          className="glass-card rounded-3xl p-8 sm:p-12 border border-white/10 space-y-6 bg-brand-surface/80"
+        >
           <div className="max-w-2xl space-y-2">
             <div className="text-xs font-mono font-bold text-emerald-400 uppercase tracking-wider">
               {lang === 'ar' ? 'القطاعات المستفيدة' : 'CLIENTS & SECTORS'}
@@ -207,10 +243,17 @@ export default function ManufacturingPage() {
               </span>
             ))}
           </div>
-        </section>
+        </motion.section>
 
         {/* 5. Manufacturing RFP / Quote Form */}
-        <section id="quote" className="glass-card rounded-3xl p-8 sm:p-12 border border-emerald-500/30 bg-brand-surface/90">
+        <motion.section 
+          id="quote" 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          className="glass-card rounded-3xl p-8 sm:p-12 border border-emerald-500/30 bg-brand-surface/90"
+        >
           <div className="max-w-2xl mx-auto text-center space-y-3 mb-8">
             <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
               {dict.manufacturing.rfp.heading}
@@ -370,7 +413,7 @@ export default function ManufacturingPage() {
               </div>
             </form>
           )}
-        </section>
+        </motion.section>
 
       </div>
     </div>

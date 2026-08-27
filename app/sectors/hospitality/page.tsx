@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { motion } from 'framer-motion';
 import { useLanguage } from '@/context/LanguageContext';
 import { 
   Building2, 
@@ -73,7 +74,12 @@ export default function HospitalityPage() {
       <div className="max-w-6xl mx-auto space-y-20">
         
         {/* 1. Sector Hero */}
-        <section className="text-center max-w-3xl mx-auto space-y-6 pt-6">
+        <motion.section 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          className="text-center max-w-3xl mx-auto space-y-6 pt-6"
+        >
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide uppercase bg-sky-500/10 border border-sky-500/30 text-sky-400">
             <Building2 className="w-3.5 h-3.5" />
             <span>{dict.hospitality.hero.eyebrow}</span>
@@ -110,10 +116,17 @@ export default function HospitalityPage() {
               <ExternalLink className="w-3.5 h-3.5" />
             </a>
           </div>
-        </section>
+        </motion.section>
 
         {/* 2. Properties Portfolio Grid (6 Named Properties) */}
-        <section id="portfolio" className="space-y-8">
+        <motion.section 
+          id="portfolio" 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.6 }}
+          className="space-y-8"
+        >
           <div className="text-center max-w-2xl mx-auto space-y-2">
             <div className="text-xs font-mono font-bold text-sky-400 uppercase tracking-wider">
               {dict.hospitality.portfolio.label}
@@ -128,8 +141,12 @@ export default function HospitalityPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {dict.hospitality.portfolio.properties.map((prop, idx) => (
-              <div
+              <motion.div
                 key={idx}
+                initial={{ opacity: 0, y: 25 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{ duration: 0.55, delay: idx * 0.08, ease: [0.22, 1, 0.36, 1] }}
                 className="glass-card rounded-3xl p-6 border border-white/10 hover:border-sky-500/50 hover:shadow-[0_0_30px_rgba(56,189,248,0.15)] transition-all flex flex-col justify-between group bg-brand-surface/80"
               >
                 <div>
@@ -174,13 +191,19 @@ export default function HospitalityPage() {
                   <span>{lang === 'ar' ? 'محفظة فنادق سويس بلو' : 'SwissBlue Portfolio'}</span>
                   <Building2 className="w-4 h-4 opacity-60" />
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
-        </section>
+        </motion.section>
 
         {/* 3. Hospitality Management Services */}
-        <section className="glass-card rounded-3xl p-8 sm:p-12 border border-white/10 space-y-8 bg-brand-surface/80">
+        <motion.section 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          className="glass-card rounded-3xl p-8 sm:p-12 border border-white/10 space-y-8 bg-brand-surface/80"
+        >
           <div className="max-w-2xl space-y-2">
             <div className="text-xs font-mono font-bold text-sky-400 uppercase tracking-wider">
               {lang === 'ar' ? 'خدمات إدارة وتشغيل المنشآت' : 'OPERATOR SERVICES'}
@@ -195,7 +218,14 @@ export default function HospitalityPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {dict.hospitality.services.list.map((serv, idx) => (
-              <div key={idx} className="p-6 rounded-2xl bg-black/40 border border-white/5 space-y-2">
+              <motion.div 
+                key={idx} 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{ duration: 0.5, delay: idx * 0.08, ease: [0.22, 1, 0.36, 1] }}
+                className="p-6 rounded-2xl bg-black/40 border border-white/5 space-y-2"
+              >
                 <div className="flex items-center gap-2 text-sky-400 font-bold text-sm">
                   <CheckCircle2 className="w-4 h-4" />
                   <span>{serv.title}</span>
@@ -203,13 +233,20 @@ export default function HospitalityPage() {
                 <p className="text-xs text-zinc-400 leading-relaxed">
                   {serv.desc}
                 </p>
-              </div>
+              </motion.div>
             ))}
           </div>
-        </section>
+        </motion.section>
 
         {/* 4. Hotel Partnership RFP Form */}
-        <section id="rfp" className="glass-card rounded-3xl p-8 sm:p-12 border border-sky-500/30 bg-brand-surface/90">
+        <motion.section 
+          id="rfp" 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          className="glass-card rounded-3xl p-8 sm:p-12 border border-sky-500/30 bg-brand-surface/90"
+        >
           <div className="max-w-2xl mx-auto text-center space-y-3 mb-8">
             <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
               {dict.hospitality.rfp.heading}
@@ -355,7 +392,7 @@ export default function HospitalityPage() {
               </div>
             </form>
           )}
-        </section>
+        </motion.section>
 
       </div>
     </div>
