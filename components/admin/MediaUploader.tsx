@@ -39,7 +39,7 @@ export default function MediaUploader({
     }
 
     setSelectedFile(file);
-    if (file.type.startsWith('image/')) {
+    if (file.type.startsWith('image/') || file.type.startsWith('video/')) {
       const url = URL.createObjectURL(file);
       setPreviewUrl(url);
     } else {
@@ -180,7 +180,16 @@ export default function MediaUploader({
 
           {selectedFile ? (
             <div className="flex flex-col items-center gap-3">
-              {previewUrl ? (
+              {previewUrl && selectedFile.type.startsWith('video/') ? (
+                <video 
+                  src={previewUrl} 
+                  autoPlay 
+                  loop 
+                  muted 
+                  playsInline 
+                  className="h-32 max-w-full object-contain rounded-xl border border-white/15 bg-black" 
+                />
+              ) : previewUrl ? (
                 <img src={previewUrl} alt="Preview" className="h-32 object-contain rounded-xl border border-white/15" />
               ) : selectedBucket === 'videos' ? (
                 <Video className="w-12 h-12 text-blue-400" />
