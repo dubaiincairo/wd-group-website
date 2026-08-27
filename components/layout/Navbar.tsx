@@ -39,12 +39,19 @@ export default function Navbar() {
 
   return (
     <header 
-      className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
+      className={`fixed top-0 inset-x-0 z-50 transition-all duration-500 ease-out ${
         scrolled 
-          ? 'bg-brand-dark/90 backdrop-blur-xl border-b border-brand-border py-3 shadow-2xl' 
-          : 'bg-transparent py-4 sm:py-5'
+          ? 'bg-[#08090C]/80 backdrop-blur-xl shadow-[0_10px_35px_rgba(0,0,0,0.6)] py-3.5' 
+          : 'bg-[#08090C]/20 backdrop-blur-sm py-4 sm:py-5'
       }`}
     >
+      {/* Seamless luxury gradient separator that fades in smoothly on scroll without hard pop-in */}
+      <div 
+        className={`absolute bottom-0 inset-x-0 h-[1px] bg-gradient-to-r from-transparent via-white/[0.08] to-transparent transition-opacity duration-500 pointer-events-none ${
+          scrolled ? 'opacity-100' : 'opacity-0'
+        }`} 
+      />
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           
