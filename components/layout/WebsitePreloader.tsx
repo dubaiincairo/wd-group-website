@@ -7,18 +7,33 @@ import { Sparkles } from 'lucide-react';
 
 export default function WebsitePreloader({ forced = false }: { forced?: boolean }) {
   const { lang } = useLanguage();
-  const isAr = lang === 'ar';
-
+  const [mounted, setMounted] = useState(false);
+  const [activeLang, setActiveLang] = useState<'ar' | 'en'>('ar');
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(0);
   const [fadingOut, setFadingOut] = useState(false);
 
   useEffect(() => {
-    // Check if user already saw the full preloader in this tab session
+    // Resolve language with absolute priority from localStorage or active context
+    let resolved: 'ar' | 'en' = 'ar';
+    try {
+      const saved = localStorage.getItem('wd_lang');
+      if (saved === 'ar' || saved === 'en') {
+        resolved = saved;
+      } else if (lang === 'en' || lang === 'ar') {
+        resolved = lang;
+      }
+    } catch (e) {
+      resolved = lang === 'en' ? 'en' : 'ar';
+    }
+    setActiveLang(resolved);
+    setMounted(true);
+
+    // Run swift smooth preloader timer
     const hasSeen = sessionStorage.getItem('wd_preloader_seen');
-    const targetDuration = (hasSeen && !forced) ? 300 : 600;
+    const targetDuration = (hasSeen && !forced) ? 280 : 550;
     const intervalTime = 16;
-    const totalSteps = targetDuration / intervalTime;
+    const totalSteps = Math.max(1, Math.round(targetDuration / intervalTime));
     let currentStep = 0;
 
     const timer = setInterval(() => {
@@ -32,23 +47,23 @@ export default function WebsitePreloader({ forced = false }: { forced?: boolean 
         sessionStorage.setItem('wd_preloader_seen', 'true');
         setTimeout(() => {
           setLoading(false);
-        }, 350); // smooth fade duration
+        }, 300); // quick fade
       }
     }, intervalTime);
 
     return () => clearInterval(timer);
-  }, [forced]);
+  }, [forced, lang]);
 
-  if (!loading) return null;
+  if (!loading || !mounted) return null;
 
-  const logoSrc = isAr ? '/brand/wd-group-logo-ar-white.png' : '/brand/wd-group-logo-white.png';
-  const logoAlt = isAr ? 'مجموعة دبليو دي للأعمال' : 'WD Group';
+  const isAr = activeLang === 'ar';
 
   return (
     <div
+      key={`preloader-${activeLang}`}
       dir={isAr ? 'rtl' : 'ltr'}
-      lang={lang}
-      className={`fixed inset-0 z-[99999] flex flex-col items-center justify-center bg-[#08090C] text-white transition-all duration-500 ease-out select-none ${
+      lang={activeLang}
+      className={`fixed inset-0 z-[99999] flex flex-col items-center justify-center bg-[#08090C] text-white transition-all duration-300 ease-out select-none ${
         fadingOut ? 'opacity-0 scale-[1.02] pointer-events-none' : 'opacity-100 scale-100'
       }`}
     >
@@ -58,17 +73,29 @@ export default function WebsitePreloader({ forced = false }: { forced?: boolean 
 
       <div className="relative z-10 flex flex-col items-center max-w-sm w-full px-6 text-center">
         
-        {/* Real Brand Logo with Subtle Breathing Glow */}
-        <div className="relative mb-6 flex items-center justify-center group">
-          <div className={`relative h-14 sm:h-16 ${isAr ? 'w-56 sm:w-64' : 'w-48 sm:w-56'} transition-transform duration-500 group-hover:scale-105`}>
-            <Image
-              src={logoSrc}
-              alt={logoAlt}
-              fill
-              className="object-contain drop-shadow-[0_0_24px_rgba(201,168,106,0.35)]"
-              priority
-            />
-          </div>
+        {/* Real Brand Logo (Strictly Single Language Asset) */}
+        <div className="relative mb-6 flex items-center justify-center">
+          {isAr ? (
+            <div className="relative h-14 sm:h-16 w-56 sm:w-64">
+              <Image
+                src="/brand/wd-group-logo-ar-white.png"
+                alt="مجموعة دبليو دي للأعمال"
+                fill
+                className="object-contain drop-shadow-[0_0_24px_rgba(201,168,106,0.35)]"
+                priority
+              />
+            </div>
+          ) : (
+            <div className="relative h-14 sm:h-16 w-48 sm:w-56">
+              <Image
+                src="/brand/wd-group-logo-white.png"
+                alt="WD Group"
+                fill
+                className="object-contain drop-shadow-[0_0_24px_rgba(201,168,106,0.35)]"
+                priority
+              />
+            </div>
+          )}
           <div className="absolute -inset-4 rounded-3xl bg-[#C9A86A]/10 blur-xl -z-10 animate-pulse" />
         </div>
 

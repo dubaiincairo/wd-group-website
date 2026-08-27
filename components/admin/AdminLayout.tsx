@@ -69,42 +69,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   }
 
   if (loading) {
-    const logoSrc = isAr ? '/brand/wd-group-logo-ar-white.png' : '/brand/wd-group-logo-white.png';
-    const logoAlt = isAr ? 'مجموعة دبليو دي للأعمال' : 'WD Group';
-
-    return (
-      <div 
-        dir={isAr ? 'rtl' : 'ltr'} 
-        lang={lang} 
-        className="min-h-screen bg-[#08090C] text-white flex flex-col items-center justify-center relative overflow-hidden select-none px-4 text-center"
-      >
-        {/* Ambient Glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[450px] h-[450px] bg-radial from-[#C9A86A]/15 via-blue-600/10 to-transparent blur-[120px] pointer-events-none" />
-        
-        {/* Real Brand Logo */}
-        <div className="relative mb-6 flex items-center justify-center">
-          <div className={`relative h-14 sm:h-16 ${isAr ? 'w-56 sm:w-64' : 'w-48 sm:w-56'} animate-pulse`}>
-            <Image 
-              src={logoSrc} 
-              alt={logoAlt} 
-              fill 
-              className="object-contain drop-shadow-[0_0_20px_rgba(201,168,106,0.35)]"
-              priority
-            />
-          </div>
-        </div>
-
-        {/* Corporate Status */}
-        <div className="space-y-1">
-          <p className="text-xs font-mono text-zinc-300 font-semibold tracking-wider">
-            {isAr ? 'جارٍ تحميل لوحة التحكم وإدارة المنظومة…' : 'INITIALIZING SECURE ADMIN CONSOLE…'}
-          </p>
-          <p className="text-[11px] font-mono text-[#C9A86A]/80">
-            {isAr ? 'مجموعة دبليو دي للأعمال' : 'WD GROUP HOLDING'}
-          </p>
-        </div>
-      </div>
-    );
+    return <div className="min-h-screen bg-[#08090C]" />;
   }
 
   return (

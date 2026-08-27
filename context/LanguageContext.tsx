@@ -36,15 +36,21 @@ function resolveField(isAr: boolean, valAr: any, valEn: any, baseAr: any, baseEn
 }
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [lang, setLang] = useState<Language>('en');
+  const [lang, setLang] = useState<Language>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const saved = localStorage.getItem('wd_lang') as Language;
+        if (saved === 'en' || saved === 'ar') return saved;
+        const docLang = document.documentElement.lang as Language;
+        if (docLang === 'en' || docLang === 'ar') return docLang;
+        if (document.documentElement.dir === 'rtl') return 'ar';
+      } catch (e) {}
+    }
+    return 'en';
+  });
   const [dynamicContent, setDynamicContent] = useState<any>(null);
 
   useEffect(() => {
-    const saved = localStorage.getItem('wd_lang') as Language;
-    if (saved && (saved === 'en' || saved === 'ar')) {
-      setLang(saved);
-    }
-
     // Fetch dynamic published CMS content
     async function loadDynamicContent() {
       try {
