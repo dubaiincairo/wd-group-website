@@ -284,13 +284,13 @@ export default function LiveEditorDock() {
   };
 
   const PAGE_OPTIONS = [
-    { id: 'home', label: lang === 'ar' ? 'الرئيسية (/)' : 'Homepage (/)', icon: Home },
-    { id: 'about', label: lang === 'ar' ? 'من نحن (/about)' : 'About Us (/about)', icon: Info },
-    { id: 'hospitality', label: lang === 'ar' ? 'الضيافة (سويس بلو)' : 'Hospitality (SwissBlue)', icon: Building2 },
-    { id: 'manufacturing', label: lang === 'ar' ? 'التصنيع (جرين وود)' : 'Manufacturing (GreenWood)', icon: Factory },
-    { id: 'contracting', label: lang === 'ar' ? 'المقاولات (تصاميم الوطن)' : 'Contracting (Fit-Out)', icon: HardHat },
-    { id: 'careers', label: lang === 'ar' ? 'الوظائف (/careers)' : 'Careers (/careers)', icon: Briefcase },
-    { id: 'contact', label: lang === 'ar' ? 'تواصل معنا (/contact)' : 'Contact Us (/contact)', icon: Mail },
+    { id: 'home', label: lang === 'ar' ? 'الرئيسية' : 'Home', icon: Home },
+    { id: 'about', label: lang === 'ar' ? 'عنّا' : 'About', icon: Info },
+    { id: 'hospitality', label: lang === 'ar' ? 'الضيافة' : 'Hospitality', icon: Building2 },
+    { id: 'manufacturing', label: lang === 'ar' ? 'التصنيع' : 'Manufacturing', icon: Factory },
+    { id: 'contracting', label: lang === 'ar' ? 'المقاولات' : 'Contracting', icon: HardHat },
+    { id: 'careers', label: lang === 'ar' ? 'الوظائف' : 'Careers', icon: Briefcase },
+    { id: 'contact', label: lang === 'ar' ? 'تواصل' : 'Contact', icon: Mail },
   ];
 
   return (
