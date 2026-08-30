@@ -233,6 +233,7 @@ ${formData.notes || 'None'}
                               fill
                               sizes="80px"
                               className="object-cover"
+                              unoptimized
                             />
                           </div>
 

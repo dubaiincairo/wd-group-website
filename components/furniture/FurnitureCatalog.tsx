@@ -296,13 +296,14 @@ export default function FurnitureCatalog({ onQuickView, onAddToCart }: Furniture
               >
                 <div>
                   {/* Image Container with Hover Zoom */}
-                  <div className="relative aspect-4/3 w-full rounded-2xl overflow-hidden mb-4 bg-black/40 border border-white/5">
+                  <div className="relative w-full h-64 sm:h-72 rounded-2xl overflow-hidden mb-4 bg-black/50 border border-white/10">
                     <Image
                       src={item.images[0]}
                       alt={isAr ? item.nameAr : item.nameEn}
                       fill
                       sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                       className="object-cover group-hover:scale-105 transition-transform duration-700"
+                      unoptimized
                     />
 
                     <div className="absolute inset-0 bg-gradient-to-t from-[#0F1117]/80 via-transparent to-black/20" />
@@ -423,13 +424,14 @@ export default function FurnitureCatalog({ onQuickView, onAddToCart }: Furniture
                 className="luxury-card rounded-3xl p-5 border border-white/10 hover:border-[#C9A86A]/50 bg-[#0F1117]/90 flex flex-col sm:flex-row gap-5 items-center justify-between group cursor-pointer"
               >
                 <div className="flex flex-col sm:flex-row gap-4 items-center w-full sm:w-auto">
-                  <div className="relative w-full sm:w-36 h-32 rounded-2xl overflow-hidden shrink-0 bg-black/40 border border-white/10">
+                  <div className="relative w-full sm:w-44 h-44 sm:h-36 rounded-2xl overflow-hidden shrink-0 bg-black/40 border border-white/10">
                     <Image
                       src={item.images[0]}
                       alt={isAr ? item.nameAr : item.nameEn}
                       fill
-                      sizes="144px"
+                      sizes="176px"
                       className="object-cover group-hover:scale-105 transition-transform duration-500"
+                      unoptimized
                     />
                   </div>
 

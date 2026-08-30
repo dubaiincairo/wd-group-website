@@ -136,7 +136,7 @@ export default function ProductQuickViewModal({
             {/* Left: Image Gallery */}
             <div className="space-y-4">
               {/* Main Image */}
-              <div className="relative aspect-4/3 w-full rounded-2xl overflow-hidden border border-white/10 bg-black/40 group">
+              <div className="relative w-full h-72 sm:h-80 md:h-96 rounded-2xl overflow-hidden border border-white/10 bg-black/50 group">
                 <Image
                   src={product.images[selectedImageIdx] || product.images[0]}
                   alt={isAr ? product.nameAr : product.nameEn}
@@ -144,6 +144,7 @@ export default function ProductQuickViewModal({
                   sizes="(min-width: 768px) 50vw, 100vw"
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
                   priority
+                  unoptimized
                 />
                 
                 {/* Badge Overlay */}
@@ -202,6 +203,7 @@ export default function ProductQuickViewModal({
                         fill
                         sizes="80px"
                         className="object-cover"
+                        unoptimized
                       />
                     </button>
                   ))}
