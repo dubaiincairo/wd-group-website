@@ -273,9 +273,9 @@ export const FURNITURE_CATALOG: FurnitureItem[] = [
     leadTimeEn: '8–12 Business Days',
     leadTimeAr: '8 – 12 يوم عمل',
     images: [
-      'https://images.unsplash.com/photo-1580481077195-73ab013f3367?auto=format&fit=crop&w=1200&q=85',
-      'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1200&q=85',
-      'https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?auto=format&fit=crop&w=1200&q=85'
+      'https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1200&q=85'
     ],
     finishes: [
       { id: 'cognac-leather', nameEn: 'Heritage Cognac Leather', nameAr: 'جلد كونياك كلاسيكي', colorCode: '#9E5B32' },
