@@ -1,16 +1,18 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useLanguage } from '@/context/LanguageContext';
-import { Mail, Phone, MapPin, Building2, Factory, HardHat, FileText, Shield } from 'lucide-react';
+import { Mail, Phone, MapPin, Building2, Factory, HardHat, FileText, Shield, Lock } from 'lucide-react';
+import BankingAccessModal from '@/components/banking/BankingAccessModal';
 
 export default function Footer() {
   const pathname = usePathname();
   const { lang, dict } = useLanguage();
   const currentYear = new Date().getFullYear();
+  const [isBankingModalOpen, setIsBankingModalOpen] = useState(false);
 
   if (pathname?.startsWith('/admin') || pathname === '/maintenance') {
     return null;
@@ -74,9 +76,14 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/contact#bank-accounts" className="hover:text-white transition-colors flex items-center gap-1">
-                  <span>{lang === 'ar' ? 'الحسابات البنكية المعتمدة' : 'Bank Accounts'}</span>
-                </Link>
+                <button
+                  type="button"
+                  onClick={() => setIsBankingModalOpen(true)}
+                  className="hover:text-[#C9A86A] text-left rtl:text-right transition-colors flex items-center gap-1.5 cursor-pointer text-zinc-400 group"
+                >
+                  <Lock className="w-3.5 h-3.5 text-[#C9A86A] group-hover:scale-110 transition-transform shrink-0" />
+                  <span>{lang === 'ar' ? 'الحسابات البنكية المعتمدة' : 'Official Bank Accounts'}</span>
+                </button>
               </li>
               <li>
                 <Link href="/about#profile" className="hover:text-white transition-colors">
@@ -151,6 +158,12 @@ export default function Footer() {
         </div>
 
       </div>
+
+      {/* Protected Banking Access Modal */}
+      <BankingAccessModal 
+        isOpen={isBankingModalOpen} 
+        onClose={() => setIsBankingModalOpen(false)} 
+      />
     </footer>
   );
 }
