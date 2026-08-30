@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useLanguage } from '@/context/LanguageContext';
-import { Mail, Phone, MapPin, Building2, Factory, HardHat, FileText, Shield, Lock } from 'lucide-react';
+import { Mail, Phone, MapPin, Building2, Factory, HardHat, ShoppingBag, FileText, Shield, Sparkles, Lock } from 'lucide-react';
 import BankingAccessModal from '@/components/banking/BankingAccessModal';
 
 export default function Footer() {
@@ -115,6 +115,20 @@ export default function Footer() {
                 <Link href="/sectors/contracting" className="hover:text-amber-300 transition-colors flex items-center gap-1.5">
                   <HardHat className="w-3.5 h-3.5 text-amber-400" />
                   <span>{dict.footer.contr_title}</span>
+                </Link>
+              </li>
+              <li className="pt-1">
+                <Link 
+                  href="/furniture" 
+                  className="hover:text-[#E3C58A] transition-all flex items-center justify-between group/store p-1.5 -mx-1.5 rounded-lg bg-[#C9A86A]/10 hover:bg-[#C9A86A]/20 border border-[#C9A86A]/30 shadow-sm"
+                >
+                  <div className="flex items-center gap-1.5 text-zinc-200 group-hover/store:text-white font-semibold">
+                    <ShoppingBag className="w-3.5 h-3.5 text-[#C9A86A]" />
+                    <span className="text-[#C9A86A] group-hover/store:text-[#E3C58A]">{dict.footer.furniture_store || (lang === 'ar' ? 'متجر أثاث جرين وود' : 'GreenWood Furniture Store')}</span>
+                  </div>
+                  <span className="text-[9px] font-extrabold px-1.5 py-0.2 rounded-full bg-[#C9A86A] text-[#08090C] font-mono shadow-sm">
+                    {dict.footer.furniture_badge || (lang === 'ar' ? 'جديد' : 'NEW')}
+                  </span>
                 </Link>
               </li>
             </ul>

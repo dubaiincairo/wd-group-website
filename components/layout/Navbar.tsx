@@ -13,7 +13,9 @@ import {
   Globe, 
   Menu, 
   X, 
-  ArrowUpRight
+  ArrowUpRight,
+  ShoppingBag,
+  Sparkles
 } from 'lucide-react';
 
 export default function Navbar() {
@@ -193,6 +195,33 @@ export default function Navbar() {
                         {lang === 'ar' ? 'تنفيذ شامل' : 'Turnkey'}
                       </span>
                     </Link>
+
+                    <div className="pt-1 my-1 border-t border-white/10" />
+
+                    <Link 
+                      href="/furniture" 
+                      onClick={() => setSectorsOpen(false)}
+                      className={`flex items-center justify-between p-2.5 rounded-xl hover:bg-[#C9A86A]/10 border border-[#C9A86A]/25 transition-all group/item ${
+                        pathname === '/furniture' ? 'bg-[#C9A86A]/20' : 'bg-[#C9A86A]/5'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-7 h-7 rounded-lg bg-[#C9A86A]/20 flex items-center justify-center text-[#C9A86A] group-hover/item:scale-110 transition-transform">
+                          <ShoppingBag className="w-4 h-4" />
+                        </div>
+                        <div>
+                          <span className="text-xs font-bold text-white group-hover/item:text-[#C9A86A] block">
+                            {lang === 'ar' ? 'متجر أثاث جرين وود' : 'GreenWood Furniture Store'}
+                          </span>
+                          <span className="text-[10px] text-zinc-400">
+                            {lang === 'ar' ? 'تسوق وطلب تسعير مشروعات' : 'Retail & Hospitality FF&E'}
+                          </span>
+                        </div>
+                      </div>
+                      <span className="text-[9px] font-extrabold text-[#08090C] bg-[#C9A86A] px-2 py-0.5 rounded-full font-mono shadow-sm">
+                        {lang === 'ar' ? 'جديد' : 'NEW'}
+                      </span>
+                    </Link>
                   </div>
                 </div>
               )}
@@ -307,6 +336,19 @@ export default function Navbar() {
               <span>{dict.nav.contracting}</span>
               <span className="text-xs bg-amber-500/10 px-2 py-0.5 rounded-full">
                 {lang === 'ar' ? 'مشاريع متكاملة' : 'Projects'}
+              </span>
+            </Link>
+            <Link 
+              href="/furniture"
+              onClick={() => setMobileMenuOpen(false)}
+              className="px-3 py-2 rounded-xl text-sm font-bold text-[#C9A86A] bg-[#C9A86A]/10 border border-[#C9A86A]/30 hover:bg-[#C9A86A]/20 flex items-center justify-between"
+            >
+              <div className="flex items-center gap-2">
+                <ShoppingBag className="w-4 h-4 text-[#C9A86A]" />
+                <span>{lang === 'ar' ? 'متجر أثاث جرين وود' : 'GreenWood Furniture Store'}</span>
+              </div>
+              <span className="text-xs bg-[#C9A86A] text-[#08090C] font-extrabold px-2 py-0.5 rounded-full font-mono">
+                {lang === 'ar' ? 'جديد' : 'NEW'}
               </span>
             </Link>
             <Link 
