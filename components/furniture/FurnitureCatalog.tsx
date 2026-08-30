@@ -453,7 +453,7 @@ export default function FurnitureCatalog({ onQuickView, onAddToCart }: Furniture
                     <div className="text-[11px] text-zinc-500 flex items-center justify-center sm:justify-start gap-3 pt-1">
                       <span>{item.dimensions.width}W × {item.dimensions.depth}D × {item.dimensions.height}H cm</span>
                       <span>·</span>
-                      <span className="text-emerald-400">{isAr ? item.leadTimeAr : item.leadTimeEn}</span>
+                      <span className="text-emerald-400 whitespace-nowrap">{isAr ? item.leadTimeAr : item.leadTimeEn}</span>
                     </div>
                   </div>
                 </div>

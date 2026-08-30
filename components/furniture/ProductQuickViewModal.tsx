@@ -271,9 +271,9 @@ export default function ProductQuickViewModal({
                     </div>
                   </div>
 
-                  <div className="text-right rtl:text-left text-[11px] font-mono text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-lg border border-emerald-500/20">
-                    <Clock className="w-3 h-3 inline mr-1 rtl:mr-0 rtl:ml-1" />
-                    {isAr ? product.leadTimeAr : product.leadTimeEn}
+                  <div className="inline-flex items-center gap-1.5 whitespace-nowrap text-[11px] font-mono text-emerald-400 bg-emerald-500/10 px-3 py-1.5 rounded-lg border border-emerald-500/20 shrink-0">
+                    <Clock className="w-3.5 h-3.5 shrink-0" />
+                    <span>{isAr ? product.leadTimeAr : product.leadTimeEn}</span>
                   </div>
                 </div>
 

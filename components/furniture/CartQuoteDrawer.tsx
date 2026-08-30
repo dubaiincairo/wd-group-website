@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '@/context/LanguageContext';
 import { FurnitureItem } from '@/lib/furnitureData';
@@ -17,7 +18,9 @@ import {
   Building2, 
   Truck, 
   ShieldCheck,
-  ArrowRight
+  ArrowRight,
+  CreditCard,
+  FileText
 } from 'lucide-react';
 
 export interface CartItem {
@@ -335,23 +338,41 @@ ${formData.notes || 'None'}
 
                     {/* Action Buttons */}
                     <div className="space-y-2.5 pt-1">
-                      <button
-                        onClick={() => setCheckoutModalOpen(true)}
+                      <Link
+                        href="/furniture/checkout"
+                        onClick={() => {
+                          try {
+                            localStorage.setItem('wd_furniture_cart', JSON.stringify(items));
+                          } catch (e) {}
+                          onClose();
+                        }}
                         className="w-full py-3.5 px-4 rounded-xl font-extrabold text-xs sm:text-sm text-[#08090C] bg-gradient-to-r from-[#C9A86A] via-[#DFBA73] to-[#C9A86A] hover:shadow-[0_0_25px_rgba(201,168,106,0.45)] transition-all flex items-center justify-center gap-2"
                       >
-                        <span>{dict.furniture.cart.direct_checkout}</span>
+                        <CreditCard className="w-4 h-4" />
+                        <span>{isAr ? 'متابعة الدفع والشراء' : 'Proceed to Checkout'}</span>
                         <ArrowRight className="w-4 h-4 rtl:rotate-180" />
-                      </button>
+                      </Link>
 
-                      <a
-                        href={`https://wa.me/966505725070?text=${whatsappCheckoutMessage}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-full py-2.5 px-4 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 text-xs font-bold flex items-center justify-center gap-2 transition-all"
-                      >
-                        <MessageSquare className="w-4 h-4" />
-                        <span>{isAr ? 'إرسال الطلب عبر واتساب' : 'Instant WhatsApp Order'}</span>
-                      </a>
+                      <div className="grid grid-cols-2 gap-2">
+                        <button
+                          type="button"
+                          onClick={() => setCheckoutModalOpen(true)}
+                          className="py-2.5 px-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-300 text-[11px] font-semibold flex items-center justify-center gap-1.5 transition-all"
+                        >
+                          <FileText className="w-3.5 h-3.5 text-[#C9A86A]" />
+                          <span>{isAr ? 'عرض سعر (RFQ)' : 'Quick RFQ'}</span>
+                        </button>
+
+                        <a
+                          href={`https://wa.me/966505725070?text=${whatsappCheckoutMessage}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="py-2.5 px-3 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 text-[11px] font-bold flex items-center justify-center gap-1.5 transition-all"
+                        >
+                          <MessageSquare className="w-3.5 h-3.5" />
+                          <span>{isAr ? 'واتساب' : 'WhatsApp'}</span>
+                        </a>
+                      </div>
                     </div>
                   </div>
                 )}
