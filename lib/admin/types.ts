@@ -344,6 +344,7 @@ export interface SiteContentPayload {
     maintenance_message_ar?: string;
     maintenance_message_en?: string;
     maintenance_estimated_date?: string;
+    bank_access_code?: string;
     bank_accounts?: BankAccountRecord[];
   };
   seo: {

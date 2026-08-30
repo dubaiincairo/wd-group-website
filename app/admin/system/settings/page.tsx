@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Settings, Save, RefreshCw, Building, Phone, Mail, AlertTriangle, Wrench, Sparkles, CreditCard, Plus, Trash2, Building2 } from 'lucide-react';
+import { Settings, Save, RefreshCw, Building, Phone, Mail, AlertTriangle, Wrench, Sparkles, CreditCard, Plus, Trash2, Building2, Lock } from 'lucide-react';
 import BilingualInput from '@/components/admin/BilingualInput';
 import MediaFieldUploader from '@/components/admin/MediaFieldUploader';
 import { useToast } from '@/components/admin/ToastProvider';
@@ -313,7 +313,7 @@ export default function GlobalSettingsAdminPage() {
                 valueEn={s.maintenance_message_en || 'We are currently preparing and upgrading the official digital platform for WD Group. We look forward to welcoming you soon.'}
                 valueAr={s.maintenance_message_ar || 'نعمل حالياً على تطوير وتجهيز المنصة الرقمية الرسمية لمجموعة دبليو دي للأعمال. سنكون معكم قريباً بحلتنا الجديدة.'}
                 onChangeEn={(v) => setContent({ ...content, settings: { ...s, maintenance_message_en: v } })}
-                onChangeAr={(v) => setContent({ ...content, settings: { ...s, maintenance_message_ar: v } })}
+                onChangeAr={(v) => setContent({ ...content, settings: { ...s, maintenance_headline_ar: v } })}
               />
 
               <div className="space-y-1.5 max-w-xs">
@@ -341,7 +341,7 @@ export default function GlobalSettingsAdminPage() {
                 <span>{isAr ? '// الحسابات البنكية الرسمية المعتمدة' : '// OFFICIAL CORPORATE BANK ACCOUNTS'}</span>
               </h3>
               <p className="text-xs text-zinc-400 mt-1">
-                {isAr ? 'إدارة الحسابات البنكية المعتمدة التي تظهر لزوار صفحة الاتصال والمعاملات الرسمية.' : 'Manage approved bank accounts displayed on the public Contact page and financial documents.'}
+                {isAr ? 'إدارة الحسابات البنكية المعتمدة المحمية برمز تحقق للعملاء والشركاء.' : 'Manage approved corporate bank accounts protected by access code for authorized clients.'}
               </p>
             </div>
 
@@ -369,11 +369,39 @@ export default function GlobalSettingsAdminPage() {
                   },
                 });
               }}
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600/20 border border-blue-500/30 hover:bg-blue-600/30 text-blue-400 text-xs font-bold transition-colors self-start sm:self-auto"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600/20 border border-blue-500/30 hover:bg-blue-600/30 text-blue-400 text-xs font-bold transition-colors self-start sm:self-auto cursor-pointer"
             >
               <Plus className="w-4 h-4" />
               <span>{isAr ? 'إضافة حساب بنكي' : 'Add Bank Account'}</span>
             </button>
+          </div>
+
+          {/* Access Code Protection Configuration */}
+          <div className="bg-[#08090C] border border-[#C9A86A]/30 rounded-2xl p-4 sm:p-5 space-y-2.5">
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex items-center gap-2 text-xs font-bold text-[#C9A86A]">
+                <Lock className="w-4 h-4" />
+                <span>{isAr ? 'رمز التحقق المالي المعتمد لفتح الحسابات للعملاء' : 'Active Financial Authorization Code'}</span>
+              </div>
+              <span className="text-[10px] font-mono text-zinc-400 bg-white/5 border border-white/10 px-2 py-0.5 rounded">
+                {isAr ? 'نافذة التذييل المنبثقة' : 'Footer Popup Modal'}
+              </span>
+            </div>
+            <p className="text-[11px] text-zinc-400 leading-relaxed">
+              {isAr 
+                ? 'الرمز الذي يجب على العميل إدخاله في النافذة المنبثقة عند النقر على رابط الحسابات البنكية بالتذييل. (الافتراضي: WD-2026)' 
+                : 'The authorization code clients must enter in the pop-up modal triggered from the footer. (Default: WD-2026)'}
+            </p>
+            <div className="max-w-xs pt-1">
+              <input
+                type="text"
+                value={s.bank_access_code || 'WD-2026'}
+                onChange={(e) => setContent({ ...content, settings: { ...s, bank_access_code: e.target.value.toUpperCase() } })}
+                placeholder="WD-2026"
+                className="w-full bg-[#0F1117] border border-white/20 focus:border-[#C9A86A] rounded-xl px-3.5 py-2 text-xs font-mono font-bold tracking-widest text-[#E3C58A] focus:outline-none uppercase"
+                dir="ltr"
+              />
+            </div>
           </div>
 
           {(!s.bank_accounts || s.bank_accounts.length === 0) ? (

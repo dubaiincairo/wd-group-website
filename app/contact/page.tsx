@@ -11,13 +11,8 @@ import {
   CheckCircle2, 
   Send, 
   ShieldCheck, 
-  UploadCloud,
-  ChevronDown,
-  CreditCard,
-  Building2,
-  Copy,
-  Check,
-  Lock
+  UploadCloud, 
+  ChevronDown 
 } from 'lucide-react';
 
 export default function ContactPage() {
@@ -25,7 +20,6 @@ export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     fullName: '',
     company: '',
@@ -62,21 +56,6 @@ export default function ContactPage() {
       setLoading(false);
     }
   };
-
-  const handleCopy = (text: string, key: string) => {
-    try {
-      navigator.clipboard.writeText(text);
-      setCopiedKey(key);
-      setTimeout(() => {
-        setCopiedKey((prev) => (prev === key ? null : prev));
-      }, 2200);
-    } catch (err) {
-      console.error('Failed to copy text:', err);
-    }
-  };
-
-  const bankingData = (dict.contact as any)?.banking;
-  const bankAccounts = bankingData?.accounts || [];
 
   return (
     <div className="min-h-screen bg-brand-dark text-white pt-28 pb-20 px-4 sm:px-6 lg:px-8">
@@ -189,172 +168,7 @@ export default function ContactPage() {
 
         </motion.section>
 
-        {/* 3. Official Bank Accounts (الحسابات البنكية المعتمدة) */}
-        {bankingData && bankAccounts.length > 0 && (
-          <motion.section 
-            id="bank-accounts"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-60px' }}
-            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            className="glass-card rounded-3xl p-8 sm:p-12 border border-blue-500/30 bg-brand-surface/90 shadow-2xl relative overflow-hidden"
-          >
-            {/* Ambient Lighting */}
-            <div className="absolute top-0 right-0 w-96 h-96 bg-blue-600/10 blur-[100px] pointer-events-none" />
-
-            <div className="relative z-10 space-y-8">
-              
-              {/* Section Header */}
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/10 pb-6">
-                <div>
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-bold text-blue-400 bg-blue-500/10 border border-blue-500/20 mb-2">
-                    <Building2 className="w-3.5 h-3.5" />
-                    <span>{lang === 'ar' ? 'المعاملات والتحويلات الرسمية' : 'OFFICIAL BANKING CREDENTIALS'}</span>
-                  </div>
-                  <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
-                    {bankingData.title}
-                  </h2>
-                  <p className="text-xs sm:text-sm text-zinc-400 mt-1">
-                    {bankingData.subtitle}
-                  </p>
-                </div>
-
-                <div className="flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-2.5 rounded-2xl shrink-0">
-                  <Lock className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <span className="text-xs font-medium text-zinc-300">
-                    {lang === 'ar' ? 'حسابات بنكية رسمية موثقة' : 'Verified Corporate Accounts'}
-                  </span>
-                </div>
-              </div>
-
-              {/* Security Advisory Callout */}
-              <div className="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-4 flex items-start gap-3 text-xs text-amber-200/90 leading-relaxed">
-                <ShieldCheck className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
-                <div>
-                  <strong className="text-amber-300 font-bold block mb-0.5">
-                    {lang === 'ar' ? 'تنبيه أمني ومعاملات رسمية:' : 'Official Payment Notice:'}
-                  </strong>
-                  {bankingData.notice}
-                </div>
-              </div>
-
-              {/* Bank Accounts Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {bankAccounts.map((acc: any, idx: number) => {
-                  const ibanKey = `iban_${idx}`;
-                  const accKey = `acc_${idx}`;
-                  const isIbanCopied = copiedKey === ibanKey;
-                  const isAccCopied = copiedKey === accKey;
-
-                  return (
-                    <div 
-                      key={idx} 
-                      className="rounded-2xl p-6 bg-black/40 border border-white/10 hover:border-blue-500/40 transition-all duration-300 space-y-4 relative group"
-                    >
-                      {/* Bank Header */}
-                      <div className="flex items-center justify-between gap-3 border-b border-white/10 pb-3">
-                        <div className="flex items-center gap-2.5">
-                          <div className="w-9 h-9 rounded-xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400 font-bold text-xs">
-                            <CreditCard className="w-4 h-4" />
-                          </div>
-                          <div>
-                            <h4 className="text-sm font-bold text-white">
-                              {acc.bankName}
-                            </h4>
-                            <span className="text-[11px] text-zinc-400">
-                              {acc.currency || (lang === 'ar' ? 'ريال سعودي (SAR)' : 'SAR')}
-                            </span>
-                          </div>
-                        </div>
-
-                        {acc.swiftCode && (
-                          <span className="text-[11px] font-mono text-zinc-400 bg-white/5 px-2 py-1 rounded border border-white/5">
-                            SWIFT: {acc.swiftCode}
-                          </span>
-                        )}
-                      </div>
-
-                      {/* Beneficiary Name */}
-                      <div className="space-y-1">
-                        <span className="text-[11px] font-mono text-zinc-400 block">
-                          {bankingData.beneficiary}:
-                        </span>
-                        <div className="text-xs sm:text-sm font-bold text-zinc-100 bg-white/5 px-3 py-2 rounded-xl border border-white/5">
-                          {acc.accountName || bankingData.beneficiaryName}
-                        </div>
-                      </div>
-
-                      {/* IBAN */}
-                      <div className="space-y-1.5">
-                        <div className="flex items-center justify-between">
-                          <span className="text-[11px] font-mono text-zinc-400">
-                            {bankingData.ibanLabel}:
-                          </span>
-                          <button
-                            type="button"
-                            onClick={() => handleCopy(acc.iban, ibanKey)}
-                            className="inline-flex items-center gap-1.5 text-[11px] font-mono font-bold text-blue-400 hover:text-blue-300 transition-colors"
-                          >
-                            {isIbanCopied ? (
-                              <>
-                                <Check className="w-3.5 h-3.5 text-emerald-400" />
-                                <span className="text-emerald-400">{bankingData.copied}</span>
-                              </>
-                            ) : (
-                              <>
-                                <Copy className="w-3.5 h-3.5" />
-                                <span>{bankingData.copyIban}</span>
-                              </>
-                            )}
-                          </button>
-                        </div>
-
-                        <div className="text-xs sm:text-sm font-mono font-bold text-blue-400 bg-blue-500/10 border border-blue-500/20 px-3.5 py-2.5 rounded-xl flex items-center justify-between tracking-wider select-all" dir="ltr">
-                          <span>{acc.iban}</span>
-                        </div>
-                      </div>
-
-                      {/* Account Number */}
-                      {acc.accountNumber && (
-                        <div className="space-y-1">
-                          <div className="flex items-center justify-between">
-                            <span className="text-[11px] font-mono text-zinc-400">
-                              {bankingData.accountNumber}:
-                            </span>
-                            <button
-                              type="button"
-                              onClick={() => handleCopy(acc.accountNumber, accKey)}
-                              className="inline-flex items-center gap-1 text-[11px] font-mono text-zinc-400 hover:text-white transition-colors"
-                            >
-                              {isAccCopied ? (
-                                <>
-                                  <Check className="w-3 h-3 text-emerald-400" />
-                                  <span className="text-emerald-400 text-[10px]">{bankingData.copied}</span>
-                                </>
-                              ) : (
-                                <>
-                                  <Copy className="w-3 h-3" />
-                                  <span className="text-[10px]">{bankingData.copyAccount}</span>
-                                </>
-                              )}
-                            </button>
-                          </div>
-                          <div className="text-xs font-mono font-semibold text-zinc-300 bg-white/5 px-3 py-1.5 rounded-lg border border-white/5" dir="ltr">
-                            {acc.accountNumber}
-                          </div>
-                        </div>
-                      )}
-
-                    </div>
-                  );
-                })}
-              </div>
-
-            </div>
-          </motion.section>
-        )}
-
-        {/* 4. Integrated Multi-Sector Inquiry Form */}
+        {/* 3. Integrated Multi-Sector Inquiry Form */}
         <motion.section 
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
