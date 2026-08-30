@@ -1,13 +1,13 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Settings, Save, RefreshCw, Building, Phone, Mail, AlertTriangle, Wrench, Sparkles } from 'lucide-react';
+import { Settings, Save, RefreshCw, Building, Phone, Mail, AlertTriangle, Wrench, Sparkles, CreditCard, Plus, Trash2, Building2 } from 'lucide-react';
 import BilingualInput from '@/components/admin/BilingualInput';
 import MediaFieldUploader from '@/components/admin/MediaFieldUploader';
 import { useToast } from '@/components/admin/ToastProvider';
 import AdminLoadingState from '@/components/admin/AdminLoadingState';
 import { useLanguage } from '@/context/LanguageContext';
-import type { SiteContentPayload } from '@/lib/admin/types';
+import type { SiteContentPayload, BankAccountRecord } from '@/lib/admin/types';
 
 export default function GlobalSettingsAdminPage() {
   const { showToast } = useToast();
@@ -328,6 +328,216 @@ export default function GlobalSettingsAdminPage() {
                   className="w-full bg-[#08090C] border border-white/15 rounded-xl px-4 py-2 text-xs font-mono text-white focus:outline-none focus:border-amber-500"
                 />
               </div>
+            </div>
+          )}
+        </div>
+
+        {/* 5. Official Corporate Bank Accounts (الحسابات البنكية المعتمدة) */}
+        <div className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 space-y-6 shadow-xl col-span-1 md:col-span-2">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4">
+            <div>
+              <h3 className="text-xs font-mono font-bold text-blue-400 uppercase tracking-wider flex items-center gap-2">
+                <CreditCard className="w-4 h-4" />
+                <span>{isAr ? '// الحسابات البنكية الرسمية المعتمدة' : '// OFFICIAL CORPORATE BANK ACCOUNTS'}</span>
+              </h3>
+              <p className="text-xs text-zinc-400 mt-1">
+                {isAr ? 'إدارة الحسابات البنكية المعتمدة التي تظهر لزوار صفحة الاتصال والمعاملات الرسمية.' : 'Manage approved bank accounts displayed on the public Contact page and financial documents.'}
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => {
+                const currentAccounts = s.bank_accounts || [];
+                const newAcc: BankAccountRecord = {
+                  id: `bank_${Date.now()}`,
+                  bank_name_ar: 'مصرف الراجحي',
+                  bank_name_en: 'Al Rajhi Bank',
+                  account_name_ar: 'شركة تصاميم الوطن المحدودة',
+                  account_name_en: 'Watan Designs Ltd.',
+                  iban: 'SA0000000000000000000000',
+                  account_number: '000000000000',
+                  swift_code: 'RJHISARI',
+                  currency: 'SAR',
+                  is_active: true,
+                };
+                setContent({
+                  ...content,
+                  settings: {
+                    ...s,
+                    bank_accounts: [...currentAccounts, newAcc],
+                  },
+                });
+              }}
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600/20 border border-blue-500/30 hover:bg-blue-600/30 text-blue-400 text-xs font-bold transition-colors self-start sm:self-auto"
+            >
+              <Plus className="w-4 h-4" />
+              <span>{isAr ? 'إضافة حساب بنكي' : 'Add Bank Account'}</span>
+            </button>
+          </div>
+
+          {(!s.bank_accounts || s.bank_accounts.length === 0) ? (
+            <div className="p-8 text-center border border-dashed border-white/10 rounded-2xl space-y-2">
+              <CreditCard className="w-8 h-8 text-zinc-500 mx-auto" />
+              <p className="text-xs text-zinc-400">{isAr ? 'لم يتم تخصيص حسابات بنكية بعد. سيتم عرض الحسابات الافتراضية.' : 'No custom bank accounts configured yet. Default corporate accounts will be displayed.'}</p>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {s.bank_accounts.map((acc, index) => (
+                <div 
+                  key={acc.id || index}
+                  className="bg-[#08090C] border border-white/10 rounded-2xl p-5 space-y-4 relative"
+                >
+                  <div className="flex items-center justify-between gap-2 border-b border-white/5 pb-3">
+                    <div className="flex items-center gap-2">
+                      <span className="w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 text-xs font-mono font-bold flex items-center justify-center">
+                        {index + 1}
+                      </span>
+                      <span className="text-xs font-bold text-white">
+                        {isAr ? (acc.bank_name_ar || acc.bank_name_en) : (acc.bank_name_en || acc.bank_name_ar)}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                      <label className="flex items-center gap-2 text-xs text-zinc-400 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={acc.is_active !== false}
+                          onChange={(e) => {
+                            const updated = [...(s.bank_accounts || [])];
+                            updated[index] = { ...updated[index], is_active: e.target.checked };
+                            setContent({ ...content, settings: { ...s, bank_accounts: updated } });
+                          }}
+                          className="w-3.5 h-3.5 rounded bg-white/10 border-white/20 text-blue-600 focus:ring-0"
+                        />
+                        <span>{isAr ? 'مفعّل' : 'Active'}</span>
+                      </label>
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const updated = (s.bank_accounts || []).filter((_, i) => i !== index);
+                          setContent({ ...content, settings: { ...s, bank_accounts: updated } });
+                        }}
+                        className="text-zinc-500 hover:text-rose-400 transition-colors p-1"
+                        title={isAr ? 'حذف الحساب' : 'Remove Account'}
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <BilingualInput
+                      label={isAr ? 'اسم البنك' : 'Bank Name'}
+                      valueEn={acc.bank_name_en}
+                      valueAr={acc.bank_name_ar}
+                      onChangeEn={(v) => {
+                        const updated = [...(s.bank_accounts || [])];
+                        updated[index] = { ...updated[index], bank_name_en: v };
+                        setContent({ ...content, settings: { ...s, bank_accounts: updated } });
+                      }}
+                      onChangeAr={(v) => {
+                        const updated = [...(s.bank_accounts || [])];
+                        updated[index] = { ...updated[index], bank_name_ar: v };
+                        setContent({ ...content, settings: { ...s, bank_accounts: updated } });
+                      }}
+                    />
+
+                    <BilingualInput
+                      label={isAr ? 'اسم المستفيد / الحساب' : 'Beneficiary / Account Name'}
+                      valueEn={acc.account_name_en}
+                      valueAr={acc.account_name_ar}
+                      onChangeEn={(v) => {
+                        const updated = [...(s.bank_accounts || [])];
+                        updated[index] = { ...updated[index], account_name_en: v };
+                        setContent({ ...content, settings: { ...s, bank_accounts: updated } });
+                      }}
+                      onChangeAr={(v) => {
+                        const updated = [...(s.bank_accounts || [])];
+                        updated[index] = { ...updated[index], account_name_ar: v };
+                        setContent({ ...content, settings: { ...s, bank_accounts: updated } });
+                      }}
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
+                    <div className="space-y-1 sm:col-span-2">
+                      <label className="text-[11px] font-mono text-zinc-400">
+                        {isAr ? 'رقم الآيبان (IBAN)' : 'IBAN (International Bank Account Number)'}
+                      </label>
+                      <input
+                        type="text"
+                        value={acc.iban || ''}
+                        onChange={(e) => {
+                          const updated = [...(s.bank_accounts || [])];
+                          updated[index] = { ...updated[index], iban: e.target.value };
+                          setContent({ ...content, settings: { ...s, bank_accounts: updated } });
+                        }}
+                        placeholder="SA0000000000000000000000"
+                        className="w-full bg-[#0F1117] border border-white/15 rounded-xl px-3 py-2 text-xs font-mono font-bold text-blue-400 focus:outline-none focus:border-blue-500"
+                        dir="ltr"
+                      />
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="text-[11px] font-mono text-zinc-400">
+                        {isAr ? 'رقم الحساب' : 'Account Number'}
+                      </label>
+                      <input
+                        type="text"
+                        value={acc.account_number || ''}
+                        onChange={(e) => {
+                          const updated = [...(s.bank_accounts || [])];
+                          updated[index] = { ...updated[index], account_number: e.target.value };
+                          setContent({ ...content, settings: { ...s, bank_accounts: updated } });
+                        }}
+                        placeholder="000000000000"
+                        className="w-full bg-[#0F1117] border border-white/15 rounded-xl px-3 py-2 text-xs font-mono text-white focus:outline-none focus:border-blue-500"
+                        dir="ltr"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="space-y-1">
+                      <label className="text-[11px] font-mono text-zinc-400">
+                        {isAr ? 'رمز السويفت (SWIFT)' : 'SWIFT / BIC Code'}
+                      </label>
+                      <input
+                        type="text"
+                        value={acc.swift_code || ''}
+                        onChange={(e) => {
+                          const updated = [...(s.bank_accounts || [])];
+                          updated[index] = { ...updated[index], swift_code: e.target.value };
+                          setContent({ ...content, settings: { ...s, bank_accounts: updated } });
+                        }}
+                        placeholder="RJHISARI"
+                        className="w-full bg-[#0F1117] border border-white/15 rounded-xl px-3 py-2 text-xs font-mono text-white focus:outline-none focus:border-blue-500"
+                        dir="ltr"
+                      />
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="text-[11px] font-mono text-zinc-400">
+                        {isAr ? 'العملة' : 'Currency'}
+                      </label>
+                      <input
+                        type="text"
+                        value={acc.currency || ''}
+                        onChange={(e) => {
+                          const updated = [...(s.bank_accounts || [])];
+                          updated[index] = { ...updated[index], currency: e.target.value };
+                          setContent({ ...content, settings: { ...s, bank_accounts: updated } });
+                        }}
+                        placeholder="SAR"
+                        className="w-full bg-[#0F1117] border border-white/15 rounded-xl px-3 py-2 text-xs font-mono text-white focus:outline-none focus:border-blue-500"
+                      />
+                    </div>
+                  </div>
+
+                </div>
+              ))}
             </div>
           )}
         </div>
