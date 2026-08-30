@@ -218,9 +218,9 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
           quote: resolveField(isAr, c.home?.ceo?.quote_ar, c.home?.ceo?.quote_en, arDict.home.ceo.quote, enDict.home.ceo.quote),
           name: resolveField(isAr, c.home?.ceo?.name_ar, c.home?.ceo?.name_en, arDict.home.ceo.name, enDict.home.ceo.name),
           title: resolveField(isAr, c.home?.ceo?.title_ar, c.home?.ceo?.title_en, arDict.home.ceo.title, enDict.home.ceo.title),
-          photo_url: isAr 
-            ? (c.home?.ceo?.photo_url_ar || c.home?.ceo?.photo_url || c.home?.media?.ceo_photo || (baseDict.home.ceo as any)?.photo_url || '')
-            : (c.home?.ceo?.photo_url_en || c.home?.ceo?.photo_url || c.home?.media?.ceo_photo || (baseDict.home.ceo as any)?.photo_url || ''),
+          photo_url: resolveField(isAr, c.home?.ceo?.photo_url_ar || c.home?.ceo?.photo_url, c.home?.ceo?.photo_url_en || c.home?.ceo?.photo_url, (arDict.home.ceo as any).photo_url, (enDict.home.ceo as any).photo_url)
+            || c.home?.media?.ceo_photo
+            || (baseDict.home.ceo as any).photo_url,
         },
         partnership: {
           ...baseDict.home.partnership,
@@ -380,6 +380,21 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
           secondary_email: c.settings?.secondary_email || c.contact?.secondary_email || baseDict.contact.cards.secondary_email,
           primary_phone: c.settings?.primary_phone || c.contact?.primary_phone || baseDict.contact.cards.primary_phone,
           secondary_phone: c.settings?.secondary_phone || c.contact?.secondary_phone || baseDict.contact.cards.secondary_phone,
+        },
+        banking: {
+          ...(baseDict.contact as any).banking,
+          accounts: Array.isArray(c.settings?.bank_accounts) && c.settings.bank_accounts.length > 0
+            ? c.settings.bank_accounts
+                .filter((b: any) => b.is_active !== false)
+                .map((b: any) => ({
+                  bankName: (isAr ? b.bank_name_ar : b.bank_name_en) || b.bank_name_en,
+                  accountName: (isAr ? b.account_name_ar : b.account_name_en) || b.account_name_en,
+                  iban: b.iban,
+                  accountNumber: b.account_number,
+                  swiftCode: b.swift_code || '',
+                  currency: b.currency || (isAr ? 'ريال سعودي (SAR)' : 'SAR'),
+                }))
+            : (baseDict.contact as any).banking?.accounts || [],
         },
       },
     };

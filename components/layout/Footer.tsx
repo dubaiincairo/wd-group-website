@@ -74,6 +74,11 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/contact#bank-accounts" className="hover:text-white transition-colors flex items-center gap-1">
+                  <span>{lang === 'ar' ? 'الحسابات البنكية المعتمدة' : 'Bank Accounts'}</span>
+                </Link>
+              </li>
+              <li>
                 <Link href="/about#profile" className="hover:text-white transition-colors">
                   {dict.footer.profile}
                 </Link>

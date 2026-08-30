@@ -131,7 +131,9 @@ function getDefaultContent() {
         name_ar: ar.home.ceo.name,
         title_en: en.home.ceo.title,
         title_ar: ar.home.ceo.title,
-        photo_url: '',
+        photo_url: (en.home.ceo as any).photo_url || '',
+        photo_url_ar: (ar.home.ceo as any).photo_url || '',
+        photo_url_en: (en.home.ceo as any).photo_url || '',
       },
       partnership: {
         label_en: en.home.partnership.label,
@@ -235,6 +237,32 @@ function getDefaultContent() {
       maintenance_message_ar: 'نعمل حالياً على تطوير وتجهيز المنصة الرقمية لمجموعة دبليو دي للأعمال. سنكون معكم قريباً.',
       maintenance_message_en: 'We are currently preparing the new digital platform for WD Group. We look forward to launching soon.',
       maintenance_estimated_date: 'Q3 2026',
+      bank_accounts: [
+        {
+          id: 'bank_1',
+          bank_name_ar: 'مصرف الراجحي',
+          bank_name_en: 'Al Rajhi Bank',
+          account_name_ar: 'شركة تصاميم الوطن المحدودة',
+          account_name_en: 'Watan Designs Ltd.',
+          iban: 'SA0000000000000000000000',
+          account_number: '000000000000',
+          swift_code: 'RJHISARI',
+          currency: 'SAR',
+          is_active: true,
+        },
+        {
+          id: 'bank_2',
+          bank_name_ar: 'البنك الأهلي السعودي (SNB)',
+          bank_name_en: 'Saudi National Bank (SNB / AlAhli)',
+          account_name_ar: 'شركة تصاميم الوطن المحدودة',
+          account_name_en: 'Watan Designs Ltd.',
+          iban: 'SA0000000000000000000000',
+          account_number: '000000000000',
+          swift_code: 'NCBKSAJE',
+          currency: 'SAR',
+          is_active: true,
+        }
+      ],
     },
     seo: {
       global_title_en: 'WD Group | Integrated Hospitality, Manufacturing & Contracting',

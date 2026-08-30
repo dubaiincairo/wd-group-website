@@ -171,7 +171,7 @@ export const translations = {
         quote: "“We believe true success is measured by the impact we make on our employees, our clients, and our community. We began with a simple ambition: to build a Saudi institution that future generations will be proud of.”",
         name: "Eng. Mohammed Ali Saleh Al-Shaibani",
         title: "Chief Executive Officer",
-        photo_url: "",
+        photo_url: "https://fqkbgfdasfwnryekkgqz.supabase.co/storage/v1/object/public/photos/1787855667130_Watan_Designs_Company_Profile__1_.png",
       },
       partnership: {
         label: "Connect with WD Group",
@@ -419,6 +419,38 @@ export const translations = {
         entity: "Legal entity: Watan Designs Ltd.",
         cr: "Commercial Registration: 5950011057",
         vat: "VAT Number: 300865965100003",
+      },
+      banking: {
+        title: "Official Corporate Bank Accounts",
+        subtitle: "Official approved bank accounts for WD Group for Business (Watan Designs Ltd.)",
+        notice: "Please verify that the beneficiary account name matches the official corporate legal entity: Watan Designs Ltd. (شركة تصاميم الوطن المحدودة).",
+        copyIban: "Copy IBAN",
+        copyAccount: "Copy Account #",
+        copied: "Copied to clipboard!",
+        beneficiary: "Beneficiary Name",
+        beneficiaryName: "Watan Designs Ltd.",
+        accountNumber: "Account Number",
+        ibanLabel: "IBAN",
+        swiftLabel: "SWIFT / BIC",
+        currencyLabel: "Currency",
+        accounts: [
+          {
+            bankName: "Al Rajhi Bank",
+            accountName: "Watan Designs Ltd.",
+            iban: "SA0000000000000000000000",
+            accountNumber: "000000000000",
+            swiftCode: "RJHISARI",
+            currency: "SAR",
+          },
+          {
+            bankName: "Saudi National Bank (SNB / AlAhli)",
+            accountName: "Watan Designs Ltd.",
+            iban: "SA0000000000000000000000",
+            accountNumber: "000000000000",
+            swiftCode: "NCBKSAJE",
+            currency: "SAR",
+          }
+        ]
       }
     },
     forms: {
@@ -652,7 +684,7 @@ export const translations = {
         quote: "«نؤمن أن النجاح الحقيقي يُقاس بالأثر الذي نتركه في موظفينا وعملائنا ومجتمعنا. انطلقنا بطموح بسيط: أن نبني مؤسسة وطنية تفخر بها الأجيال القادمة.»",
         name: "المهندس محمد علي صالح الشيباني",
         title: "المدير التنفيذي",
-        photo_url: "",
+        photo_url: "https://fqkbgfdasfwnryekkgqz.supabase.co/storage/v1/object/public/photos/1787855637181_Watan_Designs_Company_Profile.png",
       },
       partnership: {
         label: "تواصل مع مجموعة دبليو دي للأعمال",
@@ -900,6 +932,38 @@ export const translations = {
         entity: "الكيان القانوني: شركة تصاميم الوطن المحدودة",
         cr: "السجل التجاري: 5950011057",
         vat: "الرقم الضريبي: 300865965100003",
+      },
+      banking: {
+        title: "الحسابات البنكية الرسمية المعتمدة",
+        subtitle: "الحسابات البنكية المعتمدة للتحويلات والتعاملات الرسمية لمجموعة دبليو دي للأعمال (شركة تصاميم الوطن المحدودة)",
+        notice: "يرجى التأكد من مطابقة اسم المستفيد للكيان القانوني الرسمي المعتمد: شركة تصاميم الوطن المحدودة.",
+        copyIban: "نسخ الآيبان",
+        copyAccount: "نسخ رقم الحساب",
+        copied: "تم النسخ إلى الحافظة!",
+        beneficiary: "اسم المستفيد المعتمد",
+        beneficiaryName: "شركة تصاميم الوطن المحدودة",
+        accountNumber: "رقم الحساب",
+        ibanLabel: "رقم الآيبان (IBAN)",
+        swiftLabel: "رمز السويفت (SWIFT)",
+        currencyLabel: "العملة",
+        accounts: [
+          {
+            bankName: "مصرف الراجحي",
+            accountName: "شركة تصاميم الوطن المحدودة",
+            iban: "SA0000000000000000000000",
+            accountNumber: "000000000000",
+            swiftCode: "RJHISARI",
+            currency: "ريال سعودي (SAR)",
+          },
+          {
+            bankName: "البنك الأهلي السعودي (SNB)",
+            accountName: "شركة تصاميم الوطن المحدودة",
+            iban: "SA0000000000000000000000",
+            accountNumber: "000000000000",
+            swiftCode: "NCBKSAJE",
+            currency: "ريال سعودي (SAR)",
+          }
+        ]
       }
     },
     forms: {

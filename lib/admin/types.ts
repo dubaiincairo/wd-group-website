@@ -96,6 +96,19 @@ export interface MediaMetaRecord {
   created_at: string;
 }
 
+export interface BankAccountRecord {
+  id: string;
+  bank_name_ar: string;
+  bank_name_en: string;
+  account_name_ar: string;
+  account_name_en: string;
+  iban: string;
+  account_number: string;
+  swift_code?: string;
+  currency?: string;
+  is_active?: boolean;
+}
+
 export interface SiteContentPayload {
   home: {
     hero: {
@@ -331,6 +344,7 @@ export interface SiteContentPayload {
     maintenance_message_ar?: string;
     maintenance_message_en?: string;
     maintenance_estimated_date?: string;
+    bank_accounts?: BankAccountRecord[];
   };
   seo: {
     global_title_en: string;
