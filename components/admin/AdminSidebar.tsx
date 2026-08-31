@@ -147,7 +147,7 @@ const NAV_GROUPS: NavGroup[] = [
       {
         label: 'Orders & Fulfillment',
         labelAr: 'الطلبات والشحن المباشر',
-        href: '/admin/ecommerce#orders',
+        href: '/admin/ecommerce?tab=orders',
         icon: Package,
         iconBg: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/25 group-hover:bg-emerald-500/25',
         allowedRoles: ['owner', 'admin', 'crm', 'editor'],
@@ -155,7 +155,7 @@ const NAV_GROUPS: NavGroup[] = [
       {
         label: 'Factory Queue & Logistics',
         labelAr: 'خطوط الإنتاج والتسليم',
-        href: '/admin/ecommerce#factory',
+        href: '/admin/ecommerce?tab=inventory',
         icon: Truck,
         iconBg: 'bg-blue-500/15 text-blue-400 border-blue-500/25 group-hover:bg-blue-500/25',
         allowedRoles: ['owner', 'admin', 'crm'],

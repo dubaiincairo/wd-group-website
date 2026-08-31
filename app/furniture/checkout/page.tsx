@@ -366,7 +366,7 @@ export default function FurnitureCheckoutPage() {
               </div>
               <div>
                 <span className="text-zinc-500 block text-[10px] uppercase">{dict.furniture.checkout.order_summary.total}</span>
-                <span className="text-[#E3C58A] font-bold">{finalTotal.toLocaleString('en-US')} SAR</span>
+                <span className="text-[#E3C58A] font-bold">{finalTotal.toLocaleString('en-US')} {isAr ? 'ر.س' : 'SAR'}</span>
               </div>
             </div>
 
@@ -1035,7 +1035,7 @@ export default function FurnitureCheckoutPage() {
                         <div className="mt-3 pt-3 border-t border-white/10 text-xs text-zinc-300 flex items-center justify-between font-mono bg-black/30 p-3 rounded-xl">
                           <span>{isAr ? '4 دفعات شهرية بقيمة:' : '4 monthly installments of:'}</span>
                           <span className="text-[#3EEDBF] font-extrabold text-sm">
-                            {tabbyInstallment.toLocaleString('en-US')} SAR / {isAr ? 'شهر' : 'mo'}
+                            {tabbyInstallment.toLocaleString('en-US')} {isAr ? 'ر.س' : 'SAR'} / {isAr ? 'شهر' : 'mo'}
                           </span>
                         </div>
                       )}
@@ -1077,7 +1077,7 @@ export default function FurnitureCheckoutPage() {
                         <div className="mt-3 pt-3 border-t border-white/10 text-xs text-zinc-300 flex items-center justify-between font-mono bg-black/30 p-3 rounded-xl">
                           <span>{isAr ? '3 دفعات شهرية بقيمة:' : '3 monthly installments of:'}</span>
                           <span className="text-[#FF7A59] font-extrabold text-sm">
-                            {tamaraInstallment.toLocaleString('en-US')} SAR / {isAr ? 'شهر' : 'mo'}
+                            {tamaraInstallment.toLocaleString('en-US')} {isAr ? 'ر.س' : 'SAR'} / {isAr ? 'شهر' : 'mo'}
                           </span>
                         </div>
                       )}
@@ -1300,9 +1300,9 @@ export default function FurnitureCheckoutPage() {
                       </p>
                       <p className="text-zinc-400 text-[11px]">
                         {selectedPayment === 'tabby'
-                          ? `4 × ${tabbyInstallment.toLocaleString('en-US')} SAR/mo`
+                          ? `4 × ${tabbyInstallment.toLocaleString('en-US')} ${isAr ? 'ر.س' : 'SAR'}/${isAr ? 'شهر' : 'mo'}`
                           : selectedPayment === 'tamara'
-                          ? `3 × ${tamaraInstallment.toLocaleString('en-US')} SAR/mo`
+                          ? `3 × ${tamaraInstallment.toLocaleString('en-US')} ${isAr ? 'ر.س' : 'SAR'}/${isAr ? 'شهر' : 'mo'}`
                           : isAr ? 'دفع مباشر مشفر ومعتمد' : 'Direct Authorized Checkout'}
                       </p>
                     </div>
@@ -1323,7 +1323,7 @@ export default function FurnitureCheckoutPage() {
                     ) : (
                       <>
                         <ShieldCheck className="w-5 h-5" />
-                        <span>{dict.furniture.checkout.order_summary.place_order} ({finalTotal.toLocaleString('en-US')} SAR)</span>
+                        <span>{dict.furniture.checkout.order_summary.place_order} ({finalTotal.toLocaleString('en-US')} {isAr ? 'ر.س' : 'SAR'})</span>
                       </>
                     )}
                   </button>
@@ -1388,7 +1388,7 @@ export default function FurnitureCheckoutPage() {
                               <span>{isAr ? finish?.nameAr : finish?.nameEn}</span>
                             </div>
                             <div className="text-[11px] font-mono text-[#C9A86A]">
-                              {item.product.price.toLocaleString('en-US')} SAR
+                              {item.product.price.toLocaleString('en-US')} {isAr ? 'ر.س' : 'SAR'}
                             </div>
                           </div>
 
@@ -1454,19 +1454,19 @@ export default function FurnitureCheckoutPage() {
                 <div className="space-y-2 pt-3 border-t border-white/10 text-xs font-mono">
                   <div className="flex items-center justify-between text-zinc-400">
                     <span>{dict.furniture.checkout.order_summary.subtotal}</span>
-                    <span className="text-zinc-200">{subtotal.toLocaleString('en-US')} SAR</span>
+                    <span className="text-zinc-200">{subtotal.toLocaleString('en-US')} {isAr ? 'ر.س' : 'SAR'}</span>
                   </div>
 
                   {discountAmount > 0 && (
                     <div className="flex items-center justify-between text-emerald-400">
                       <span>{dict.furniture.checkout.order_summary.discount} ({discountPercent}%)</span>
-                      <span>-{discountAmount.toLocaleString('en-US')} SAR</span>
+                      <span>-{discountAmount.toLocaleString('en-US')} {isAr ? 'ر.س' : 'SAR'}</span>
                     </div>
                   )}
 
                   <div className="flex items-center justify-between text-zinc-400">
                     <span>{dict.furniture.checkout.order_summary.vat}</span>
-                    <span className="text-zinc-200">{vatAmount.toLocaleString('en-US')} SAR</span>
+                    <span className="text-zinc-200">{vatAmount.toLocaleString('en-US')} {isAr ? 'ر.س' : 'SAR'}</span>
                   </div>
 
                   <div className="flex items-center justify-between text-zinc-400">
@@ -1479,7 +1479,7 @@ export default function FurnitureCheckoutPage() {
                   <div className="pt-3 border-t border-white/10 flex items-center justify-between text-sm sm:text-base font-bold text-white">
                     <span>{dict.furniture.checkout.order_summary.total}</span>
                     <span className="text-[#C9A86A] text-lg sm:text-xl font-extrabold">
-                      {finalTotal.toLocaleString('en-US')} SAR
+                      {finalTotal.toLocaleString('en-US')} {isAr ? 'ر.س' : 'SAR'}
                     </span>
                   </div>
                 </div>

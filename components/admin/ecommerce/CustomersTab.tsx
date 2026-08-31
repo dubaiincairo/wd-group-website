@@ -257,7 +257,7 @@ export default function CustomersTab() {
                     </td>
 
                     <td className="py-3.5 px-4 font-mono font-extrabold text-[#C9A86A]">
-                      {cust.totalSpend.toLocaleString('en-US')} SAR
+                      {cust.totalSpend.toLocaleString('en-US')} {isAr ? 'ر.س' : 'SAR'}
                     </td>
 
                     <td className="py-3.5 px-4 font-mono text-zinc-400 text-[11px]">

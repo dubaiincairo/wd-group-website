@@ -118,7 +118,7 @@ export default function SettingsTab() {
                 onChange={(e) => setRiyadhRate(Number(e.target.value))}
                 className="w-full px-3 py-2 rounded-xl bg-black/40 border border-white/10 text-white font-bold"
               />
-              <span className="text-emerald-400 shrink-0">SAR (0 = Free)</span>
+              <span className="text-emerald-400 shrink-0">{isAr ? 'ر.س (0 = مجاني)' : 'SAR (0 = Free)'}</span>
             </div>
           </div>
 
@@ -131,7 +131,7 @@ export default function SettingsTab() {
                 onChange={(e) => setWesternRate(Number(e.target.value))}
                 className="w-full px-3 py-2 rounded-xl bg-black/40 border border-white/10 text-white font-bold"
               />
-              <span className="text-zinc-400 shrink-0">SAR</span>
+              <span className="text-zinc-400 shrink-0">{isAr ? 'ر.س' : 'SAR'}</span>
             </div>
           </div>
 
@@ -144,7 +144,7 @@ export default function SettingsTab() {
                 onChange={(e) => setEasternRate(Number(e.target.value))}
                 className="w-full px-3 py-2 rounded-xl bg-black/40 border border-white/10 text-white font-bold"
               />
-              <span className="text-zinc-400 shrink-0">SAR</span>
+              <span className="text-zinc-400 shrink-0">{isAr ? 'ر.س' : 'SAR'}</span>
             </div>
           </div>
 
@@ -157,7 +157,7 @@ export default function SettingsTab() {
                 onChange={(e) => setSouthernRate(Number(e.target.value))}
                 className="w-full px-3 py-2 rounded-xl bg-black/40 border border-white/10 text-white font-bold"
               />
-              <span className="text-zinc-400 shrink-0">SAR</span>
+              <span className="text-zinc-400 shrink-0">{isAr ? 'ر.س' : 'SAR'}</span>
             </div>
           </div>
 
@@ -170,7 +170,7 @@ export default function SettingsTab() {
                 onChange={(e) => setNorthernRate(Number(e.target.value))}
                 className="w-full px-3 py-2 rounded-xl bg-black/40 border border-white/10 text-white font-bold"
               />
-              <span className="text-zinc-400 shrink-0">SAR</span>
+              <span className="text-zinc-400 shrink-0">{isAr ? 'ر.س' : 'SAR'}</span>
             </div>
           </div>
 
@@ -183,7 +183,7 @@ export default function SettingsTab() {
                 onChange={(e) => setCraneLiftingSurcharge(Number(e.target.value))}
                 className="w-full px-3 py-2 rounded-xl bg-black/40 border border-white/10 text-amber-400 font-bold"
               />
-              <span className="text-zinc-400 shrink-0">SAR</span>
+              <span className="text-zinc-400 shrink-0">{isAr ? 'ر.س' : 'SAR'}</span>
             </div>
           </div>
         </div>
@@ -203,7 +203,7 @@ export default function SettingsTab() {
               onChange={(e) => setFreeShippingThreshold(Number(e.target.value))}
               className="w-32 px-3 py-2 rounded-xl bg-black/40 border border-white/10 text-emerald-400 font-bold text-sm text-center"
             />
-            <span className="text-zinc-400">SAR</span>
+            <span className="text-zinc-400">{isAr ? 'ر.س' : 'SAR'}</span>
           </div>
         </div>
       </div>
@@ -365,7 +365,7 @@ export default function SettingsTab() {
                 onChange={(e) => setHighTicketAlertThreshold(Number(e.target.value))}
                 className="w-24 px-2 py-1 rounded-lg bg-black/40 border border-white/10 text-[#C9A86A] text-right font-bold"
               />
-              <span className="text-zinc-400 text-[10px]">SAR</span>
+              <span className="text-zinc-400 text-[10px]">{isAr ? 'ر.س' : 'SAR'}</span>
             </div>
           </div>
         </div>
