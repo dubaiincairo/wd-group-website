@@ -1,13 +1,16 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/context/LanguageContext';
+import { WishlistProvider, useWishlist } from '@/context/WishlistContext';
 import { FurnitureItem, FURNITURE_CATALOG } from '@/lib/furnitureData';
 import FurnitureCatalog from '@/components/furniture/FurnitureCatalog';
 import ProductQuickViewModal from '@/components/furniture/ProductQuickViewModal';
 import CartQuoteDrawer, { CartItem } from '@/components/furniture/CartQuoteDrawer';
+import WishlistDrawer from '@/components/furniture/WishlistDrawer';
 import BespokeConsultationBanner from '@/components/furniture/BespokeConsultationBanner';
 import BrandedSeparator from '@/components/ui/BrandedSeparator';
 import { 
@@ -20,17 +23,39 @@ import {
   ArrowRight, 
   Star, 
   Building2,
-  PhoneCall,
+  Heart,
+  Activity,
   CheckCircle2
 } from 'lucide-react';
 
-export default function FurniturePage() {
+function FurniturePageContent() {
   const { lang, dict } = useLanguage();
   const isAr = lang === 'ar';
+  const { wishlistIds, setIsWishlistDrawerOpen } = useWishlist();
 
   const [quickViewProduct, setQuickViewProduct] = useState<FurnitureItem | null>(null);
   const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
+
+  // Sync cart with localStorage
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('wd_furniture_cart');
+      if (saved) {
+        setCartItems(JSON.parse(saved));
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }, []);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('wd_furniture_cart', JSON.stringify(cartItems));
+    } catch (e) {
+      console.error(e);
+    }
+  }, [cartItems]);
 
   const handleAddToCart = (product: FurnitureItem, selectedFinish: string, quantity: number) => {
     setCartItems((prev) => {
@@ -64,7 +89,7 @@ export default function FurniturePage() {
   const handleRemoveItem = (productId: string, selectedFinishId: string) => {
     setCartItems((prev) =>
       prev.filter(
-        (i) => !(i.product.id === productId && i.selectedFinishId === selectedFinishId)
+        (item) => !(item.product.id === productId && item.selectedFinishId === selectedFinishId)
       )
     );
   };
@@ -72,41 +97,54 @@ export default function FurniturePage() {
   const totalCartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
-    <div className="min-h-screen bg-brand-dark text-white pt-28 pb-20 px-4 sm:px-6 lg:px-8 relative selection:bg-[#C9A86A] selection:text-[#08090C]">
+    <div className="min-h-screen bg-[#08090C] text-white pt-24 pb-20 selection:bg-[#C9A86A]/30">
       
-      {/* Ambient background glows */}
-      <div className="absolute top-20 left-1/2 -translate-x-1/2 w-[800px] h-[350px] bg-blue-600/5 blur-[160px] pointer-events-none" />
-      <div className="absolute top-96 right-10 w-[450px] h-[450px] bg-[#C9A86A]/5 blur-[140px] pointer-events-none" />
-      <div className="absolute bottom-40 left-10 w-[500px] h-[500px] bg-emerald-600/5 blur-[150px] pointer-events-none" />
+      {/* Background Ambient Glows */}
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <div className="absolute top-10 left-1/4 w-[500px] h-[500px] bg-[#C9A86A]/5 rounded-full blur-[140px]" />
+        <div className="absolute top-1/3 right-1/4 w-[600px] h-[600px] bg-[#0B5C3D]/8 rounded-full blur-[160px]" />
+      </div>
 
-      <div className="max-w-7xl mx-auto space-y-16 relative z-10">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16 sm:space-y-24">
         
         {/* 1. Showroom Hero Section */}
         <motion.section 
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="text-center max-w-4xl mx-auto space-y-6 pt-4 sm:pt-6"
+          transition={{ duration: 0.7 }}
+          className="text-center max-w-4xl mx-auto space-y-6 pt-6 sm:pt-10"
         >
-          {/* Eyebrow badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold tracking-wide uppercase bg-[#C9A86A]/15 border border-[#C9A86A]/40 text-[#C9A86A] shadow-[0_0_20px_rgba(201,168,106,0.15)]">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>{dict.furniture.hero.eyebrow}</span>
+          {/* Eyebrow Tag + Live Tracker Link */}
+          <div className="flex flex-wrap items-center justify-center gap-2.5">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#C9A86A]/10 border border-[#C9A86A]/30 text-[#C9A86A] text-xs font-mono font-medium backdrop-blur-md">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>{dict.furniture.hero.eyebrow}</span>
+            </div>
+
+            <Link
+              href="/furniture/track"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 text-xs font-mono transition-all"
+            >
+              <Activity className="w-3.5 h-3.5 text-emerald-400 animate-pulse" />
+              <span>{isAr ? 'تتبع طلب نشط بالمصنع' : 'Track Active Order'}</span>
+            </Link>
           </div>
 
           {/* Main Title */}
-          <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-white leading-tight">
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight sm:leading-tight">
             {dict.furniture.hero.title}
           </h1>
 
           {/* Subtitle */}
-          <p className="text-sm sm:text-lg text-zinc-300 leading-relaxed font-normal max-w-2xl mx-auto">
+          <p className="text-sm sm:text-lg text-zinc-300 max-w-3xl mx-auto leading-relaxed font-normal">
             {dict.furniture.hero.subtitle}
           </p>
 
-          {/* Slogan pill */}
-          <div className="text-xs sm:text-sm font-mono text-[#E3C58A] bg-[#C9A86A]/10 inline-block px-5 py-2.5 rounded-2xl border border-[#C9A86A]/25 shadow-sm">
-            &ldquo;{dict.furniture.hero.slogan}&rdquo;
+          {/* Slogan */}
+          <div className="pt-1">
+            <span className="text-xs sm:text-sm font-mono text-[#C9A86A] font-semibold tracking-wide uppercase px-4 py-1.5 rounded-lg bg-white/5 border border-white/10">
+              {dict.furniture.hero.slogan}
+            </span>
           </div>
 
           {/* Action CTAs */}
@@ -120,8 +158,21 @@ export default function FurniturePage() {
             </a>
 
             <button
+              onClick={() => setIsWishlistDrawerOpen(true)}
+              className="inline-flex items-center gap-2 px-5 py-3.5 rounded-xl text-xs sm:text-sm font-bold text-zinc-200 bg-[#141721] hover:bg-[#1A1E2C] border border-white/10 hover:border-rose-500/40 transition-all cursor-pointer"
+            >
+              <Heart className="w-4 h-4 text-rose-400" />
+              <span>{dict.furniture.wishlist.title}</span>
+              {wishlistIds.length > 0 && (
+                <span className="px-2 py-0.5 rounded-full bg-rose-500 text-white text-[10px] font-extrabold font-mono">
+                  {wishlistIds.length}
+                </span>
+              )}
+            </button>
+
+            <button
               onClick={() => setCartDrawerOpen(true)}
-              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl text-xs sm:text-sm font-bold text-zinc-200 bg-[#141721] hover:bg-[#1A1E2C] border border-white/10 hover:border-[#C9A86A]/40 transition-all cursor-pointer"
+              className="inline-flex items-center gap-2 px-5 py-3.5 rounded-xl text-xs sm:text-sm font-bold text-zinc-200 bg-[#141721] hover:bg-[#1A1E2C] border border-white/10 hover:border-[#C9A86A]/40 transition-all cursor-pointer"
             >
               <ShoppingBag className="w-4 h-4 text-[#C9A86A]" />
               <span>{dict.furniture.cart.title}</span>
@@ -179,51 +230,47 @@ export default function FurniturePage() {
                 {dict.furniture.hero.stats.delivery}
               </span>
               <span className="text-[10px] text-zinc-400 font-mono">
-                {isAr ? 'تركيب فندقي متخصص' : 'White-Glove Service'}
+                {isAr ? 'توصيل وتركيب فندقي' : 'White-Glove Service'}
               </span>
             </div>
           </div>
 
           <div className="glass-card rounded-2xl p-4 sm:p-5 border border-white/5 bg-[#0F1117]/80 flex items-center gap-3.5">
             <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/25 flex items-center justify-center text-amber-400 shrink-0">
-              <Sparkles className="w-5 h-5" />
+              <Award className="w-5 h-5" />
             </div>
             <div>
               <span className="text-xs font-bold text-white block">
                 {dict.furniture.hero.stats.custom}
               </span>
               <span className="text-[10px] text-zinc-400 font-mono">
-                {isAr ? 'حسب طلب المشروع' : 'Tailored to Spec'}
+                {isAr ? 'تفصيل مقاسات وأقمشة' : 'Bespoke Sizing'}
               </span>
             </div>
           </div>
         </motion.section>
 
-        {/* Separator */}
-        <BrandedSeparator variant="gold" />
+        <BrandedSeparator />
 
-        {/* 3. Main Interactive Furniture Catalog */}
-        <section>
+        {/* 3. Main Catalog Section */}
+        <section id="catalog" className="scroll-mt-28">
           <FurnitureCatalog
             onQuickView={(prod) => setQuickViewProduct(prod)}
             onAddToCart={handleAddToCart}
           />
         </section>
 
-        {/* Separator */}
-        <BrandedSeparator variant="emerald" />
+        <BrandedSeparator />
 
-        {/* 4. Bespoke B2B Project & Hotel FF&E Procurement Banner */}
-        <section>
-          <BespokeConsultationBanner />
-        </section>
+        {/* 4. Bespoke B2B Project Procurement Banner */}
+        <BespokeConsultationBanner />
 
-        {/* 5. Hospitality & Residential Client Testimonials */}
-        <section className="space-y-6">
-          <div className="text-center max-w-2xl mx-auto space-y-2">
-            <div className="text-xs font-mono font-bold text-[#C9A86A] uppercase tracking-wider">
+        {/* 5. Hospitality & Client Endorsements */}
+        <section className="space-y-8">
+          <div className="text-center space-y-2 max-w-2xl mx-auto">
+            <h3 className="text-2xl sm:text-3xl font-extrabold text-white">
               {dict.furniture.testimonials.heading}
-            </div>
+            </h3>
             <p className="text-xs sm:text-sm text-zinc-400">
               {dict.furniture.testimonials.subheading}
             </p>
@@ -238,12 +285,12 @@ export default function FurniturePage() {
               </div>
               <p className="text-xs text-zinc-300 leading-relaxed italic">
                 &ldquo;{isAr 
-                  ? 'تم تأثيث أجنحة سويس بلو بالكامل من مصانع جرين وود. دقة الأبعاد وجودة التجاليد الخشبية وتكامل الإضاءة المدمجة جعلت التجربة الفندقية استثنائية لضيوفنا.'
-                  : 'Furnished SwissBlue hotel suites entirely through GreenWood factories. Precision woodwork, integrated LED joinery, and durable finishes delivered an unforgettable guest experience.'}&rdquo;
+                  ? 'تم تأثيث أجنحتنا الرئاسية بالكامل من سرير سويس بلو والكمودينات المدمجة ببراعة لا متناهية. دقة تشطيب الخشب والنحاس فاقت التوقعات.'
+                  : 'Furnished our presidential suites with the SwissBlue signature bed and joinery. Craftsmanship and invisible Qi charging exceeded all 5-star hotel benchmarks.'}&rdquo;
               </p>
               <div className="pt-2 border-t border-white/5 flex items-center justify-between text-[11px] font-mono">
-                <span className="text-white font-bold">{isAr ? 'فنادق ومنتجعات سويس بلو' : 'SwissBlue Hotels & Resorts'}</span>
-                <span className="text-[#C9A86A]">{isAr ? 'جدة والرياض' : 'Jeddah & Riyadh'}</span>
+                <span className="text-white font-bold">{isAr ? 'فندق سويس بلو الفاخر' : 'SwissBlue Hotels & Suites'}</span>
+                <span className="text-[#C9A86A]">Jeddah & Riyadh</span>
               </div>
             </div>
 
@@ -285,33 +332,65 @@ export default function FurniturePage() {
 
       </div>
 
-      {/* Floating Cart Button (Bottom Right/Left) */}
-      <motion.button
-        initial={{ scale: 0, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        whileHover={{ scale: 1.08 }}
-        whileTap={{ scale: 0.95 }}
-        onClick={() => setCartDrawerOpen(true)}
-        className="fixed bottom-6 right-6 rtl:right-auto rtl:left-6 z-40 p-4 rounded-2xl bg-gradient-to-r from-[#C9A86A] via-[#DFBA73] to-[#C9A86A] text-[#08090C] shadow-[0_0_30px_rgba(201,168,106,0.6)] border border-[#E3C58A] flex items-center gap-3 cursor-pointer group"
-      >
-        <div className="relative">
-          <ShoppingBag className="w-6 h-6" />
-          {totalCartCount > 0 && (
-            <span className="absolute -top-2 -right-2 rtl:-right-auto rtl:-left-2 bg-emerald-600 text-white text-[10px] font-mono font-extrabold w-5 h-5 rounded-full flex items-center justify-center shadow-md border-2 border-[#08090C]">
-              {totalCartCount}
-            </span>
-          )}
-        </div>
-        <span className="text-xs font-extrabold hidden sm:inline">
-          {dict.furniture.cart.title}
-        </span>
-      </motion.button>
+      {/* Floating Action Controls (Bottom Right/Left) */}
+      <div className="fixed bottom-6 right-6 rtl:right-auto rtl:left-6 z-40 flex flex-col gap-3 items-end rtl:items-start">
+        {/* Wishlist Pill */}
+        <motion.button
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          whileHover={{ scale: 1.08 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => setIsWishlistDrawerOpen(true)}
+          className="p-3.5 rounded-2xl bg-[#141721]/95 text-white backdrop-blur-xl shadow-xl border border-white/15 hover:border-rose-500/50 flex items-center gap-2 cursor-pointer group"
+          aria-label={dict.furniture.wishlist.title}
+        >
+          <div className="relative">
+            <Heart className={`w-5 h-5 ${wishlistIds.length > 0 ? 'text-rose-400 fill-rose-400' : 'text-zinc-300'}`} />
+            {wishlistIds.length > 0 && (
+              <span className="absolute -top-2.5 -right-2.5 rtl:-right-auto rtl:-left-2.5 bg-rose-500 text-white text-[9px] font-mono font-extrabold w-4 h-4 rounded-full flex items-center justify-center shadow-md">
+                {wishlistIds.length}
+              </span>
+            )}
+          </div>
+          <span className="text-xs font-bold hidden sm:inline text-zinc-200">
+            {dict.furniture.wishlist.title}
+          </span>
+        </motion.button>
+
+        {/* Cart Pill */}
+        <motion.button
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          whileHover={{ scale: 1.08 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => setCartDrawerOpen(true)}
+          className="p-4 rounded-2xl bg-gradient-to-r from-[#C9A86A] via-[#DFBA73] to-[#C9A86A] text-[#08090C] shadow-[0_0_30px_rgba(201,168,106,0.6)] border border-[#E3C58A] flex items-center gap-3 cursor-pointer group"
+          aria-label={dict.furniture.cart.title}
+        >
+          <div className="relative">
+            <ShoppingBag className="w-6 h-6" />
+            {totalCartCount > 0 && (
+              <span className="absolute -top-2 -right-2 rtl:-right-auto rtl:-left-2 bg-emerald-600 text-white text-[10px] font-mono font-extrabold w-5 h-5 rounded-full flex items-center justify-center shadow-md border-2 border-[#08090C]">
+                {totalCartCount}
+              </span>
+            )}
+          </div>
+          <span className="text-xs font-extrabold hidden sm:inline">
+            {dict.furniture.cart.title}
+          </span>
+        </motion.button>
+      </div>
 
       {/* Quick View Modal */}
       <ProductQuickViewModal
         product={quickViewProduct}
         isOpen={!!quickViewProduct}
         onClose={() => setQuickViewProduct(null)}
+        onAddToCart={handleAddToCart}
+      />
+
+      {/* Wishlist Drawer */}
+      <WishlistDrawer
         onAddToCart={handleAddToCart}
       />
 
@@ -326,5 +405,13 @@ export default function FurniturePage() {
       />
 
     </div>
+  );
+}
+
+export default function FurniturePage() {
+  return (
+    <WishlistProvider>
+      <FurniturePageContent />
+    </WishlistProvider>
   );
 }

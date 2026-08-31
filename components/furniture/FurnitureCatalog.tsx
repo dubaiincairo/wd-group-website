@@ -4,6 +4,7 @@ import React, { useState, useMemo } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '@/context/LanguageContext';
+import { useWishlist } from '@/context/WishlistContext';
 import { FurnitureItem, FURNITURE_CATALOG } from '@/lib/furnitureData';
 import { 
   Search, 
@@ -21,7 +22,8 @@ import {
   Clock,
   RotateCcw,
   Building2,
-  ChevronDown
+  ChevronDown,
+  Heart
 } from 'lucide-react';
 
 interface FurnitureCatalogProps {
@@ -32,6 +34,7 @@ interface FurnitureCatalogProps {
 export default function FurnitureCatalog({ onQuickView, onAddToCart }: FurnitureCatalogProps) {
   const { lang, dict } = useLanguage();
   const isAr = lang === 'ar';
+  const { toggleWishlist, isInWishlist } = useWishlist();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
@@ -309,7 +312,7 @@ export default function FurnitureCatalog({ onQuickView, onAddToCart }: Furniture
                     <div className="absolute inset-0 bg-gradient-to-t from-[#0F1117]/80 via-transparent to-black/20" />
 
                     {/* Top Badges */}
-                    <div className="absolute top-3 left-3 rtl:left-auto rtl:right-3 flex flex-col gap-1.5">
+                    <div className="absolute top-3 left-3 rtl:left-auto rtl:right-3 flex flex-col gap-1.5 z-10">
                       <span className="px-2.5 py-0.5 rounded-full bg-[#0B5C3D]/90 text-[#34D399] border border-[#34D399]/40 text-[10px] font-bold backdrop-blur-md">
                         {dict.furniture.card.made_in_saudi}
                       </span>
@@ -319,6 +322,22 @@ export default function FurnitureCatalog({ onQuickView, onAddToCart }: Furniture
                         </span>
                       )}
                     </div>
+
+                    {/* Wishlist Heart Button */}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleWishlist(item.id);
+                      }}
+                      className={`absolute top-3 right-3 rtl:right-auto rtl:left-3 p-2 rounded-full backdrop-blur-md border transition-all z-20 cursor-pointer ${
+                        isInWishlist(item.id)
+                          ? 'bg-rose-500/20 text-rose-400 border-rose-500/40 scale-105 shadow-[0_0_12px_rgba(244,63,94,0.4)]'
+                          : 'bg-black/60 text-zinc-300 hover:text-rose-400 border-white/15 hover:scale-105'
+                      }`}
+                      aria-label={dict.furniture.wishlist.add_to_wishlist}
+                    >
+                      <Heart className={`w-4 h-4 transition-transform ${isInWishlist(item.id) ? 'fill-rose-500 text-rose-500' : ''}`} />
+                    </button>
 
                     {/* Quick View Hover Button */}
                     <button
@@ -468,26 +487,43 @@ export default function FurnitureCatalog({ onQuickView, onAddToCart }: Furniture
                     </span>
                   </div>
 
-                  <button
-                    onClick={(e) => handleItemAddToCart(item, e)}
-                    className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all shadow-md ${
-                      isAdded
-                        ? 'bg-emerald-600 text-white'
-                        : 'bg-white/10 hover:bg-[#C9A86A] text-white hover:text-[#08090C] border border-white/10 hover:border-[#C9A86A]'
-                    }`}
-                  >
-                    {isAdded ? (
-                      <>
-                        <Check className="w-3.5 h-3.5" />
-                        <span>{dict.furniture.card.in_cart}</span>
-                      </>
-                    ) : (
-                      <>
-                        <ShoppingBag className="w-3.5 h-3.5" />
-                        <span>{dict.furniture.card.add_to_quote}</span>
-                      </>
-                    )}
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleWishlist(item.id);
+                      }}
+                      className={`p-2.5 rounded-xl border transition-all cursor-pointer ${
+                        isInWishlist(item.id)
+                          ? 'bg-rose-500/20 text-rose-400 border-rose-500/40 shadow-[0_0_10px_rgba(244,63,94,0.3)]'
+                          : 'bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-rose-400 border-white/10'
+                      }`}
+                      aria-label={dict.furniture.wishlist.add_to_wishlist}
+                    >
+                      <Heart className={`w-4 h-4 ${isInWishlist(item.id) ? 'fill-rose-500 text-rose-500' : ''}`} />
+                    </button>
+
+                    <button
+                      onClick={(e) => handleItemAddToCart(item, e)}
+                      className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all shadow-md ${
+                        isAdded
+                          ? 'bg-emerald-600 text-white'
+                          : 'bg-white/10 hover:bg-[#C9A86A] text-white hover:text-[#08090C] border border-white/10 hover:border-[#C9A86A]'
+                      }`}
+                    >
+                      {isAdded ? (
+                        <>
+                          <Check className="w-3.5 h-3.5" />
+                          <span>{dict.furniture.card.in_cart}</span>
+                        </>
+                      ) : (
+                        <>
+                          <ShoppingBag className="w-3.5 h-3.5" />
+                          <span>{dict.furniture.card.add_to_quote}</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
                 </div>
               </motion.div>
             );

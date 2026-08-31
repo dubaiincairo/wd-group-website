@@ -27,7 +27,9 @@ import {
   Mail,
   MapPin,
   FileText,
-  AlertCircle
+  AlertCircle,
+  Calendar,
+  Wrench
 } from 'lucide-react';
 
 interface CartItemState {
@@ -103,6 +105,33 @@ export default function FurnitureCheckoutPage() {
     crNumber: '',
     vatNumber: '',
   });
+
+  // Delivery Scheduling State
+  const defaultDeliveryDate = new Date();
+  defaultDeliveryDate.setDate(defaultDeliveryDate.getDate() + 8);
+  const [selectedDeliveryDate, setSelectedDeliveryDate] = useState<string>(
+    defaultDeliveryDate.toISOString().split('T')[0]
+  );
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState<'morning' | 'afternoon' | 'evening'>('morning');
+  const [whiteGloveAssembly, setWhiteGloveAssembly] = useState(true);
+  const [wallAnchoring, setWallAnchoring] = useState(false);
+
+  // Generate upcoming available delivery dates (8 to 16 days out)
+  const upcomingDeliveryDates = React.useMemo(() => {
+    const dates = [];
+    for (let i = 8; i <= 15; i++) {
+      const d = new Date();
+      d.setDate(d.getDate() + i);
+      dates.push({
+        iso: d.toISOString().split('T')[0],
+        dayName: d.toLocaleDateString(isAr ? 'ar-SA' : 'en-US', { weekday: 'short' }),
+        dayNumber: d.getDate(),
+        monthName: d.toLocaleDateString(isAr ? 'ar-SA' : 'en-US', { month: 'short' }),
+        isEarliest: i === 8,
+      });
+    }
+    return dates;
+  }, [isAr]);
 
   // Payment Method Selection
   type PaymentMethod = 'mada_cards' | 'apple_pay' | 'tabby' | 'tamara' | 'bank_transfer' | 'cod' | 'b2b_po';
@@ -360,11 +389,20 @@ export default function FurnitureCheckoutPage() {
 
             {/* Actions */}
             <div className="flex flex-wrap items-center justify-center gap-3.5 pt-4">
+              <Link
+                href={`/furniture/track?ref=${orderReference}`}
+                className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-gradient-to-r from-[#C9A86A] via-[#DFBA73] to-[#C9A86A] text-[#08090C] font-extrabold text-xs sm:text-sm shadow-lg hover:shadow-[0_0_25px_rgba(201,168,106,0.5)] transition-all cursor-pointer"
+              >
+                <Truck className="w-4 h-4" />
+                <span>{isAr ? 'تتبع مراحل التصنيع والشحن المباشر' : 'Track Live Factory Production'}</span>
+                <ArrowRight className="w-4 h-4 rtl:rotate-180" />
+              </Link>
+
               <a
                 href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm shadow-lg transition-all"
+                className="inline-flex items-center gap-2 px-5 py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm shadow-lg transition-all"
               >
                 <MessageSquare className="w-4 h-4" />
                 <span>{dict.furniture.checkout.success.whatsapp_btn}</span>
@@ -372,7 +410,7 @@ export default function FurnitureCheckoutPage() {
 
               <button
                 onClick={() => window.print()}
-                className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-[#141721] hover:bg-[#1A1E2C] text-zinc-200 border border-white/10 font-bold text-xs sm:text-sm transition-all cursor-pointer"
+                className="inline-flex items-center gap-2 px-5 py-3.5 rounded-xl bg-[#141721] hover:bg-[#1A1E2C] text-zinc-200 border border-white/10 font-bold text-xs sm:text-sm transition-all cursor-pointer"
               >
                 <Printer className="w-4 h-4 text-[#C9A86A]" />
                 <span>{dict.furniture.checkout.success.print_btn}</span>
@@ -380,7 +418,7 @@ export default function FurnitureCheckoutPage() {
 
               <Link
                 href="/furniture"
-                className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-300 font-bold text-xs sm:text-sm transition-all"
+                className="inline-flex items-center gap-2 px-5 py-3.5 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-300 font-bold text-xs sm:text-sm transition-all"
               >
                 <span>{dict.furniture.checkout.success.back_btn}</span>
               </Link>
@@ -643,6 +681,155 @@ export default function FurnitureCheckoutPage() {
                       className="w-full px-3.5 py-2.5 rounded-xl bg-[#141721] border border-white/10 text-white focus:outline-none focus:border-[#C9A86A]"
                       placeholder={isAr ? 'مثال: يرجى التنسيق مع حارس الفيلا أو توفير رافعة للأدوار العليا' : 'e.g., Gate access code or high-floor crane requirements'}
                     />
+                  </div>
+
+                  {/* INTERACTIVE DELIVERY DATE & TIME SLOT SCHEDULER */}
+                  <div className="p-5 rounded-2xl bg-[#141721] border border-white/10 space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-lg bg-[#C9A86A]/10 border border-[#C9A86A]/30 flex items-center justify-center text-[#C9A86A]">
+                          <Calendar className="w-4 h-4" />
+                        </div>
+                        <div>
+                          <h3 className="text-xs sm:text-sm font-bold text-white">
+                            {isAr ? 'جدول موعد التوصيل والتركيب الفندقي' : 'Preferred Delivery & Assembly Date'}
+                          </h3>
+                          <span className="text-[10px] text-zinc-400 font-mono">
+                            {isAr ? 'مواعيد التجهيز المباشر بالمصنع (توصيل مجاني شامل)' : 'Factory lead-time synchronized (White-Glove Included)'}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* 1. Date Selector Strip */}
+                    <div className="space-y-1.5">
+                      <label className="block text-[11px] text-zinc-400 font-semibold">
+                        {isAr ? 'اختر اليوم المناسب لاستلام وتركيب الأثاث:' : 'Select preferred installation day:'}
+                      </label>
+                      <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-thin">
+                        {upcomingDeliveryDates.map((item) => {
+                          const isSelected = selectedDeliveryDate === item.iso;
+                          return (
+                            <button
+                              key={item.iso}
+                              type="button"
+                              onClick={() => setSelectedDeliveryDate(item.iso)}
+                              className={`p-3 rounded-xl border shrink-0 text-center min-w-[76px] transition-all cursor-pointer ${
+                                isSelected
+                                  ? 'bg-[#C9A86A] text-[#08090C] border-[#E3C58A] shadow-md scale-105'
+                                  : 'bg-white/5 hover:bg-white/10 border-white/10 text-white'
+                              }`}
+                            >
+                              <span className={`block text-[10px] font-mono uppercase ${isSelected ? 'text-[#08090C] font-bold' : 'text-zinc-400'}`}>
+                                {item.dayName}
+                              </span>
+                              <span className="block text-lg font-extrabold font-mono my-0.5">
+                                {item.dayNumber}
+                              </span>
+                              <span className={`block text-[10px] font-medium ${isSelected ? 'text-[#08090C]' : 'text-zinc-400'}`}>
+                                {item.monthName}
+                              </span>
+                              {item.isEarliest && (
+                                <span className={`block text-[8px] mt-1 px-1 py-0.5 rounded font-extrabold ${
+                                  isSelected ? 'bg-[#08090C] text-[#C9A86A]' : 'bg-emerald-500/20 text-emerald-300'
+                                }`}>
+                                  {isAr ? 'الأقرب' : 'Earliest'}
+                                </span>
+                              )}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    {/* 2. Time Slot Windows */}
+                    <div className="space-y-1.5 pt-2 border-t border-white/5">
+                      <label className="block text-[11px] text-zinc-400 font-semibold">
+                        {isAr ? 'الفترة الزمنية المفضلة لوصول فريق التركيب:' : 'Preferred arrival window:'}
+                      </label>
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                        <button
+                          type="button"
+                          onClick={() => setSelectedTimeSlot('morning')}
+                          className={`p-2.5 rounded-xl border text-left rtl:text-right transition-all flex items-center justify-between ${
+                            selectedTimeSlot === 'morning'
+                              ? 'bg-[#C9A86A]/20 border-[#C9A86A] text-white'
+                              : 'bg-white/5 hover:bg-white/10 border-white/10 text-zinc-300'
+                          }`}
+                        >
+                          <div>
+                            <span className="block text-xs font-bold text-white">
+                              {isAr ? 'الفترة الصباحية' : 'Morning Slot'}
+                            </span>
+                            <span className="block text-[10px] text-zinc-400 font-mono">09:00 AM – 01:00 PM</span>
+                          </div>
+                          {selectedTimeSlot === 'morning' && <Check className="w-3.5 h-3.5 text-[#C9A86A]" />}
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => setSelectedTimeSlot('afternoon')}
+                          className={`p-2.5 rounded-xl border text-left rtl:text-right transition-all flex items-center justify-between ${
+                            selectedTimeSlot === 'afternoon'
+                              ? 'bg-[#C9A86A]/20 border-[#C9A86A] text-white'
+                              : 'bg-white/5 hover:bg-white/10 border-white/10 text-zinc-300'
+                          }`}
+                        >
+                          <div>
+                            <span className="block text-xs font-bold text-white">
+                              {isAr ? 'فترة بعد الظهر' : 'Afternoon Slot'}
+                            </span>
+                            <span className="block text-[10px] text-zinc-400 font-mono">02:00 PM – 06:00 PM</span>
+                          </div>
+                          {selectedTimeSlot === 'afternoon' && <Check className="w-3.5 h-3.5 text-[#C9A86A]" />}
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => setSelectedTimeSlot('evening')}
+                          className={`p-2.5 rounded-xl border text-left rtl:text-right transition-all flex items-center justify-between ${
+                            selectedTimeSlot === 'evening'
+                              ? 'bg-[#C9A86A]/20 border-[#C9A86A] text-white'
+                              : 'bg-white/5 hover:bg-white/10 border-white/10 text-zinc-300'
+                          }`}
+                        >
+                          <div>
+                            <span className="block text-xs font-bold text-white">
+                              {isAr ? 'الفترة المسائية' : 'Evening Slot'}
+                            </span>
+                            <span className="block text-[10px] text-zinc-400 font-mono">06:00 PM – 10:00 PM</span>
+                          </div>
+                          {selectedTimeSlot === 'evening' && <Check className="w-3.5 h-3.5 text-[#C9A86A]" />}
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* 3. White-Glove Assembly Services Checklist */}
+                    <div className="pt-2 border-t border-white/5 space-y-2 text-xs">
+                      <label className="flex items-center gap-2.5 cursor-pointer text-zinc-300 hover:text-white">
+                        <input
+                          type="checkbox"
+                          checked={whiteGloveAssembly}
+                          onChange={(e) => setWhiteGloveAssembly(e.target.checked)}
+                          className="w-4 h-4 rounded text-[#C9A86A] focus:ring-[#C9A86A] border-zinc-700 bg-zinc-800"
+                        />
+                        <span>
+                          {isAr ? 'خدمة التركيب الفندقي الشامل، ضبط الاتزان، وإزالة كافة مخلفات التغليف (مجانًا)' : 'Complimentary White-Glove Room Assembly & Packaging Removal'}
+                        </span>
+                      </label>
+
+                      <label className="flex items-center gap-2.5 cursor-pointer text-zinc-300 hover:text-white">
+                        <input
+                          type="checkbox"
+                          checked={wallAnchoring}
+                          onChange={(e) => setWallAnchoring(e.target.checked)}
+                          className="w-4 h-4 rounded text-[#C9A86A] focus:ring-[#C9A86A] border-zinc-700 bg-zinc-800"
+                        />
+                        <span>
+                          {isAr ? 'تثبيت جداري آمن للتجاليد والكونسول (موصى به لسلامة الأطفال والأبراج)' : 'Wall Anchoring & Seismic Mounting for High Units / Wall Claddings'}
+                        </span>
+                      </label>
+                    </div>
                   </div>
 
                   <button

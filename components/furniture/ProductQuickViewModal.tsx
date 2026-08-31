@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '@/context/LanguageContext';
+import { useWishlist } from '@/context/WishlistContext';
 import { FurnitureItem } from '@/lib/furnitureData';
 import { 
   X, 
@@ -19,7 +20,8 @@ import {
   Layers,
   ChevronLeft,
   ChevronRight,
-  Star
+  Star,
+  Heart
 } from 'lucide-react';
 
 interface ProductQuickViewModalProps {
@@ -37,6 +39,7 @@ export default function ProductQuickViewModal({
 }: ProductQuickViewModalProps) {
   const { lang, dict } = useLanguage();
   const isAr = lang === 'ar';
+  const { toggleWishlist, isInWishlist } = useWishlist();
 
   const [selectedImageIdx, setSelectedImageIdx] = useState(0);
   const [selectedFinish, setSelectedFinish] = useState<string>('');
@@ -121,13 +124,27 @@ export default function ProductQuickViewModal({
               </span>
             </div>
 
-            <button
-              onClick={onClose}
-              className="p-1.5 rounded-full text-zinc-400 hover:text-white hover:bg-white/10 transition-colors"
-              aria-label={dict.furniture.modal.close}
-            >
-              <X className="w-5 h-5" />
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => toggleWishlist(product.id)}
+                className={`p-2 rounded-xl border transition-all cursor-pointer ${
+                  isInWishlist(product.id)
+                    ? 'bg-rose-500/20 text-rose-400 border-rose-500/40 shadow-[0_0_12px_rgba(244,63,94,0.3)]'
+                    : 'bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-rose-400 border-white/10'
+                }`}
+                aria-label={dict.furniture.wishlist.add_to_wishlist}
+              >
+                <Heart className={`w-4 h-4 ${isInWishlist(product.id) ? 'fill-rose-500 text-rose-500' : ''}`} />
+              </button>
+
+              <button
+                onClick={onClose}
+                className="p-2 rounded-xl text-zinc-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+                aria-label={dict.furniture.modal.close}
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
           </div>
 
           {/* Modal Body - 2 Columns */}
