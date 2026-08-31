@@ -295,28 +295,29 @@ export default function EcommerceAdminDashboard() {
     // Explicitly lock starting position at default (1. Overview, 2. Orders, 3. Products)
     tabsContainerRef.current.scrollLeft = 0;
 
+    // 2. Delayed start (1.7s) so user has fully settled and clearly sees the animation initiate
     const timer = setTimeout(() => {
       if (tabsContainerRef.current && !hasAnimatedScrollRef.current) {
         const el = tabsContainerRef.current;
         const maxScroll = el.scrollWidth - el.clientWidth;
         
         if (maxScroll > 15) {
-          const peekDistance = Math.min(320, maxScroll);
+          const peekDistance = Math.min(340, maxScroll);
           
-          // 1. Smoothly glide right from default posture to reveal more options
+          // Step A: Smoothly glide right from default posture to reveal hidden tabs
           el.scrollTo({ left: peekDistance, behavior: 'smooth' });
 
-          // 2. Pause so user sees remaining tabs, then glide smoothly back to default posture (1-2-3)
+          // Step B: Pause for 1 second so user registers remaining tabs, then glide smoothly back to default posture (1-2-3)
           const returnTimer = setTimeout(() => {
             if (el && !hasAnimatedScrollRef.current) {
               el.scrollTo({ left: 0, behavior: 'smooth' });
             }
-          }, 900);
+          }, 1000);
 
           return () => clearTimeout(returnTimer);
         }
       }
-    }, 800);
+    }, 1700);
 
     return () => clearTimeout(timer);
   }, []);
