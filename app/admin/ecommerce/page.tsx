@@ -422,7 +422,7 @@ export default function EcommerceAdminDashboard() {
     <div className="space-y-8">
       
       {/* 1. Header & Navigation */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-white/10">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-6 border-b border-white/10">
         <div>
           <div className="flex items-center gap-2 text-xs font-mono text-zinc-400 mb-1">
             <Link href="/admin" className="hover:text-[#C9A86A] transition-colors">
@@ -438,8 +438,8 @@ export default function EcommerceAdminDashboard() {
           </h1>
         </div>
 
-        {/* Currency Converter Toggle & Public Store Link */}
-        <div className="flex items-center gap-3 flex-wrap">
+        {/* Currency Converter Toggle & Public Store Link (strictly single horizontal line) */}
+        <div className="flex items-center gap-2.5 shrink-0 whitespace-nowrap">
           
           {/* Global Currency Switcher */}
           <div className="flex items-center gap-1 bg-[#141721] p-1 rounded-xl border border-white/10 text-xs font-mono">
@@ -466,7 +466,7 @@ export default function EcommerceAdminDashboard() {
           <Link
             href="/furniture"
             target="_blank"
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-300 text-xs font-mono font-semibold transition-all cursor-pointer"
+            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-300 text-xs font-mono font-semibold transition-all cursor-pointer shrink-0 whitespace-nowrap"
           >
             <span>{isAr ? 'المعرض العام' : 'Public Storefront'}</span>
             <ExternalLink className="w-3.5 h-3.5" />
