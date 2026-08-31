@@ -284,6 +284,36 @@ export default function EcommerceAdminDashboard() {
   const [selectedOrder, setSelectedOrder] = useState<EcommerceOrderRecord | null>(null);
   const [newNoteText, setNewNoteText] = useState('');
 
+  // Tab Rail Scroll Teaser Animation Ref
+  const tabsContainerRef = React.useRef<HTMLDivElement>(null);
+  const hasAnimatedScrollRef = React.useRef(false);
+
+  // Auto teaser scroll (peek to the right and return to 0) on page load
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      if (tabsContainerRef.current && !hasAnimatedScrollRef.current) {
+        const el = tabsContainerRef.current;
+        if (el.scrollWidth > el.clientWidth) {
+          const peekDistance = isAr ? -Math.min(260, el.scrollWidth - el.clientWidth) : Math.min(260, el.scrollWidth - el.clientWidth);
+          
+          // 1. Smoothly scroll to reveal hidden tabs
+          el.scrollTo({ left: peekDistance, behavior: 'smooth' });
+
+          // 2. Hold for 700ms and smoothly return back to start
+          const returnTimer = setTimeout(() => {
+            if (el && !hasAnimatedScrollRef.current) {
+              el.scrollTo({ left: 0, behavior: 'smooth' });
+            }
+          }, 750);
+
+          return () => clearTimeout(returnTimer);
+        }
+      }
+    }, 600);
+
+    return () => clearTimeout(timer);
+  }, [isAr]);
+
   const formatPrice = (valSAR: number) => {
     if (currency === 'USD') {
       const valUSD = Math.round(valSAR / 3.75);
@@ -442,8 +472,15 @@ export default function EcommerceAdminDashboard() {
         </div>
       </div>
 
-      {/* 2. Top Navigation Segmented Tab Rail with Fluid Sliding Gold Pill */}
-      <div className="glass-card bg-[#0F1117]/80 p-1.5 rounded-2xl border border-white/10 overflow-x-auto" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+      {/* 2. Top Navigation Segmented Tab Rail with Fluid Sliding Gold Pill & Teaser Scroll Animation */}
+      <div 
+        ref={tabsContainerRef}
+        onPointerDown={() => { hasAnimatedScrollRef.current = true; }}
+        onTouchStart={() => { hasAnimatedScrollRef.current = true; }}
+        onWheel={() => { hasAnimatedScrollRef.current = true; }}
+        className="glass-card bg-[#0F1117]/80 p-1.5 rounded-2xl border border-white/10 overflow-x-auto scroll-smooth" 
+        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+      >
         <div className="flex items-center gap-1.5 min-w-max">
           {[
             { id: 'overview', icon: LayoutDashboard, labelEn: '1. Overview', labelAr: '1. الرئيسية والمؤشرات' },
