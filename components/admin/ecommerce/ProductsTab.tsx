@@ -207,7 +207,7 @@ export default function ProductsTab({
     const rows = products.map((p) =>
       `"${p.sku}","${p.nameEn}","${p.nameAr}","${p.categoryEn}",${p.price},"${p.inStock ? 'Yes' : 'No'}","${p.isHospitalityGrade ? 'Yes' : 'No'}","${p.leadTimeEn}"`
     );
-    const csvContent = 'data:text/csv;charset=utf-8,' + [headers, ...rows].join('\n');
+    const csvContent = 'data:text/csv;charset=utf-8,\uFEFF' + [headers, ...rows].join('\n');
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement('a');
     link.setAttribute('href', encodedUri);
@@ -321,7 +321,9 @@ export default function ProductsTab({
 
               {/* Title & Category */}
               <div>
-                <span className="text-[10px] font-mono text-zinc-400 uppercase block">{item.categoryEn}</span>
+                <span className="text-[10px] font-mono text-zinc-400 uppercase block">
+                  {isAr ? item.categoryAr : item.categoryEn}
+                </span>
                 <h4 className="text-sm font-bold text-white group-hover:text-[#C9A86A] transition-colors line-clamp-1">
                   {isAr ? item.nameAr : item.nameEn}
                 </h4>
@@ -333,12 +335,12 @@ export default function ProductsTab({
               {/* Dimensions & Lead Time Meta */}
               <div className="grid grid-cols-2 gap-2 p-2.5 rounded-xl bg-[#141721] text-[10px] font-mono border border-white/5">
                 <div>
-                  <span className="text-zinc-500 block uppercase">Dimensions:</span>
-                  <span className="text-white font-bold">{item.dimensions.width}×{item.dimensions.depth}×{item.dimensions.height} cm</span>
+                  <span className="text-zinc-500 block uppercase">{isAr ? 'الأبعاد:' : 'Dimensions:'}</span>
+                  <span className="text-white font-bold">{item.dimensions.width}×{item.dimensions.depth}×{item.dimensions.height} {isAr ? 'سم' : 'cm'}</span>
                 </div>
                 <div>
-                  <span className="text-zinc-500 block uppercase">Lead Time:</span>
-                  <span className="text-emerald-400 font-bold">{item.leadTimeEn}</span>
+                  <span className="text-zinc-500 block uppercase">{isAr ? 'مدة التنفيذ:' : 'Lead Time:'}</span>
+                  <span className="text-emerald-400 font-bold">{isAr ? item.leadTimeAr : item.leadTimeEn}</span>
                 </div>
               </div>
             </div>
@@ -360,14 +362,14 @@ export default function ProductsTab({
                 <button
                   onClick={() => handleOpenEdit(item)}
                   className="p-2 rounded-xl bg-white/5 hover:bg-[#C9A86A] text-zinc-300 hover:text-[#08090C] transition-colors cursor-pointer"
-                  title="Edit Product"
+                  title={isAr ? 'تعديل القطعة' : 'Edit Product'}
                 >
                   <Edit3 className="w-3.5 h-3.5" />
                 </button>
                 <button
                   onClick={() => handleDelete(item.id, isAr ? item.nameAr : item.nameEn)}
                   className="p-2 rounded-xl bg-white/5 hover:bg-rose-600 text-zinc-400 hover:text-white transition-colors cursor-pointer"
-                  title="Delete Product"
+                  title={isAr ? 'حذف القطعة' : 'Delete Product'}
                 >
                   <Trash2 className="w-3.5 h-3.5" />
                 </button>
@@ -409,7 +411,7 @@ export default function ProductsTab({
               {/* Row 1: SKU & Names */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
-                  <label className="block text-zinc-400 mb-1 font-mono">SKU Code *</label>
+                  <label className="block text-zinc-400 mb-1 font-mono">{isAr ? 'رمز القطعة SKU *' : 'SKU Code *'}</label>
                   <input
                     type="text"
                     value={formSku}
@@ -419,7 +421,7 @@ export default function ProductsTab({
                   />
                 </div>
                 <div>
-                  <label className="block text-zinc-400 mb-1">Name (English) *</label>
+                  <label className="block text-zinc-400 mb-1">{isAr ? 'الاسم بالإنجليزية *' : 'Name (English) *'}</label>
                   <input
                     type="text"
                     value={formNameEn}
@@ -430,12 +432,13 @@ export default function ProductsTab({
                   />
                 </div>
                 <div>
-                  <label className="block text-zinc-400 mb-1">الاسم (بالعربية) *</label>
+                  <label className="block text-zinc-400 mb-1">{isAr ? 'الاسم بالعربية *' : 'Name (Arabic) *'}</label>
                   <input
                     type="text"
                     value={formNameAr}
                     onChange={(e) => setFormNameAr(e.target.value)}
                     required
+                    dir="rtl"
                     placeholder="أريكة الدرعية"
                     className="w-full px-3 py-2 rounded-xl bg-[#141721] border border-white/10 text-white focus:border-[#C9A86A]"
                   />
@@ -445,7 +448,7 @@ export default function ProductsTab({
               {/* Row 2: Category & Prices */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div className="relative">
-                  <label className="block text-zinc-400 mb-1">Category</label>
+                  <label className="block text-zinc-400 mb-1">{isAr ? 'القسم / الفئة' : 'Category'}</label>
                   <select
                     value={formCategoryEn}
                     onChange={(e) => {
@@ -456,19 +459,19 @@ export default function ProductsTab({
                       if (e.target.value === 'Architectural Joinery') setFormCategoryAr('التجاليد والكونسول والمكاتب');
                       if (e.target.value === 'Decor & Partitions') setFormCategoryAr('القواطع والإكسسوارات الفاخرة');
                     }}
-                    className="w-full appearance-none px-3 py-2 pr-8 rounded-xl bg-[#141721] border border-white/10 text-white focus:border-[#C9A86A]"
+                    className="w-full appearance-none px-3 py-2 pr-8 rtl:pr-3 rtl:pl-8 rounded-xl bg-[#141721] border border-white/10 text-white focus:border-[#C9A86A]"
                   >
-                    <option value="Living & Lounge">Living & Lounge</option>
-                    <option value="Hospitality & Suites">Hospitality & Suites</option>
-                    <option value="Dining & Banquet">Dining & Banquet</option>
-                    <option value="Architectural Joinery">Architectural Joinery</option>
-                    <option value="Decor & Partitions">Decor & Partitions</option>
+                    <option value="Living & Lounge">{isAr ? 'الصالونات وغرف المعيشة' : 'Living & Lounge'}</option>
+                    <option value="Hospitality & Suites">{isAr ? 'الأجنحة والضيافة الفندقية' : 'Hospitality & Suites'}</option>
+                    <option value="Dining & Banquet">{isAr ? 'غرف الطعام والولائم' : 'Dining & Banquet'}</option>
+                    <option value="Architectural Joinery">{isAr ? 'التجاليد والكونسول والمكاتب' : 'Architectural Joinery'}</option>
+                    <option value="Decor & Partitions">{isAr ? 'القواطع والإكسسوارات الفاخرة' : 'Decor & Partitions'}</option>
                   </select>
-                  <ChevronDown className="w-3.5 h-3.5 text-zinc-400 absolute right-3 top-7 pointer-events-none" />
+                  <ChevronDown className="w-3.5 h-3.5 text-zinc-400 absolute right-3 rtl:right-auto rtl:left-3 top-7 pointer-events-none" />
                 </div>
 
                 <div>
-                  <label className="block text-zinc-400 mb-1 font-mono">Retail Price (SAR) *</label>
+                  <label className="block text-zinc-400 mb-1 font-mono">{isAr ? 'سعر البيع (ر.س) *' : 'Retail Price (SAR) *'}</label>
                   <input
                     type="number"
                     value={formPrice}
@@ -479,7 +482,7 @@ export default function ProductsTab({
                 </div>
 
                 <div>
-                  <label className="block text-zinc-400 mb-1 font-mono">Compare Price (SAR)</label>
+                  <label className="block text-zinc-400 mb-1 font-mono">{isAr ? 'السعر المقارن (ر.س)' : 'Compare Price (SAR)'}</label>
                   <input
                     type="number"
                     value={formOriginalPrice}
@@ -492,7 +495,7 @@ export default function ProductsTab({
               {/* Row 3: Dimensions & Lead Time */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 font-mono">
                 <div>
-                  <label className="block text-zinc-400 mb-1">Width (cm)</label>
+                  <label className="block text-zinc-400 mb-1">{isAr ? 'العرض (سم)' : 'Width (cm)'}</label>
                   <input
                     type="number"
                     value={formWidth}
@@ -501,7 +504,7 @@ export default function ProductsTab({
                   />
                 </div>
                 <div>
-                  <label className="block text-zinc-400 mb-1">Depth (cm)</label>
+                  <label className="block text-zinc-400 mb-1">{isAr ? 'العمق (سم)' : 'Depth (cm)'}</label>
                   <input
                     type="number"
                     value={formDepth}
@@ -510,7 +513,7 @@ export default function ProductsTab({
                   />
                 </div>
                 <div>
-                  <label className="block text-zinc-400 mb-1">Height (cm)</label>
+                  <label className="block text-zinc-400 mb-1">{isAr ? 'الارتفاع (سم)' : 'Height (cm)'}</label>
                   <input
                     type="number"
                     value={formHeight}
@@ -519,11 +522,17 @@ export default function ProductsTab({
                   />
                 </div>
                 <div>
-                  <label className="block text-zinc-400 mb-1">Lead Time EN</label>
+                  <label className="block text-zinc-400 mb-1">{isAr ? 'مدة التنفيذ' : 'Lead Time'}</label>
                   <input
                     type="text"
-                    value={formLeadTimeEn}
-                    onChange={(e) => setFormLeadTimeEn(e.target.value)}
+                    value={isAr ? formLeadTimeAr : formLeadTimeEn}
+                    onChange={(e) => {
+                      if (isAr) {
+                        setFormLeadTimeAr(e.target.value);
+                      } else {
+                        setFormLeadTimeEn(e.target.value);
+                      }
+                    }}
                     className="w-full px-3 py-2 rounded-xl bg-[#141721] border border-white/10 text-white focus:border-[#C9A86A]"
                   />
                 </div>
@@ -531,7 +540,7 @@ export default function ProductsTab({
 
               {/* Image URL */}
               <div>
-                <label className="block text-zinc-400 mb-1 font-mono">Primary Image URL (HTTPS)</label>
+                <label className="block text-zinc-400 mb-1 font-mono">{isAr ? 'رابط الصورة الرئيسية (HTTPS)' : 'Primary Image URL (HTTPS)'}</label>
                 <input
                   type="url"
                   value={formImageUrl}
@@ -550,7 +559,7 @@ export default function ProductsTab({
                     onChange={(e) => setFormInStock(e.target.checked)}
                     className="rounded text-[#C9A86A]"
                   />
-                  <span>In Stock & Ready</span>
+                  <span>{isAr ? 'متوفر بالمخزون وجاهز للشحن' : 'In Stock & Ready'}</span>
                 </label>
 
                 <label className="flex items-center gap-2 cursor-pointer">
@@ -560,7 +569,7 @@ export default function ProductsTab({
                     onChange={(e) => setFormHospitalityGrade(e.target.checked)}
                     className="rounded text-[#C9A86A]"
                   />
-                  <span>Hospitality FF&E Certified</span>
+                  <span>{isAr ? 'معتمد للمشاريع الفندقية (FF&E)' : 'Hospitality FF&E Certified'}</span>
                 </label>
               </div>
 
@@ -568,49 +577,49 @@ export default function ProductsTab({
               <div className="p-3.5 rounded-2xl bg-[#141721] border border-white/10 space-y-3">
                 <span className="text-[11px] font-bold text-[#C9A86A] flex items-center gap-1.5 font-mono">
                   <Globe className="w-3.5 h-3.5" />
-                  <span>SEO & Search Engine Metadata</span>
+                  <span>{isAr ? 'بيانات محركات البحث والـ SEO' : 'SEO & Search Engine Metadata'}</span>
                 </span>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-zinc-400 mb-1">SEO Title Tag</label>
+                    <label className="block text-zinc-400 mb-1">{isAr ? 'عنوان الصفحة (Title Tag)' : 'SEO Title Tag'}</label>
                     <input
                       type="text"
                       value={formSeoTitle}
                       onChange={(e) => setFormSeoTitle(e.target.value)}
                       placeholder="Product Name | WD Group GreenWood"
-                      className="w-full px-3 py-1.5 rounded-xl bg-black/40 border border-white/10 text-white text-xs"
+                      className="w-full px-3 py-2 rounded-xl bg-[#08090C] border border-white/10 text-white text-xs focus:border-[#C9A86A]"
                     />
                   </div>
                   <div>
-                    <label className="block text-zinc-400 mb-1">Focus Keyword</label>
+                    <label className="block text-zinc-400 mb-1">{isAr ? 'الكلمة المفتاحية الرئيسية' : 'Focus Keyword'}</label>
                     <input
                       type="text"
                       value={formFocusKeyword}
                       onChange={(e) => setFormFocusKeyword(e.target.value)}
-                      placeholder="luxury modular sofa riyadh"
-                      className="w-full px-3 py-1.5 rounded-xl bg-black/40 border border-white/10 text-white text-xs"
+                      placeholder="luxury sofa riyadh"
+                      className="w-full px-3 py-2 rounded-xl bg-[#08090C] border border-white/10 text-white text-xs focus:border-[#C9A86A]"
                     />
                   </div>
                 </div>
               </div>
 
-              {/* Submit Buttons */}
-              <div className="flex items-center justify-end gap-3 pt-4 border-t border-white/10">
+              <div className="pt-3 flex justify-end gap-2 border-t border-white/10">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-300 text-xs font-mono cursor-pointer"
+                  className="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-400 font-bold"
                 >
                   {isAr ? 'إلغاء' : 'Cancel'}
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#C9A86A] to-[#DFBA73] text-[#08090C] text-xs font-extrabold font-mono shadow-md hover:shadow-lg transition-all cursor-pointer"
+                  className="px-6 py-2 rounded-xl bg-gradient-to-r from-[#C9A86A] via-[#DFBA73] to-[#C9A86A] text-[#08090C] font-extrabold cursor-pointer"
                 >
-                  {editingItem ? (isAr ? 'حفظ التعديلات' : 'Save Changes') : (isAr ? 'إضافة القطعة' : 'Create Product')}
+                  {editingItem 
+                    ? (isAr ? 'حفظ التعديلات' : 'Save Changes') 
+                    : (isAr ? 'إضافة القطعة' : 'Add Piece')}
                 </button>
               </div>
-
             </form>
           </div>
         </div>

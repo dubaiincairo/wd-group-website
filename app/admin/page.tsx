@@ -364,7 +364,9 @@ export default function AdminDashboardPage() {
                               ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
                               : 'bg-zinc-500/20 text-zinc-400 border-zinc-500/40'
                           }`}>
-                            {inq.status.toUpperCase()}
+                            {isAr 
+                              ? (inq.status === 'new' ? 'جديد' : inq.status === 'contacted' ? 'تم التواصل' : inq.status === 'won' ? 'تم التعاقد' : 'مكتمل')
+                              : inq.status.toUpperCase()}
                           </span>
                         </td>
 
@@ -471,7 +473,9 @@ export default function AdminDashboardPage() {
                               ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
                               : 'bg-zinc-500/20 text-zinc-400 border-zinc-500/40'
                           }`}>
-                            {app.status.toUpperCase()}
+                            {isAr 
+                              ? (app.status === 'new' ? 'جديد' : app.status === 'shortlisted' ? 'مرشح مؤهل' : app.status === 'hired' ? 'تم التعيين' : 'مرفوض')
+                              : app.status.toUpperCase()}
                           </span>
                         </td>
 

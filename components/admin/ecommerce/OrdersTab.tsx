@@ -224,12 +224,12 @@ export default function OrdersTab({
             className="w-full appearance-none px-3.5 py-2.5 pr-9 rtl:pr-3.5 rtl:pl-9 rounded-xl bg-[#141721] border border-white/10 text-white text-xs focus:outline-none focus:border-[#C9A86A] cursor-pointer"
           >
             <option value="all">{isAr ? 'كافة وسائل الدفع' : 'All Payment Methods'}</option>
-            <option value="mada_cards">Mada / Credit Cards</option>
+            <option value="mada_cards">{isAr ? 'مدى والبطاقات الائتمانية' : 'Mada / Credit Cards'}</option>
             <option value="apple_pay">Apple Pay</option>
-            <option value="tabby">Tabby (4 Installments)</option>
-            <option value="tamara">Tamara (3/4 Installments)</option>
-            <option value="bank_transfer">Corporate Bank Wire</option>
-            <option value="b2b_po">B2B Purchase Order (PO)</option>
+            <option value="tabby">{isAr ? 'تابي (تقسيط 4 دفعات)' : 'Tabby (4 Installments)'}</option>
+            <option value="tamara">{isAr ? 'تمارا (تقسيط وتمويل)' : 'Tamara (3/4 Installments)'}</option>
+            <option value="bank_transfer">{isAr ? 'تحويل بنكي للشركات' : 'Corporate Bank Wire'}</option>
+            <option value="b2b_po">{isAr ? 'أمر شراء معتمد (B2B PO)' : 'B2B Purchase Order (PO)'}</option>
           </select>
           <ChevronDown className="w-4 h-4 text-zinc-400 absolute right-3 rtl:right-auto rtl:left-3 top-3 pointer-events-none" />
         </div>
@@ -378,7 +378,9 @@ export default function OrdersTab({
                             ? 'bg-amber-500/10 text-amber-300 border border-amber-500/30'
                             : 'bg-blue-500/10 text-blue-300 border border-blue-500/30'
                         }`}>
-                          {order.orderType === 'b2b' ? 'B2B Project' : 'Residential'}
+                          {order.orderType === 'b2b' 
+                            ? (isAr ? 'مشروع فندقي B2B' : 'B2B Project') 
+                            : (isAr ? 'سكني فاخر' : 'Residential')}
                         </span>
                       </td>
 
@@ -415,14 +417,14 @@ export default function OrdersTab({
                             {order.paymentMethod === 'apple_pay'
                               ? 'Apple Pay'
                               : order.paymentMethod === 'mada_cards'
-                              ? 'Mada / Cards'
+                              ? (isAr ? 'مدى / بطاقات' : 'Mada / Cards')
                               : order.paymentMethod === 'tabby'
-                              ? 'Tabby'
+                              ? (isAr ? 'تابي' : 'Tabby')
                               : order.paymentMethod === 'tamara'
-                              ? 'Tamara'
+                              ? (isAr ? 'تمارا' : 'Tamara')
                               : order.paymentMethod === 'bank_transfer'
-                              ? 'Bank Wire'
-                              : 'B2B PO'}
+                              ? (isAr ? 'تحويل بنكي' : 'Bank Wire')
+                              : (isAr ? 'أمر شراء B2B' : 'B2B PO')}
                           </span>
                           <span className={`text-[9px] uppercase px-2 py-0.5 rounded-full font-bold border whitespace-nowrap ${
                             order.paymentStatus === 'paid'

@@ -163,7 +163,7 @@ export default function AnalyticsTab() {
               15% VAT Out
             </span>
           </div>
-          <p className="text-[11px] text-zinc-500 font-mono">76,200 SAR {isAr ? 'ضريبة مستحقة للزكاة' : 'VAT collected for ZATCA'}</p>
+          <p className="text-[11px] text-zinc-500 font-mono">{isAr ? '76,200 ر.س ضريبة مستحقة للزكاة' : '76,200 SAR VAT collected for ZATCA'}</p>
         </div>
 
         <div className="glass-card rounded-2xl p-5 border border-white/10 bg-[#0F1117]/90 space-y-2">
@@ -267,10 +267,10 @@ export default function AnalyticsTab() {
                 <div className="space-y-3 font-mono text-xs">
                   <span className="text-zinc-400 block font-bold uppercase">{isAr ? 'حصة بوابات الدفع' : 'Payment Gateways'}</span>
                   {[
-                    { label: 'مدى والبطاقات (Mada / Credit)', share: '38%', sar: '221,996 SAR', color: 'bg-emerald-500' },
-                    { label: 'Apple Pay المباشر', share: '24%', sar: '140,208 SAR', color: 'bg-blue-500' },
-                    { label: 'تابي وتقسيط 4 دفعات (Tabby)', share: '18%', sar: '105,156 SAR', color: 'bg-purple-500' },
-                    { label: 'تحويل بنكي وأوامر شراء (B2B PO)', share: '20%', sar: '116,840 SAR', color: 'bg-[#C9A86A]' },
+                    { label: isAr ? 'مدى والبطاقات (Mada / Credit)' : 'Mada & Credit Cards', share: '38%', sar: isAr ? '221,996 ر.س' : '221,996 SAR', color: 'bg-emerald-500' },
+                    { label: isAr ? 'Apple Pay المباشر' : 'Apple Pay Direct', share: '24%', sar: isAr ? '140,208 ر.س' : '140,208 SAR', color: 'bg-blue-500' },
+                    { label: isAr ? 'تابي وتقسيط 4 دفعات (Tabby)' : 'Tabby (4 Interest-Free Split)', share: '18%', sar: isAr ? '105,156 ر.س' : '105,156 SAR', color: 'bg-purple-500' },
+                    { label: isAr ? 'تحويل بنكي وأوامر شراء (B2B PO)' : 'Bank Wire / Commercial PO', share: '20%', sar: isAr ? '116,840 ر.س' : '116,840 SAR', color: 'bg-[#C9A86A]' },
                   ].map((g, i) => (
                     <div key={i} className="space-y-1">
                       <div className="flex justify-between text-zinc-300">
@@ -288,10 +288,10 @@ export default function AnalyticsTab() {
                 <div className="space-y-3 font-mono text-xs">
                   <span className="text-zinc-400 block font-bold uppercase">{isAr ? 'التوزيع الجغرافي للشحن بالمملكة' : 'Geographic Distribution'}</span>
                   {[
-                    { label: 'منطقة الرياض (Riyadh Hub)', share: '52%', sar: '303,784 SAR', color: 'bg-[#C9A86A]' },
-                    { label: 'المنطقة الغربية (Jeddah, Makkah)', share: '28%', sar: '163,576 SAR', color: 'bg-sky-500' },
-                    { label: 'المنطقة الشرقية (Khobar, Dammam)', share: '14%', sar: '81,788 SAR', color: 'bg-amber-500' },
-                    { label: 'الجنوب والشمال (Tabuk, Al-Ula, Asir)', share: '6%', sar: '35,052 SAR', color: 'bg-purple-500' },
+                    { label: isAr ? 'منطقة الرياض (المركز الرئيسي)' : 'Riyadh Province (Central Hub)', share: '52%', sar: isAr ? '303,784 ر.س' : '303,784 SAR', color: 'bg-[#C9A86A]' },
+                    { label: isAr ? 'المنطقة الغربية (جدة، مكة، المدينة)' : 'Western (Jeddah, Makkah, Medina)', share: '28%', sar: isAr ? '163,576 ر.س' : '163,576 SAR', color: 'bg-sky-500' },
+                    { label: isAr ? 'المنطقة الشرقية (الخبر، الدمام، الجبيل)' : 'Eastern (Khobar, Dammam, Jubail)', share: '14%', sar: isAr ? '81,788 ر.س' : '81,788 SAR', color: 'bg-amber-500' },
+                    { label: isAr ? 'الجنوب والشمال (تبوك، العلا، عسير)' : 'Southern & Northern Provinces', share: '6%', sar: isAr ? '35,052 ر.س' : '35,052 SAR', color: 'bg-purple-500' },
                   ].map((r, i) => (
                     <div key={i} className="space-y-1">
                       <div className="flex justify-between text-zinc-300">
@@ -321,7 +321,7 @@ export default function AnalyticsTab() {
                   className="text-xs font-mono text-[#C9A86A] hover:underline flex items-center gap-1 cursor-pointer"
                 >
                   <FileSpreadsheet className="w-3.5 h-3.5" />
-                  <span>Export Factory Telemetry CSV</span>
+                  <span>{isAr ? 'تصدير مؤشرات المصانع CSV' : 'Export Factory Telemetry CSV'}</span>
                 </button>
               </div>
 
@@ -329,36 +329,36 @@ export default function AnalyticsTab() {
                 <table className="w-full text-left rtl:text-right border-collapse">
                   <thead>
                     <tr className="border-b border-white/10 bg-white/[0.02] text-zinc-400 uppercase text-[10px]">
-                      <th className="py-3 px-4">Plant Workcenter</th>
-                      <th className="py-3 px-4">Active Jobs</th>
-                      <th className="py-3 px-4">Capacity Load</th>
-                      <th className="py-3 px-4">Avg Lead Time</th>
-                      <th className="py-3 px-4">Scrap Rate</th>
-                      <th className="py-3 px-4">On-Time Rate</th>
+                      <th className="py-3 px-4">{isAr ? 'المصنع / خط الإنتاج' : 'Plant Workcenter'}</th>
+                      <th className="py-3 px-4">{isAr ? 'الأوامر النشطة' : 'Active Jobs'}</th>
+                      <th className="py-3 px-4">{isAr ? 'الحمل التشغيلي' : 'Capacity Load'}</th>
+                      <th className="py-3 px-4">{isAr ? 'متوسط مدة التنفيذ' : 'Avg Lead Time'}</th>
+                      <th className="py-3 px-4">{isAr ? 'نسبة الهدر' : 'Scrap Rate'}</th>
+                      <th className="py-3 px-4">{isAr ? 'الالتزام بالموعد' : 'On-Time Rate'}</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-white/5">
                     <tr className="hover:bg-white/[0.02]">
-                      <td className="py-3 px-4 font-bold text-white">Plant 1: 5-Axis Wood & Joinery</td>
-                      <td className="py-3 px-4 text-zinc-300">14 Orders</td>
-                      <td className="py-3 px-4 text-amber-400 font-bold">78% Load</td>
-                      <td className="py-3 px-4 text-zinc-300">11.2 Days</td>
+                      <td className="py-3 px-4 font-bold text-white">{isAr ? 'مصنع 1: أخشاب ونجارة CNC 5-محاور' : 'Plant 1: 5-Axis Wood & Joinery'}</td>
+                      <td className="py-3 px-4 text-zinc-300">14 {isAr ? 'طلباً' : 'Orders'}</td>
+                      <td className="py-3 px-4 text-amber-400 font-bold">78% {isAr ? 'طاقة' : 'Load'}</td>
+                      <td className="py-3 px-4 text-zinc-300">11.2 {isAr ? 'يوماً' : 'Days'}</td>
                       <td className="py-3 px-4 text-emerald-400">1.2%</td>
                       <td className="py-3 px-4 text-emerald-400 font-bold">98.4%</td>
                     </tr>
                     <tr className="hover:bg-white/[0.02]">
-                      <td className="py-3 px-4 font-bold text-white">Plant 2: Architectural Metals & Brass</td>
-                      <td className="py-3 px-4 text-zinc-300">6 Orders</td>
-                      <td className="py-3 px-4 text-emerald-400 font-bold">45% Load</td>
-                      <td className="py-3 px-4 text-zinc-300">8.5 Days</td>
+                      <td className="py-3 px-4 font-bold text-white">{isAr ? 'مصنع 2: نحاس ومعادن معمارية' : 'Plant 2: Architectural Metals & Brass'}</td>
+                      <td className="py-3 px-4 text-zinc-300">6 {isAr ? 'طلبات' : 'Orders'}</td>
+                      <td className="py-3 px-4 text-emerald-400 font-bold">45% {isAr ? 'طاقة' : 'Load'}</td>
+                      <td className="py-3 px-4 text-zinc-300">8.5 {isAr ? 'أيام' : 'Days'}</td>
                       <td className="py-3 px-4 text-emerald-400">0.8%</td>
                       <td className="py-3 px-4 text-emerald-400 font-bold">99.1%</td>
                     </tr>
                     <tr className="hover:bg-white/[0.02]">
-                      <td className="py-3 px-4 font-bold text-white">Plant 3: Italian Leather & Upholstery</td>
-                      <td className="py-3 px-4 text-zinc-300">18 Orders</td>
-                      <td className="py-3 px-4 text-rose-400 font-bold">85% Load</td>
-                      <td className="py-3 px-4 text-zinc-300">13.4 Days</td>
+                      <td className="py-3 px-4 font-bold text-white">{isAr ? 'مصنع 3: جلود وتنجيد إيطالي' : 'Plant 3: Italian Leather & Upholstery'}</td>
+                      <td className="py-3 px-4 text-zinc-300">18 {isAr ? 'طلباً' : 'Orders'}</td>
+                      <td className="py-3 px-4 text-rose-400 font-bold">85% {isAr ? 'طاقة' : 'Load'}</td>
+                      <td className="py-3 px-4 text-zinc-300">13.4 {isAr ? 'يوماً' : 'Days'}</td>
                       <td className="py-3 px-4 text-emerald-400">1.9%</td>
                       <td className="py-3 px-4 text-emerald-400 font-bold">96.8%</td>
                     </tr>
@@ -381,7 +381,7 @@ export default function AnalyticsTab() {
                   className="text-xs font-mono text-[#C9A86A] hover:underline flex items-center gap-1 cursor-pointer"
                 >
                   <FileSpreadsheet className="w-3.5 h-3.5" />
-                  <span>Export Client LTV CSV</span>
+                  <span>{isAr ? 'تصدير بيانات كبار العملاء CSV' : 'Export Client LTV CSV'}</span>
                 </button>
               </div>
 
@@ -389,33 +389,33 @@ export default function AnalyticsTab() {
                 <table className="w-full text-left rtl:text-right border-collapse">
                   <thead>
                     <tr className="border-b border-white/10 bg-white/[0.02] text-zinc-400 uppercase text-[10px]">
-                      <th className="py-3 px-4">Client Name</th>
-                      <th className="py-3 px-4">Segment</th>
-                      <th className="py-3 px-4">Orders Completed</th>
-                      <th className="py-3 px-4">Lifetime Spend (SAR)</th>
-                      <th className="py-3 px-4">Last Order</th>
+                      <th className="py-3 px-4">{isAr ? 'اسم العميل / المنشأة' : 'Client Name'}</th>
+                      <th className="py-3 px-4">{isAr ? 'الشريحة' : 'Segment'}</th>
+                      <th className="py-3 px-4">{isAr ? 'الطلبات المكتملة' : 'Orders Completed'}</th>
+                      <th className="py-3 px-4">{isAr ? 'إجمالي الإنفاق (ر.س)' : 'Lifetime Spend (SAR)'}</th>
+                      <th className="py-3 px-4">{isAr ? 'آخر طلب' : 'Last Order'}</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-white/5">
                     <tr className="hover:bg-white/[0.02]">
                       <td className="py-3 px-4 font-bold text-white">سلطان بن عبدالعزيز آل سعود</td>
-                      <td className="py-3 px-4 text-amber-400 font-bold">Royal VIP</td>
-                      <td className="py-3 px-4 text-zinc-300">4 Contracts</td>
-                      <td className="py-3 px-4 text-[#C9A86A] font-extrabold">218,000 SAR</td>
+                      <td className="py-3 px-4 text-amber-400 font-bold">{isAr ? 'عميل ملكي VIP' : 'Royal VIP'}</td>
+                      <td className="py-3 px-4 text-zinc-300">4 {isAr ? 'عقود' : 'Contracts'}</td>
+                      <td className="py-3 px-4 text-[#C9A86A] font-extrabold">218,000 {isAr ? 'ر.س' : 'SAR'}</td>
                       <td className="py-3 px-4 text-zinc-400">2026-08-28</td>
                     </tr>
                     <tr className="hover:bg-white/[0.02]">
                       <td className="py-3 px-4 font-bold text-white">فندق سويس بلو (SwissBlue Hotels)</td>
-                      <td className="py-3 px-4 text-blue-400 font-bold">Hospitality Partner</td>
-                      <td className="py-3 px-4 text-zinc-300">3 Turnkey Suites</td>
-                      <td className="py-3 px-4 text-[#C9A86A] font-extrabold">380,000 SAR</td>
+                      <td className="py-3 px-4 text-blue-400 font-bold">{isAr ? 'شريك فندقي B2B' : 'Hospitality Partner'}</td>
+                      <td className="py-3 px-4 text-zinc-300">3 {isAr ? 'أجنحة متكاملة' : 'Turnkey Suites'}</td>
+                      <td className="py-3 px-4 text-[#C9A86A] font-extrabold">380,000 {isAr ? 'ر.س' : 'SAR'}</td>
                       <td className="py-3 px-4 text-zinc-400">2026-08-26</td>
                     </tr>
                     <tr className="hover:bg-white/[0.02]">
                       <td className="py-3 px-4 font-bold text-white">شركة طويق للاستثمار والتطوير</td>
-                      <td className="py-3 px-4 text-purple-400 font-bold">Corporate Commercial</td>
-                      <td className="py-3 px-4 text-zinc-300">2 Boardrooms</td>
-                      <td className="py-3 px-4 text-[#C9A86A] font-extrabold">154,000 SAR</td>
+                      <td className="py-3 px-4 text-purple-400 font-bold">{isAr ? 'مقر شركات تجاري' : 'Corporate Commercial'}</td>
+                      <td className="py-3 px-4 text-zinc-300">2 {isAr ? 'قاعات مجالس إدارة' : 'Boardrooms'}</td>
+                      <td className="py-3 px-4 text-[#C9A86A] font-extrabold">154,000 {isAr ? 'ر.س' : 'SAR'}</td>
                       <td className="py-3 px-4 text-zinc-400">2026-08-24</td>
                     </tr>
                   </tbody>
@@ -437,7 +437,7 @@ export default function AnalyticsTab() {
                   className="text-xs font-mono text-[#C9A86A] hover:underline flex items-center gap-1 cursor-pointer"
                 >
                   <FileSpreadsheet className="w-3.5 h-3.5" />
-                  <span>Export Inventory CSV</span>
+                  <span>{isAr ? 'تصدير بيانات المخزون CSV' : 'Export Inventory CSV'}</span>
                 </button>
               </div>
 
@@ -445,38 +445,50 @@ export default function AnalyticsTab() {
                 <table className="w-full text-left rtl:text-right border-collapse">
                   <thead>
                     <tr className="border-b border-white/10 bg-white/[0.02] text-zinc-400 uppercase text-[10px]">
-                      <th className="py-3 px-4">SKU Code</th>
-                      <th className="py-3 px-4">Furniture Piece</th>
-                      <th className="py-3 px-4">Plant Stock</th>
-                      <th className="py-3 px-4">Safety Limit</th>
-                      <th className="py-3 px-4">Turnover Rate</th>
-                      <th className="py-3 px-4">Status</th>
+                      <th className="py-3 px-4">SKU</th>
+                      <th className="py-3 px-4">{isAr ? 'اسم القطعة' : 'Furniture Piece'}</th>
+                      <th className="py-3 px-4">{isAr ? 'مخزون المصنع' : 'Plant Stock'}</th>
+                      <th className="py-3 px-4">{isAr ? 'حد الأمان' : 'Safety Limit'}</th>
+                      <th className="py-3 px-4">{isAr ? 'معدل الدوران' : 'Turnover Rate'}</th>
+                      <th className="py-3 px-4">{isAr ? 'الحالة' : 'Status'}</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-white/5">
                     <tr className="hover:bg-white/[0.02]">
                       <td className="py-3 px-4 text-[#C9A86A] font-bold">GW-LV-801</td>
-                      <td className="py-3 px-4 text-white">The Al-Diriyah Modular Curved Sofa</td>
-                      <td className="py-3 px-4 text-rose-400 font-bold">2 units</td>
-                      <td className="py-3 px-4 text-zinc-400">3 units</td>
-                      <td className="py-3 px-4 text-zinc-300">14 Days</td>
-                      <td className="py-3 px-4 text-rose-400 font-bold bg-rose-500/10 px-2 py-0.5 rounded">Low Stock Alert</td>
+                      <td className="py-3 px-4 text-white font-sans">{isAr ? 'أريكة الدرعية المنحنية الفاخرة' : 'The Al-Diriyah Modular Curved Sofa'}</td>
+                      <td className="py-3 px-4 text-rose-400 font-bold">2 {isAr ? 'قطع' : 'units'}</td>
+                      <td className="py-3 px-4 text-zinc-400">3 {isAr ? 'قطع' : 'units'}</td>
+                      <td className="py-3 px-4 text-zinc-300">14 {isAr ? 'يوماً' : 'Days'}</td>
+                      <td className="py-3 px-4">
+                        <span className="text-rose-400 font-bold bg-rose-500/10 px-2 py-0.5 rounded">
+                          {isAr ? 'تنبيه مخزون منخفض' : 'Low Stock Alert'}
+                        </span>
+                      </td>
                     </tr>
                     <tr className="hover:bg-white/[0.02]">
                       <td className="py-3 px-4 text-[#C9A86A] font-bold">GW-BD-702</td>
-                      <td className="py-3 px-4 text-white">SwissBlue Presidential Suite Bed</td>
-                      <td className="py-3 px-4 text-emerald-400 font-bold">4 units</td>
-                      <td className="py-3 px-4 text-zinc-400">2 units</td>
-                      <td className="py-3 px-4 text-zinc-300">21 Days</td>
-                      <td className="py-3 px-4 text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded">Optimal</td>
+                      <td className="py-3 px-4 text-white font-sans">{isAr ? 'سرير الجناح الرئاسي سويس بلو والتجاليد' : 'SwissBlue Presidential Suite Bed'}</td>
+                      <td className="py-3 px-4 text-emerald-400 font-bold">4 {isAr ? 'قطع' : 'units'}</td>
+                      <td className="py-3 px-4 text-zinc-400">2 {isAr ? 'قطع' : 'units'}</td>
+                      <td className="py-3 px-4 text-zinc-300">21 {isAr ? 'يوماً' : 'Days'}</td>
+                      <td className="py-3 px-4">
+                        <span className="text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded">
+                          {isAr ? 'مخزون ممتاز' : 'Optimal'}
+                        </span>
+                      </td>
                     </tr>
                     <tr className="hover:bg-white/[0.02]">
                       <td className="py-3 px-4 text-[#C9A86A] font-bold">GW-TB-405</td>
-                      <td className="py-3 px-4 text-white">The Najran Travertine Coffee Table</td>
-                      <td className="py-3 px-4 text-amber-400 font-bold">1 unit</td>
-                      <td className="py-3 px-4 text-zinc-400">2 units</td>
-                      <td className="py-3 px-4 text-zinc-300">10 Days</td>
-                      <td className="py-3 px-4 text-amber-400 font-bold bg-amber-500/10 px-2 py-0.5 rounded">Reorder Triggered</td>
+                      <td className="py-3 px-4 text-white font-sans">{isAr ? 'طاولة قهوة نجران من الترافرتين' : 'The Najran Travertine Coffee Table'}</td>
+                      <td className="py-3 px-4 text-amber-400 font-bold">1 {isAr ? 'قطعة' : 'unit'}</td>
+                      <td className="py-3 px-4 text-zinc-400">2 {isAr ? 'قطع' : 'units'}</td>
+                      <td className="py-3 px-4 text-zinc-300">10 {isAr ? 'أيام' : 'Days'}</td>
+                      <td className="py-3 px-4">
+                        <span className="text-amber-400 font-bold bg-amber-500/10 px-2 py-0.5 rounded">
+                          {isAr ? 'مطلوب إعادة طلب' : 'Reorder Triggered'}
+                        </span>
+                      </td>
                     </tr>
                   </tbody>
                 </table>
@@ -497,22 +509,22 @@ export default function AnalyticsTab() {
                   className="text-xs font-mono text-[#C9A86A] hover:underline flex items-center gap-1 cursor-pointer"
                 >
                   <FileSpreadsheet className="w-3.5 h-3.5" />
-                  <span>Export ZATCA CSV</span>
+                  <span>{isAr ? 'تصدير إقرار زاتكا CSV' : 'Export ZATCA CSV'}</span>
                 </button>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div className="p-4 rounded-2xl bg-[#141721] border border-white/5 space-y-1">
-                  <span className="text-zinc-400 text-[10px] uppercase block">Taxable Supplies (15%)</span>
-                  <span className="text-lg font-bold text-white">1,285,000 SAR</span>
+                  <span className="text-zinc-400 text-[10px] uppercase block">{isAr ? 'المبيعات الخاضعة للضريبة القياسية (15%)' : 'Taxable Supplies (15%)'}</span>
+                  <span className="text-lg font-bold text-white">1,285,000 {isAr ? 'ر.س' : 'SAR'}</span>
                 </div>
                 <div className="p-4 rounded-2xl bg-[#141721] border border-white/5 space-y-1">
-                  <span className="text-zinc-400 text-[10px] uppercase block">Total Output VAT Collected</span>
-                  <span className="text-lg font-bold text-emerald-400">192,750 SAR</span>
+                  <span className="text-zinc-400 text-[10px] uppercase block">{isAr ? 'إجمالي ضريبة المخرجات المحصلة' : 'Total Output VAT Collected'}</span>
+                  <span className="text-lg font-bold text-emerald-400">192,750 {isAr ? 'ر.س' : 'SAR'}</span>
                 </div>
                 <div className="p-4 rounded-2xl bg-[#141721] border border-white/5 space-y-1">
-                  <span className="text-zinc-400 text-[10px] uppercase block">Zero-Rated / Export Sales</span>
-                  <span className="text-lg font-bold text-zinc-400">0.00 SAR</span>
+                  <span className="text-zinc-400 text-[10px] uppercase block">{isAr ? 'مبيعات الصادرات / نسبة الصفر' : 'Zero-Rated / Export Sales'}</span>
+                  <span className="text-lg font-bold text-zinc-400">0.00 {isAr ? 'ر.س' : 'SAR'}</span>
                 </div>
               </div>
             </div>

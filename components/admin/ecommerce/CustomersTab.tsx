@@ -311,12 +311,18 @@ export default function CustomersTab() {
                 {/* Financial Summary */}
                 <div className="grid grid-cols-2 gap-3 p-4 rounded-2xl bg-[#141721] font-mono">
                   <div>
-                    <span className="text-zinc-500 text-[10px] uppercase block">Lifetime Spend</span>
-                    <span className="text-lg font-bold text-[#E3C58A]">{activeProfile.totalSpend.toLocaleString('en-US')} SAR</span>
+                    <span className="text-zinc-500 text-[10px] uppercase block">
+                      {isAr ? 'إجمالي الإنفاق التراكمي' : 'Lifetime Spend'}
+                    </span>
+                    <span className="text-lg font-bold text-[#E3C58A]">{activeProfile.totalSpend.toLocaleString('en-US')} {isAr ? 'ر.س' : 'SAR'}</span>
                   </div>
                   <div>
-                    <span className="text-zinc-500 text-[10px] uppercase block">Total Orders</span>
-                    <span className="text-lg font-bold text-white">{activeProfile.ordersCount} Completed</span>
+                    <span className="text-zinc-500 text-[10px] uppercase block">
+                      {isAr ? 'إجمالي الطلبات' : 'Total Orders'}
+                    </span>
+                    <span className="text-lg font-bold text-white">
+                      {activeProfile.ordersCount} {isAr ? 'طلبات مكتملة' : 'Completed'}
+                    </span>
                   </div>
                 </div>
 
@@ -332,13 +338,15 @@ export default function CustomersTab() {
                   </div>
                   <div className="flex items-center gap-2 text-zinc-300 font-mono">
                     <MapPin className="w-4 h-4 text-[#C9A86A]" />
-                    <span>{activeProfile.city}, Saudi Arabia</span>
+                    <span>{activeProfile.city}, {isAr ? 'المملكة العربية السعودية' : 'Saudi Arabia'}</span>
                   </div>
                 </div>
 
                 {/* Tags */}
                 <div className="space-y-2">
-                  <span className="text-zinc-400 font-mono uppercase text-[10px] block">Client Tags</span>
+                  <span className="text-zinc-400 font-mono uppercase text-[10px] block">
+                    {isAr ? 'الوسوم والتصنيفات' : 'Client Tags'}
+                  </span>
                   <div className="flex flex-wrap gap-1.5">
                     {activeProfile.tags.map((tag, idx) => (
                       <span key={idx} className="px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 text-zinc-300 text-[11px] font-mono">
@@ -350,8 +358,10 @@ export default function CustomersTab() {
 
                 {/* Notes */}
                 <div className="p-4 rounded-2xl bg-[#141721] border border-white/5 space-y-1">
-                  <span className="text-zinc-500 text-[10px] font-mono uppercase block">CRM Operator Notes</span>
-                  <p className="text-zinc-300 leading-relaxed">{activeProfile.notes}</p>
+                  <span className="text-zinc-500 text-[10px] font-mono uppercase block">
+                    {isAr ? 'ملاحظات مسؤول علاقات العملاء' : 'CRM Operator Notes'}
+                  </span>
+                  <p className="text-zinc-300 leading-relaxed" dir={isAr ? 'rtl' : 'ltr'}>{activeProfile.notes}</p>
                 </div>
 
               </div>

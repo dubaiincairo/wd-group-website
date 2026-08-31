@@ -98,66 +98,67 @@ const INITIAL_PROMOS: PromoCode[] = [
     id: 'pr-3',
     code: 'TRADE-SWISSBLUE',
     titleEn: 'SwissBlue Hospitality Partner 15% FF&E Privilege',
-    titleAr: 'خصم شركاء الفنادق والضيافة 15%',
+    titleAr: 'خصم شركاء سويس بلو الفندقيين 15%',
     discountType: 'percentage',
     discountValue: 15,
-    minSpend: 100000,
-    applicableScope: 'bedroom',
+    minSpend: 50000,
+    maxDiscountCap: 30000,
+    applicableScope: 'b2b',
     customerEligibility: 'hospitality_partners',
     perCustomerLimit: 5,
-    usageCount: 4,
+    usageCount: 6,
     usageLimit: 20,
-    revenueGeneratedSAR: 490000,
+    revenueGeneratedSAR: 620000,
     expiresAt: '2026-12-31',
     autoApply: false,
     isActive: true,
   },
   {
     id: 'pr-4',
-    code: 'CORP10',
-    titleEn: 'Corporate HQ Boardroom Furniture 10% Discount',
-    titleAr: 'خصم المقرات التنفيذية والشركات 10%',
-    discountType: 'percentage',
-    discountValue: 10,
-    minSpend: 50000,
-    applicableScope: 'joinery',
+    code: 'FREE-WHITEGLOVE',
+    titleEn: 'Complimentary Nationwide White-Glove Installation',
+    titleAr: 'تركيب وتوصيل وايت جلوف مجاني لكافة المدن',
+    discountType: 'free_shipping',
+    discountValue: 0,
+    minSpend: 30000,
+    applicableScope: 'all',
     customerEligibility: 'all',
     perCustomerLimit: 2,
-    usageCount: 8,
-    usageLimit: 50,
-    revenueGeneratedSAR: 304000,
+    usageCount: 42,
+    usageLimit: 500,
+    revenueGeneratedSAR: 410000,
     expiresAt: '2026-10-31',
     autoApply: false,
     isActive: true,
   },
 ];
 
-const INITIAL_ABANDONED: AbandonedCartRecord[] = [
+const INITIAL_ABANDONED_CARTS: AbandonedCartRecord[] = [
   {
-    id: 'ab-1',
-    customerName: 'الأستاذ فيصل الراجحي',
-    phone: '+966 50 889 1122',
-    items: 'The Al-Diriyah Modular Curved Sofa (Cream Bouclé)',
-    cartValue: 18900,
+    id: 'ab-101',
+    customerName: 'الأستاذ فيصل بن تركي الراجحي',
+    phone: '+966 50 112 9988',
+    items: 'أريكة الدرعية المنحنية (بوكليه عاجي) + طاولة نجران من الترافرتين',
+    cartValue: 27650,
     abandonedAt: 'منذ 3 ساعات',
     recoverySent: false,
   },
   {
-    id: 'ab-2',
-    customerName: 'م. ريم العتيبي',
-    phone: '+966 54 332 9988',
-    items: 'The Najran Travertine Table + 2× Al-Ula Armchairs',
-    cartValue: 27150,
-    abandonedAt: 'منذ 6 ساعات',
+    id: 'ab-102',
+    customerName: 'شركة أصول العقارية للضيافة',
+    phone: '+966 54 887 6655',
+    items: 'سرير الجناح الرئاسي سويس بلو مع التجاليد الخشبية (عدد 2)',
+    cartValue: 49000,
+    abandonedAt: 'منذ 5 ساعات',
     recoverySent: true,
   },
   {
-    id: 'ab-3',
-    customerName: 'المهندس طارق الدوسري',
-    phone: '+966 55 771 4433',
-    items: 'The Tuwaiq Executive Boardroom Table',
-    cartValue: 38000,
-    abandonedAt: 'منذ يوم أمس',
+    id: 'ab-103',
+    customerName: 'د. سارة المنصور',
+    phone: '+966 55 334 2211',
+    items: 'كرسي الاسترخاء النحتي العلا (جلد كونياك)',
+    cartValue: 9200,
+    abandonedAt: 'أمس 18:40',
     recoverySent: false,
   },
 ];
@@ -168,10 +169,10 @@ export default function MarketingTab() {
   const { showToast } = useToast();
 
   const [promos, setPromos] = useState<PromoCode[]>(INITIAL_PROMOS);
-  const [abandonedCarts, setAbandonedCarts] = useState<AbandonedCartRecord[]>(INITIAL_ABANDONED);
+  const [abandonedCarts, setAbandonedCarts] = useState<AbandonedCartRecord[]>(INITIAL_ABANDONED_CARTS);
   const [isPromoModalOpen, setIsPromoModalOpen] = useState(false);
 
-  // Advanced Promo Form State
+  // New Promo Code Form State
   const [newCode, setNewCode] = useState('');
   const [newTitleEn, setNewTitleEn] = useState('');
   const [newTitleAr, setNewTitleAr] = useState('');
@@ -245,6 +246,27 @@ export default function MarketingTab() {
 
   const totalPromoRevenue = promos.reduce((sum, p) => sum + p.revenueGeneratedSAR, 0);
 
+  const getScopeLabel = (scope: string) => {
+    switch (scope) {
+      case 'living': return isAr ? 'الصالونات وغرف المعيشة' : 'Living & Lounge';
+      case 'bedroom': return isAr ? 'الأجنحة وغرف النوم' : 'Hospitality & Bedroom';
+      case 'dining': return isAr ? 'غرف الطعام والولائم' : 'Dining & Banquet';
+      case 'joinery': return isAr ? 'التجاليد والمكاتب' : 'Architectural Joinery';
+      case 'decor': return isAr ? 'القواطع والإكسسوارات' : 'Decor & Partitions';
+      case 'b2b': return isAr ? 'عقود B2B والفنادق' : 'Commercial & Hotel B2B';
+      default: return isAr ? 'كافة أقسام المتجر' : 'Entire Store';
+    }
+  };
+
+  const getEligibilityLabel = (elig: string) => {
+    switch (elig) {
+      case 'vip_only': return isAr ? 'كبار الشخصيات VIP' : 'VIP Royal / Elite';
+      case 'new_clients': return isAr ? 'العملاء الجدد' : 'New Clients';
+      case 'hospitality_partners': return isAr ? 'الشركاء الفندقيون' : 'Hotel Partners';
+      default: return isAr ? 'جميع العملاء المسجلين' : 'All Customers';
+    }
+  };
+
   return (
     <div className="space-y-8">
       
@@ -281,7 +303,7 @@ export default function MarketingTab() {
         </div>
         <div className="glass-card rounded-2xl p-4 border border-white/10 bg-[#0F1117]/90 space-y-1">
           <span className="text-zinc-400 text-[11px] uppercase font-mono block">{isAr ? 'الإيرادات المحققة من الخصومات' : 'Attributed Promo Revenue'}</span>
-          <span className="text-xl font-mono font-extrabold text-[#C9A86A]">{totalPromoRevenue.toLocaleString('en-US')} SAR</span>
+          <span className="text-xl font-mono font-extrabold text-[#C9A86A]">{totalPromoRevenue.toLocaleString('en-US')} {isAr ? 'ر.س' : 'SAR'}</span>
         </div>
       </div>
 
@@ -292,7 +314,7 @@ export default function MarketingTab() {
             <Sparkles className="w-4 h-4 text-[#C9A86A]" />
             <span>{isAr ? 'أكواد الخصم المفعلة حالياً' : 'Active Promo Codes'}</span>
           </h4>
-          <span className="text-xs font-mono text-zinc-400">{promos.length} {isAr ? 'كود' : 'coupons'}</span>
+          <span className="text-xs font-mono text-zinc-400">{promos.length} {isAr ? 'أكواد' : 'coupons'}</span>
         </div>
 
         <div className="overflow-x-auto">
@@ -318,8 +340,8 @@ export default function MarketingTab() {
                         {promo.code}
                       </span>
                       {promo.autoApply && (
-                        <span className="text-[9px] bg-emerald-500/20 text-emerald-300 px-1.5 py-0.2 rounded">
-                          Auto
+                        <span className="text-[9px] bg-emerald-500/20 text-emerald-300 px-1.5 py-0.2 rounded font-sans">
+                          {isAr ? 'تلقائي' : 'Auto'}
                         </span>
                       )}
                     </div>
@@ -330,17 +352,17 @@ export default function MarketingTab() {
 
                   <td className="py-3.5 px-4 font-bold text-white">
                     {promo.discountType === 'percentage' && `${promo.discountValue}%`}
-                    {promo.discountType === 'fixed' && `${promo.discountValue.toLocaleString()} SAR`}
-                    {promo.discountType === 'free_shipping' && (isAr ? 'تركيب مجاني' : 'Free Assembly')}
+                    {promo.discountType === 'fixed' && `${promo.discountValue.toLocaleString()} ${isAr ? 'ر.س' : 'SAR'}`}
+                    {promo.discountType === 'free_shipping' && (isAr ? 'تركيب وشحن مجاني' : 'Free Assembly')}
                   </td>
 
                   <td className="py-3.5 px-4 text-[11px] text-zinc-300 font-sans">
-                    <span className="block capitalize font-bold text-zinc-200">{promo.applicableScope}</span>
-                    <span className="text-[10px] text-zinc-400 capitalize">{promo.customerEligibility.replace('_', ' ')}</span>
+                    <span className="block font-bold text-zinc-200">{getScopeLabel(promo.applicableScope)}</span>
+                    <span className="text-[10px] text-zinc-400">{getEligibilityLabel(promo.customerEligibility)}</span>
                   </td>
 
                   <td className="py-3.5 px-4 text-zinc-300">
-                    {promo.minSpend.toLocaleString('en-US')} SAR
+                    {promo.minSpend.toLocaleString('en-US')} {isAr ? 'ر.س' : 'SAR'}
                   </td>
 
                   <td className="py-3.5 px-4">
@@ -358,7 +380,7 @@ export default function MarketingTab() {
                   </td>
 
                   <td className="py-3.5 px-4 font-bold text-[#C9A86A]">
-                    {promo.revenueGeneratedSAR.toLocaleString('en-US')} SAR
+                    {promo.revenueGeneratedSAR.toLocaleString('en-US')} {isAr ? 'ر.س' : 'SAR'}
                   </td>
 
                   <td className="py-3.5 px-4 text-[11px] text-zinc-400">
@@ -380,6 +402,7 @@ export default function MarketingTab() {
                       <button
                         onClick={() => handleDeletePromo(promo.id)}
                         className="p-1.5 rounded-lg text-zinc-500 hover:text-rose-400 hover:bg-white/5 transition-colors cursor-pointer"
+                        title={isAr ? 'حذف الكود' : 'Delete Code'}
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>
@@ -428,7 +451,7 @@ export default function MarketingTab() {
                 </div>
                 <p className="text-xs text-zinc-300">{cart.items}</p>
                 <span className="text-[11px] font-mono text-[#C9A86A] font-bold">
-                  {isAr ? 'قيمة السلة:' : 'Cart Valuation:'} {cart.cartValue.toLocaleString('en-US')} SAR
+                  {isAr ? 'قيمة السلة:' : 'Cart Valuation:'} {cart.cartValue.toLocaleString('en-US')} {isAr ? 'ر.س' : 'SAR'}
                 </span>
               </div>
 
@@ -465,23 +488,29 @@ export default function MarketingTab() {
               {/* Row 1: Code & Campaign Title */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-zinc-400 mb-1 font-mono">Coupon Code *</label>
+                  <label className="block text-zinc-400 mb-1 font-mono">{isAr ? 'كود الخصم (Coupon Code) *' : 'Coupon Code *'}</label>
                   <input
                     type="text"
                     value={newCode}
                     onChange={(e) => setNewCode(e.target.value.toUpperCase())}
                     required
-                    placeholder="E.G. RIYADH2026"
+                    placeholder={isAr ? 'مثال: RIYADH2026' : 'E.G. RIYADH2026'}
                     className="w-full px-3.5 py-2.5 rounded-xl bg-[#141721] border border-white/10 text-white font-mono uppercase focus:border-[#C9A86A]"
                   />
                 </div>
                 <div>
-                  <label className="block text-zinc-400 mb-1">Campaign Title EN</label>
+                  <label className="block text-zinc-400 mb-1">{isAr ? 'عنوان الحملة بالعربية' : 'Campaign Title EN'}</label>
                   <input
                     type="text"
-                    value={newTitleEn}
-                    onChange={(e) => setNewTitleEn(e.target.value)}
-                    placeholder="Spring Villa Furnishing Promotion"
+                    value={isAr ? newTitleAr : newTitleEn}
+                    onChange={(e) => {
+                      if (isAr) {
+                        setNewTitleAr(e.target.value);
+                      } else {
+                        setNewTitleEn(e.target.value);
+                      }
+                    }}
+                    placeholder={isAr ? 'عرض تأثيث الفلل السكنية' : 'Spring Villa Furnishing Promotion'}
                     className="w-full px-3.5 py-2.5 rounded-xl bg-[#141721] border border-white/10 text-white focus:border-[#C9A86A]"
                   />
                 </div>
@@ -490,23 +519,25 @@ export default function MarketingTab() {
               {/* Row 2: Discount Type & Value */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div className="relative">
-                  <label className="block text-zinc-400 mb-1">Discount Type</label>
+                  <label className="block text-zinc-400 mb-1">{isAr ? 'نوع الخصم' : 'Discount Type'}</label>
                   <select
                     value={newDiscountType}
                     onChange={(e) => setNewDiscountType(e.target.value as any)}
-                    className="w-full appearance-none px-3.5 py-2.5 pr-8 rounded-xl bg-[#141721] border border-white/10 text-white focus:border-[#C9A86A]"
+                    className="w-full appearance-none px-3.5 py-2.5 pr-8 rtl:pr-3.5 rtl:pl-8 rounded-xl bg-[#141721] border border-white/10 text-white focus:border-[#C9A86A]"
                   >
-                    <option value="percentage">Percentage (%)</option>
-                    <option value="fixed">Fixed Amount (SAR)</option>
-                    <option value="free_shipping">Free White-Glove Shipping</option>
+                    <option value="percentage">{isAr ? 'نسبة مئوية (%)' : 'Percentage (%)'}</option>
+                    <option value="fixed">{isAr ? 'مبلغ ثابت (ر.س)' : 'Fixed Amount (SAR)'}</option>
+                    <option value="free_shipping">{isAr ? 'شحن وتركيب وايت جلوف مجاني' : 'Free White-Glove Shipping'}</option>
                   </select>
-                  <ChevronDown className="w-3.5 h-3.5 text-zinc-400 absolute right-3 top-8 pointer-events-none" />
+                  <ChevronDown className="w-3.5 h-3.5 text-zinc-400 absolute right-3 rtl:right-auto rtl:left-3 top-8 pointer-events-none" />
                 </div>
 
                 {newDiscountType !== 'free_shipping' && (
                   <div>
                     <label className="block text-zinc-400 mb-1 font-mono">
-                      {newDiscountType === 'percentage' ? 'Discount Rate (%) *' : 'Discount SAR *'}
+                      {newDiscountType === 'percentage' 
+                        ? (isAr ? 'نسبة الخصم (%) *' : 'Discount Rate (%) *') 
+                        : (isAr ? 'قيمة الخصم (ر.س) *' : 'Discount SAR *')}
                     </label>
                     <input
                       type="number"
@@ -521,7 +552,7 @@ export default function MarketingTab() {
                 )}
 
                 <div>
-                  <label className="block text-zinc-400 mb-1 font-mono">Min Spend (SAR)</label>
+                  <label className="block text-zinc-400 mb-1 font-mono">{isAr ? 'الحد الأدنى للطلب (ر.س)' : 'Min Spend (SAR)'}</label>
                   <input
                     type="number"
                     value={newMinSpend}
@@ -535,43 +566,43 @@ export default function MarketingTab() {
               {/* Row 3: Applicable Scope & Eligibility */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="relative">
-                  <label className="block text-zinc-400 mb-1">Applicable Product Category</label>
+                  <label className="block text-zinc-400 mb-1">{isAr ? 'نطاق المنتجات المشمولة' : 'Applicable Product Category'}</label>
                   <select
                     value={newScope}
                     onChange={(e) => setNewScope(e.target.value as any)}
-                    className="w-full appearance-none px-3.5 py-2.5 pr-8 rounded-xl bg-[#141721] border border-white/10 text-white focus:border-[#C9A86A]"
+                    className="w-full appearance-none px-3.5 py-2.5 pr-8 rtl:pr-3.5 rtl:pl-8 rounded-xl bg-[#141721] border border-white/10 text-white focus:border-[#C9A86A]"
                   >
-                    <option value="all">Entire Store (All Categories)</option>
-                    <option value="living">Living & Lounge Only</option>
-                    <option value="bedroom">Hospitality & Bedroom Only</option>
-                    <option value="dining">Dining & Banquet Only</option>
-                    <option value="joinery">Architectural Joinery Only</option>
-                    <option value="decor">Decor & Partitions Only</option>
-                    <option value="b2b">Commercial & Hotel B2B Orders</option>
+                    <option value="all">{isAr ? 'كافة أقسام المتجر' : 'Entire Store (All Categories)'}</option>
+                    <option value="living">{isAr ? 'الصالونات وغرف المعيشة فقط' : 'Living & Lounge Only'}</option>
+                    <option value="bedroom">{isAr ? 'الأجنحة وغرف النوم الفندقية فقط' : 'Hospitality & Bedroom Only'}</option>
+                    <option value="dining">{isAr ? 'غرف الطعام والولائم فقط' : 'Dining & Banquet Only'}</option>
+                    <option value="joinery">{isAr ? 'التجاليد والمكاتب التنفيذية فقط' : 'Architectural Joinery Only'}</option>
+                    <option value="decor">{isAr ? 'القواطع والإكسسوارات الفاخرة' : 'Decor & Partitions Only'}</option>
+                    <option value="b2b">{isAr ? 'عقود التوريد التجاري والفندقي B2B' : 'Commercial & Hotel B2B Orders'}</option>
                   </select>
-                  <ChevronDown className="w-3.5 h-3.5 text-zinc-400 absolute right-3 top-8 pointer-events-none" />
+                  <ChevronDown className="w-3.5 h-3.5 text-zinc-400 absolute right-3 rtl:right-auto rtl:left-3 top-8 pointer-events-none" />
                 </div>
 
                 <div className="relative">
-                  <label className="block text-zinc-400 mb-1">Target Customer Eligibility</label>
+                  <label className="block text-zinc-400 mb-1">{isAr ? 'فئة العملاء المستهدفين' : 'Target Customer Eligibility'}</label>
                   <select
                     value={newEligibility}
                     onChange={(e) => setNewEligibility(e.target.value as any)}
-                    className="w-full appearance-none px-3.5 py-2.5 pr-8 rounded-xl bg-[#141721] border border-white/10 text-white focus:border-[#C9A86A]"
+                    className="w-full appearance-none px-3.5 py-2.5 pr-8 rtl:pr-3.5 rtl:pl-8 rounded-xl bg-[#141721] border border-white/10 text-white focus:border-[#C9A86A]"
                   >
-                    <option value="all">All Registered Customers</option>
-                    <option value="vip_only">VIP Royal & High-Net-Worth Only</option>
-                    <option value="new_clients">First-Time Buyers Only</option>
-                    <option value="hospitality_partners">Hotel & Commercial Partners</option>
+                    <option value="all">{isAr ? 'جميع العملاء المسجلين' : 'All Registered Customers'}</option>
+                    <option value="vip_only">{isAr ? 'عملاء النخبة وكبار الشخصيات VIP' : 'VIP Royal & High-Net-Worth Only'}</option>
+                    <option value="new_clients">{isAr ? 'العملاء الجدد (الطلب الأول)' : 'First-Time Buyers Only'}</option>
+                    <option value="hospitality_partners">{isAr ? 'الشركاء الفندقيون والتجاريون' : 'Hotel & Commercial Partners'}</option>
                   </select>
-                  <ChevronDown className="w-3.5 h-3.5 text-zinc-400 absolute right-3 top-8 pointer-events-none" />
+                  <ChevronDown className="w-3.5 h-3.5 text-zinc-400 absolute right-3 rtl:right-auto rtl:left-3 top-8 pointer-events-none" />
                 </div>
               </div>
 
               {/* Row 4: Usage Limits & Expiry */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 font-mono">
                 <div>
-                  <label className="block text-zinc-400 mb-1">Total Usage Limit</label>
+                  <label className="block text-zinc-400 mb-1">{isAr ? 'الحد الإجمالي للاستخدام' : 'Total Usage Limit'}</label>
                   <input
                     type="number"
                     value={newLimit}
@@ -581,7 +612,7 @@ export default function MarketingTab() {
                   />
                 </div>
                 <div>
-                  <label className="block text-zinc-400 mb-1">Limit Per Client</label>
+                  <label className="block text-zinc-400 mb-1">{isAr ? 'حد الاستخدام لكل عميل' : 'Limit Per Client'}</label>
                   <input
                     type="number"
                     value={newPerCustomer}
@@ -591,7 +622,7 @@ export default function MarketingTab() {
                   />
                 </div>
                 <div>
-                  <label className="block text-zinc-400 mb-1">Expiry Date</label>
+                  <label className="block text-zinc-400 mb-1">{isAr ? 'تاريخ انتهاء الكود' : 'Expiry Date'}</label>
                   <input
                     type="date"
                     value={newExpiry}
@@ -611,7 +642,7 @@ export default function MarketingTab() {
                   className="rounded text-[#C9A86A]"
                 />
                 <label htmlFor="autoApply" className="text-zinc-300 cursor-pointer">
-                  {isAr ? 'تطبيق الخصم تلقائياً عند الدفع (Auto-apply banner at checkout)' : 'Auto-apply discount banner at checkout'}
+                  {isAr ? 'تطبيق الخصم تلقائياً عند الدفع لجميع المؤهلين' : 'Auto-apply discount banner at checkout'}
                 </label>
               </div>
 
