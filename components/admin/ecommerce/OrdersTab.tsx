@@ -20,11 +20,13 @@ import {
   ChevronRight,
   Truck,
   Building2,
-  Calendar
+  Calendar,
+  ChevronDown
 } from 'lucide-react';
 
 interface OrdersTabProps {
   orders: EcommerceOrderRecord[];
+  currency: 'SAR' | 'USD';
   onSelectOrder: (order: EcommerceOrderRecord) => void;
   onUpdateStatus: (orderId: string, newStatus: EcommerceOrderStatus) => void;
   onBulkUpdateStatus: (orderIds: string[], newStatus: EcommerceOrderStatus) => void;
@@ -32,6 +34,7 @@ interface OrdersTabProps {
 
 export default function OrdersTab({
   orders,
+  currency,
   onSelectOrder,
   onUpdateStatus,
   onBulkUpdateStatus,
@@ -51,6 +54,14 @@ export default function OrdersTab({
   // Pagination State
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
+
+  const formatPrice = (valSAR: number) => {
+    if (currency === 'USD') {
+      const valUSD = Math.round(valSAR / 3.75);
+      return `${valUSD.toLocaleString('en-US')} USD`;
+    }
+    return `${valSAR.toLocaleString('en-US')} ${isAr ? 'ر.س' : 'SAR'}`;
+  };
 
   // Filtered Orders
   const filteredOrders = useMemo(() => {
@@ -105,7 +116,7 @@ export default function OrdersTab({
   const handleExportSelected = () => {
     const targetOrders = orders.filter((o) => selectedIds.includes(o.id));
     if (targetOrders.length === 0) return;
-    const headers = ['Order Ref,Customer,Email,Phone,City,Order Type,Payment,Status,Total SAR,Date'];
+    const headers = ['Order Ref,Customer,Email,Phone,City,Order Type,Payment,Status,Total,Date'];
     const rows = targetOrders.map((o) =>
       `"${o.orderRef}","${o.customerName}","${o.email}","${o.phone}","${o.city}","${o.orderType}","${o.paymentMethod}","${o.status}",${o.totalAmount},"${o.createdAt}"`
     );
@@ -125,37 +136,37 @@ export default function OrdersTab({
       case 'confirmed':
         return {
           label: isAr ? 'مؤكد ومعتمد' : 'Confirmed',
-          bg: 'bg-blue-500/10 text-blue-400 border-blue-500/30',
+          bg: 'bg-blue-500/15 text-blue-400 border-blue-500/30',
         };
       case 'in_production':
         return {
-          label: isAr ? 'قيد التصنيع بالمصنع' : 'In Production',
-          bg: 'bg-amber-500/10 text-amber-400 border-amber-500/30 animate-pulse',
+          label: isAr ? 'قيد التصنيع' : 'In Production',
+          bg: 'bg-amber-500/15 text-amber-400 border-amber-500/30',
         };
       case 'ready_for_dispatch':
         return {
-          label: isAr ? 'جاهز للشحن الفندقي' : 'Ready for Dispatch',
-          bg: 'bg-purple-500/10 text-purple-400 border-purple-500/30',
+          label: isAr ? 'جاهز للشحن' : 'Ready Dispatch',
+          bg: 'bg-purple-500/15 text-purple-400 border-purple-500/30',
         };
       case 'out_for_delivery':
         return {
-          label: isAr ? 'خارج للتوصيل والتركيب' : 'Out for Delivery',
-          bg: 'bg-sky-500/10 text-sky-400 border-sky-500/30',
+          label: isAr ? 'خارج للتوصيل' : 'Out for Delivery',
+          bg: 'bg-sky-500/15 text-sky-400 border-sky-500/30',
         };
       case 'delivered':
         return {
           label: isAr ? 'تم التسليم والتركيب' : 'Delivered & Assembled',
-          bg: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30',
+          bg: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30',
         };
       case 'cancelled':
         return {
           label: isAr ? 'ملغي' : 'Cancelled',
-          bg: 'bg-rose-500/10 text-rose-400 border-rose-500/30',
+          bg: 'bg-rose-500/15 text-rose-400 border-rose-500/30',
         };
       default:
         return {
           label: isAr ? 'في انتظار الدفع' : 'Pending Payment',
-          bg: 'bg-zinc-500/10 text-zinc-400 border-zinc-500/30',
+          bg: 'bg-zinc-500/15 text-zinc-400 border-zinc-500/30',
         };
     }
   };
@@ -163,9 +174,10 @@ export default function OrdersTab({
   return (
     <div className="space-y-6">
       
-      {/* 1. Filters & Search Controls */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-        {/* Search */}
+      {/* 1. Multi-Criteria Filters Bar */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+        
+        {/* Search Input without trailing dots */}
         <div className="relative">
           <input
             type="text"
@@ -174,61 +186,70 @@ export default function OrdersTab({
               setSearchQuery(e.target.value);
               setCurrentPage(1);
             }}
-            placeholder={isAr ? 'بحث برقم الطلب، العميل، الهاتف...' : 'Search order, name, phone, city...'}
-            className="w-full pl-9 pr-4 rtl:pl-4 rtl:pr-9 py-2.5 rounded-xl bg-[#141721] border border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:border-[#C9A86A]"
+            placeholder={isAr ? 'بحث برقم الطلب، العميل، الهاتف' : 'Search order ref, client, phone'}
+            className="w-full pl-9 pr-4 rtl:pl-4 rtl:pr-9 py-2.5 rounded-xl bg-[#141721] border border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:border-[#C9A86A] transition-all"
           />
-          <Search className="w-4 h-4 text-zinc-400 absolute left-3 rtl:left-auto rtl:right-3 top-3" />
+          <Search className="w-4 h-4 text-zinc-400 absolute left-3 rtl:left-auto rtl:right-3 top-3 pointer-events-none" />
         </div>
 
-        {/* Status Filter */}
-        <select
-          value={statusFilter}
-          onChange={(e) => {
-            setStatusFilter(e.target.value);
-            setCurrentPage(1);
-          }}
-          className="w-full px-3 py-2.5 rounded-xl bg-[#141721] border border-white/10 text-white text-xs focus:outline-none focus:border-[#C9A86A]"
-        >
-          <option value="all">{isAr ? 'كافة الحالات (All Statuses)' : 'All Statuses'}</option>
-          <option value="pending_payment">{isAr ? 'في انتظار الدفع' : 'Pending Payment'}</option>
-          <option value="confirmed">{isAr ? 'مؤكد ومعتمد' : 'Confirmed'}</option>
-          <option value="in_production">{isAr ? 'قيد التصنيع بالمصنع' : 'In Production'}</option>
-          <option value="ready_for_dispatch">{isAr ? 'جاهز للشحن الفندقي' : 'Ready for Dispatch'}</option>
-          <option value="delivered">{isAr ? 'تم التسليم والتركيب' : 'Delivered'}</option>
-          <option value="cancelled">{isAr ? 'ملغي' : 'Cancelled'}</option>
-        </select>
+        {/* Status Filter Dropdown with Standard Chevron */}
+        <div className="relative">
+          <select
+            value={statusFilter}
+            onChange={(e) => {
+              setStatusFilter(e.target.value);
+              setCurrentPage(1);
+            }}
+            className="w-full appearance-none px-3.5 py-2.5 pr-9 rtl:pr-3.5 rtl:pl-9 rounded-xl bg-[#141721] border border-white/10 text-white text-xs focus:outline-none focus:border-[#C9A86A] cursor-pointer"
+          >
+            <option value="all">{isAr ? 'كافة الحالات' : 'All Statuses'}</option>
+            <option value="pending_payment">{isAr ? 'في انتظار الدفع' : 'Pending Payment'}</option>
+            <option value="confirmed">{isAr ? 'مؤكد ومعتمد' : 'Confirmed'}</option>
+            <option value="in_production">{isAr ? 'قيد التصنيع بالمصنع' : 'In Production'}</option>
+            <option value="ready_for_dispatch">{isAr ? 'جاهز للشحن الفندقي' : 'Ready for Dispatch'}</option>
+            <option value="delivered">{isAr ? 'تم التسليم والتركيب' : 'Delivered & Assembled'}</option>
+            <option value="cancelled">{isAr ? 'ملغي' : 'Cancelled'}</option>
+          </select>
+          <ChevronDown className="w-4 h-4 text-zinc-400 absolute right-3 rtl:right-auto rtl:left-3 top-3 pointer-events-none" />
+        </div>
 
-        {/* Payment Filter */}
-        <select
-          value={paymentFilter}
-          onChange={(e) => {
-            setPaymentFilter(e.target.value);
-            setCurrentPage(1);
-          }}
-          className="w-full px-3 py-2.5 rounded-xl bg-[#141721] border border-white/10 text-white text-xs focus:outline-none focus:border-[#C9A86A]"
-        >
-          <option value="all">{isAr ? 'كافة وسائل الدفع' : 'All Payment Methods'}</option>
-          <option value="mada_cards">Mada / Credit Cards</option>
-          <option value="apple_pay">Apple Pay</option>
-          <option value="tabby">Tabby (4 Installments)</option>
-          <option value="tamara">Tamara (3/4 Installments)</option>
-          <option value="bank_transfer">Corporate Bank Transfer</option>
-          <option value="b2b_po">B2B Purchase Order (PO)</option>
-        </select>
+        {/* Payment Filter Dropdown */}
+        <div className="relative">
+          <select
+            value={paymentFilter}
+            onChange={(e) => {
+              setPaymentFilter(e.target.value);
+              setCurrentPage(1);
+            }}
+            className="w-full appearance-none px-3.5 py-2.5 pr-9 rtl:pr-3.5 rtl:pl-9 rounded-xl bg-[#141721] border border-white/10 text-white text-xs focus:outline-none focus:border-[#C9A86A] cursor-pointer"
+          >
+            <option value="all">{isAr ? 'كافة وسائل الدفع' : 'All Payment Methods'}</option>
+            <option value="mada_cards">Mada / Credit Cards</option>
+            <option value="apple_pay">Apple Pay</option>
+            <option value="tabby">Tabby (4 Installments)</option>
+            <option value="tamara">Tamara (3/4 Installments)</option>
+            <option value="bank_transfer">Corporate Bank Wire</option>
+            <option value="b2b_po">B2B Purchase Order (PO)</option>
+          </select>
+          <ChevronDown className="w-4 h-4 text-zinc-400 absolute right-3 rtl:right-auto rtl:left-3 top-3 pointer-events-none" />
+        </div>
 
-        {/* Customer Type */}
-        <select
-          value={typeFilter}
-          onChange={(e) => {
-            setTypeFilter(e.target.value);
-            setCurrentPage(1);
-          }}
-          className="w-full px-3 py-2.5 rounded-xl bg-[#141721] border border-white/10 text-white text-xs focus:outline-none focus:border-[#C9A86A]"
-        >
-          <option value="all">{isAr ? 'كافة أنواع المشترين' : 'All Customer Types'}</option>
-          <option value="retail">{isAr ? 'سكني وفردي (Residential)' : 'Residential'}</option>
-          <option value="b2b">{isAr ? 'مشاريع وفنادق (B2B / Hospitality)' : 'B2B / Hospitality'}</option>
-        </select>
+        {/* Customer Type Dropdown */}
+        <div className="relative">
+          <select
+            value={typeFilter}
+            onChange={(e) => {
+              setTypeFilter(e.target.value);
+              setCurrentPage(1);
+            }}
+            className="w-full appearance-none px-3.5 py-2.5 pr-9 rtl:pr-3.5 rtl:pl-9 rounded-xl bg-[#141721] border border-white/10 text-white text-xs focus:outline-none focus:border-[#C9A86A] cursor-pointer"
+          >
+            <option value="all">{isAr ? 'كافة أنواع المشترين' : 'All Customer Types'}</option>
+            <option value="retail">{isAr ? 'سكني وفردي (Residential)' : 'Residential'}</option>
+            <option value="b2b">{isAr ? 'مشاريع وفنادق (B2B / Hospitality)' : 'B2B / Hospitality'}</option>
+          </select>
+          <ChevronDown className="w-4 h-4 text-zinc-400 absolute right-3 rtl:right-auto rtl:left-3 top-3 pointer-events-none" />
+        </div>
       </div>
 
       {/* 2. Bulk Action Bar (when rows are selected) */}
@@ -245,26 +266,26 @@ export default function OrdersTab({
             <span className="text-zinc-400 text-[11px]">{isAr ? 'تحديث الحالة جماعياً:' : 'Bulk Status:'}</span>
             <button
               onClick={() => handleBulkStatusChange('confirmed')}
-              className="px-2.5 py-1 rounded-lg bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 font-mono"
+              className="px-2.5 py-1 rounded-lg bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 font-mono cursor-pointer"
             >
               {isAr ? 'تأكيد' : 'Confirm'}
             </button>
             <button
               onClick={() => handleBulkStatusChange('in_production')}
-              className="px-2.5 py-1 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-mono"
+              className="px-2.5 py-1 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-mono cursor-pointer"
             >
               {isAr ? 'إرسال للمصنع' : 'Send to CNC'}
             </button>
             <button
               onClick={() => handleBulkStatusChange('ready_for_dispatch')}
-              className="px-2.5 py-1 rounded-lg bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 font-mono"
+              className="px-2.5 py-1 rounded-lg bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 font-mono cursor-pointer"
             >
               {isAr ? 'جاهز للشحن' : 'Ready Dispatch'}
             </button>
 
             <button
               onClick={handleExportSelected}
-              className="px-3 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-white font-mono flex items-center gap-1.5"
+              className="px-3 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-white font-mono flex items-center gap-1.5 cursor-pointer"
             >
               <FileSpreadsheet className="w-3.5 h-3.5" />
               <span>CSV</span>
@@ -280,7 +301,7 @@ export default function OrdersTab({
             <thead>
               <tr className="border-b border-white/10 bg-white/[0.02] text-zinc-400 font-mono uppercase text-[10px]">
                 <th className="py-3.5 px-4 w-10">
-                  <button onClick={handleSelectAll} className="text-zinc-400 hover:text-white">
+                  <button onClick={handleSelectAll} className="text-zinc-400 hover:text-white cursor-pointer">
                     {selectedIds.length === paginatedOrders.length && paginatedOrders.length > 0 ? (
                       <CheckSquare className="w-4 h-4 text-[#C9A86A]" />
                     ) : (
@@ -293,9 +314,9 @@ export default function OrdersTab({
                 <th className="py-3.5 px-4">{isAr ? 'نوع الطلب' : 'Type'}</th>
                 <th className="py-3.5 px-4">{isAr ? 'القطع المشتراة' : 'Items'}</th>
                 <th className="py-3.5 px-4">{isAr ? 'موعد التسليم' : 'Delivery Target'}</th>
-                <th className="py-3.5 px-4">{isAr ? 'طريقة الدفع' : 'Payment'}</th>
-                <th className="py-3.5 px-4">{isAr ? 'الإجمالي (ر.س)' : 'Total (SAR)'}</th>
-                <th className="py-3.5 px-4">{isAr ? 'حالة الطلب' : 'Status'}</th>
+                <th className="py-3.5 px-4">{isAr ? 'طريقة وحالة الدفع' : 'Payment & Status'}</th>
+                <th className="py-3.5 px-4">{isAr ? 'الإجمالي' : 'Total'}</th>
+                <th className="py-3.5 px-4">{isAr ? 'حالة الطلب' : 'Order Status'}</th>
                 <th className="py-3.5 px-4 text-center">{isAr ? 'معاينة' : 'Action'}</th>
               </tr>
             </thead>
@@ -322,7 +343,7 @@ export default function OrdersTab({
                       <td className="py-3.5 px-4" onClick={(e) => e.stopPropagation()}>
                         <button
                           onClick={() => handleToggleSelect(order.id)}
-                          className="text-zinc-400 hover:text-white"
+                          className="text-zinc-400 hover:text-white cursor-pointer"
                         >
                           {isSelected ? (
                             <CheckSquare className="w-4 h-4 text-[#C9A86A]" />
@@ -352,7 +373,7 @@ export default function OrdersTab({
                       </td>
 
                       <td className="py-3.5 px-4">
-                        <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold ${
+                        <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold whitespace-nowrap ${
                           order.orderType === 'b2b'
                             ? 'bg-amber-500/10 text-amber-300 border border-amber-500/30'
                             : 'bg-blue-500/10 text-blue-300 border border-blue-500/30'
@@ -382,28 +403,43 @@ export default function OrdersTab({
                         </div>
                       </td>
 
-                      <td className="py-3.5 px-4 font-mono text-[11px] text-zinc-300">
+                      <td className="py-3.5 px-4 font-mono text-[11px] text-zinc-300 whitespace-nowrap">
                         <span className="block text-emerald-400 font-semibold">{order.deliveryDate}</span>
                         <span className="text-[10px] text-zinc-500 uppercase">{order.timeSlot}</span>
                       </td>
 
+                      {/* Standardized Payment Method & Status Alignment */}
                       <td className="py-3.5 px-4 font-mono">
-                        <span className="text-[11px] text-zinc-300 uppercase block font-semibold">
-                          {order.paymentMethod.replace('_', ' ')}
-                        </span>
-                        <span className={`text-[9px] uppercase px-1.5 py-0.2 rounded ${
-                          order.paymentStatus === 'paid' ? 'text-emerald-400' : 'text-amber-400'
-                        }`}>
-                          {order.paymentStatus}
-                        </span>
+                        <div className="flex flex-col items-start gap-1">
+                          <span className="text-[11px] text-zinc-200 uppercase font-semibold whitespace-nowrap">
+                            {order.paymentMethod === 'apple_pay'
+                              ? 'Apple Pay'
+                              : order.paymentMethod === 'mada_cards'
+                              ? 'Mada / Cards'
+                              : order.paymentMethod === 'tabby'
+                              ? 'Tabby'
+                              : order.paymentMethod === 'tamara'
+                              ? 'Tamara'
+                              : order.paymentMethod === 'bank_transfer'
+                              ? 'Bank Wire'
+                              : 'B2B PO'}
+                          </span>
+                          <span className={`text-[9px] uppercase px-2 py-0.5 rounded-full font-bold border whitespace-nowrap ${
+                            order.paymentStatus === 'paid'
+                              ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
+                              : 'bg-amber-500/10 text-amber-400 border-amber-500/30'
+                          }`}>
+                            {order.paymentStatus === 'paid' ? (isAr ? 'مدفوع' : 'PAID') : (isAr ? 'بانتظار التحويل' : 'PENDING')}
+                          </span>
+                        </div>
                       </td>
 
-                      <td className="py-3.5 px-4 font-mono font-extrabold text-[#C9A86A]">
-                        {order.totalAmount.toLocaleString('en-US')}
+                      <td className="py-3.5 px-4 font-mono font-extrabold text-[#C9A86A] whitespace-nowrap">
+                        {formatPrice(order.totalAmount)}
                       </td>
 
                       <td className="py-3.5 px-4">
-                        <span className={`px-2.5 py-1 rounded-full text-[10px] font-mono font-semibold border inline-block ${badge.bg}`}>
+                        <span className={`px-2.5 py-1 rounded-full text-[10px] font-mono font-semibold border inline-flex items-center gap-1 whitespace-nowrap ${badge.bg}`}>
                           {badge.label}
                         </span>
                       </td>
@@ -439,29 +475,29 @@ export default function OrdersTab({
             <button
               onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
               disabled={currentPage === 1}
-              className="p-1.5 rounded-lg bg-white/5 text-zinc-400 hover:text-white disabled:opacity-30 cursor-pointer"
+              className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed text-zinc-300"
             >
               <ChevronLeft className="w-4 h-4 rtl:rotate-180" />
             </button>
 
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
+            {[...Array(totalPages)].map((_, i) => (
               <button
-                key={num}
-                onClick={() => setCurrentPage(num)}
-                className={`w-7 h-7 rounded-lg transition-all cursor-pointer ${
-                  currentPage === num
-                    ? 'bg-[#C9A86A] text-[#08090C] font-bold'
-                    : 'bg-white/5 text-zinc-400 hover:text-white'
+                key={i}
+                onClick={() => setCurrentPage(i + 1)}
+                className={`w-7 h-7 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer ${
+                  currentPage === i + 1
+                    ? 'bg-[#C9A86A] text-[#08090C]'
+                    : 'bg-white/5 text-zinc-400 hover:bg-white/10 hover:text-white'
                 }`}
               >
-                {num}
+                {i + 1}
               </button>
             ))}
 
             <button
               onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
               disabled={currentPage === totalPages}
-              className="p-1.5 rounded-lg bg-white/5 text-zinc-400 hover:text-white disabled:opacity-30 cursor-pointer"
+              className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed text-zinc-300"
             >
               <ChevronRight className="w-4 h-4 rtl:rotate-180" />
             </button>

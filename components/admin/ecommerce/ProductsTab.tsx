@@ -4,33 +4,37 @@ import React, { useState, useMemo } from 'react';
 import Image from 'next/image';
 import { useLanguage } from '@/context/LanguageContext';
 import { useToast } from '@/components/admin/ToastProvider';
-import { FURNITURE_CATALOG, FurnitureItem } from '@/lib/furnitureData';
+import { FurnitureItem } from '@/lib/furnitureData';
 import { 
   Plus, 
   Search, 
   Edit3, 
   Trash2, 
-  Layers, 
-  Sparkles, 
-  Check, 
-  X, 
   ExternalLink, 
+  CheckCircle2, 
+  Tag, 
+  Sparkles, 
+  Layers, 
   FileSpreadsheet, 
+  X, 
+  Check, 
   Globe, 
-  Factory, 
-  ShieldCheck,
-  Eye
+  DollarSign, 
+  Maximize2,
+  ChevronDown
 } from 'lucide-react';
 
 interface ProductsTabProps {
   products: FurnitureItem[];
-  onAddProduct: (item: FurnitureItem) => void;
-  onUpdateProduct: (item: FurnitureItem) => void;
-  onDeleteProduct: (id: string) => void;
+  currency: 'SAR' | 'USD';
+  onAddProduct: (product: FurnitureItem) => void;
+  onUpdateProduct: (product: FurnitureItem) => void;
+  onDeleteProduct: (productId: string) => void;
 }
 
 export default function ProductsTab({
   products,
+  currency,
   onAddProduct,
   onUpdateProduct,
   onDeleteProduct,
@@ -50,8 +54,8 @@ export default function ProductsTab({
   const [formSku, setFormSku] = useState('');
   const [formNameEn, setFormNameEn] = useState('');
   const [formNameAr, setFormNameAr] = useState('');
-  const [formCategoryEn, setFormCategoryEn] = useState('Living Room');
-  const [formCategoryAr, setFormCategoryAr] = useState('غرف المعيشة');
+  const [formCategoryEn, setFormCategoryEn] = useState('Living & Lounge');
+  const [formCategoryAr, setFormCategoryAr] = useState('الصالونات وغرف المعيشة');
   const [formPrice, setFormPrice] = useState(15000);
   const [formOriginalPrice, setFormOriginalPrice] = useState(18000);
   const [formLeadTimeEn, setFormLeadTimeEn] = useState('10-14 days');
@@ -67,6 +71,14 @@ export default function ProductsTab({
   const [formSeoTitle, setFormSeoTitle] = useState('');
   const [formSeoDescription, setFormSeoDescription] = useState('');
   const [formFocusKeyword, setFormFocusKeyword] = useState('');
+
+  const formatPrice = (valSAR: number) => {
+    if (currency === 'USD') {
+      const valUSD = Math.round(valSAR / 3.75);
+      return `${valUSD.toLocaleString('en-US')} USD`;
+    }
+    return `${valSAR.toLocaleString('en-US')} ${isAr ? 'ر.س' : 'SAR'}`;
+  };
 
   const filteredProducts = useMemo(() => {
     return products.filter((p) => {
@@ -84,17 +96,17 @@ export default function ProductsTab({
     setFormSku(`GW-${Math.floor(100 + Math.random() * 900)}`);
     setFormNameEn('');
     setFormNameAr('');
-    setFormCategoryEn('Living Room');
-    setFormCategoryAr('غرف المعيشة');
+    setFormCategoryEn('Living & Lounge');
+    setFormCategoryAr('الصالونات وغرف المعيشة');
     setFormPrice(16500);
     setFormOriginalPrice(19000);
-    setFormLeadTimeEn('10-14 days');
-    setFormLeadTimeAr('10-14 يوم');
+    setFormLeadTimeEn('10–14 Business Days');
+    setFormLeadTimeAr('10 – 14 يوم عمل');
     setFormInStock(true);
     setFormHospitalityGrade(true);
-    setFormImageUrl('https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=800&q=80');
-    setFormWidth(220);
-    setFormDepth(95);
+    setFormImageUrl('');
+    setFormWidth(240);
+    setFormDepth(110);
     setFormHeight(80);
     setFormSeoTitle('');
     setFormSeoDescription('');
@@ -174,19 +186,26 @@ export default function ProductsTab({
 
     if (editingItem) {
       onUpdateProduct(payload);
-      showToast(isAr ? 'تم تحديث بيانات المنتج بنجاح' : 'Product updated successfully', 'success');
+      showToast(isAr ? 'تم تعديل بيانات القطعة بنجاح' : 'Product updated successfully', 'success');
     } else {
       onAddProduct(payload);
-      showToast(isAr ? 'تمت إضافة القطعة الجديدة للكتالوج' : 'New piece added to catalog', 'success');
+      showToast(isAr ? 'تمت إضافة القطعة إلى الكتالوج' : 'New piece added to catalog', 'success');
     }
 
     setIsModalOpen(false);
   };
 
+  const handleDelete = (id: string, name: string) => {
+    if (confirm(isAr ? `هل أنت متأكد من حذف (${name})؟` : `Delete (${name})?`)) {
+      onDeleteProduct(id);
+      showToast(isAr ? 'تم حذف القطعة' : 'Product deleted', 'success');
+    }
+  };
+
   const handleExportCSV = () => {
-    const headers = ['SKU,Name (EN),Name (AR),Category,Price (SAR),In Stock,Hospitality Grade,Lead Time'];
+    const headers = ['SKU,Name En,Name Ar,Category,Price SAR,In Stock,Hospitality Grade,Lead Time'];
     const rows = products.map((p) =>
-      `"${p.sku}","${p.nameEn}","${p.nameAr}","${p.categoryEn}",${p.price},${p.inStock},${p.isHospitalityGrade},"${p.leadTimeEn}"`
+      `"${p.sku}","${p.nameEn}","${p.nameAr}","${p.categoryEn}",${p.price},"${p.inStock ? 'Yes' : 'No'}","${p.isHospitalityGrade ? 'Yes' : 'No'}","${p.leadTimeEn}"`
     );
     const csvContent = 'data:text/csv;charset=utf-8,' + [headers, ...rows].join('\n');
     const encodedUri = encodeURI(csvContent);
@@ -196,17 +215,17 @@ export default function ProductsTab({
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    showToast(isAr ? 'تم تصدير كتالوج المنتجات' : 'Exported product catalog as CSV', 'success');
+    showToast(isAr ? 'تم تصدير الكتالوج بصيغة CSV' : 'Exported catalog as CSV', 'success');
   };
 
   return (
     <div className="space-y-6">
       
-      {/* 1. Header & Quick Actions */}
+      {/* 1. Header & Actions */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="space-y-1">
+        <div>
           <h3 className="text-base font-bold text-white flex items-center gap-2">
-            <Layers className="w-4 h-4 text-[#C9A86A]" />
+            <Layers className="w-5 h-5 text-[#C9A86A]" />
             <span>{isAr ? 'كتالوج ومخزون الأثاث الفاخر (CRUD)' : 'Furniture Catalog & Product Management'}</span>
           </h3>
           <p className="text-xs text-zinc-400">
@@ -240,25 +259,27 @@ export default function ProductsTab({
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder={isAr ? 'بحث بالاسم أو الكود (SKU)...' : 'Search by name or SKU...'}
+            placeholder={isAr ? 'بحث باسم القطعة أو كود SKU' : 'Search by name or SKU'}
             className="w-full pl-9 pr-4 rtl:pl-4 rtl:pr-9 py-2.5 rounded-xl bg-[#141721] border border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:border-[#C9A86A]"
           />
-          <Search className="w-4 h-4 text-zinc-400 absolute left-3 rtl:left-auto rtl:right-3 top-3" />
+          <Search className="w-4 h-4 text-zinc-400 absolute left-3 rtl:left-auto rtl:right-3 top-3 pointer-events-none" />
         </div>
 
-        <select
-          value={selectedCategory}
-          onChange={(e) => setSelectedCategory(e.target.value)}
-          className="w-full px-3 py-2.5 rounded-xl bg-[#141721] border border-white/10 text-white text-xs focus:outline-none focus:border-[#C9A86A]"
-        >
-          <option value="all">{isAr ? 'كافة الأقسام والتصنيفات' : 'All Categories'}</option>
-          <option value="Living Room">{isAr ? 'غرف المعيشة والصوالين' : 'Living Room'}</option>
-          <option value="Hospitality & Bedroom">{isAr ? 'الأجنحة الفندقية وغرف النوم' : 'Hospitality & Bedroom'}</option>
-          <option value="Dining Room">{isAr ? 'غرف الطعام والضيافة' : 'Dining Room'}</option>
-          <option value="Architectural Joinery">{isAr ? 'التجاليد والكونسول' : 'Architectural Joinery'}</option>
-          <option value="Executive Offices">{isAr ? 'المكاتب التنفيذية وقاعات الاجتماعات' : 'Executive Offices'}</option>
-          <option value="Decor & Partitions">{isAr ? 'القواطع والفواصل المعمارية' : 'Decor & Partitions'}</option>
-        </select>
+        <div className="relative">
+          <select
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            className="w-full appearance-none px-3.5 py-2.5 pr-9 rtl:pr-3.5 rtl:pl-9 rounded-xl bg-[#141721] border border-white/10 text-white text-xs focus:outline-none focus:border-[#C9A86A] cursor-pointer"
+          >
+            <option value="all">{isAr ? 'كافة الأقسام والتصنيفات' : 'All Categories'}</option>
+            <option value="Living & Lounge">{isAr ? 'الصالونات وغرف المعيشة' : 'Living & Lounge'}</option>
+            <option value="Hospitality & Suites">{isAr ? 'الأجنحة والضيافة الفندقية' : 'Hospitality & Suites'}</option>
+            <option value="Dining & Banquet">{isAr ? 'غرف الطعام والولائم' : 'Dining & Banquet'}</option>
+            <option value="Architectural Joinery">{isAr ? 'التجاليد والكونسول والمكاتب' : 'Architectural Joinery'}</option>
+            <option value="Decor & Partitions">{isAr ? 'القواطع والإكسسوارات الفاخرة' : 'Decor & Partitions'}</option>
+          </select>
+          <ChevronDown className="w-4 h-4 text-zinc-400 absolute right-3 rtl:right-auto rtl:left-3 top-3 pointer-events-none" />
+        </div>
       </div>
 
       {/* 3. Product Cards Grid */}
@@ -266,11 +287,11 @@ export default function ProductsTab({
         {filteredProducts.map((item) => (
           <div
             key={item.id}
-            className="glass-card rounded-2xl p-5 border border-white/10 bg-[#0F1117]/90 space-y-4 flex flex-col justify-between group hover:border-[#C9A86A]/40 transition-all shadow-lg"
+            className="glass-card rounded-3xl p-5 border border-white/10 bg-[#0F1117]/90 space-y-4 hover:border-[#C9A86A]/40 transition-all duration-300 shadow-xl flex flex-col justify-between group"
           >
             <div className="space-y-3">
-              {/* Product Thumbnail */}
-              <div className="relative w-full h-44 rounded-xl overflow-hidden border border-white/10 bg-black/40">
+              {/* Image & Badges */}
+              <div className="relative w-full h-48 rounded-2xl overflow-hidden bg-black/40 border border-white/5">
                 <Image
                   src={item.images[0]}
                   alt={item.nameEn}
@@ -278,23 +299,23 @@ export default function ProductsTab({
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
                   unoptimized
                 />
-                
-                {/* Badges */}
                 <div className="absolute top-2.5 left-2.5 rtl:left-auto rtl:right-2.5 flex items-center gap-1.5">
-                  <span className={`px-2 py-0.5 rounded text-[9px] font-mono font-bold ${
-                    item.inStock ? 'bg-emerald-500/90 text-[#08090C]' : 'bg-amber-500/90 text-[#08090C]'
-                  }`}>
-                    {item.inStock ? 'In Stock' : 'Made to Order'}
+                  <span className="px-2 py-0.5 rounded-md bg-black/70 backdrop-blur-md text-[#C9A86A] text-[10px] font-mono font-bold border border-white/10">
+                    {item.sku}
                   </span>
                   {item.isHospitalityGrade && (
-                    <span className="px-2 py-0.5 rounded bg-blue-600/90 text-white text-[9px] font-mono font-bold">
-                      FF&E Certified
+                    <span className="px-2 py-0.5 rounded-md bg-emerald-500/80 backdrop-blur-md text-white text-[9px] font-mono font-bold">
+                      {isAr ? 'معتمد فندقياً' : 'Hospitality FF&E'}
                     </span>
                   )}
                 </div>
 
-                <div className="absolute bottom-2.5 right-2.5 rtl:right-auto rtl:left-2.5 px-2 py-0.5 rounded bg-[#08090C]/80 backdrop-blur-md text-[10px] font-mono text-[#C9A86A] font-bold">
-                  {item.sku}
+                <div className="absolute top-2.5 right-2.5 rtl:right-auto rtl:left-2.5">
+                  <span className={`px-2 py-0.5 rounded-full text-[9px] font-mono font-bold ${
+                    item.inStock ? 'bg-emerald-500 text-[#08090C]' : 'bg-rose-500 text-white'
+                  }`}>
+                    {item.inStock ? (isAr ? 'متوفر' : 'In Stock') : (isAr ? 'حسب الطلب' : 'Custom')}
+                  </span>
                 </div>
               </div>
 
@@ -322,15 +343,15 @@ export default function ProductsTab({
               </div>
             </div>
 
-            {/* Price & Actions */}
+            {/* Price & CRUD Action Buttons */}
             <div className="pt-3 border-t border-white/5 flex items-center justify-between">
               <div>
-                <span className="text-xs font-mono font-extrabold text-[#E3C58A] block">
-                  {item.price.toLocaleString('en-US')} SAR
+                <span className="text-sm font-extrabold text-[#C9A86A] font-mono block">
+                  {formatPrice(item.price)}
                 </span>
                 {item.originalPrice && item.originalPrice > item.price && (
                   <span className="text-[10px] text-zinc-500 line-through font-mono">
-                    {item.originalPrice.toLocaleString('en-US')} SAR
+                    {formatPrice(item.originalPrice)}
                   </span>
                 )}
               </div>
@@ -338,23 +359,17 @@ export default function ProductsTab({
               <div className="flex items-center gap-1.5">
                 <button
                   onClick={() => handleOpenEdit(item)}
-                  className="p-2 rounded-lg bg-white/5 hover:bg-[#C9A86A] text-zinc-400 hover:text-[#08090C] transition-colors cursor-pointer"
+                  className="p-2 rounded-xl bg-white/5 hover:bg-[#C9A86A] text-zinc-300 hover:text-[#08090C] transition-colors cursor-pointer"
                   title="Edit Product"
                 >
-                  <Edit3 className="w-4 h-4" />
+                  <Edit3 className="w-3.5 h-3.5" />
                 </button>
-
                 <button
-                  onClick={() => {
-                    if (confirm(isAr ? 'هل أنت متأكد من حذف هذه القطعة من الكتالوج؟' : 'Are you sure you want to delete this piece?')) {
-                      onDeleteProduct(item.id);
-                      showToast(isAr ? 'تم حذف القطعة' : 'Product deleted', 'success');
-                    }
-                  }}
-                  className="p-2 rounded-lg bg-white/5 hover:bg-rose-500 text-zinc-400 hover:text-white transition-colors cursor-pointer"
+                  onClick={() => handleDelete(item.id, isAr ? item.nameAr : item.nameEn)}
+                  className="p-2 rounded-xl bg-white/5 hover:bg-rose-600 text-zinc-400 hover:text-white transition-colors cursor-pointer"
                   title="Delete Product"
                 >
-                  <Trash2 className="w-4 h-4" />
+                  <Trash2 className="w-3.5 h-3.5" />
                 </button>
               </div>
             </div>
@@ -363,24 +378,27 @@ export default function ProductsTab({
         ))}
       </div>
 
-      {/* 4. ADD / EDIT PRODUCT MODAL */}
+      {/* 4. Add / Edit Product Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 overflow-y-auto bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="w-full max-w-2xl bg-[#0F1117] border border-[#C9A86A]/40 rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl text-white">
-            
-            <div className="flex items-center justify-between pb-4 border-b border-white/10">
-              <div className="space-y-1">
-                <h3 className="text-lg font-bold text-white">
-                  {editingItem 
-                    ? (isAr ? `تعديل قطعة الأثاث: ${editingItem.sku}` : `Edit Furniture Piece: ${editingItem.sku}`)
-                    : (isAr ? 'إضافة قطعة أثاث جديدة للكتالوج' : 'Add New Furniture Piece to Catalog')}
-                </h3>
-                <p className="text-xs text-zinc-400">GreenWood Manufacturing & Showroom specifications</p>
-              </div>
+        <div className="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4">
+          <div
+            onClick={() => setIsModalOpen(false)}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm"
+          />
 
+          <div className="relative w-full max-w-2xl bg-[#0F1117] border border-white/10 rounded-3xl p-6 sm:p-8 text-white shadow-2xl space-y-6 z-10 my-8">
+            <div className="flex items-center justify-between pb-4 border-b border-white/10">
+              <h3 className="text-base font-bold text-white flex items-center gap-2">
+                <Layers className="w-5 h-5 text-[#C9A86A]" />
+                <span>
+                  {editingItem
+                    ? (isAr ? 'تعديل بيانات قطعة الأثاث' : 'Edit Furniture Piece')
+                    : (isAr ? 'إضافة قطعة أثاث جديدة للكتالوج' : 'Add New Furniture Piece')}
+                </span>
+              </h3>
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="p-2 rounded-xl text-zinc-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+                className="p-1 rounded-lg text-zinc-400 hover:text-white cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -390,173 +408,149 @@ export default function ProductsTab({
               
               {/* Row 1: SKU & Names */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div className="space-y-1">
-                  <label className="text-zinc-400 font-mono">SKU Code</label>
+                <div>
+                  <label className="block text-zinc-400 mb-1 font-mono">SKU Code *</label>
                   <input
                     type="text"
                     value={formSku}
                     onChange={(e) => setFormSku(e.target.value)}
                     required
-                    className="w-full px-3 py-2 rounded-xl bg-[#141721] border border-white/10 text-white font-mono"
+                    className="w-full px-3 py-2 rounded-xl bg-[#141721] border border-white/10 text-white font-mono focus:border-[#C9A86A]"
                   />
                 </div>
-                <div className="space-y-1">
-                  <label className="text-zinc-400 font-mono">English Name</label>
+                <div>
+                  <label className="block text-zinc-400 mb-1">Name (English) *</label>
                   <input
                     type="text"
                     value={formNameEn}
                     onChange={(e) => setFormNameEn(e.target.value)}
                     required
-                    placeholder="e.g. Al-Diriyah Curved Sofa"
-                    className="w-full px-3 py-2 rounded-xl bg-[#141721] border border-white/10 text-white"
+                    placeholder="The Diriyah Sofa"
+                    className="w-full px-3 py-2 rounded-xl bg-[#141721] border border-white/10 text-white focus:border-[#C9A86A]"
                   />
                 </div>
-                <div className="space-y-1">
-                  <label className="text-zinc-400 font-mono">الاسم بالعربية</label>
+                <div>
+                  <label className="block text-zinc-400 mb-1">الاسم (بالعربية) *</label>
                   <input
                     type="text"
                     value={formNameAr}
                     onChange={(e) => setFormNameAr(e.target.value)}
                     required
-                    placeholder="مثال: أريكة الدرعية المنحنية"
-                    className="w-full px-3 py-2 rounded-xl bg-[#141721] border border-white/10 text-white rtl:text-right"
+                    placeholder="أريكة الدرعية"
+                    className="w-full px-3 py-2 rounded-xl bg-[#141721] border border-white/10 text-white focus:border-[#C9A86A]"
                   />
                 </div>
               </div>
 
-              {/* Row 2: Category & Pricing */}
+              {/* Row 2: Category & Prices */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div className="space-y-1">
-                  <label className="text-zinc-400 font-mono">Category</label>
+                <div className="relative">
+                  <label className="block text-zinc-400 mb-1">Category</label>
                   <select
                     value={formCategoryEn}
                     onChange={(e) => {
                       setFormCategoryEn(e.target.value);
-                      if (e.target.value === 'Living Room') setFormCategoryAr('غرف المعيشة');
-                      if (e.target.value === 'Hospitality & Bedroom') setFormCategoryAr('الأجنحة الفندقية');
-                      if (e.target.value === 'Dining Room') setFormCategoryAr('غرف الطعام');
-                      if (e.target.value === 'Architectural Joinery') setFormCategoryAr('التجاليد والكونسول');
-                      if (e.target.value === 'Executive Offices') setFormCategoryAr('المكاتب التنفيذية');
+                      if (e.target.value === 'Living & Lounge') setFormCategoryAr('الصالونات وغرف المعيشة');
+                      if (e.target.value === 'Hospitality & Suites') setFormCategoryAr('الأجنحة والضيافة الفندقية');
+                      if (e.target.value === 'Dining & Banquet') setFormCategoryAr('غرف الطعام والولائم');
+                      if (e.target.value === 'Architectural Joinery') setFormCategoryAr('التجاليد والكونسول والمكاتب');
+                      if (e.target.value === 'Decor & Partitions') setFormCategoryAr('القواطع والإكسسوارات الفاخرة');
                     }}
-                    className="w-full px-3 py-2 rounded-xl bg-[#141721] border border-white/10 text-white"
+                    className="w-full appearance-none px-3 py-2 pr-8 rounded-xl bg-[#141721] border border-white/10 text-white focus:border-[#C9A86A]"
                   >
-                    <option value="Living Room">Living Room</option>
-                    <option value="Hospitality & Bedroom">Hospitality & Bedroom</option>
-                    <option value="Dining Room">Dining Room</option>
+                    <option value="Living & Lounge">Living & Lounge</option>
+                    <option value="Hospitality & Suites">Hospitality & Suites</option>
+                    <option value="Dining & Banquet">Dining & Banquet</option>
                     <option value="Architectural Joinery">Architectural Joinery</option>
-                    <option value="Executive Offices">Executive Offices</option>
                     <option value="Decor & Partitions">Decor & Partitions</option>
                   </select>
+                  <ChevronDown className="w-3.5 h-3.5 text-zinc-400 absolute right-3 top-7 pointer-events-none" />
                 </div>
 
-                <div className="space-y-1">
-                  <label className="text-zinc-400 font-mono">Retail Price (SAR)</label>
+                <div>
+                  <label className="block text-zinc-400 mb-1 font-mono">Retail Price (SAR) *</label>
                   <input
                     type="number"
                     value={formPrice}
                     onChange={(e) => setFormPrice(Number(e.target.value))}
                     required
-                    className="w-full px-3 py-2 rounded-xl bg-[#141721] border border-white/10 text-white font-mono text-emerald-400 font-bold"
+                    className="w-full px-3 py-2 rounded-xl bg-[#141721] border border-white/10 text-white font-mono focus:border-[#C9A86A]"
                   />
                 </div>
 
-                <div className="space-y-1">
-                  <label className="text-zinc-400 font-mono">Compare Price (SAR)</label>
+                <div>
+                  <label className="block text-zinc-400 mb-1 font-mono">Compare Price (SAR)</label>
                   <input
                     type="number"
                     value={formOriginalPrice}
                     onChange={(e) => setFormOriginalPrice(Number(e.target.value))}
-                    className="w-full px-3 py-2 rounded-xl bg-[#141721] border border-white/10 text-white font-mono text-zinc-400"
+                    className="w-full px-3 py-2 rounded-xl bg-[#141721] border border-white/10 text-white font-mono focus:border-[#C9A86A]"
                   />
                 </div>
               </div>
 
-              {/* Row 3: Dimensions & Image */}
-              <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
-                <div className="space-y-1">
-                  <label className="text-zinc-400 font-mono">Width (cm)</label>
+              {/* Row 3: Dimensions & Lead Time */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 font-mono">
+                <div>
+                  <label className="block text-zinc-400 mb-1">Width (cm)</label>
                   <input
                     type="number"
                     value={formWidth}
                     onChange={(e) => setFormWidth(Number(e.target.value))}
-                    className="w-full px-3 py-2 rounded-xl bg-[#141721] border border-white/10 text-white font-mono"
+                    className="w-full px-3 py-2 rounded-xl bg-[#141721] border border-white/10 text-white focus:border-[#C9A86A]"
                   />
                 </div>
-                <div className="space-y-1">
-                  <label className="text-zinc-400 font-mono">Depth (cm)</label>
+                <div>
+                  <label className="block text-zinc-400 mb-1">Depth (cm)</label>
                   <input
                     type="number"
                     value={formDepth}
                     onChange={(e) => setFormDepth(Number(e.target.value))}
-                    className="w-full px-3 py-2 rounded-xl bg-[#141721] border border-white/10 text-white font-mono"
+                    className="w-full px-3 py-2 rounded-xl bg-[#141721] border border-white/10 text-white focus:border-[#C9A86A]"
                   />
                 </div>
-                <div className="space-y-1">
-                  <label className="text-zinc-400 font-mono">Height (cm)</label>
+                <div>
+                  <label className="block text-zinc-400 mb-1">Height (cm)</label>
                   <input
                     type="number"
                     value={formHeight}
                     onChange={(e) => setFormHeight(Number(e.target.value))}
-                    className="w-full px-3 py-2 rounded-xl bg-[#141721] border border-white/10 text-white font-mono"
+                    className="w-full px-3 py-2 rounded-xl bg-[#141721] border border-white/10 text-white focus:border-[#C9A86A]"
                   />
                 </div>
-                <div className="space-y-1">
-                  <label className="text-zinc-400 font-mono">Lead Time</label>
+                <div>
+                  <label className="block text-zinc-400 mb-1">Lead Time EN</label>
                   <input
                     type="text"
                     value={formLeadTimeEn}
                     onChange={(e) => setFormLeadTimeEn(e.target.value)}
-                    className="w-full px-3 py-2 rounded-xl bg-[#141721] border border-white/10 text-white font-mono"
+                    className="w-full px-3 py-2 rounded-xl bg-[#141721] border border-white/10 text-white focus:border-[#C9A86A]"
                   />
                 </div>
               </div>
 
               {/* Image URL */}
-              <div className="space-y-1">
-                <label className="text-zinc-400 font-mono">Photo URL (Unsplash or Supabase Storage)</label>
+              <div>
+                <label className="block text-zinc-400 mb-1 font-mono">Primary Image URL (HTTPS)</label>
                 <input
                   type="url"
                   value={formImageUrl}
                   onChange={(e) => setFormImageUrl(e.target.value)}
-                  placeholder="https://images.unsplash.com/..."
-                  className="w-full px-3 py-2 rounded-xl bg-[#141721] border border-white/10 text-white font-mono"
+                  placeholder="https://images.unsplash.com/photo-..."
+                  className="w-full px-3 py-2 rounded-xl bg-[#141721] border border-white/10 text-white font-mono text-xs focus:border-[#C9A86A]"
                 />
               </div>
 
-              {/* SEO Fields Section */}
-              <div className="p-3.5 rounded-2xl bg-[#141721] border border-white/5 space-y-2">
-                <span className="text-[11px] font-mono text-[#C9A86A] font-bold block flex items-center gap-1.5">
-                  <Globe className="w-3.5 h-3.5" />
-                  <span>SEO & Search Engine Metadata</span>
-                </span>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  <input
-                    type="text"
-                    value={formSeoTitle}
-                    onChange={(e) => setFormSeoTitle(e.target.value)}
-                    placeholder="SEO Page Title"
-                    className="w-full px-3 py-1.5 rounded-lg bg-black/40 border border-white/10 text-white text-xs"
-                  />
-                  <input
-                    type="text"
-                    value={formFocusKeyword}
-                    onChange={(e) => setFormFocusKeyword(e.target.value)}
-                    placeholder="Focus Keyword (e.g. Modern Saudi Sofa)"
-                    className="w-full px-3 py-1.5 rounded-lg bg-black/40 border border-white/10 text-white text-xs"
-                  />
-                </div>
-              </div>
-
               {/* Toggles */}
-              <div className="flex items-center gap-6 pt-2">
+              <div className="flex items-center gap-6 p-3 rounded-xl bg-[#141721] border border-white/5">
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={formInStock}
                     onChange={(e) => setFormInStock(e.target.checked)}
-                    className="w-4 h-4 rounded text-[#C9A86A]"
+                    className="rounded text-[#C9A86A]"
                   />
-                  <span className="text-zinc-300">In Stock Ready for White-Glove</span>
+                  <span>In Stock & Ready</span>
                 </label>
 
                 <label className="flex items-center gap-2 cursor-pointer">
@@ -564,31 +558,60 @@ export default function ProductsTab({
                     type="checkbox"
                     checked={formHospitalityGrade}
                     onChange={(e) => setFormHospitalityGrade(e.target.checked)}
-                    className="w-4 h-4 rounded text-[#C9A86A]"
+                    className="rounded text-[#C9A86A]"
                   />
-                  <span className="text-zinc-300">Hotel FF&E Certified</span>
+                  <span>Hospitality FF&E Certified</span>
                 </label>
               </div>
 
+              {/* SEO Meta Fields */}
+              <div className="p-3.5 rounded-2xl bg-[#141721] border border-white/10 space-y-3">
+                <span className="text-[11px] font-bold text-[#C9A86A] flex items-center gap-1.5 font-mono">
+                  <Globe className="w-3.5 h-3.5" />
+                  <span>SEO & Search Engine Metadata</span>
+                </span>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-zinc-400 mb-1">SEO Title Tag</label>
+                    <input
+                      type="text"
+                      value={formSeoTitle}
+                      onChange={(e) => setFormSeoTitle(e.target.value)}
+                      placeholder="Product Name | WD Group GreenWood"
+                      className="w-full px-3 py-1.5 rounded-xl bg-black/40 border border-white/10 text-white text-xs"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-zinc-400 mb-1">Focus Keyword</label>
+                    <input
+                      type="text"
+                      value={formFocusKeyword}
+                      onChange={(e) => setFormFocusKeyword(e.target.value)}
+                      placeholder="luxury modular sofa riyadh"
+                      className="w-full px-3 py-1.5 rounded-xl bg-black/40 border border-white/10 text-white text-xs"
+                    />
+                  </div>
+                </div>
+              </div>
+
               {/* Submit Buttons */}
-              <div className="pt-4 border-t border-white/10 flex items-center justify-end gap-3">
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-white/10">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-300 text-xs font-bold"
+                  className="px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-300 text-xs font-mono cursor-pointer"
                 >
-                  Cancel
+                  {isAr ? 'إلغاء' : 'Cancel'}
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-xl bg-gradient-to-r from-[#C9A86A] to-[#DFBA73] text-[#08090C] font-extrabold text-xs shadow-lg cursor-pointer"
+                  className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#C9A86A] to-[#DFBA73] text-[#08090C] text-xs font-extrabold font-mono shadow-md hover:shadow-lg transition-all cursor-pointer"
                 >
-                  {editingItem ? 'Save Changes' : 'Create Product'}
+                  {editingItem ? (isAr ? 'حفظ التعديلات' : 'Save Changes') : (isAr ? 'إضافة القطعة' : 'Create Product')}
                 </button>
               </div>
 
             </form>
-
           </div>
         </div>
       )}

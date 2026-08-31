@@ -1,15 +1,19 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
-import Image from 'next/image';
+import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '@/context/LanguageContext';
 import { useToast } from '@/components/admin/ToastProvider';
-import { FURNITURE_CATALOG, FurnitureItem } from '@/lib/furnitureData';
-import type { EcommerceOrderRecord, EcommerceOrderStatus, InternalNote } from '@/lib/admin/types';
+import { 
+  EcommerceOrderRecord, 
+  EcommerceOrderStatus, 
+  InternalNote 
+} from '@/lib/admin/types';
+import { FurnitureItem, FURNITURE_CATALOG } from '@/lib/furnitureData';
 
-// Subcomponents
+// 8 Core Subcomponents
 import OverviewTab from '@/components/admin/ecommerce/OverviewTab';
 import OrdersTab from '@/components/admin/ecommerce/OrdersTab';
 import ProductsTab from '@/components/admin/ecommerce/ProductsTab';
@@ -20,37 +24,39 @@ import MarketingTab from '@/components/admin/ecommerce/MarketingTab';
 import SettingsTab from '@/components/admin/ecommerce/SettingsTab';
 
 import { 
-  LayoutDashboard,
+  LayoutDashboard, 
   ShoppingCart, 
-  Package, 
   Layers, 
   Warehouse, 
   Users, 
   TrendingUp, 
   Tag, 
   Settings, 
+  ArrowLeft, 
   ExternalLink, 
-  FileSpreadsheet, 
-  X, 
-  Printer, 
-  MessageSquare,
   Sparkles,
-  Truck
+  Download,
+  Plus,
+  X,
+  MessageSquare,
+  Printer,
+  DollarSign
 } from 'lucide-react';
 
+// Initial Mock Database Seed
 const INITIAL_ORDERS: EcommerceOrderRecord[] = [
   {
     id: 'ord-101',
     orderRef: 'WD-ORD-2026-8812',
     customerName: 'سلطان بن عبدالعزيز آل سعود',
-    email: 'sultan.saud@al-saud.sa',
+    email: 'sultan.saud@al-saud.com',
     phone: '+966 50 572 5070',
     city: 'Riyadh',
     district: 'حي النرجس',
-    address: 'العنوان الوطني: RRRD2938',
-    villaBuilding: 'فيلا 14 — المجمع السكني الملكي',
-    deliveryNotes: 'يرجى التنسيق المسبق مع حارس الفيلا وتوفير بطانيات حماية للأرضيات الرخامية.',
-    orderType: 'retail',
+    address: 'العنوان الوطني: RDSA4491',
+    villaBuilding: 'قصر رقم 4',
+    deliveryNotes: 'الرجاء التنسيق المسبق مع مسؤول المراسم قبل الدخول.',
+    orderType: 'b2b',
     deliveryDate: '2026-09-08',
     timeSlot: 'morning',
     whiteGloveAssembly: true,
@@ -62,9 +68,9 @@ const INITIAL_ORDERS: EcommerceOrderRecord[] = [
     promoCode: 'WDVIP10',
     vatAmount: 6217,
     totalAmount: 47662,
-    status: 'in_production',
+    status: 'delivered',
     factory: 'GreenWood Factory 1 & 3 — Riyadh',
-    leadTechnician: 'م. فهد الغامدي (فريق التركيبات 1)',
+    leadTechnician: 'م. فهد الغامدي',
     items: [
       {
         productId: 'gw-diriyah-curved-sofa',
@@ -73,7 +79,7 @@ const INITIAL_ORDERS: EcommerceOrderRecord[] = [
         nameAr: 'أريكة الدرعية المنحنية الفاخرة',
         finishId: 'cream-boucle',
         finishNameEn: 'Ivory Bouclé',
-        finishNameAr: 'بوكليه عاجي',
+        finishNameAr: 'بوكليه عاجي إيطالي',
         unitPrice: 18900,
         quantity: 1,
         image: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=600&q=80',
@@ -101,54 +107,51 @@ const INITIAL_ORDERS: EcommerceOrderRecord[] = [
         unitPrice: 9200,
         quantity: 2,
         image: 'https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?auto=format&fit=crop&w=600&q=80',
-      },
+      }
     ],
     internalNotes: [
       {
         id: 'n1',
-        text: 'تم تأكيد خامات البوكليه العاجي الإيطالي واختيار لوح الترافرتين من محجر نجران.',
+        text: 'تم تأكيد خامات البوكليه العاجي الإيطالي واختيار لوح الترافرتين من محجر نجران بعناية تامة.',
         author: 'م. أحمد الشيباني',
         authorEmail: 'ahmed@wdgroup.online',
-        createdAt: '2026-08-29T10:00:00Z',
+        createdAt: '2026-08-29T09:15:00Z',
       },
     ],
     createdAt: '2026-08-28T14:30:00Z',
   },
   {
     id: 'ord-102',
-    orderRef: 'WD-ORD-2026-8804',
-    customerName: 'فندق سويس بلو للأجنحة الفندقية',
+    orderRef: 'WD-ORD-2026-8805',
+    customerName: 'فندق سويس بلو — أجنحة الكورنيش',
     email: 'procurement@swissbluehotels.com',
-    phone: '+966 12 600 4400',
+    phone: '+966 54 889 0011',
     city: 'Jeddah',
-    district: 'حي الشاطئ — كورنيش جدة',
-    address: 'شارع الأمير فيصل بن فهد',
-    villaBuilding: 'مشروع توسعة الأجنحة الرئاسية — الدور 12',
-    deliveryNotes: 'توريد فندقي معتمد. يتطلب تصريح دخول لشاحنات التفريغ من البوابة الشمالية.',
+    district: 'حي الشاطئ',
+    address: 'كورنيش جدة — برج سويس بلو الفندقي',
+    villaBuilding: 'الطوابق 14 و 15 (الأجنحة التنفيذية)',
+    deliveryNotes: 'التفريغ من البوابة الخلفية للخدمات وتجهيز المصعد الخدمي.',
     orderType: 'b2b',
-    companyName: 'SwissBlue Hospitality Co.',
-    crNumber: '4030288192',
-    vatNumber: '310293847500003',
     deliveryDate: '2026-09-12',
-    timeSlot: 'afternoon',
+    timeSlot: 'morning',
     whiteGloveAssembly: true,
     wallAnchoring: true,
     paymentMethod: 'b2b_po',
-    paymentStatus: 'authorized',
+    paymentStatus: 'paid',
     subtotal: 122500,
-    discountAmount: 18375,
+    discountAmount: 12250,
     promoCode: 'TRADE-SWISSBLUE',
-    vatAmount: 15618,
-    totalAmount: 119743,
-    status: 'confirmed',
-    factory: 'GreenWood Factory 1 — Riyadh',
-    leadTechnician: 'م. ياسر القحطاني',
+    vatAmount: 16537,
+    totalAmount: 126787,
+    status: 'in_production',
+    factory: 'GreenWood Factory 1 — Woodworking Hub',
+    leadTechnician: 'فريق التركيبات الفندقية الغربية',
     items: [
       {
         productId: 'gw-swissblue-suite-bed',
         sku: 'GW-BD-702',
-        nameEn: 'SwissBlue Suite Bed & Fluted Joinery',
-        nameAr: 'سرير الجناح الرئاسي سويس بلو والتجاليد',
+        nameEn: 'SwissBlue Presidential Suite Bed & Joinery',
+        nameAr: 'سرير الجناح الرئاسي سويس بلو مع التجاليد',
         finishId: 'natural-walnut',
         finishNameEn: 'Natural American Walnut',
         finishNameAr: 'جوز أمريكي طبيعي',
@@ -160,75 +163,72 @@ const INITIAL_ORDERS: EcommerceOrderRecord[] = [
     internalNotes: [
       {
         id: 'n2',
-        text: 'تم إصدار أمر الشراء البنكي المعتمد بشروط دفع 30 يوماً وتجهيز غرف النماذج.',
-        author: 'إدارة المبيعات',
-        authorEmail: 'sales@wdgroup.online',
-        createdAt: '2026-08-30T09:00:00Z',
+        text: 'تم تسليم المخططات التنفيذية واعتماد عينات النحاس الشامبين مع إدارة الفندق.',
+        author: 'م. راكان الحربي',
+        authorEmail: 'rakan@wdgroup.online',
+        createdAt: '2026-08-27T11:00:00Z',
       },
     ],
-    createdAt: '2026-08-27T11:15:00Z',
+    createdAt: '2026-08-26T16:00:00Z',
   },
   {
     id: 'ord-103',
     orderRef: 'WD-ORD-2026-8798',
-    customerName: 'د. خالد التميمي',
-    email: 'dr.khaled@tamimi-clinic.com',
-    phone: '+966 55 443 2211',
-    city: 'Khobar',
-    district: 'حي الحزام الذهبي',
-    address: 'شارع الملك فيصل',
-    villaBuilding: 'فيلا د. خالد',
-    deliveryNotes: 'يرجى التوصيل في الفترة المسائية حصراً.',
+    customerName: 'م. خالد المنصور',
+    email: 'khalid.mansoor@almansoor-arch.com',
+    phone: '+966 55 432 1098',
+    city: 'Riyadh',
+    district: 'حي حطين',
+    address: 'العنوان الوطني: RYD9012',
+    villaBuilding: 'فيلا 14',
+    deliveryNotes: 'تركيب في الصالون المفتوح الدور الأول.',
     orderType: 'retail',
-    deliveryDate: '2026-09-06',
-    timeSlot: 'evening',
+    deliveryDate: '2026-09-05',
+    timeSlot: 'afternoon',
     whiteGloveAssembly: true,
     wallAnchoring: false,
     paymentMethod: 'tabby',
     paymentStatus: 'paid',
-    subtotal: 13800,
+    subtotal: 18900,
     discountAmount: 0,
-    vatAmount: 2070,
-    totalAmount: 15870,
+    vatAmount: 2835,
+    totalAmount: 21735,
     status: 'ready_for_dispatch',
-    factory: 'GreenWood Factory 1 — Riyadh',
-    leadTechnician: 'فريق لوجستيات الشرقية',
+    factory: 'GreenWood Factory 3 — Riyadh',
+    leadTechnician: 'فريق التركيبات 2',
     items: [
       {
-        productId: 'gw-rawdah-fluted-credenza',
-        sku: 'GW-JN-550',
-        nameEn: 'The Rawdah Fluted Walnut Credenza',
-        nameAr: 'خزانة ووحدة كونسول الروضة المضلعة',
-        finishId: 'walnut-brass',
-        finishNameEn: 'Natural Walnut & Champagne Brass',
-        finishNameAr: 'جوز طبيعي مع نحاس شامبين',
-        unitPrice: 13800,
+        productId: 'gw-diriyah-curved-sofa',
+        sku: 'GW-LV-801',
+        nameEn: 'The Al-Diriyah Modular Curved Sofa',
+        nameAr: 'أريكة الدرعية المنحنية الفاخرة',
+        finishId: 'camel-velvet',
+        finishNameEn: 'Desert Camel Velvet',
+        finishNameAr: 'مخمل صحراوي جملي',
+        unitPrice: 18900,
         quantity: 1,
-        image: 'https://images.unsplash.com/photo-1595428774223-ef52624120d2?auto=format&fit=crop&w=600&q=80',
+        image: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=600&q=80',
       },
     ],
     internalNotes: [],
-    createdAt: '2026-08-26T16:40:00Z',
+    createdAt: '2026-08-25T18:30:00Z',
   },
   {
     id: 'ord-104',
-    orderRef: 'WD-ORD-2026-8785',
-    customerName: 'شركة طويق للاستثمار والتطوير العقاري',
-    email: 'projects@tuwaiq-holding.sa',
-    phone: '+966 11 488 9900',
+    orderRef: 'WD-ORD-2026-8782',
+    customerName: 'شركة طويق للاستثمار والتطوير',
+    email: 'finance@tuwaiqholding.sa',
+    phone: '+966 11 445 6789',
     city: 'Riyadh',
-    district: 'حي النخيل — طريق الملك فهد',
-    address: 'برج طويق للأعمال — الطابق 24',
-    villaBuilding: 'قاعة مجلس الإدارة الرئيسي',
-    deliveryNotes: 'تركيب مسائي بعد ساعات العمل الرسمية بالبرج.',
+    district: 'طريق الملك فهد',
+    address: 'برج طويق التنفيذي — الدور 28',
+    villaBuilding: 'قاعة مجلس الإدارة الرئيسية',
+    deliveryNotes: 'التوريد برافعة خارجية مخصصة بسبب طول الطاولة (4.2م).',
     orderType: 'b2b',
-    companyName: 'Tuwaiq Holding Co.',
-    crNumber: '1010892834',
-    vatNumber: '310029384700003',
     deliveryDate: '2026-09-15',
     timeSlot: 'evening',
     whiteGloveAssembly: true,
-    wallAnchoring: true,
+    wallAnchoring: false,
     paymentMethod: 'bank_transfer',
     paymentStatus: 'paid',
     subtotal: 76000,
@@ -237,8 +237,8 @@ const INITIAL_ORDERS: EcommerceOrderRecord[] = [
     vatAmount: 10260,
     totalAmount: 78660,
     status: 'in_production',
-    factory: 'GreenWood Factory 1 & 2 — Riyadh Hub',
-    leadTechnician: 'م. عبدالله الشهري',
+    factory: 'GreenWood Factory 1 & 2 — Riyadh',
+    leadTechnician: 'م. فهد الغامدي',
     items: [
       {
         productId: 'gw-tuwaiq-boardroom-table',
@@ -256,64 +256,13 @@ const INITIAL_ORDERS: EcommerceOrderRecord[] = [
     internalNotes: [
       {
         id: 'n3',
-        text: 'تم استلام الإشعار البنكي بالحساب الرسمي بمصرف الراجحي وقص ألواح الجوز 4.2 م.',
+        text: 'تم استلام التحويل البنكي وتأكيد مواصفات الشواحن الذكية ومنافذ HDMI 4K.',
         author: 'الإدارة المالية',
         authorEmail: 'finance@wdgroup.online',
         createdAt: '2026-08-25T13:20:00Z',
       },
     ],
     createdAt: '2026-08-24T12:00:00Z',
-  },
-  {
-    id: 'ord-105',
-    orderRef: 'WD-ORD-2026-8770',
-    customerName: 'الأستاذة نورة الشمري',
-    email: 'noura.shammari@gmail.com',
-    phone: '+966 56 112 3344',
-    city: 'Riyadh',
-    district: 'حي الملقا',
-    address: 'العنوان الوطني: RYDX9921',
-    villaBuilding: 'فيلا 8',
-    deliveryNotes: 'تركيب في الصالون الرئيسي الأرضي.',
-    orderType: 'retail',
-    deliveryDate: '2026-09-02',
-    timeSlot: 'morning',
-    whiteGloveAssembly: true,
-    wallAnchoring: false,
-    paymentMethod: 'mada_cards',
-    paymentStatus: 'paid',
-    subtotal: 22400,
-    discountAmount: 1120,
-    promoCode: 'GREENWOOD5',
-    vatAmount: 3192,
-    totalAmount: 24472,
-    status: 'delivered',
-    factory: 'GreenWood Factory 1 — Riyadh',
-    leadTechnician: 'فريق تركيبات الملقا',
-    items: [
-      {
-        productId: 'gw-riyadh-dining-suite',
-        sku: 'GW-DN-610',
-        nameEn: 'The Riyadh Luxury 8-Seater Dining Suite',
-        nameAr: 'طاولة طعام الرياض الملكية لـ 8 أشخاص',
-        finishId: 'natural-oiled-walnut',
-        finishNameEn: 'Natural Oiled Walnut',
-        finishNameAr: 'جوز طبيعي معالج بالزيوت',
-        unitPrice: 22400,
-        quantity: 1,
-        image: 'https://images.unsplash.com/photo-1617806118233-18e1de247200?auto=format&fit=crop&w=600&q=80',
-      },
-    ],
-    internalNotes: [
-      {
-        id: 'n4',
-        text: 'تم التسليم والتركيب بنجاح وتوقيع نموذج الاستلام وضمان الـ 5 سنوات.',
-        author: 'م. فهد الغامدي',
-        authorEmail: 'fahad@wdgroup.online',
-        createdAt: '2026-09-02T11:40:00Z',
-      },
-    ],
-    createdAt: '2026-08-20T10:10:00Z',
   }
 ];
 
@@ -321,6 +270,8 @@ export default function EcommerceAdminDashboard() {
   const { lang } = useLanguage();
   const isAr = lang === 'ar';
   const { showToast } = useToast();
+
+  const [currency, setCurrency] = useState<'SAR' | 'USD'>('SAR');
 
   const [activeTab, setActiveTab] = useState<
     'overview' | 'orders' | 'products' | 'inventory' | 'customers' | 'analytics' | 'marketing' | 'settings'
@@ -332,6 +283,14 @@ export default function EcommerceAdminDashboard() {
   // Selected Order for Slide-Over Drawer
   const [selectedOrder, setSelectedOrder] = useState<EcommerceOrderRecord | null>(null);
   const [newNoteText, setNewNoteText] = useState('');
+
+  const formatPrice = (valSAR: number) => {
+    if (currency === 'USD') {
+      const valUSD = Math.round(valSAR / 3.75);
+      return `${valUSD.toLocaleString('en-US')} USD`;
+    }
+    return `${valSAR.toLocaleString('en-US')} ${isAr ? 'ر.س' : 'SAR'}`;
+  };
 
   // Status Handlers
   const handleUpdateOrderStatus = (orderId: string, newStatus: EcommerceOrderStatus) => {
@@ -373,7 +332,7 @@ export default function EcommerceAdminDashboard() {
     const newNote: InternalNote = {
       id: `note-${Date.now()}`,
       text: newNoteText.trim(),
-      author: 'Admin Operations',
+      author: isAr ? 'م. إدارة العمليات' : 'Admin Operations',
       authorEmail: 'admin@wdgroup.online',
       createdAt: new Date().toISOString(),
     };
@@ -384,7 +343,7 @@ export default function EcommerceAdminDashboard() {
     );
     setSelectedOrder({ ...selectedOrder, internalNotes: updatedNotes });
     setNewNoteText('');
-    showToast(isAr ? 'تمت إضافة الملاحظة الداخلية' : 'Internal note added', 'success');
+    showToast(isAr ? 'تمت إضافة الملاحظة الداخلية' : 'Internal note saved', 'success');
   };
 
   const getStatusBadge = (status: EcommerceOrderStatus) => {
@@ -392,77 +351,99 @@ export default function EcommerceAdminDashboard() {
       case 'confirmed':
         return {
           label: isAr ? 'مؤكد ومعتمد' : 'Confirmed',
-          bg: 'bg-blue-500/10 text-blue-400 border-blue-500/30',
+          bg: 'bg-blue-500/15 text-blue-400 border-blue-500/30',
         };
       case 'in_production':
         return {
-          label: isAr ? 'قيد التصنيع بالمصنع' : 'In Production',
-          bg: 'bg-amber-500/10 text-amber-400 border-amber-500/30 animate-pulse',
+          label: isAr ? 'قيد التصنيع' : 'In Production',
+          bg: 'bg-amber-500/15 text-amber-400 border-amber-500/30',
         };
       case 'ready_for_dispatch':
         return {
-          label: isAr ? 'جاهز للشحن الفندقي' : 'Ready for Dispatch',
-          bg: 'bg-purple-500/10 text-purple-400 border-purple-500/30',
+          label: isAr ? 'جاهز للشحن' : 'Ready Dispatch',
+          bg: 'bg-purple-500/15 text-purple-400 border-purple-500/30',
         };
       case 'out_for_delivery':
         return {
-          label: isAr ? 'خارج للتوصيل والتركيب' : 'Out for Delivery',
-          bg: 'bg-sky-500/10 text-sky-400 border-sky-500/30',
+          label: isAr ? 'خارج للتوصيل' : 'Out for Delivery',
+          bg: 'bg-sky-500/15 text-sky-400 border-sky-500/30',
         };
       case 'delivered':
         return {
           label: isAr ? 'تم التسليم والتركيب' : 'Delivered & Assembled',
-          bg: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30',
+          bg: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30',
         };
       case 'cancelled':
         return {
           label: isAr ? 'ملغي' : 'Cancelled',
-          bg: 'bg-rose-500/10 text-rose-400 border-rose-500/30',
+          bg: 'bg-rose-500/15 text-rose-400 border-rose-500/30',
         };
       default:
         return {
           label: isAr ? 'في انتظار الدفع' : 'Pending Payment',
-          bg: 'bg-zinc-500/10 text-zinc-400 border-zinc-500/30',
+          bg: 'bg-zinc-500/15 text-zinc-400 border-zinc-500/30',
         };
     }
   };
 
   return (
-    <div className="space-y-8 pb-20">
+    <div className="space-y-8">
       
-      {/* 1. Main Console Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/10 pb-6">
+      {/* 1. Header & Navigation */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-white/10">
         <div>
-          <div className="flex items-center gap-2 mb-1.5">
-            <span className="px-2.5 py-0.5 rounded-md bg-[#C9A86A]/15 border border-[#C9A86A]/30 text-[#C9A86A] text-[11px] font-mono font-bold">
-              GreenWood Saudi Manufacturing & Retail Operations
-            </span>
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+          <div className="flex items-center gap-2 text-xs font-mono text-zinc-400 mb-1">
+            <Link href="/admin" className="hover:text-[#C9A86A] transition-colors">
+              {isAr ? 'لوحة التحكم العامة' : 'Main Admin'}
+            </Link>
+            <span>/</span>
+            <span className="text-[#C9A86A]">{isAr ? 'منصة إدارة المبيعات والتجارة' : 'E-Commerce Operations'}</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-            {isAr ? 'منظومة إدارة التجارة الإلكترونية والمبيعات' : 'E-Commerce Sales & Operations Control Center'}
+
+          <h1 className="text-xl sm:text-3xl font-extrabold text-white flex items-center gap-2.5">
+            <ShoppingCart className="w-6 h-6 text-[#C9A86A]" />
+            <span>{isAr ? 'منظومة مبيعات وعمليات الأثاث والتوريد' : 'E-Commerce Sales & Operations Command Center'}</span>
           </h1>
-          <p className="text-xs sm:text-sm text-zinc-400 mt-1">
-            {isAr 
-              ? 'إدارة شاملة لطلبات الأثاث، خطوط إنتاج المصانع، المخزون، العملاء، الحملات التسويقية والشحن الفندقي.'
-              : 'Complete management suite for luxury furniture sales, CNC factory queue, multi-warehouse stock, CRM, and logistics.'}
-          </p>
         </div>
 
-        <div className="flex items-center gap-2.5 flex-wrap">
+        {/* Currency Converter Toggle & Public Store Link */}
+        <div className="flex items-center gap-3 flex-wrap">
+          
+          {/* Global Currency Switcher */}
+          <div className="flex items-center gap-1 bg-[#141721] p-1 rounded-xl border border-white/10 text-xs font-mono">
+            <button
+              onClick={() => setCurrency('SAR')}
+              className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer font-bold flex items-center gap-1.5 ${
+                currency === 'SAR' ? 'bg-[#C9A86A] text-[#08090C] shadow-md' : 'text-zinc-400 hover:text-white'
+              }`}
+            >
+              <span>🇸🇦</span>
+              <span>SAR</span>
+            </button>
+            <button
+              onClick={() => setCurrency('USD')}
+              className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer font-bold flex items-center gap-1.5 ${
+                currency === 'USD' ? 'bg-[#C9A86A] text-[#08090C] shadow-md' : 'text-zinc-400 hover:text-white'
+              }`}
+            >
+              <span>🇺🇸</span>
+              <span>USD</span>
+            </button>
+          </div>
+
           <Link
             href="/furniture"
             target="_blank"
-            className="px-4 py-2.5 rounded-xl bg-[#C9A86A]/15 hover:bg-[#C9A86A] text-[#C9A86A] hover:text-[#08090C] border border-[#C9A86A]/30 text-xs font-bold flex items-center gap-2 transition-all font-mono"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-300 text-xs font-mono font-semibold transition-all cursor-pointer"
           >
-            <ExternalLink className="w-4 h-4" />
-            <span>{isAr ? 'معاينة المتجر الحي' : 'Live Storefront'}</span>
+            <span>{isAr ? 'المعرض العام' : 'Public Storefront'}</span>
+            <ExternalLink className="w-3.5 h-3.5" />
           </Link>
         </div>
       </div>
 
-      {/* 2. 8-Domain Navigation Bar */}
-      <div className="flex gap-2 border-b border-white/10 pb-3 overflow-x-auto text-xs font-mono scrollbar-none">
+      {/* 2. Top Navigation Tabs */}
+      <div className="flex items-center gap-2 overflow-x-auto pb-2 text-xs font-mono scrollbar-thin">
         
         {/* 1. Overview */}
         <button
@@ -474,7 +455,7 @@ export default function EcommerceAdminDashboard() {
           }`}
         >
           <LayoutDashboard className="w-4 h-4" />
-          <span>{isAr ? 'نظرة عامة' : '1. Overview'}</span>
+          <span>{isAr ? 'الرئيسية والمؤشرات' : '1. Overview'}</span>
         </button>
 
         {/* 2. Orders */}
@@ -487,8 +468,8 @@ export default function EcommerceAdminDashboard() {
           }`}
         >
           <ShoppingCart className="w-4 h-4" />
-          <span>{isAr ? 'الطلبات والشحن' : '2. Orders'}</span>
-          <span className="px-1.5 py-0.2 rounded-md bg-black/20 text-[10px]">
+          <span>{isAr ? 'إدارة الطلبات' : '2. Orders & Pipeline'}</span>
+          <span className="px-1.5 py-0.2 rounded-md bg-emerald-500/20 text-emerald-300 text-[10px]">
             {orders.length}
           </span>
         </button>
@@ -580,6 +561,7 @@ export default function EcommerceAdminDashboard() {
       {activeTab === 'overview' && (
         <OverviewTab
           orders={orders}
+          currency={currency}
           onSelectOrder={(order) => setSelectedOrder(order)}
           onNavigateTab={(tab: any) => setActiveTab(tab)}
         />
@@ -588,6 +570,7 @@ export default function EcommerceAdminDashboard() {
       {activeTab === 'orders' && (
         <OrdersTab
           orders={orders}
+          currency={currency}
           onSelectOrder={(order) => setSelectedOrder(order)}
           onUpdateStatus={handleUpdateOrderStatus}
           onBulkUpdateStatus={handleBulkUpdateStatus}
@@ -597,6 +580,7 @@ export default function EcommerceAdminDashboard() {
       {activeTab === 'products' && (
         <ProductsTab
           products={products}
+          currency={currency}
           onAddProduct={handleAddProduct}
           onUpdateProduct={handleUpdateProduct}
           onDeleteProduct={handleDeleteProduct}
@@ -613,7 +597,7 @@ export default function EcommerceAdminDashboard() {
 
       {activeTab === 'settings' && <SettingsTab />}
 
-      {/* 4. SLIDE-OVER ORDER DETAIL DRAWER */}
+      {/* 4. SLIDE-OVER ORDER DETAIL DRAWER WITH SOFT TRANSPARENT BACKDROP */}
       <AnimatePresence>
         {selectedOrder && (
           <div className="fixed inset-0 z-50 overflow-hidden">
@@ -622,16 +606,16 @@ export default function EcommerceAdminDashboard() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setSelectedOrder(null)}
-              className="absolute inset-0 bg-black/80 backdrop-blur-md"
+              className="absolute inset-0 bg-black/40 backdrop-blur-sm cursor-pointer"
             />
 
-            <div className="fixed inset-y-0 right-0 rtl:right-auto rtl:left-0 max-w-full flex pl-10 rtl:pl-0 rtl:pr-10">
+            <div className="fixed inset-y-0 right-0 rtl:right-auto rtl:left-0 max-w-full flex pl-10 rtl:pl-0 rtl:pr-10 pointer-events-none">
               <motion.div
                 initial={{ x: isAr ? '-100%' : '100%' }}
                 animate={{ x: 0 }}
                 exit={{ x: isAr ? '-100%' : '100%' }}
                 transition={{ type: 'spring', damping: 28, stiffness: 280 }}
-                className="w-screen max-w-2xl bg-[#0F1117] border-l rtl:border-l-0 rtl:border-r border-white/10 text-white shadow-2xl flex flex-col justify-between"
+                className="w-screen max-w-2xl bg-[#0F1117] border-l rtl:border-l-0 rtl:border-r border-white/10 text-white shadow-2xl flex flex-col justify-between pointer-events-auto"
               >
                 {/* Drawer Header */}
                 <div className="p-6 border-b border-white/10 flex items-center justify-between">
@@ -651,7 +635,7 @@ export default function EcommerceAdminDashboard() {
 
                   <button
                     onClick={() => setSelectedOrder(null)}
-                    className="p-2 rounded-xl text-zinc-400 hover:text-white hover:bg-white/10 transition-colors"
+                    className="p-2 rounded-xl text-zinc-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
                   >
                     <X className="w-5 h-5" />
                   </button>
@@ -660,25 +644,36 @@ export default function EcommerceAdminDashboard() {
                 {/* Drawer Body */}
                 <div className="flex-1 overflow-y-auto p-6 space-y-6 text-xs">
                   
-                  {/* Status Transition Controller */}
+                  {/* Status Selection Controller */}
                   <div className="p-4 rounded-2xl bg-[#141721] border border-white/10 space-y-3">
-                    <label className="block text-xs font-bold text-white">
-                      {isAr ? 'تغيير وتحديث حالة الطلب بالمصنع:' : 'Update Live Order Status:'}
-                    </label>
-                    <div className="flex gap-2 flex-wrap">
-                      {(['confirmed', 'in_production', 'ready_for_dispatch', 'out_for_delivery', 'delivered'] as EcommerceOrderStatus[]).map((st) => (
-                        <button
-                          key={st}
-                          onClick={() => handleUpdateOrderStatus(selectedOrder.id, st)}
-                          className={`px-3 py-1.5 rounded-lg text-xs font-mono transition-all cursor-pointer ${
-                            selectedOrder.status === st
-                              ? 'bg-[#C9A86A] text-[#08090C] font-bold shadow-md'
-                              : 'bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white'
-                          }`}
-                        >
-                          {getStatusBadge(st).label}
-                        </button>
-                      ))}
+                    <div className="flex items-center justify-between">
+                      <label className="block text-xs font-bold text-white">
+                        {isAr ? 'تحديث مرحلة الطلب بالمصنع:' : 'Select Target Order Status:'}
+                      </label>
+                      <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold border ${getStatusBadge(selectedOrder.status).bg}`}>
+                        {isAr ? 'الحالة الحالية:' : 'Current:'} {getStatusBadge(selectedOrder.status).label}
+                      </span>
+                    </div>
+                    
+                    <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+                      {(['confirmed', 'in_production', 'ready_for_dispatch', 'out_for_delivery', 'delivered'] as EcommerceOrderStatus[]).map((st) => {
+                        const isCurrent = selectedOrder.status === st;
+                        const b = getStatusBadge(st);
+                        return (
+                          <button
+                            key={st}
+                            onClick={() => handleUpdateOrderStatus(selectedOrder.id, st)}
+                            className={`px-2 py-2 rounded-xl text-[11px] font-mono transition-all cursor-pointer flex flex-col items-center justify-center text-center gap-1 border ${
+                              isCurrent
+                                ? 'bg-[#C9A86A] text-[#08090C] font-extrabold border-[#DFBA73] shadow-md ring-1 ring-[#C9A86A]'
+                                : 'bg-white/5 hover:bg-white/10 text-zinc-300 border-white/5'
+                            }`}
+                          >
+                            <span className="truncate w-full">{b.label}</span>
+                            {isCurrent && <span className="text-[9px] uppercase tracking-wider font-extrabold">✓ Active</span>}
+                          </button>
+                        );
+                      })}
                     </div>
                   </div>
 
@@ -739,7 +734,7 @@ export default function EcommerceAdminDashboard() {
                           </div>
 
                           <div className="text-right rtl:text-left font-mono">
-                            <span className="text-white font-bold block">{item.unitPrice.toLocaleString('en-US')} SAR</span>
+                            <span className="text-white font-bold block">{formatPrice(item.unitPrice)}</span>
                             <span className="text-zinc-500 text-[10px]">× {item.quantity}</span>
                           </div>
                         </div>
@@ -751,36 +746,38 @@ export default function EcommerceAdminDashboard() {
                   <div className="p-4 rounded-2xl bg-[#141721] border border-white/10 space-y-2 font-mono text-xs">
                     <div className="flex justify-between text-zinc-400">
                       <span>Subtotal</span>
-                      <span>{selectedOrder.subtotal.toLocaleString('en-US')} SAR</span>
+                      <span>{formatPrice(selectedOrder.subtotal)}</span>
                     </div>
                     {selectedOrder.discountAmount > 0 && (
                       <div className="flex justify-between text-emerald-400">
                         <span>Discount ({selectedOrder.promoCode})</span>
-                        <span>-{selectedOrder.discountAmount.toLocaleString('en-US')} SAR</span>
+                        <span>-{formatPrice(selectedOrder.discountAmount)}</span>
                       </div>
                     )}
                     <div className="flex justify-between text-zinc-400">
                       <span>15% Saudi VAT</span>
-                      <span>{selectedOrder.vatAmount.toLocaleString('en-US')} SAR</span>
+                      <span>{formatPrice(selectedOrder.vatAmount)}</span>
                     </div>
                     <div className="flex justify-between text-white font-extrabold text-sm pt-2 border-t border-white/10">
                       <span>Total Amount</span>
-                      <span className="text-[#C9A86A]">{selectedOrder.totalAmount.toLocaleString('en-US')} SAR</span>
+                      <span className="text-[#C9A86A]">{formatPrice(selectedOrder.totalAmount)}</span>
                     </div>
                   </div>
 
-                  {/* Internal Operations Notes */}
+                  {/* Internal Operations Notes (Strict RTL Formatting) */}
                   <div className="space-y-3">
                     <h4 className="text-xs font-bold text-zinc-400 uppercase font-mono">
                       {isAr ? 'سجل الملاحظات الإدارية والمصنعية' : 'Internal Operational Notes'}
                     </h4>
                     <div className="space-y-2">
                       {selectedOrder.internalNotes.map((note) => (
-                        <div key={note.id} className="p-3 rounded-xl bg-[#141721] border border-white/5 text-xs space-y-1">
-                          <p className="text-zinc-300">{note.text}</p>
-                          <div className="flex justify-between text-[10px] font-mono text-zinc-500">
+                        <div key={note.id} className="p-3 rounded-xl bg-[#141721] border border-white/5 text-xs space-y-1.5">
+                          <p className="text-zinc-200 leading-relaxed text-right rtl:text-right" dir="rtl">
+                            {note.text}
+                          </p>
+                          <div className="flex justify-between text-[10px] font-mono text-zinc-500 pt-1 border-t border-white/5">
                             <span>{note.author}</span>
-                            <span>{new Date(note.createdAt).toLocaleDateString()}</span>
+                            <span>{new Date(note.createdAt).toLocaleDateString(isAr ? 'ar-SA' : 'en-GB')}</span>
                           </div>
                         </div>
                       ))}
@@ -791,14 +788,15 @@ export default function EcommerceAdminDashboard() {
                         type="text"
                         value={newNoteText}
                         onChange={(e) => setNewNoteText(e.target.value)}
-                        placeholder={isAr ? 'أضف ملاحظة داخلية جديدة...' : 'Add internal note...'}
-                        className="flex-1 px-3 py-2 rounded-xl bg-[#141721] border border-white/10 text-white text-xs focus:outline-none focus:border-[#C9A86A]"
+                        dir={isAr ? 'rtl' : 'ltr'}
+                        placeholder={isAr ? 'أضف ملاحظة تشغيلية داخلية جديدة' : 'Add internal operational note'}
+                        className="flex-1 px-3.5 py-2.5 rounded-xl bg-[#141721] border border-white/10 text-white text-xs focus:outline-none focus:border-[#C9A86A]"
                       />
                       <button
                         type="submit"
-                        className="px-3.5 py-2 rounded-xl bg-[#C9A86A] text-[#08090C] font-bold text-xs cursor-pointer font-mono"
+                        className="px-4 py-2.5 rounded-xl bg-[#C9A86A] text-[#08090C] font-bold text-xs cursor-pointer font-mono shrink-0"
                       >
-                        {isAr ? 'إضافة' : 'Add'}
+                        {isAr ? 'إضافة' : 'Add Note'}
                       </button>
                     </form>
                   </div>
