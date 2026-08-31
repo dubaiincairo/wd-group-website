@@ -578,22 +578,22 @@ export default function EcommerceAdminDashboard() {
       {/* 4. SLIDE-OVER ORDER DETAIL DRAWER WITH SOFT TRANSPARENT BACKDROP */}
       <AnimatePresence>
         {selectedOrder && (
-          <div className="fixed inset-0 z-50 overflow-hidden">
+          <div className="fixed inset-0 top-[65px] z-40 overflow-hidden">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setSelectedOrder(null)}
-              className="absolute inset-0 bg-black/40 backdrop-blur-sm cursor-pointer"
+              className="absolute inset-0 bg-black/40 backdrop-blur-[2px] cursor-pointer"
             />
 
-            <div className="fixed inset-y-0 right-0 rtl:right-auto rtl:left-0 max-w-full flex pl-10 rtl:pl-0 rtl:pr-10 pointer-events-none">
+            <div className="absolute inset-y-0 right-0 rtl:right-auto rtl:left-0 max-w-full flex pl-10 rtl:pl-0 rtl:pr-10 pointer-events-none">
               <motion.div
                 initial={{ x: isAr ? '-100%' : '100%' }}
                 animate={{ x: 0 }}
                 exit={{ x: isAr ? '-100%' : '100%' }}
                 transition={{ type: 'spring', damping: 28, stiffness: 280 }}
-                className="w-screen max-w-2xl bg-[#0F1117] border-l rtl:border-l-0 rtl:border-r border-white/10 text-white shadow-2xl flex flex-col justify-between pointer-events-auto"
+                className="w-screen max-w-2xl h-full bg-[#0F1117] border-l rtl:border-l-0 rtl:border-r border-white/10 text-white shadow-2xl flex flex-col justify-between pointer-events-auto"
               >
                 {/* Drawer Header */}
                 <div className="p-6 border-b border-white/10 flex items-center justify-between">

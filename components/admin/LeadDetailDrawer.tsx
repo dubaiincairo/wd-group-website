@@ -80,9 +80,14 @@ export default function LeadDetailDrawer({
     : null;
 
   return (
-    <div className="fixed inset-0 z-50 overflow-hidden bg-black/70 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="absolute inset-y-0 right-0 rtl:right-auto rtl:left-0 max-w-full flex pl-10 rtl:pl-0 rtl:pr-10">
-        <div className="w-screen max-w-2xl bg-[#0F1117] border-l rtl:border-l-0 rtl:border-r border-white/15 text-white shadow-2xl flex flex-col animate-in slide-in-from-right duration-300">
+    <div className="fixed inset-0 top-[65px] z-40 overflow-hidden animate-in fade-in duration-200">
+      {/* Soft translucent backdrop below header */}
+      <div
+        onClick={onClose}
+        className="absolute inset-0 bg-black/40 backdrop-blur-[2px] cursor-pointer"
+      />
+      <div className="absolute inset-y-0 right-0 rtl:right-auto rtl:left-0 max-w-full flex pl-10 rtl:pl-0 rtl:pr-10 pointer-events-none">
+        <div className="w-screen max-w-2xl h-full bg-[#0F1117] border-l rtl:border-l-0 rtl:border-r border-white/15 text-white shadow-2xl flex flex-col pointer-events-auto animate-in slide-in-from-right duration-300">
           
           {/* Drawer Header */}
           <div className="p-6 border-b border-white/10 flex items-center justify-between bg-black/40">
