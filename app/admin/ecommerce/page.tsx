@@ -434,7 +434,7 @@ export default function EcommerceAdminDashboard() {
 
           <h1 className="text-xl sm:text-3xl font-extrabold text-white flex items-center gap-2.5">
             <ShoppingCart className="w-6 h-6 text-[#C9A86A]" />
-            <span>{isAr ? 'منظومة مبيعات وعمليات الأثاث والتوريد' : 'E-Commerce Sales & Operations Command Center'}</span>
+            <span>{isAr ? 'منظومة مبيعات وعمليات الأثاث والتوريد' : 'E-Commerce Sales & Operations Center'}</span>
           </h1>
         </div>
 
