@@ -24,7 +24,11 @@ import {
   MessageSquare,
   Sparkles,
   ExternalLink,
-  Lock
+  Lock,
+  ShoppingCart,
+  Package,
+  Truck,
+  TrendingUp
 } from 'lucide-react';
 import type { AdminRole } from '@/lib/admin/types';
 
@@ -124,6 +128,37 @@ const NAV_GROUPS: NavGroup[] = [
         icon: HardHat,
         iconBg: 'bg-amber-500/15 text-amber-400 border-amber-500/25 group-hover:bg-amber-500/25',
         allowedRoles: ['owner', 'admin', 'editor'],
+      },
+    ],
+  },
+  {
+    groupName: 'E-Commerce & Sales',
+    groupNameAr: 'المتجر والمبيعات',
+    accentDot: 'bg-[#C9A86A]',
+    items: [
+      {
+        label: 'Sales & Operations Hub',
+        labelAr: 'مركز المبيعات والعمليات',
+        href: '/admin/ecommerce',
+        icon: ShoppingCart,
+        iconBg: 'bg-[#C9A86A]/15 text-[#C9A86A] border-[#C9A86A]/25 group-hover:bg-[#C9A86A]/25',
+        allowedRoles: ['owner', 'admin', 'crm', 'editor'],
+      },
+      {
+        label: 'Orders & Fulfillment',
+        labelAr: 'الطلبات والشحن المباشر',
+        href: '/admin/ecommerce#orders',
+        icon: Package,
+        iconBg: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/25 group-hover:bg-emerald-500/25',
+        allowedRoles: ['owner', 'admin', 'crm', 'editor'],
+      },
+      {
+        label: 'Factory Queue & Logistics',
+        labelAr: 'خطوط الإنتاج والتسليم',
+        href: '/admin/ecommerce#factory',
+        icon: Truck,
+        iconBg: 'bg-blue-500/15 text-blue-400 border-blue-500/25 group-hover:bg-blue-500/25',
+        allowedRoles: ['owner', 'admin', 'crm'],
       },
     ],
   },

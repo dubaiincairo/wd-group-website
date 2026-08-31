@@ -19,7 +19,8 @@ import {
   ExternalLink,
   ShieldCheck,
   TrendingUp,
-  FileText
+  FileText,
+  ShoppingCart
 } from 'lucide-react';
 import StatCard from '@/components/admin/StatCard';
 import LeadDetailDrawer from '@/components/admin/LeadDetailDrawer';
@@ -223,7 +224,14 @@ export default function AdminDashboardPage() {
         </div>
 
         {/* Action Buttons */}
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-2.5 flex-wrap">
+          <Link
+            href="/admin/ecommerce"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#C9A86A] via-[#DFBA73] to-[#C9A86A] hover:shadow-[0_0_25px_rgba(201,168,106,0.4)] text-[#08090C] text-xs font-extrabold transition-all shadow-md cursor-pointer"
+          >
+            <ShoppingCart className="w-3.5 h-3.5" />
+            <span>{isAr ? 'مبيعات المتجر والعمليات' : 'E-Commerce & Orders'}</span>
+          </Link>
           <Link
             href="/admin/crm/inquiries"
             className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition-all shadow-glow-blue"
@@ -244,7 +252,18 @@ export default function AdminDashboardPage() {
       {/* 2. Key Metrics Stats Bar */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 items-stretch">
         <StatCard
-          title={isAr ? 'إجمالي الطلبات والاستفسارات' : 'Total Inquiries & RFPs'}
+          title={isAr ? 'مبيعات المتجر الفاخر' : 'E-Commerce Revenue'}
+          value="584,200 SAR"
+          subtitle={isAr ? '42 طلباً نشطاً وتوريد فندقي' : '42 active orders & B2B FF&E'}
+          icon={ShoppingCart}
+          iconColor="text-[#C9A86A]"
+          badge="Live Store"
+          badgeColor="amber"
+          href="/admin/ecommerce"
+        />
+
+        <StatCard
+          title={isAr ? 'إجمالي الاستفسارات والمناقصات' : 'Total Inquiries & RFPs'}
           value={inquiries.length}
           subtitle={isAr ? `${newInquiriesCount} طلب جديد غير متصل` : `${newInquiriesCount} new uncontacted`}
           icon={MessageSquare}
@@ -268,15 +287,6 @@ export default function AdminDashboardPage() {
           icon={Briefcase}
           iconColor="text-emerald-400"
           href="/admin/hr/jobs"
-        />
-
-        <StatCard
-          title={isAr ? 'حالة البنية التحتية' : 'Infrastructure Status'}
-          value={isAr ? 'متصل ونشط' : 'Healthy'}
-          subtitle={isAr ? 'قاعدة البيانات والتخزين تعمل' : 'Supabase DB & Storage Active'}
-          icon={Activity}
-          iconColor="text-sky-400"
-          href="/admin/system/health"
         />
       </div>
 

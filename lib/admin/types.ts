@@ -375,3 +375,63 @@ export interface SiteContentPayload {
 }
 
 export type SiteSettings = SiteContentPayload['settings'];
+
+// -------------------------------------------------------------
+// E-COMMERCE & FURNITURE ORDERS
+// -------------------------------------------------------------
+export type EcommerceOrderStatus = 
+  | 'pending_payment'
+  | 'confirmed'
+  | 'in_production'
+  | 'ready_for_dispatch'
+  | 'out_for_delivery'
+  | 'delivered'
+  | 'cancelled';
+
+export interface EcommerceOrderItem {
+  productId: string;
+  sku: string;
+  nameEn: string;
+  nameAr: string;
+  finishId: string;
+  finishNameEn: string;
+  finishNameAr: string;
+  unitPrice: number;
+  quantity: number;
+  image: string;
+}
+
+export interface EcommerceOrderRecord {
+  id: string;
+  orderRef: string;
+  customerName: string;
+  email: string;
+  phone: string;
+  city: string;
+  district?: string;
+  address?: string;
+  villaBuilding?: string;
+  deliveryNotes?: string;
+  orderType: 'retail' | 'b2b';
+  companyName?: string;
+  crNumber?: string;
+  vatNumber?: string;
+  deliveryDate: string;
+  timeSlot: 'morning' | 'afternoon' | 'evening';
+  whiteGloveAssembly: boolean;
+  wallAnchoring: boolean;
+  paymentMethod: string;
+  paymentStatus: 'paid' | 'pending' | 'authorized' | 'cod_pending';
+  subtotal: number;
+  discountAmount: number;
+  promoCode?: string;
+  vatAmount: number;
+  totalAmount: number;
+  status: EcommerceOrderStatus;
+  factory: string;
+  leadTechnician?: string;
+  items: EcommerceOrderItem[];
+  internalNotes: InternalNote[];
+  createdAt: string;
+  updatedAt?: string;
+}
