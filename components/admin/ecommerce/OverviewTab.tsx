@@ -102,7 +102,7 @@ export default function OverviewTab({ orders, currency, onSelectOrder, onNavigat
         </div>
       </div>
 
-      {/* 2. Key Metrics Bar with Standard Currency Formatting */}
+      {/* 2. Key Metrics Bar with Standard Simple Currency Formatting */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         
         {/* Card 1: Total Revenue */}
@@ -116,15 +116,15 @@ export default function OverviewTab({ orders, currency, onSelectOrder, onNavigat
             </div>
           </div>
           <div>
-            <div className="flex items-baseline gap-1.5 flex-wrap">
+            <div className="flex items-baseline gap-1.5">
               <span className="text-2xl font-extrabold text-white font-mono tracking-tight">
                 {formatPrice(totalRevSAR).amount}
               </span>
-              <span className="text-xs font-mono font-bold text-[#C9A86A] bg-[#C9A86A]/10 px-1.5 py-0.5 rounded border border-[#C9A86A]/20">
+              <span className="text-xs font-mono text-zinc-400 font-semibold">
                 {formatPrice(totalRevSAR).unit}
               </span>
             </div>
-            <span className="text-[11px] text-emerald-400 font-mono mt-1 block">
+            <span className="text-[11px] text-emerald-400 font-mono mt-1 block truncate whitespace-nowrap">
               +28.4% {isAr ? 'نمو شهري' : 'MoM growth'}
             </span>
           </div>
@@ -149,7 +149,7 @@ export default function OverviewTab({ orders, currency, onSelectOrder, onNavigat
                 {isAr ? 'طلباً حياً' : 'live'}
               </span>
             </div>
-            <span className="text-[11px] text-zinc-400 font-mono mt-1 block">
+            <span className="text-[11px] text-zinc-400 font-mono mt-1 block truncate whitespace-nowrap">
               {isAr ? 'قيد التصنيع والتركيب' : 'In production & assembly'}
             </span>
           </div>
@@ -166,15 +166,15 @@ export default function OverviewTab({ orders, currency, onSelectOrder, onNavigat
             </div>
           </div>
           <div>
-            <div className="flex items-baseline gap-1.5 flex-wrap">
+            <div className="flex items-baseline gap-1.5">
               <span className="text-2xl font-extrabold text-white font-mono tracking-tight">
                 {formatPrice(aovSAR).amount}
               </span>
-              <span className="text-xs font-mono font-bold text-amber-400 bg-amber-500/10 px-1.5 py-0.5 rounded border border-amber-500/20">
+              <span className="text-xs font-mono text-zinc-400 font-semibold">
                 {formatPrice(aovSAR).unit}
               </span>
             </div>
-            <span className="text-[11px] text-zinc-400 font-mono mt-1 block">
+            <span className="text-[11px] text-zinc-400 font-mono mt-1 block truncate whitespace-nowrap">
               {isAr ? 'عقود فاخرة وتوريد فندقي' : 'High-ticket luxury suites'}
             </span>
           </div>
@@ -193,13 +193,13 @@ export default function OverviewTab({ orders, currency, onSelectOrder, onNavigat
           <div>
             <div className="flex items-baseline gap-1.5">
               <span className="text-2xl font-extrabold text-white font-mono">
-                3.42%
+                3.42
               </span>
               <span className="text-xs font-mono text-sky-400">
                 Top 5%
               </span>
             </div>
-            <span className="text-[11px] text-emerald-400 font-mono mt-1 block">
+            <span className="text-[11px] text-emerald-400 font-mono mt-1 block truncate whitespace-nowrap">
               +0.6% {isAr ? 'مقارنة بالمتوسط' : 'vs benchmark'}
             </span>
           </div>
@@ -224,7 +224,7 @@ export default function OverviewTab({ orders, currency, onSelectOrder, onNavigat
                 VIP / B2B
               </span>
             </div>
-            <span className="text-[11px] text-zinc-400 font-mono mt-1 block">
+            <span className="text-[11px] text-zinc-400 font-mono mt-1 block truncate whitespace-nowrap">
               {isAr ? '46% عقود فنادق متكررة' : '46% repeat luxury clients'}
             </span>
           </div>
