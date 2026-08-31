@@ -54,11 +54,12 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: '/favicon.ico' },
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/favicon.ico', sizes: 'any' },
       { url: '/brand/wd-group-logo-white.png', sizes: '192x192', type: 'image/png' },
     ],
-    shortcut: '/favicon.ico',
-    apple: '/brand/wd-group-logo-white.png',
+    shortcut: '/favicon.svg',
+    apple: '/favicon.svg',
   },
 };
 
@@ -70,6 +71,9 @@ export default function RootLayout({
   return (
     <html lang="en" dir="ltr" className={`${inter.variable} ${notoKufi.variable} ${playfair.variable} ${ibmMono.variable}`}>
       <head>
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link rel="shortcut icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" href="/favicon.svg" />
         {/* Google tag (gtag.js) */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-FVBW70B8H5"

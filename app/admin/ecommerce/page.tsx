@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -40,7 +40,9 @@ import {
   X,
   MessageSquare,
   Printer,
-  DollarSign
+  DollarSign,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
 
 // Initial Mock Database Seed
@@ -284,6 +286,36 @@ export default function EcommerceAdminDashboard() {
   const [selectedOrder, setSelectedOrder] = useState<EcommerceOrderRecord | null>(null);
   const [newNoteText, setNewNoteText] = useState('');
 
+  // Horizontal Tabs Scrolling Refs & State
+  const tabsContainerRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+
+  const checkTabScroll = () => {
+    if (tabsContainerRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = tabsContainerRef.current;
+      setCanScrollLeft(Math.abs(scrollLeft) > 10);
+      setCanScrollRight(Math.abs(scrollLeft) < scrollWidth - clientWidth - 10);
+    }
+  };
+
+  useEffect(() => {
+    checkTabScroll();
+    window.addEventListener('resize', checkTabScroll);
+    return () => window.removeEventListener('resize', checkTabScroll);
+  }, []);
+
+  const handleTabScroll = (direction: 'left' | 'right') => {
+    if (tabsContainerRef.current) {
+      const distance = 280;
+      tabsContainerRef.current.scrollBy({
+        left: direction === 'left' ? -distance : distance,
+        behavior: 'smooth',
+      });
+      setTimeout(checkTabScroll, 350);
+    }
+  };
+
   const formatPrice = (valSAR: number) => {
     if (currency === 'USD') {
       const valUSD = Math.round(valSAR / 3.75);
@@ -442,117 +474,149 @@ export default function EcommerceAdminDashboard() {
         </div>
       </div>
 
-      {/* 2. Top Navigation Tabs */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-2 text-xs font-mono scrollbar-thin">
+      {/* 2. Top Navigation Tabs with Smooth Click-to-Scroll & Visual Scroll Indicators */}
+      <div className="relative group">
         
-        {/* 1. Overview */}
+        {/* Left Scroll Button */}
         <button
-          onClick={() => setActiveTab('overview')}
-          className={`px-3.5 py-2.5 rounded-xl transition-all flex items-center gap-2 font-bold cursor-pointer shrink-0 ${
-            activeTab === 'overview'
-              ? 'bg-[#C9A86A] text-[#08090C] shadow-md'
-              : 'bg-white/5 text-zinc-400 hover:text-white'
-          }`}
+          onClick={() => handleTabScroll('left')}
+          className="absolute -left-3 top-1/2 -translate-y-1/2 z-20 w-8 h-8 rounded-full bg-[#141721] border border-white/20 text-white shadow-xl flex items-center justify-center hover:bg-[#C9A86A] hover:text-[#08090C] transition-all cursor-pointer"
+          title="Scroll Left"
         >
-          <LayoutDashboard className="w-4 h-4" />
-          <span>{isAr ? 'الرئيسية والمؤشرات' : '1. Overview'}</span>
+          <ChevronLeft className="w-4 h-4" />
         </button>
 
-        {/* 2. Orders */}
-        <button
-          onClick={() => setActiveTab('orders')}
-          className={`px-3.5 py-2.5 rounded-xl transition-all flex items-center gap-2 font-bold cursor-pointer shrink-0 ${
-            activeTab === 'orders'
-              ? 'bg-[#C9A86A] text-[#08090C] shadow-md'
-              : 'bg-white/5 text-zinc-400 hover:text-white'
-          }`}
+        {/* Scrollable Tabs Track */}
+        <div
+          ref={tabsContainerRef}
+          onScroll={checkTabScroll}
+          className="flex items-center gap-2 overflow-x-auto pb-3 pt-1 px-4 text-xs font-mono scroll-smooth no-scrollbar"
+          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
-          <ShoppingCart className="w-4 h-4" />
-          <span>{isAr ? 'إدارة الطلبات' : '2. Orders & Pipeline'}</span>
-          <span className="px-1.5 py-0.2 rounded-md bg-emerald-500/20 text-emerald-300 text-[10px]">
-            {orders.length}
-          </span>
-        </button>
+          
+          {/* 1. Overview */}
+          <button
+            onClick={() => setActiveTab('overview')}
+            className={`px-4 py-2.5 rounded-2xl transition-all flex items-center gap-2 font-bold cursor-pointer shrink-0 border ${
+              activeTab === 'overview'
+                ? 'bg-[#C9A86A] text-[#08090C] border-[#DFBA73] shadow-lg ring-1 ring-[#C9A86A]'
+                : 'bg-white/5 text-zinc-400 hover:text-white border-white/5 hover:border-white/15'
+            }`}
+          >
+            <LayoutDashboard className="w-4 h-4" />
+            <span>{isAr ? '1. الرئيسية والمؤشرات' : '1. Overview'}</span>
+          </button>
 
-        {/* 3. Products */}
-        <button
-          onClick={() => setActiveTab('products')}
-          className={`px-3.5 py-2.5 rounded-xl transition-all flex items-center gap-2 font-bold cursor-pointer shrink-0 ${
-            activeTab === 'products'
-              ? 'bg-[#C9A86A] text-[#08090C] shadow-md'
-              : 'bg-white/5 text-zinc-400 hover:text-white'
-          }`}
-        >
-          <Layers className="w-4 h-4" />
-          <span>{isAr ? 'المنتجات والكتالوج' : '3. Products (CRUD)'}</span>
-          <span className="px-1.5 py-0.2 rounded-md bg-black/20 text-[10px]">
-            {products.length}
-          </span>
-        </button>
+          {/* 2. Orders */}
+          <button
+            onClick={() => setActiveTab('orders')}
+            className={`px-4 py-2.5 rounded-2xl transition-all flex items-center gap-2 font-bold cursor-pointer shrink-0 border ${
+              activeTab === 'orders'
+                ? 'bg-[#C9A86A] text-[#08090C] border-[#DFBA73] shadow-lg ring-1 ring-[#C9A86A]'
+                : 'bg-white/5 text-zinc-400 hover:text-white border-white/5 hover:border-white/15'
+            }`}
+          >
+            <ShoppingCart className="w-4 h-4" />
+            <span>{isAr ? '2. إدارة الطلبات' : '2. Orders & Pipeline'}</span>
+            <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-extrabold ${
+              activeTab === 'orders' ? 'bg-[#08090C] text-[#C9A86A]' : 'bg-emerald-500/20 text-emerald-300'
+            }`}>
+              {orders.length}
+            </span>
+          </button>
 
-        {/* 4. Inventory */}
-        <button
-          onClick={() => setActiveTab('inventory')}
-          className={`px-3.5 py-2.5 rounded-xl transition-all flex items-center gap-2 font-bold cursor-pointer shrink-0 ${
-            activeTab === 'inventory'
-              ? 'bg-[#C9A86A] text-[#08090C] shadow-md'
-              : 'bg-white/5 text-zinc-400 hover:text-white'
-          }`}
-        >
-          <Warehouse className="w-4 h-4" />
-          <span>{isAr ? 'المستودعات والمصانع' : '4. Inventory & Plants'}</span>
-        </button>
+          {/* 3. Products */}
+          <button
+            onClick={() => setActiveTab('products')}
+            className={`px-4 py-2.5 rounded-2xl transition-all flex items-center gap-2 font-bold cursor-pointer shrink-0 border ${
+              activeTab === 'products'
+                ? 'bg-[#C9A86A] text-[#08090C] border-[#DFBA73] shadow-lg ring-1 ring-[#C9A86A]'
+                : 'bg-white/5 text-zinc-400 hover:text-white border-white/5 hover:border-white/15'
+            }`}
+          >
+            <Layers className="w-4 h-4" />
+            <span>{isAr ? '3. المنتجات والكتالوج' : '3. Products (CRUD)'}</span>
+            <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-extrabold ${
+              activeTab === 'products' ? 'bg-[#08090C] text-[#C9A86A]' : 'bg-white/10 text-zinc-300'
+            }`}>
+              {products.length}
+            </span>
+          </button>
 
-        {/* 5. Customers */}
-        <button
-          onClick={() => setActiveTab('customers')}
-          className={`px-3.5 py-2.5 rounded-xl transition-all flex items-center gap-2 font-bold cursor-pointer shrink-0 ${
-            activeTab === 'customers'
-              ? 'bg-[#C9A86A] text-[#08090C] shadow-md'
-              : 'bg-white/5 text-zinc-400 hover:text-white'
-          }`}
-        >
-          <Users className="w-4 h-4" />
-          <span>{isAr ? 'العملاء وCRM' : '5. Customers & CRM'}</span>
-        </button>
+          {/* 4. Inventory */}
+          <button
+            onClick={() => setActiveTab('inventory')}
+            className={`px-4 py-2.5 rounded-2xl transition-all flex items-center gap-2 font-bold cursor-pointer shrink-0 border ${
+              activeTab === 'inventory'
+                ? 'bg-[#C9A86A] text-[#08090C] border-[#DFBA73] shadow-lg ring-1 ring-[#C9A86A]'
+                : 'bg-white/5 text-zinc-400 hover:text-white border-white/5 hover:border-white/15'
+            }`}
+          >
+            <Warehouse className="w-4 h-4" />
+            <span>{isAr ? '4. المستودعات والمصانع' : '4. Inventory & Plants'}</span>
+          </button>
 
-        {/* 6. Analytics */}
-        <button
-          onClick={() => setActiveTab('analytics')}
-          className={`px-3.5 py-2.5 rounded-xl transition-all flex items-center gap-2 font-bold cursor-pointer shrink-0 ${
-            activeTab === 'analytics'
-              ? 'bg-[#C9A86A] text-[#08090C] shadow-md'
-              : 'bg-white/5 text-zinc-400 hover:text-white'
-          }`}
-        >
-          <TrendingUp className="w-4 h-4" />
-          <span>{isAr ? 'التحليلات والمقارنات' : '6. Analytics'}</span>
-        </button>
+          {/* 5. Customers */}
+          <button
+            onClick={() => setActiveTab('customers')}
+            className={`px-4 py-2.5 rounded-2xl transition-all flex items-center gap-2 font-bold cursor-pointer shrink-0 border ${
+              activeTab === 'customers'
+                ? 'bg-[#C9A86A] text-[#08090C] border-[#DFBA73] shadow-lg ring-1 ring-[#C9A86A]'
+                : 'bg-white/5 text-zinc-400 hover:text-white border-white/5 hover:border-white/15'
+            }`}
+          >
+            <Users className="w-4 h-4" />
+            <span>{isAr ? '5. العملاء وCRM' : '5. Customers & CRM'}</span>
+          </button>
 
-        {/* 7. Marketing */}
-        <button
-          onClick={() => setActiveTab('marketing')}
-          className={`px-3.5 py-2.5 rounded-xl transition-all flex items-center gap-2 font-bold cursor-pointer shrink-0 ${
-            activeTab === 'marketing'
-              ? 'bg-[#C9A86A] text-[#08090C] shadow-md'
-              : 'bg-white/5 text-zinc-400 hover:text-white'
-          }`}
-        >
-          <Tag className="w-4 h-4" />
-          <span>{isAr ? 'أكواد الخصم والسلات' : '7. Marketing & Promos'}</span>
-        </button>
+          {/* 6. Analytics & Intelligence Reports */}
+          <button
+            onClick={() => setActiveTab('analytics')}
+            className={`px-4 py-2.5 rounded-2xl transition-all flex items-center gap-2 font-bold cursor-pointer shrink-0 border ${
+              activeTab === 'analytics'
+                ? 'bg-[#C9A86A] text-[#08090C] border-[#DFBA73] shadow-lg ring-1 ring-[#C9A86A]'
+                : 'bg-white/5 text-zinc-400 hover:text-white border-white/5 hover:border-white/15'
+            }`}
+          >
+            <TrendingUp className="w-4 h-4" />
+            <span>{isAr ? '6. التقارير والذكاء المالي' : '6. Reports & Intelligence'}</span>
+          </button>
 
-        {/* 8. Settings */}
+          {/* 7. Marketing */}
+          <button
+            onClick={() => setActiveTab('marketing')}
+            className={`px-4 py-2.5 rounded-2xl transition-all flex items-center gap-2 font-bold cursor-pointer shrink-0 border ${
+              activeTab === 'marketing'
+                ? 'bg-[#C9A86A] text-[#08090C] border-[#DFBA73] shadow-lg ring-1 ring-[#C9A86A]'
+                : 'bg-white/5 text-zinc-400 hover:text-white border-white/5 hover:border-white/15'
+            }`}
+          >
+            <Tag className="w-4 h-4" />
+            <span>{isAr ? '7. أكواد الخصم والسلات' : '7. Marketing & Promos'}</span>
+          </button>
+
+          {/* 8. Settings */}
+          <button
+            onClick={() => setActiveTab('settings')}
+            className={`px-4 py-2.5 rounded-2xl transition-all flex items-center gap-2 font-bold cursor-pointer shrink-0 border ${
+              activeTab === 'settings'
+                ? 'bg-[#C9A86A] text-[#08090C] border-[#DFBA73] shadow-lg ring-1 ring-[#C9A86A]'
+                : 'bg-white/5 text-zinc-400 hover:text-white border-white/5 hover:border-white/15'
+            }`}
+          >
+            <Settings className="w-4 h-4" />
+            <span>{isAr ? '8. إعدادات الشحن والضرائب' : '8. Settings & VAT'}</span>
+          </button>
+
+        </div>
+
+        {/* Right Scroll Button with Glowing Pulse to indicate more options */}
         <button
-          onClick={() => setActiveTab('settings')}
-          className={`px-3.5 py-2.5 rounded-xl transition-all flex items-center gap-2 font-bold cursor-pointer shrink-0 ${
-            activeTab === 'settings'
-              ? 'bg-[#C9A86A] text-[#08090C] shadow-md'
-              : 'bg-white/5 text-zinc-400 hover:text-white'
-          }`}
+          onClick={() => handleTabScroll('right')}
+          className="absolute -right-3 top-1/2 -translate-y-1/2 z-20 w-8 h-8 rounded-full bg-[#141721] border border-[#C9A86A]/40 text-[#C9A86A] shadow-xl flex items-center justify-center hover:bg-[#C9A86A] hover:text-[#08090C] transition-all cursor-pointer animate-pulse"
+          title="Scroll Right for More Options"
         >
-          <Settings className="w-4 h-4" />
-          <span>{isAr ? 'إعدادات الشحن والضرائب' : '8. Settings & VAT'}</span>
+          <ChevronRight className="w-4 h-4" />
         </button>
 
       </div>
