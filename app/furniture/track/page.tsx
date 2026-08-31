@@ -24,7 +24,8 @@ import {
   Layers,
   Wrench,
   PackageCheck,
-  UserCheck
+  UserCheck,
+  Zap
 } from 'lucide-react';
 
 function OrderTrackerContent() {
@@ -36,7 +37,7 @@ function OrderTrackerContent() {
   const [searched, setSearched] = useState(false);
   const [activeOrder, setActiveOrder] = useState<any>(null);
 
-  // Demo active order data
+  // Demo active order data with cleaned leadTechnician (removed White-Glove Lead from name)
   const sampleOrder = {
     orderRef: 'WD-ORD-2026-8812',
     customerName: isAr ? 'سلطان بن عبدالعزيز آل سعود' : 'Sultan Al-Saud',
@@ -45,7 +46,7 @@ function OrderTrackerContent() {
     orderDate: '28/08/2026',
     estimatedDelivery: isAr ? '08 سبتمبر 2026 (الفترة الصباحية)' : 'September 08, 2026 (Morning Slot)',
     factory: isAr ? 'مصنع جرين وود 1 و 3 — الرياض' : 'GreenWood Factory 1 & 3 — Riyadh',
-    leadTechnician: isAr ? 'م. فهد الغامدي (رئيس فريق التركيبات الفندقية)' : 'Eng. Fahad Al-Ghamdi (White-Glove Lead)',
+    leadTechnician: isAr ? 'م. فهد الغامدي' : 'Eng. Fahad Al-Ghamdi',
     currentStageIdx: 3, // Stage 4 in progress (0-indexed 3)
     items: [
       {
@@ -164,14 +165,19 @@ function OrderTrackerContent() {
             <span>{isAr ? 'العودة إلى معرض الأثاث' : 'Back to Furniture Showroom'}</span>
           </Link>
 
-          <span className="text-[11px] font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-3 py-1 rounded-full flex items-center gap-1.5">
+          <span className="text-[11px] font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-3 py-1 rounded-full flex items-center gap-1.5 shadow-[0_0_15px_rgba(16,185,129,0.15)]">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
             <span>{isAr ? 'مزامنة حية مع مصانع جرين وود' : 'Live Factory Sync Active'}</span>
           </span>
         </div>
 
         {/* Page Header */}
-        <div className="text-center max-w-2xl mx-auto space-y-3">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          className="text-center max-w-2xl mx-auto space-y-3"
+        >
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#C9A86A]/10 border border-[#C9A86A]/30 text-[#C9A86A] text-xs font-mono font-medium">
             <Factory className="w-3.5 h-3.5" />
             <span>GreenWood Manufacturing Intelligence</span>
@@ -182,22 +188,27 @@ function OrderTrackerContent() {
           <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
             {dict.furniture.tracking.page_subtitle}
           </p>
-        </div>
+        </motion.div>
 
-        {/* Search Bar */}
-        <div className="max-w-xl mx-auto">
+        {/* Search Bar with Optimized Padding */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+          className="max-w-xl mx-auto"
+        >
           <form onSubmit={handleSearch} className="relative flex items-center">
             <input
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder={dict.furniture.tracking.search_placeholder}
-              className="w-full pl-12 pr-28 rtl:pl-28 rtl:pr-12 py-4 rounded-2xl bg-[#0F1117] border border-white/15 text-white placeholder-zinc-500 text-xs sm:text-sm focus:outline-none focus:border-[#C9A86A] shadow-2xl transition-all"
+              className="w-full pl-12 pr-36 rtl:pl-36 rtl:pr-12 py-4 rounded-2xl bg-[#0F1117] border border-white/15 text-white placeholder-zinc-500 text-xs sm:text-sm focus:outline-none focus:border-[#C9A86A] shadow-2xl transition-all font-mono"
             />
             <Search className="w-5 h-5 text-zinc-400 absolute left-4 rtl:left-auto rtl:right-4 pointer-events-none" />
             <button
               type="submit"
-              className="absolute right-2 rtl:right-auto rtl:left-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#C9A86A] to-[#DFBA73] text-[#08090C] font-extrabold text-xs hover:shadow-lg transition-all cursor-pointer font-mono"
+              className="absolute right-2 rtl:right-auto rtl:left-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#C9A86A] to-[#DFBA73] text-[#08090C] font-extrabold text-xs hover:shadow-lg transition-all cursor-pointer font-mono shrink-0"
             >
               {dict.furniture.tracking.track_btn}
             </button>
@@ -217,13 +228,14 @@ function OrderTrackerContent() {
               {dict.furniture.tracking.sample_order_btn}
             </button>
           </div>
-        </div>
+        </motion.div>
 
         {/* ACTIVE ORDER TRACKING RESULTS */}
         {searched && activeOrder && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
             className="space-y-8"
           >
             
@@ -235,8 +247,9 @@ function OrderTrackerContent() {
                     <h2 className="text-xl sm:text-2xl font-mono font-extrabold text-[#C9A86A]">
                       {activeOrder.orderRef}
                     </h2>
-                    <span className="px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-mono font-bold">
-                      {dict.furniture.tracking.status_in_progress} (65%)
+                    <span className="px-3 py-1 rounded-full bg-amber-500/15 border border-amber-500/40 text-amber-400 text-xs font-mono font-bold flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping" />
+                      <span>{dict.furniture.tracking.status_in_progress} (65%)</span>
                     </span>
                   </div>
                   <p className="text-xs text-zinc-400">
@@ -272,7 +285,7 @@ function OrderTrackerContent() {
                 </div>
 
                 <div className="p-3.5 rounded-xl bg-[#141721] border border-white/5 space-y-1">
-                  <span className="text-zinc-500 text-[10px] uppercase block">{dict.furniture.tracking.technician_lead || (isAr ? 'فريق التركيبات المعتمد' : 'White-Glove Lead')}</span>
+                  <span className="text-zinc-500 text-[10px] uppercase block">{isAr ? 'مهندس فريق التركيب المعتمد' : 'White-Glove Installation Lead'}</span>
                   <span className="text-white font-bold flex items-center gap-1.5">
                     <UserCheck className="w-3.5 h-3.5 text-emerald-400" />
                     <span>{activeOrder.leadTechnician}</span>
@@ -311,20 +324,41 @@ function OrderTrackerContent() {
               </div>
             </div>
 
-            {/* 2. Visual 6-Stage Manufacturing Pipeline */}
-            <div className="glass-card rounded-3xl p-6 sm:p-8 border border-white/10 bg-[#0F1117]/80 space-y-8">
-              <div className="space-y-1">
-                <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                  <Sparkles className="w-5 h-5 text-[#C9A86A]" />
-                  <span>{isAr ? 'مراحل التصنيع والتسليم الميداني (المسار الزمني)' : 'Manufacturing & Site Delivery Timeline'}</span>
-                </h3>
-                <p className="text-xs text-zinc-400">
-                  {isAr ? 'تحديثات مباشرة من أنظمة التحكم بالمصانع والأسطول اللوجستي' : 'Real-time telemetry from GreenWood CNC workcenters and logistics fleet'}
-                </p>
+            {/* 2. Enhanced Visual 6-Stage Manufacturing Pipeline */}
+            <div className="glass-card rounded-3xl p-6 sm:p-8 border border-white/10 bg-[#0F1117]/80 space-y-8 shadow-2xl">
+              
+              {/* Timeline Header & Progress Bar */}
+              <div className="space-y-4 pb-4 border-b border-white/10">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div className="space-y-1">
+                    <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                      <Sparkles className="w-5 h-5 text-[#C9A86A]" />
+                      <span>{isAr ? 'مراحل التصنيع والتسليم الميداني' : 'Manufacturing & Site Delivery Timeline'}</span>
+                    </h3>
+                    <p className="text-xs text-zinc-400">
+                      {isAr ? 'تحديثات مباشرة من أنظمة التحكم بماكينات CNC بمصانع جرين وود' : 'Live telemetry from GreenWood CNC workcenters and logistics fleet'}
+                    </p>
+                  </div>
+
+                  <div className="text-left sm:text-right rtl:sm:text-left font-mono">
+                    <span className="text-xs font-bold text-[#C9A86A] block">
+                      {isAr ? 'المرحلة 4 من 6 قيد التنفيذ' : 'Stage 4 of 6 In Progress'}
+                    </span>
+                    <span className="text-[11px] text-emerald-400">65% Overall Completion</span>
+                  </div>
+                </div>
+
+                {/* Glowing Progress Bar */}
+                <div className="w-full bg-white/5 h-2.5 rounded-full overflow-hidden p-0.5 border border-white/10">
+                  <div 
+                    className="h-full rounded-full bg-gradient-to-r from-emerald-500 via-[#DFBA73] to-[#C9A86A] shadow-[0_0_20px_rgba(201,168,106,0.6)] transition-all duration-1000"
+                    style={{ width: '65%' }}
+                  />
+                </div>
               </div>
 
               {/* Vertical Step Timeline */}
-              <div className="relative pl-6 rtl:pl-0 rtl:pr-6 border-l-2 rtl:border-l-0 rtl:border-r-2 border-white/10 space-y-8 my-4">
+              <div className="relative pl-7 rtl:pl-0 rtl:pr-7 border-l-2 rtl:border-l-0 rtl:border-r-2 border-white/10 space-y-6 my-4">
                 {stages.map((stg, idx) => {
                   const isDone = idx < activeOrder.currentStageIdx;
                   const isCurrent = idx === activeOrder.currentStageIdx;
@@ -332,33 +366,39 @@ function OrderTrackerContent() {
                   const Icon = stg.icon;
 
                   return (
-                    <div key={stg.num} className="relative group">
+                    <motion.div 
+                      key={stg.num} 
+                      initial={{ opacity: 0, x: isAr ? 20 : -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.5, delay: idx * 0.08, ease: [0.22, 1, 0.36, 1] }}
+                      className="relative group"
+                    >
                       {/* Timeline Node Icon */}
-                      <div className={`absolute -left-[35px] rtl:-left-auto rtl:-right-[35px] top-0 w-8 h-8 rounded-full flex items-center justify-center border-2 transition-all shadow-md ${
+                      <div className={`absolute -left-[38px] rtl:-left-auto rtl:-right-[38px] top-0 w-8 h-8 rounded-full flex items-center justify-center border-2 transition-all shadow-md ${
                         isDone
-                          ? 'bg-emerald-500 text-[#08090C] border-emerald-400'
+                          ? 'bg-emerald-500 text-[#08090C] border-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.3)]'
                           : isCurrent
-                          ? 'bg-[#C9A86A] text-[#08090C] border-[#DFBA73] animate-pulse shadow-[0_0_20px_rgba(201,168,106,0.6)]'
+                          ? 'bg-gradient-to-r from-[#C9A86A] to-[#DFBA73] text-[#08090C] border-[#DFBA73] animate-pulse shadow-[0_0_25px_rgba(201,168,106,0.7)]'
                           : 'bg-[#141721] text-zinc-600 border-white/10'
                       }`}>
                         <Icon className="w-4 h-4" />
                       </div>
 
                       {/* Content Card */}
-                      <div className={`p-4 sm:p-5 rounded-2xl border transition-all ${
+                      <div className={`p-4 sm:p-5 rounded-2xl border transition-all duration-300 ${
                         isCurrent
-                          ? 'bg-[#141721] border-[#C9A86A]/40 shadow-lg'
+                          ? 'bg-[#141721] border-[#C9A86A]/50 shadow-[0_0_30px_rgba(201,168,106,0.15)] ring-1 ring-[#C9A86A]/30'
                           : isDone
                           ? 'bg-[#141721]/60 border-emerald-500/20'
-                          : 'bg-white/5 border-white/5 opacity-60'
+                          : 'bg-white/5 border-white/5 opacity-55'
                       }`}>
-                        <div className="flex flex-wrap items-center justify-between gap-2 mb-1.5">
+                        <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
                           <div className="flex items-center gap-2">
-                            <span className={`text-xs font-mono font-extrabold px-2 py-0.5 rounded ${
+                            <span className={`text-xs font-mono font-extrabold px-2.5 py-0.5 rounded-md ${
                               isDone
-                                ? 'bg-emerald-500/20 text-emerald-300'
+                                ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
                                 : isCurrent
-                                ? 'bg-[#C9A86A] text-[#08090C]'
+                                ? 'bg-[#C9A86A] text-[#08090C] font-bold shadow'
                                 : 'bg-white/10 text-zinc-400'
                             }`}>
                               {isAr ? `المرحلة ${stg.num}` : `Stage ${stg.num}`}
@@ -369,15 +409,35 @@ function OrderTrackerContent() {
                           <div className="flex items-center gap-2 text-[11px] font-mono">
                             <span className="text-zinc-400">{stg.location}</span>
                             <span>·</span>
-                            <span className={isCurrent ? 'text-[#C9A86A] font-bold' : 'text-zinc-400'}>{stg.timestamp}</span>
+                            <span className={isCurrent ? 'text-[#C9A86A] font-bold' : 'text-zinc-400'}>
+                              {stg.timestamp}
+                            </span>
                           </div>
                         </div>
 
                         <p className="text-xs text-zinc-300 leading-relaxed">
                           {stg.desc}
                         </p>
+
+                        {/* Current Status Pill */}
+                        <div className="pt-3 mt-3 border-t border-white/5 flex items-center justify-between text-[11px] font-mono">
+                          <span className="text-zinc-500">
+                            {isAr ? 'حالة التفتيش:' : 'Verification Status:'}
+                          </span>
+                          <span className={`font-bold flex items-center gap-1 ${
+                            isDone 
+                              ? 'text-emerald-400' 
+                              : isCurrent 
+                              ? 'text-amber-400' 
+                              : 'text-zinc-500'
+                          }`}>
+                            {isDone && '✓ Verified & Cleared'}
+                            {isCurrent && '⚡ Active on CNC / Hand-Craft Line'}
+                            {isPending && '⏳ Scheduled in Queue'}
+                          </span>
+                        </div>
                       </div>
-                    </div>
+                    </motion.div>
                   );
                 })}
               </div>

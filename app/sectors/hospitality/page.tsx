@@ -17,7 +17,9 @@ import {
   Calendar,
   Layers,
   FileUp,
-  ChevronDown
+  ChevronDown,
+  Star,
+  Quote
 } from 'lucide-react';
 
 export default function HospitalityPage() {
@@ -238,7 +240,108 @@ export default function HospitalityPage() {
           </div>
         </motion.section>
 
-        {/* 4. Hotel Partnership RFP Form */}
+        {/* 4. Hospitality Client & Guest Endorsements */}
+        <motion.section 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          className="space-y-8"
+        >
+          <div className="text-center space-y-2 max-w-2xl mx-auto">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-sky-500/10 border border-sky-500/30 text-sky-400 text-xs font-mono font-semibold">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>{lang === 'ar' ? 'آراء شركاء الفنادق والنزلاء' : 'HOTEL PARTNER ENDORSEMENTS'}</span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
+              {lang === 'ar' ? 'معايير تشغيلية وضيافة نالت ثقة المستثمرين' : 'Operational Excellence Trusted by Hospitality Asset Owners'}
+            </h2>
+            <p className="text-xs sm:text-sm text-zinc-400">
+              {lang === 'ar' 
+                ? 'شهادات حية من ملاك العقارات الفندقية والنزلاء في منشآت سويس بلو بالمملكة.' 
+                : 'Verified reviews from property owners, asset managers, and executive guests across SwissBlue properties.'}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <motion.div 
+              whileHover={{ y: -6 }}
+              className="glass-card rounded-3xl p-6 border border-white/10 space-y-4 bg-[#0F1117]/80 hover:border-sky-500/40 transition-all duration-300 shadow-xl flex flex-col justify-between"
+            >
+              <div className="space-y-3">
+                <div className="flex items-center gap-1 text-amber-400">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+                  ))}
+                </div>
+                <p className="text-xs text-zinc-300 leading-relaxed italic">
+                  &ldquo;{lang === 'ar' 
+                    ? 'منذ تولي مجموعة دبليو دي إدارة أجنحة سويس بلو بكورنيش جدة، قفز معدل الإشغال السنوي إلى 94% مع تحقيق أعلى تقييمات للنزلاء على منصات الحجز العالمية.'
+                    : 'Since WD Group assumed operator management of SwissBlue Jeddah Corniche, annual occupancy reached 94% with benchmark guest satisfaction ratings across global OTAs.'}&rdquo;
+                </p>
+              </div>
+              <div className="pt-3 border-t border-white/5 flex items-center justify-between text-[11px] font-mono">
+                <div>
+                  <span className="text-white font-bold block">{lang === 'ar' ? 'م. طارق المنصور' : 'Eng. Tariq Al-Mansoor'}</span>
+                  <span className="text-zinc-500">{lang === 'ar' ? 'مالك عقار فندقي' : 'Property Owner'}</span>
+                </div>
+                <span className="text-sky-400 font-semibold">{lang === 'ar' ? 'جدة' : 'Jeddah'}</span>
+              </div>
+            </motion.div>
+
+            <motion.div 
+              whileHover={{ y: -6 }}
+              className="glass-card rounded-3xl p-6 border border-white/10 space-y-4 bg-[#0F1117]/80 hover:border-sky-500/40 transition-all duration-300 shadow-xl flex flex-col justify-between"
+            >
+              <div className="space-y-3">
+                <div className="flex items-center gap-1 text-amber-400">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+                  ))}
+                </div>
+                <p className="text-xs text-zinc-300 leading-relaxed italic">
+                  &ldquo;{lang === 'ar' 
+                    ? 'نظام إدارة الإيرادات الفندقية (RevPAR) لدى سويس بلو وفر شفافية تشغيلية كاملة وعوائد استثمارية تفوقت بنسبة 28% على الفنادق المجاورة في الرياض.'
+                    : 'The automated yield management and transparent reporting from SwissBlue increased our Net Operating Income by 28% compared to compset hotels in Riyadh.'}&rdquo;
+                </p>
+              </div>
+              <div className="pt-3 border-t border-white/5 flex items-center justify-between text-[11px] font-mono">
+                <div>
+                  <span className="text-white font-bold block">{lang === 'ar' ? 'أ. فهد السبيعي' : 'Fahad Al-Subaie'}</span>
+                  <span className="text-zinc-500">{lang === 'ar' ? 'صندوق استثمار عقاري' : 'REIT Asset Manager'}</span>
+                </div>
+                <span className="text-sky-400 font-semibold">{lang === 'ar' ? 'الرياض' : 'Riyadh'}</span>
+              </div>
+            </motion.div>
+
+            <motion.div 
+              whileHover={{ y: -6 }}
+              className="glass-card rounded-3xl p-6 border border-white/10 space-y-4 bg-[#0F1117]/80 hover:border-sky-500/40 transition-all duration-300 shadow-xl flex flex-col justify-between"
+            >
+              <div className="space-y-3">
+                <div className="flex items-center gap-1 text-amber-400">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+                  ))}
+                </div>
+                <p className="text-xs text-zinc-300 leading-relaxed italic">
+                  &ldquo;{lang === 'ar' 
+                    ? 'تجربة إقامة متكاملة من فئة الخمس نجوم. الأجنحة مجهزة بأثاث جرين وود الراقي والخدمة الفندقية سريعة واحترافية للغاية في كافة التفاصيل.'
+                    : 'A 5-star executive extended-stay experience. The bespoke GreenWood suites, acoustic tranquility, and concierge responsiveness set a new standard.'}&rdquo;
+                </p>
+              </div>
+              <div className="pt-3 border-t border-white/5 flex items-center justify-between text-[11px] font-mono">
+                <div>
+                  <span className="text-white font-bold block">{lang === 'ar' ? 'د. محمد الغامدي' : 'Dr. M. Al-Ghamdi'}</span>
+                  <span className="text-zinc-500">{lang === 'ar' ? 'نزيل تنفيذي دائم' : 'Executive Guest'}</span>
+                </div>
+                <span className="text-emerald-400 font-semibold">{lang === 'ar' ? 'الشرقية' : 'Khobar'}</span>
+              </div>
+            </motion.div>
+          </div>
+        </motion.section>
+
+        {/* 5. Hotel Partnership RFP Form */}
         <motion.section 
           id="rfp" 
           initial={{ opacity: 0, y: 30 }}

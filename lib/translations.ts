@@ -715,7 +715,7 @@ export const translations = {
       tracking: {
         page_title: "Live Factory Fabrication & Order Tracker",
         page_subtitle: "Track your bespoke GreenWood furniture pieces through our specialized Saudi manufacturing lines to site installation.",
-        search_placeholder: "Enter Order Reference (e.g. WD-ORD-2026-8812) or Mobile (+966)...",
+        search_placeholder: "Order Ref (WD-ORD-2026-8812) or Mobile...",
         track_btn: "Track Order",
         order_info: "Order Information",
         customer_name: "Client Name",
@@ -1459,7 +1459,7 @@ export const translations = {
       tracking: {
         page_title: "تتبع مراحل التصنيع والتوصيل المباشر",
         page_subtitle: "تابع مراحل تصنيع قطع أثاث جرين وود الفاخرة في خطوط إنتاجنا الوطنية خطوة بخطوة حتى وصولها وتركيبها بموقعك.",
-        search_placeholder: "أدخل رقم الطلب المرجعي (مثال: WD-ORD-2026-8812) أو رقم الجوال...",
+        search_placeholder: "رقم الطلب (WD-ORD-2026-8812) أو الجوال...",
         track_btn: "تتبع الطلب",
         order_info: "بيانات وتفاصيل الطلب",
         customer_name: "اسم العميل",
