@@ -288,31 +288,38 @@ export default function EcommerceAdminDashboard() {
   const tabsContainerRef = React.useRef<HTMLDivElement>(null);
   const hasAnimatedScrollRef = React.useRef(false);
 
-  // Auto teaser scroll (peek to the right and return to 0) on page load
+  // Auto teaser scroll: Starts strictly at default 1-2-3 posture, scrolls right to reveal hidden tabs, then smoothly returns back to 1-2-3
   React.useEffect(() => {
+    if (!tabsContainerRef.current) return;
+    
+    // Explicitly lock starting position at default (1. Overview, 2. Orders, 3. Products)
+    tabsContainerRef.current.scrollLeft = 0;
+
     const timer = setTimeout(() => {
       if (tabsContainerRef.current && !hasAnimatedScrollRef.current) {
         const el = tabsContainerRef.current;
-        if (el.scrollWidth > el.clientWidth) {
-          const peekDistance = isAr ? -Math.min(260, el.scrollWidth - el.clientWidth) : Math.min(260, el.scrollWidth - el.clientWidth);
+        const maxScroll = el.scrollWidth - el.clientWidth;
+        
+        if (maxScroll > 15) {
+          const peekDistance = Math.min(320, maxScroll);
           
-          // 1. Smoothly scroll to reveal hidden tabs
+          // 1. Smoothly glide right from default posture to reveal more options
           el.scrollTo({ left: peekDistance, behavior: 'smooth' });
 
-          // 2. Hold for 700ms and smoothly return back to start
+          // 2. Pause so user sees remaining tabs, then glide smoothly back to default posture (1-2-3)
           const returnTimer = setTimeout(() => {
             if (el && !hasAnimatedScrollRef.current) {
               el.scrollTo({ left: 0, behavior: 'smooth' });
             }
-          }, 750);
+          }, 900);
 
           return () => clearTimeout(returnTimer);
         }
       }
-    }, 600);
+    }, 800);
 
     return () => clearTimeout(timer);
-  }, [isAr]);
+  }, []);
 
   const formatPrice = (valSAR: number) => {
     if (currency === 'USD') {
