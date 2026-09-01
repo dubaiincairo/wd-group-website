@@ -85,10 +85,11 @@ export default function MediaFieldUploader({
       const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://fqkbgfdasfwnryekkgqz.supabase.co';
       const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZxa2JnZmRhc2Z3bnJ5ZWtrZ3F6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc1OTAyMDYsImV4cCI6MjEwMzE2NjIwNn0.IRPdvlCIbeTtFNf8TMc353fT-tlLxYq0Mx3P2HHmM3Q';
 
-      const targetBucket = isPdf ? (bucket === 'photos' ? 'documents' : bucket) : (accept === 'video' ? 'videos' : bucket);
+      const primaryBucket = isPdf ? (bucket === 'photos' || bucket === 'documents' ? 'assets' : bucket) : (accept === 'video' ? 'videos' : (bucket === 'documents' ? 'assets' : bucket));
+      let effectiveBucket = primaryBucket;
 
       // 1. Upload to Supabase Storage
-      const res = await fetch(`${supabaseUrl}/storage/v1/object/${targetBucket}/${cleanFileName}`, {
+      let res = await fetch(`${supabaseUrl}/storage/v1/object/${effectiveBucket}/${cleanFileName}`, {
         method: 'POST',
         headers: {
           'apikey': supabaseAnonKey,
@@ -98,12 +99,26 @@ export default function MediaFieldUploader({
         body: file,
       });
 
+      // Fallback if bucket does not exist
+      if (!res.ok && (effectiveBucket !== 'assets' && effectiveBucket !== 'photos')) {
+        effectiveBucket = isPdf ? 'assets' : 'photos';
+        res = await fetch(`${supabaseUrl}/storage/v1/object/${effectiveBucket}/${cleanFileName}`, {
+          method: 'POST',
+          headers: {
+            'apikey': supabaseAnonKey,
+            'Authorization': `Bearer ${supabaseAnonKey}`,
+            'Content-Type': file.type || (isPdf ? 'application/pdf' : accept === 'video' ? 'video/mp4' : 'image/jpeg'),
+          },
+          body: file,
+        });
+      }
+
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
         throw new Error(err.message || (isAr ? 'فشل رفع الملف إلى السحابة' : 'Storage upload failed'));
       }
 
-      const fileUrl = `${supabaseUrl}/storage/v1/object/public/${targetBucket}/${cleanFileName}`;
+      const fileUrl = `${supabaseUrl}/storage/v1/object/public/${effectiveBucket}/${cleanFileName}`;
 
       // 2. Register media in database
       try {
@@ -111,13 +126,13 @@ export default function MediaFieldUploader({
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            bucket_id: targetBucket,
+            bucket_id: effectiveBucket,
             file_name: cleanFileName,
             file_url: fileUrl,
             file_size: file.size,
             mime_type: file.type || (isPdf ? 'application/pdf' : 'application/octet-stream'),
             alt_text_en: label,
-            tags: [isPdf ? 'pdf' : accept, targetBucket],
+            tags: [isPdf ? 'pdf' : accept, effectiveBucket],
           }),
         });
       } catch (e) {
