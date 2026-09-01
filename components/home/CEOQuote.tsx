@@ -1,15 +1,23 @@
 'use client';
 
-import React from 'react';
-import Image from 'next/image';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/context/LanguageContext';
-import { Quote, Sparkles, ShieldCheck } from 'lucide-react';
+import { Quote, ShieldCheck } from 'lucide-react';
 
 export default function CEOQuote() {
   const { lang, dict } = useLanguage();
+  const [imageError, setImageError] = useState(false);
 
-  const ceoPhoto = (dict.home.ceo as any).photo_url || (dict.home.media as any)?.ceo_photo;
+  const fallbackPhoto = lang === 'ar'
+    ? 'https://fqkbgfdasfwnryekkgqz.supabase.co/storage/v1/object/public/photos/1787855637181_Watan_Designs_Company_Profile.png'
+    : 'https://fqkbgfdasfwnryekkgqz.supabase.co/storage/v1/object/public/photos/1787855667130_Watan_Designs_Company_Profile__1_.png';
+
+  const rawPhoto = (dict.home.ceo as any)?.photo_url 
+    || (dict.home.media as any)?.ceo_photo 
+    || fallbackPhoto;
+
+  const ceoPhoto = !imageError && rawPhoto ? rawPhoto : null;
 
   return (
     <section className="py-20 sm:py-24 bg-[#08090C] text-white relative overflow-hidden border-t border-white/5">
@@ -32,13 +40,13 @@ export default function CEOQuote() {
             <div className="shrink-0 relative">
               <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-full bg-gradient-to-br from-[#E3C58A] via-[#C9A86A] to-[#8A7340] p-1 shadow-glow-camel border border-[#C9A86A]/40 flex items-center justify-center overflow-hidden shrink-0">
                 {ceoPhoto ? (
-                  <div className="relative w-full h-full rounded-full overflow-hidden">
-                    <Image 
+                  <div className="relative w-full h-full rounded-full overflow-hidden bg-[#08090C]">
+                    <img 
                       src={ceoPhoto} 
                       alt={dict.home.ceo.name} 
-                      fill 
-                      sizes="(max-width: 640px) 112px, 144px"
-                      className="object-cover" 
+                      className="w-full h-full object-cover object-top rounded-full" 
+                      loading="eager"
+                      onError={() => setImageError(true)}
                     />
                   </div>
                 ) : (
