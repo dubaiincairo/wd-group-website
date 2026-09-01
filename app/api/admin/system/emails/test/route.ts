@@ -8,6 +8,7 @@ import {
   sendPasswordResetEmail,
   sendMagicSignInEmail,
   sendOrderConfirmationEmail,
+  sendDailySyncReportEmail,
 } from '@/lib/email/brevo';
 
 export const dynamic = 'force-dynamic';
@@ -118,6 +119,81 @@ export async function POST(req: NextRequest) {
           shippingAddress: isAr 
             ? 'حي النرجس، شارع أنس بن مالك، الرياض، المملكة العربية السعودية'
             : 'Al-Narjis District, Anas Ibn Malik St, Riyadh, Saudi Arabia',
+          lang,
+        });
+        break;
+
+      case 'daily-sync-report':
+        result = await sendDailySyncReportEmail({
+          targetEmail: emailToSend,
+          tasks: [
+            {
+              name: 'Supabase PostgreSQL & Sector Content Sync',
+              nameAr: 'قاعدة بيانات سوبابيس ومزامنة محتوى القطاعات',
+              service: 'Database',
+              status: 'success',
+              latencyMs: 38,
+              recordsProcessed: 64,
+            },
+            {
+              name: 'Media Assets & Video Bucket Storage',
+              nameAr: 'حاويات الوسائط السحابية ومكتبة الفيديو والصور',
+              service: 'Storage CDN',
+              status: 'success',
+              latencyMs: 44,
+              recordsProcessed: 120,
+            },
+            {
+              name: 'Brevo Transactional Email Gateway',
+              nameAr: 'بوابة البريد الإلكتروني التلقائي (Brevo API)',
+              service: 'Email Gateway',
+              status: 'warning',
+              latencyMs: 95,
+              errorCode: 'WARN_RATE_LIMIT_80PCT',
+              failureReason: isAr ? 'تم استهلاك 82% من الحصة الشهرية لإرسال البريد الإلكتروني.' : '82% of monthly transactional email quota consumed.',
+              actionNeeded: isAr ? 'ترقية باقة Brevo لتفادي توقف إشعارات المبيعات والتوظيف.' : 'Upgrade Brevo tier to prevent disruption of transactional emails.',
+              actionNeededAr: 'ترقية باقة Brevo لتفادي توقف إشعارات المبيعات والتوظيف.',
+            },
+            {
+              name: 'External ERP & Inventory Sync Connector',
+              nameAr: 'موصل مزامنة المخزون ومنظومة تخطيط الموارد (ERP)',
+              service: 'Inventory Sync',
+              status: 'failed',
+              latencyMs: 2400,
+              errorCode: 'ERR_ERP_GATEWAY_TIMEOUT_504',
+              failureReason: isAr 
+                ? 'فشل الاتصال بخادم الـ ERP الخارجي بسبب انتهاء مهلة الاستجابة (Gateway Timeout 504) أثناء استرجاع كميات الأثاث.'
+                : 'External ERP API socket timed out (HTTP 504) during furniture inventory stock level synchronization.',
+              actionNeeded: isAr ? 'فحص جدار الحماية وعنوان IP لخادم الـ ERP وإعادة تشغيل المزامنة.' : 'Check ERP server firewall allowlist and retry inventory synchronization.',
+              actionNeededAr: 'فحص جدار الحماية وعنوان IP لخادم الـ ERP وإعادة تشغيل المزامنة.',
+            },
+            {
+              name: 'CRM Commercial Leads & Inquiry Queue',
+              nameAr: 'طابور استفسارات العملاء والفرص التجارية (CRM)',
+              service: 'CRM',
+              status: 'success',
+              latencyMs: 29,
+              recordsProcessed: 18,
+            },
+            {
+              name: 'ATS Human Capital Applications Queue',
+              nameAr: 'نظام إدارة طلبات التوظيف وأرشيف السير الذاتية (ATS)',
+              service: 'HR ATS',
+              status: 'success',
+              latencyMs: 31,
+              recordsProcessed: 25,
+            },
+            {
+              name: 'Search Engine Sitemap & OpenGraph Sync',
+              nameAr: 'خريطة الموقع التفاعلية ومحركات البحث (SEO)',
+              service: 'SEO',
+              status: 'success',
+              latencyMs: 19,
+              recordsProcessed: 28,
+            },
+          ],
+          totalLatencyMs: 2656,
+          syncEnvironment: 'production',
           lang,
         });
         break;

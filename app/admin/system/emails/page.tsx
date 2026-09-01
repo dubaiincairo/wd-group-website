@@ -20,7 +20,9 @@ import {
   Code2,
   Eye,
   RefreshCw,
-  Globe
+  Globe,
+  Activity,
+  AlertTriangle
 } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 import { useToast } from '@/components/admin/ToastProvider';
@@ -704,6 +706,213 @@ export default function EmailTemplatesAdminPage() {
 </body>
 </html>`,
     },
+    {
+      id: 'daily-sync-report',
+      titleAr: '8. تقرير المزامنة اليومية وتشخيص الأعطال (Sync Diagnostics)',
+      titleEn: '8. Daily Automated Sync & Failure Diagnostics',
+      badgeAr: 'المزامنة والأعطال',
+      badgeEn: 'Sync & Diagnostics',
+      badgeType: 'amber',
+      icon: Activity,
+      descAr: 'تقرير تقني مفصل يحتوي على جدول تشخيصي احترافي يبين سبب كل عطل بدقة ورمز الخطأ والإجراء التصحيحي.',
+      descEn: 'Comprehensive automated diagnostic report detailing exact root-cause failure reasons with professional responsive tables.',
+      subjectAr: '🚨 تنبيه عاجل: تعثر المزامنة اليومية (خدمة المخزون ERP)',
+      subjectEn: '🚨 Critical Alert: Daily Automated Sync Failures (1 Failed)',
+      triggerAr: 'يُرسل آلياً يومياً أو فور حدوث أي تعثر في مهام المزامنة السحابية وقواعد البيانات.',
+      triggerEn: 'Dispatched automatically upon daily cron run or immediately when any subsystem fails.',
+      iframeDocAr: `<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { margin: 0; padding: 20px; background: #08090C; color: #E4E4E7; font-family: 'Cairo', -apple-system, sans-serif; direction: rtl; text-align: right; }
+  </style>
+</head>
+<body>
+  <div style="max-width: 600px; margin: 0 auto; background: #0F1117; border: 1px solid #232733; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.7);">
+    <div style="height: 4px; background: linear-gradient(90deg, #EF4444, #F59E0B, #10B981);"></div>
+    <div style="padding: 32px 24px; text-align: center; background: #141722; border-bottom: 1px solid #1F2430;">
+      <h1 style="margin: 0; color: #FFF; font-size: 22px;">مجموعة دبليو دي للأعمال</h1>
+      <p style="margin: 4px 0 0; color: #F59E0B; font-size: 11px; font-weight: bold;">منظومة المراقبة والاستقرار السحابي والمزامنة الآلية</p>
+    </div>
+    <div style="padding: 32px 24px; line-height: 1.65; font-size: 14px;">
+      <span style="display: inline-block; padding: 3px 10px; border-radius: 100px; font-size: 10px; font-weight: bold; background: rgba(239,68,68,0.15); color: #FCA5A5; border: 1px solid rgba(239,68,68,0.4); margin-bottom: 14px;">🚨 تنبيه أعطال فوري</span>
+      <h2 style="margin: 0 0 16px; color: #FFF; font-size: 18px;">تقرير المزامنة اليومية وتشخيص الأعطال</h2>
+      <p style="margin-top: 0; font-size: 13px; color: #D4D4D8;">
+        نرفع لسعادتكم التقرير الفني والتشخيصي المفصل لعملية <strong>المزامنة الآلية اليومية</strong>، المنفذة على البيئة السحابية:
+      </p>
+
+      <!-- KPI Summary Cards -->
+      <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin: 16px 0;">
+        <tr>
+          <td style="padding: 6px; width: 25%;">
+            <div style="background: #141722; border: 1px solid #232733; border-radius: 8px; padding: 10px 6px; text-align: center;">
+              <span style="font-size: 9px; color: #A1A1AA; text-transform: uppercase; font-weight: bold; display: block;">المهام الكلية</span>
+              <strong style="font-size: 18px; color: #FFFFFF; font-family: monospace;">7</strong>
+            </div>
+          </td>
+          <td style="padding: 6px; width: 25%;">
+            <div style="background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.3); border-radius: 8px; padding: 10px 6px; text-align: center;">
+              <span style="font-size: 9px; color: #34D399; text-transform: uppercase; font-weight: bold; display: block;">الناجحة</span>
+              <strong style="font-size: 18px; color: #34D399; font-family: monospace;">5</strong>
+            </div>
+          </td>
+          <td style="padding: 6px; width: 25%;">
+            <div style="background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.3); border-radius: 8px; padding: 10px 6px; text-align: center;">
+              <span style="font-size: 9px; color: #FBBF24; text-transform: uppercase; font-weight: bold; display: block;">التحذيرات</span>
+              <strong style="font-size: 18px; color: #FBBF24; font-family: monospace;">1</strong>
+            </div>
+          </td>
+          <td style="padding: 6px; width: 25%;">
+            <div style="background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.5); border-radius: 8px; padding: 10px 6px; text-align: center;">
+              <span style="font-size: 9px; color: #F87171; text-transform: uppercase; font-weight: bold; display: block;">المتعثرة (فشل)</span>
+              <strong style="font-size: 18px; color: #EF4444; font-family: monospace;">1</strong>
+            </div>
+          </td>
+        </tr>
+      </table>
+
+      <!-- Diagnostic Table -->
+      <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin: 16px 0; background-color: #0F1117; border: 1px solid #232733; border-radius: 12px; overflow: hidden; border-collapse: collapse;">
+        <thead>
+          <tr style="background-color: #141722; border-bottom: 2px solid #232733;">
+            <th style="padding: 10px; font-size: 10px; font-weight: 800; color: #C9A86A; text-align: right; text-transform: uppercase;">الخدمة</th>
+            <th style="padding: 10px; font-size: 10px; font-weight: 800; color: #C9A86A; text-align: center; text-transform: uppercase;">الحالة</th>
+            <th style="padding: 10px; font-size: 10px; font-weight: 800; color: #C9A86A; text-align: right; text-transform: uppercase;">سبب الفشل الدقيق والإجراء</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="background-color: rgba(255,255,255,0.01); border-bottom: 1px solid rgba(255,255,255,0.06);">
+            <td style="padding: 10px; vertical-align: top;"><strong style="color: #FFF; font-size: 12px;">قاعدة بيانات Supabase</strong><span style="font-size: 9px; color: #71717A; display: block;">Database (38ms)</span></td>
+            <td align="center" style="padding: 10px; vertical-align: top;"><span style="display:inline-block; padding:2px 6px; border-radius:4px; font-size:9px; font-weight:bold; background:rgba(16,185,129,0.15); color:#34D399;">✅ ناجح</span></td>
+            <td style="padding: 10px; font-size: 11px; color: #A1A1AA;">تمت مطابقة 64 سجلاً ومحتوى بنجاح تام.</td>
+          </tr>
+          <tr style="background-color: rgba(245,158,11,0.05); border-bottom: 1px solid rgba(245,158,11,0.2);">
+            <td style="padding: 10px; vertical-align: top;"><strong style="color: #FFF; font-size: 12px;">بوابة البريد Brevo API</strong><span style="font-size: 9px; color: #FBBF24; display: block;">Email Gateway (95ms)</span></td>
+            <td align="center" style="padding: 10px; vertical-align: top;"><span style="display:inline-block; padding:2px 6px; border-radius:4px; font-size:9px; font-weight:bold; background:rgba(245,158,11,0.2); color:#FCD34D;">⚠️ تحذير</span></td>
+            <td style="padding: 10px; font-size: 11px; color: #FCD34D;">
+              <strong>[WARN_QUOTA_82%]</strong> تم استهلاك 82% من الحصة الشهرية.<br>
+              <span style="color: #C9A86A; font-size: 10px;">الإجراء: ترقية باقة Brevo لتفادي توقف الرسائل.</span>
+            </td>
+          </tr>
+          <tr style="background-color: rgba(239,68,68,0.08); border-bottom: 1px solid rgba(239,68,68,0.3);">
+            <td style="padding: 10px; vertical-align: top;"><strong style="color: #FFF; font-size: 12px;">مزامنة مخزون الـ ERP</strong><span style="font-size: 9px; color: #EF4444; display: block;">Inventory (2400ms)</span></td>
+            <td align="center" style="padding: 10px; vertical-align: top;"><span style="display:inline-block; padding:2px 6px; border-radius:4px; font-size:9px; font-weight:bold; background:rgba(239,68,68,0.2); color:#FCA5A5;">❌ فشل</span></td>
+            <td style="padding: 10px; font-size: 11px; color: #FCA5A5;">
+              <div style="background: #0B0D14; border: 1px solid rgba(239,68,68,0.4); border-radius: 6px; padding: 6px 8px; margin-bottom: 4px;">
+                <strong style="color: #EF4444; font-family: monospace;">[ERR_ERP_504_TIMEOUT]</strong><br>
+                <code>Gateway Timeout 504 أثناء الاتصال بخادم ERP الخارجي.</code>
+              </div>
+              <span style="color: #C9A86A; font-size: 10px;">الإجراء: فحص جدار الحماية وعنوان IP وإعادة تشغيل المزامنة.</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div style="text-align: center; margin: 28px 0;">
+        <a href="https://wdgroup.online/admin/system/health" target="_blank" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #EF4444, #DC2626); color: #FFF; text-decoration: none; font-weight: bold; border-radius: 10px; font-size: 12px;">فتح لوحة فحص النظام ومعالجة العطل &larr;</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>`,
+      iframeDocEn: `<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { margin: 0; padding: 20px; background: #08090C; color: #E4E4E7; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; direction: ltr; text-align: left; }
+  </style>
+</head>
+<body>
+  <div style="max-width: 600px; margin: 0 auto; background: #0F1117; border: 1px solid #232733; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.7);">
+    <div style="height: 4px; background: linear-gradient(90deg, #EF4444, #F59E0B, #10B981);"></div>
+    <div style="padding: 32px 24px; text-align: center; background: #141722; border-bottom: 1px solid #1F2430;">
+      <h1 style="margin: 0; color: #FFF; font-size: 22px; letter-spacing: 1.5px;">WD GROUP</h1>
+      <p style="margin: 4px 0 0; color: #F59E0B; font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; font-family: monospace;">System Reliability & Automated Daily Sync</p>
+    </div>
+    <div style="padding: 32px 24px; line-height: 1.65; font-size: 14px;">
+      <span style="display: inline-block; padding: 3px 10px; border-radius: 100px; font-size: 10px; font-weight: bold; background: rgba(239,68,68,0.15); color: #FCA5A5; border: 1px solid rgba(239,68,68,0.4); margin-bottom: 14px; text-transform: uppercase; font-family: monospace;">🚨 Critical Failure Alert</span>
+      <h2 style="margin: 0 0 16px; color: #FFF; font-size: 18px;">Daily Automated Sync & Failure Diagnostics</h2>
+      <p style="margin-top: 0; font-size: 13px; color: #D4D4D8;">
+        Here is the technical diagnostic report for the <strong>Daily Automated System Sync</strong>:
+      </p>
+
+      <!-- KPI Summary Cards -->
+      <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin: 16px 0;">
+        <tr>
+          <td style="padding: 6px; width: 25%;">
+            <div style="background: #141722; border: 1px solid #232733; border-radius: 8px; padding: 10px 6px; text-align: center;">
+              <span style="font-size: 9px; color: #A1A1AA; text-transform: uppercase; font-weight: bold; display: block;">Total Tasks</span>
+              <strong style="font-size: 18px; color: #FFFFFF; font-family: monospace;">7</strong>
+            </div>
+          </td>
+          <td style="padding: 6px; width: 25%;">
+            <div style="background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.3); border-radius: 8px; padding: 10px 6px; text-align: center;">
+              <span style="font-size: 9px; color: #34D399; text-transform: uppercase; font-weight: bold; display: block;">Passed</span>
+              <strong style="font-size: 18px; color: #34D399; font-family: monospace;">5</strong>
+            </div>
+          </td>
+          <td style="padding: 6px; width: 25%;">
+            <div style="background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.3); border-radius: 8px; padding: 10px 6px; text-align: center;">
+              <span style="font-size: 9px; color: #FBBF24; text-transform: uppercase; font-weight: bold; display: block;">Warnings</span>
+              <strong style="font-size: 18px; color: #FBBF24; font-family: monospace;">1</strong>
+            </div>
+          </td>
+          <td style="padding: 6px; width: 25%;">
+            <div style="background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.5); border-radius: 8px; padding: 10px 6px; text-align: center;">
+              <span style="font-size: 9px; color: #F87171; text-transform: uppercase; font-weight: bold; display: block;">Failed</span>
+              <strong style="font-size: 18px; color: #EF4444; font-family: monospace;">1</strong>
+            </div>
+          </td>
+        </tr>
+      </table>
+
+      <!-- Diagnostic Table -->
+      <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin: 16px 0; background-color: #0F1117; border: 1px solid #232733; border-radius: 12px; overflow: hidden; border-collapse: collapse;">
+        <thead>
+          <tr style="background-color: #141722; border-bottom: 2px solid #232733;">
+            <th style="padding: 10px; font-size: 10px; font-weight: 800; color: #C9A86A; text-align: left; text-transform: uppercase;">Subsystem</th>
+            <th style="padding: 10px; font-size: 10px; font-weight: 800; color: #C9A86A; text-align: center; text-transform: uppercase;">Status</th>
+            <th style="padding: 10px; font-size: 10px; font-weight: 800; color: #C9A86A; text-align: left; text-transform: uppercase;">Exact Failure Reason & Remediation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="background-color: rgba(255,255,255,0.01); border-bottom: 1px solid rgba(255,255,255,0.06);">
+            <td style="padding: 10px; vertical-align: top;"><strong style="color: #FFF; font-size: 12px;">Supabase Database</strong><span style="font-size: 9px; color: #71717A; display: block;">Database (38ms)</span></td>
+            <td align="center" style="padding: 10px; vertical-align: top;"><span style="display:inline-block; padding:2px 6px; border-radius:4px; font-size:9px; font-weight:bold; background:rgba(16,185,129,0.15); color:#34D399;">✅ SUCCESS</span></td>
+            <td style="padding: 10px; font-size: 11px; color: #A1A1AA;">64 sector records synchronized with zero anomalies.</td>
+          </tr>
+          <tr style="background-color: rgba(245,158,11,0.05); border-bottom: 1px solid rgba(245,158,11,0.2);">
+            <td style="padding: 10px; vertical-align: top;"><strong style="color: #FFF; font-size: 12px;">Brevo Email API</strong><span style="font-size: 9px; color: #FBBF24; display: block;">Email Gateway (95ms)</span></td>
+            <td align="center" style="padding: 10px; vertical-align: top;"><span style="display:inline-block; padding:2px 6px; border-radius:4px; font-size:9px; font-weight:bold; background:rgba(245,158,11,0.2); color:#FCD34D;">⚠️ WARNING</span></td>
+            <td style="padding: 10px; font-size: 11px; color: #FCD34D;">
+              <strong>[WARN_QUOTA_82%]</strong> 82% of monthly quota consumed.<br>
+              <span style="color: #C9A86A; font-size: 10px;">Remediation: Upgrade tier to prevent delivery halts.</span>
+            </td>
+          </tr>
+          <tr style="background-color: rgba(239,68,68,0.08); border-bottom: 1px solid rgba(239,68,68,0.3);">
+            <td style="padding: 10px; vertical-align: top;"><strong style="color: #FFF; font-size: 12px;">ERP Inventory Connector</strong><span style="font-size: 9px; color: #EF4444; display: block;">Inventory (2400ms)</span></td>
+            <td align="center" style="padding: 10px; vertical-align: top;"><span style="display:inline-block; padding:2px 6px; border-radius:4px; font-size:9px; font-weight:bold; background:rgba(239,68,68,0.2); color:#FCA5A5;">❌ FAILED</span></td>
+            <td style="padding: 10px; font-size: 11px; color: #FCA5A5;">
+              <div style="background: #0B0D14; border: 1px solid rgba(239,68,68,0.4); border-radius: 6px; padding: 6px 8px; margin-bottom: 4px;">
+                <strong style="color: #EF4444; font-family: monospace;">[ERR_ERP_504_TIMEOUT]</strong><br>
+                <code>Gateway Timeout 504 during furniture inventory handshake.</code>
+              </div>
+              <span style="color: #C9A86A; font-size: 10px;">Remediation: Check ERP firewall allowlist and trigger re-sync.</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div style="text-align: center; margin: 28px 0;">
+        <a href="https://wdgroup.online/admin/system/health" target="_blank" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #EF4444, #DC2626); color: #FFF; text-decoration: none; font-weight: bold; border-radius: 10px; font-size: 12px; text-transform: uppercase;">Open System Health Console &rarr;</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>`,
+    },
   ];
 
   const currentTemplate = templates[activeTab];
@@ -773,7 +982,7 @@ export default function EmailTemplatesAdminPage() {
           <p className="text-xs sm:text-sm text-zinc-400 mt-1">
             {isAr 
               ? 'معاينة واختبار وتصدير كافة رسائل البريد الإلكتروني التلقائية المعتمدة لمجموعة دبليو دي باللغتين العربية والإنجليزية.'
-              : 'Review, test, and export all 7 branded transactional email templates for WD Group in Arabic and English.'}
+              : 'Review, test, and export all 8 branded transactional and diagnostic email templates for WD Group in Arabic and English.'}
           </p>
         </div>
 
@@ -826,7 +1035,7 @@ export default function EmailTemplatesAdminPage() {
         <div className="lg:col-span-4 space-y-3">
           <div className="flex items-center justify-between px-2">
             <span className="text-xs font-mono font-bold text-[#C9A86A] uppercase tracking-wider">
-              {isAr ? 'القوالب المعتمدة (7 قوالب)' : 'SYSTEM TEMPLATES (7 TOTAL)'}
+              {isAr ? 'القوالب المعتمدة (8 قوالب)' : 'SYSTEM TEMPLATES (8 TOTAL)'}
             </span>
             <span className="text-[10px] font-mono text-zinc-400 bg-white/5 px-2 py-0.5 rounded border border-white/10">
               {isTemplateAr ? (isAr ? '🇸🇦 عربي (RTL)' : '🇸🇦 Arabic (RTL)') : (isAr ? '🇬🇧 إنجليزي (LTR)' : '🇬🇧 English (LTR)')}

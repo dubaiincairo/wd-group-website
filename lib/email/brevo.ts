@@ -1333,3 +1333,259 @@ export async function sendOrderConfirmationEmail({
     tags: ['ecommerce-order-confirmation'],
   });
 }
+
+export interface SyncSubsystemResult {
+  name: string;
+  nameAr?: string;
+  service: string;
+  status: 'success' | 'warning' | 'failed';
+  latencyMs: number;
+  recordsProcessed?: number;
+  failureReason?: string | null;
+  errorCode?: string | null;
+  actionNeeded?: string | null;
+  actionNeededAr?: string | null;
+}
+
+/**
+ * 8. Daily Automated Sync & Failure Diagnostic Report Email
+ * Dispatched automatically to System Administrators & Executives upon cron sync execution,
+ * with exact failure reasons, root-cause diagnostics, latency benchmarks, and a high-end responsive table.
+ */
+export async function sendDailySyncReportEmail({
+  targetEmail,
+  tasks,
+  totalLatencyMs = 0,
+  syncEnvironment = 'production',
+  lang = 'ar',
+}: {
+  targetEmail?: string;
+  tasks: SyncSubsystemResult[];
+  totalLatencyMs?: number;
+  syncEnvironment?: string;
+  lang?: 'ar' | 'en';
+}) {
+  const adminEmail = targetEmail || process.env.ADMIN_ALERT_EMAIL || 'ceo@wdgroup.online';
+  const siteUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://wdgroup.online';
+  const isAr = lang === 'ar';
+  const timestamp = new Date().toLocaleString(isAr ? 'ar-SA' : 'en-US', {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+    timeZone: 'Asia/Riyadh',
+  });
+
+  const successCount = tasks.filter(t => t.status === 'success').length;
+  const warningCount = tasks.filter(t => t.status === 'warning').length;
+  const failureCount = tasks.filter(t => t.status === 'failed').length;
+  const hasFailures = failureCount > 0;
+  const hasWarnings = warningCount > 0;
+
+  const statusTitle = hasFailures 
+    ? (isAr ? `🚨 تنبيه عاجل: تعثر المزامنة اليومية (${failureCount} خدمات متعثرة)` : `🚨 Critical Alert: Daily Automated Sync Failures (${failureCount} Failed)`)
+    : hasWarnings
+    ? (isAr ? `⚠️ تقرير المزامنة اليومية: اكتملت مع وجود (${warningCount}) تحذيرات` : `⚠️ Daily Sync Report: Completed with (${warningCount}) Warnings`)
+    : (isAr ? `✅ تقرير المزامنة اليومية: كافة الأنظمة والبيانات متطابقة بنسبة 100%` : `✅ Daily Sync Report: All 100% Systems Operational`);
+
+  // Build Table Rows
+  const tableRowsHtml = tasks.map((task) => {
+    const isFailed = task.status === 'failed';
+    const isWarning = task.status === 'warning';
+    const rowBg = isFailed ? 'rgba(239, 68, 68, 0.08)' : isWarning ? 'rgba(245, 158, 11, 0.05)' : 'rgba(255, 255, 255, 0.01)';
+    const borderColor = isFailed ? 'rgba(239, 68, 68, 0.3)' : isWarning ? 'rgba(245, 158, 11, 0.3)' : 'rgba(255, 255, 255, 0.06)';
+    const statusPill = isFailed
+      ? `<span style="display:inline-block; padding:3px 8px; border-radius:6px; font-size:10px; font-weight:800; background:rgba(239,68,68,0.2); color:#FCA5A5; border:1px solid rgba(239,68,68,0.4); font-family:monospace;">❌ ${isAr ? 'فشل' : 'FAILED'}</span>`
+      : isWarning
+      ? `<span style="display:inline-block; padding:3px 8px; border-radius:6px; font-size:10px; font-weight:800; background:rgba(245,158,11,0.2); color:#FCD34D; border:1px solid rgba(245,158,11,0.4); font-family:monospace;">⚠️ ${isAr ? 'تحذير' : 'WARNING'}</span>`
+      : `<span style="display:inline-block; padding:3px 8px; border-radius:6px; font-size:10px; font-weight:800; background:rgba(16,185,129,0.15); color:#6EE7B7; border:1px solid rgba(16,185,129,0.3); font-family:monospace;">✅ ${isAr ? 'ناجح' : 'SUCCESS'}</span>`;
+
+    const displayName = isAr && task.nameAr ? task.nameAr : task.name;
+    const actionText = isAr && task.actionNeededAr ? task.actionNeededAr : task.actionNeeded;
+
+    return `
+      <tr style="background-color: ${rowBg}; border-bottom: 1px solid ${borderColor};">
+        <td style="padding: 14px 12px; vertical-align: top; text-align: ${isAr ? 'right' : 'left'};">
+          <strong style="color: #FFFFFF; font-size: 13px; display: block;">${displayName}</strong>
+          <span style="font-size: 10px; color: #9CA3AF; font-family: monospace; text-transform: uppercase;">${task.service}</span>
+        </td>
+        <td align="center" style="padding: 14px 8px; vertical-align: top;">
+          ${statusPill}
+          <div style="font-size: 10px; color: #71717A; font-family: monospace; margin-top: 4px;">${task.latencyMs}ms</div>
+        </td>
+        <td style="padding: 14px 12px; vertical-align: top; text-align: ${isAr ? 'right' : 'left'}; font-size: 12px; line-height: 1.5;">
+          ${task.failureReason ? `
+            <div style="background: #0B0D14; border: 1px solid rgba(239, 68, 68, 0.4); border-radius: 6px; padding: 8px 10px; margin-bottom: 6px;">
+              <span style="color: #EF4444; font-weight: bold; font-family: monospace; font-size: 11px; display: block; margin-bottom: 2px;">
+                ${task.errorCode ? `[${task.errorCode}] ` : ''}${isAr ? 'سبب الفشل الدقيق:' : 'Exact Failure Reason:'}
+              </span>
+              <code style="color: #FCA5A5; font-size: 11px; font-family: monospace; word-break: break-all;">
+                ${task.failureReason}
+              </code>
+            </div>
+          ` : `
+            <span style="color: #A1A1AA; font-size: 11px;">
+              ${task.recordsProcessed ? (isAr ? `تمت معالجة ومطابقة ${task.recordsProcessed} سجل بنجاح` : `Synchronized ${task.recordsProcessed} items with zero anomalies`) : (isAr ? 'الاتصال والتشغيل مستقر بنسبة 100%' : 'All health and data checks passed')}
+            </span>
+          `}
+          ${actionText ? `
+            <div style="margin-top: 4px; font-size: 11px; color: #C9A86A; background: rgba(201, 168, 106, 0.08); padding: 4px 8px; border-radius: 4px; border-left: 2px solid #C9A86A;">
+              <strong>${isAr ? 'الإجراء الموصى به:' : 'Remediation:'}</strong> ${actionText}
+            </div>
+          ` : ''}
+        </td>
+      </tr>
+    `;
+  }).join('');
+
+  const bodyHtml = isAr ? `
+    <p style="margin-top: 0; font-size: 14px; color: #F4F4F5;">
+      سعادة الإدارة التنفيذية وفريق العمليات التقنية،
+    </p>
+    <p style="color: #D4D4D8; line-height: 1.65; font-size: 13px;">
+      نرفع لسعادتكم التقرير الفني والتشخيصي المفصل لعملية <strong>المزامنة الآلية اليومية الشاملة</strong> لمجموعة دبليو دي للأعمال، المنفذة بتاريخ <strong>${timestamp}</strong> على بيئة <code>${syncEnvironment}</code>.
+    </p>
+
+    <!-- Executive KPI Metrics Summary Cards -->
+    <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin: 20px 0;">
+      <tr>
+        <td style="padding: 10px 6px; width: 25%;">
+          <div style="background: #141722; border: 1px solid #232733; border-radius: 10px; padding: 12px 8px; text-align: center;">
+            <span style="font-size: 10px; color: #A1A1AA; text-transform: uppercase; font-weight: bold; display: block;">المهام المفحوصة</span>
+            <strong style="font-size: 20px; color: #FFFFFF; font-family: monospace;">${tasks.length}</strong>
+          </div>
+        </td>
+        <td style="padding: 10px 6px; width: 25%;">
+          <div style="background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.3); border-radius: 10px; padding: 12px 8px; text-align: center;">
+            <span style="font-size: 10px; color: #34D399; text-transform: uppercase; font-weight: bold; display: block;">الناجحة</span>
+            <strong style="font-size: 20px; color: #34D399; font-family: monospace;">${successCount}</strong>
+          </div>
+        </td>
+        <td style="padding: 10px 6px; width: 25%;">
+          <div style="background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.3); border-radius: 10px; padding: 12px 8px; text-align: center;">
+            <span style="font-size: 10px; color: #FBBF24; text-transform: uppercase; font-weight: bold; display: block;">التحذيرات</span>
+            <strong style="font-size: 20px; color: #FBBF24; font-family: monospace;">${warningCount}</strong>
+          </div>
+        </td>
+        <td style="padding: 10px 6px; width: 25%;">
+          <div style="background: ${hasFailures ? 'rgba(239,68,68,0.15)' : 'rgba(255,255,255,0.02)'}; border: 1px solid ${hasFailures ? 'rgba(239,68,68,0.5)' : '#232733'}; border-radius: 10px; padding: 12px 8px; text-align: center;">
+            <span style="font-size: 10px; color: ${hasFailures ? '#F87171' : '#71717A'}; text-transform: uppercase; font-weight: bold; display: block;">المتعثرة (فشل)</span>
+            <strong style="font-size: 20px; color: ${hasFailures ? '#EF4444' : '#71717A'}; font-family: monospace;">${failureCount}</strong>
+          </div>
+        </td>
+      </tr>
+    </table>
+
+    <!-- Detailed Subsystems Diagnostics Table -->
+    <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin: 16px 0; background-color: #0F1117; border: 1px solid #232733; border-radius: 12px; overflow: hidden; border-collapse: collapse;">
+      <thead>
+        <tr style="background-color: #141722; border-bottom: 2px solid #232733;">
+          <th style="padding: 12px; font-size: 11px; font-weight: 800; color: #C9A86A; text-align: right; text-transform: uppercase; width: 32%;">الخدمة / المنظومة</th>
+          <th style="padding: 12px; font-size: 11px; font-weight: 800; color: #C9A86A; text-align: center; text-transform: uppercase; width: 18%;">الحالة والزمن</th>
+          <th style="padding: 12px; font-size: 11px; font-weight: 800; color: #C9A86A; text-align: right; text-transform: uppercase; width: 50%;">سبب الفشل الدقيق / التفاصيل الفنية</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${tableRowsHtml}
+      </tbody>
+    </table>
+
+    ${hasFailures ? `
+      <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.4); border-radius: 10px; padding: 14px 18px; margin: 20px 0;">
+        <h4 style="margin: 0 0 6px 0; font-size: 13px; color: #EF4444;">🚨 إجراءات المعالجة الفورية الموصى بها:</h4>
+        <p style="margin: 0; font-size: 12px; color: #FCA5A5; line-height: 1.6;">
+          يرجى من المهندس المناوب مراجعة السجلات الفنية (Logs) في لوحة التحكم وتحديث مفاتيح الربط أو إعادة تشغيل المزامنة اليدوية.
+        </p>
+      </div>
+    ` : ''}
+
+    <p style="margin-top: 24px; font-size: 12px; color: #A1A1AA; line-height: 1.6;">
+      صدر آلياً عن <strong>منظومة المراقبة والاستقرار السحابي — مجموعة دبليو دي</strong><br>
+      <span style="color: #71717A; font-size: 11px;">الرياض · المملكة العربية السعودية</span>
+    </p>
+  ` : `
+    <p style="margin-top: 0; font-size: 14px; color: #F4F4F5;">
+      Dear Executive Team & Technical Operations,
+    </p>
+    <p style="color: #D4D4D8; line-height: 1.65; font-size: 13px;">
+      Here is the comprehensive diagnostic report for the <strong>Daily Automated System Sync</strong> executed on <strong>${timestamp}</strong> across the <code>${syncEnvironment}</code> environment.
+    </p>
+
+    <!-- Executive KPI Metrics Summary Cards -->
+    <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin: 20px 0;">
+      <tr>
+        <td style="padding: 10px 6px; width: 25%;">
+          <div style="background: #141722; border: 1px solid #232733; border-radius: 10px; padding: 12px 8px; text-align: center;">
+            <span style="font-size: 10px; color: #A1A1AA; text-transform: uppercase; font-weight: bold; display: block;">Total Tasks</span>
+            <strong style="font-size: 20px; color: #FFFFFF; font-family: monospace;">${tasks.length}</strong>
+          </div>
+        </td>
+        <td style="padding: 10px 6px; width: 25%;">
+          <div style="background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.3); border-radius: 10px; padding: 12px 8px; text-align: center;">
+            <span style="font-size: 10px; color: #34D399; text-transform: uppercase; font-weight: bold; display: block;">Successful</span>
+            <strong style="font-size: 20px; color: #34D399; font-family: monospace;">${successCount}</strong>
+          </div>
+        </td>
+        <td style="padding: 10px 6px; width: 25%;">
+          <div style="background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.3); border-radius: 10px; padding: 12px 8px; text-align: center;">
+            <span style="font-size: 10px; color: #FBBF24; text-transform: uppercase; font-weight: bold; display: block;">Warnings</span>
+            <strong style="font-size: 20px; color: #FBBF24; font-family: monospace;">${warningCount}</strong>
+          </div>
+        </td>
+        <td style="padding: 10px 6px; width: 25%;">
+          <div style="background: ${hasFailures ? 'rgba(239,68,68,0.15)' : 'rgba(255,255,255,0.02)'}; border: 1px solid ${hasFailures ? 'rgba(239,68,68,0.5)' : '#232733'}; border-radius: 10px; padding: 12px 8px; text-align: center;">
+            <span style="font-size: 10px; color: ${hasFailures ? '#F87171' : '#71717A'}; text-transform: uppercase; font-weight: bold; display: block;">Failed</span>
+            <strong style="font-size: 20px; color: ${hasFailures ? '#EF4444' : '#71717A'}; font-family: monospace;">${failureCount}</strong>
+          </div>
+        </td>
+      </tr>
+    </table>
+
+    <!-- Detailed Subsystems Diagnostics Table -->
+    <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin: 16px 0; background-color: #0F1117; border: 1px solid #232733; border-radius: 12px; overflow: hidden; border-collapse: collapse;">
+      <thead>
+        <tr style="background-color: #141722; border-bottom: 2px solid #232733;">
+          <th style="padding: 12px; font-size: 11px; font-weight: 800; color: #C9A86A; text-align: left; text-transform: uppercase; width: 32%;">Subsystem / Service</th>
+          <th style="padding: 12px; font-size: 11px; font-weight: 800; color: #C9A86A; text-align: center; text-transform: uppercase; width: 18%;">Status & Latency</th>
+          <th style="padding: 12px; font-size: 11px; font-weight: 800; color: #C9A86A; text-align: left; text-transform: uppercase; width: 50%;">Exact Failure Reason / Technical Diagnostics</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${tableRowsHtml}
+      </tbody>
+    </table>
+
+    ${hasFailures ? `
+      <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.4); border-radius: 10px; padding: 14px 18px; margin: 20px 0;">
+        <h4 style="margin: 0 0 6px 0; font-size: 13px; color: #EF4444;">🚨 Urgent Remediation Needed:</h4>
+        <p style="margin: 0; font-size: 12px; color: #FCA5A5; line-height: 1.6;">
+          One or more mission-critical services encountered synchronization errors. Please review the diagnostic reasons above and trigger an immediate re-sync from the System Health console.
+        </p>
+      </div>
+    ` : ''}
+
+    <p style="margin-top: 24px; font-size: 12px; color: #A1A1AA; line-height: 1.6;">
+      Automated dispatch from <strong>WD Group System Reliability & Health Engine</strong><br>
+      <span style="color: #71717A; font-size: 11px;">Riyadh · Kingdom of Saudi Arabia</span>
+    </p>
+  `;
+
+  return sendEmailWithBrevo({
+    to: [{ name: 'WD Group DevOps & Executive Team', email: adminEmail }],
+    subject: statusTitle,
+    htmlContent: renderBrandedShell({
+      title: isAr ? 'تقرير المزامنة وتشخيص الأعطال' : 'Daily Automated Sync Report',
+      preheader: isAr ? `نتائج فحص ${tasks.length} خدمات: ${successCount} ناجحة، ${failureCount} متعثرة.` : `Checked ${tasks.length} services: ${successCount} Passed, ${failureCount} Failed.`,
+      badgeText: hasFailures 
+        ? (isAr ? 'تنبيه أعطال فوري' : 'Critical Failure Alert') 
+        : (isAr ? 'تقرير المزامنة اليومي' : 'Daily Sync Health'),
+      badgeType: hasFailures ? 'amber' : 'emerald',
+      bodyHtml,
+      isAr,
+      actionButton: {
+        label: isAr ? 'فتح لوحة فحص استقرار النظام' : 'Open System Health Console',
+        url: `${siteUrl}/admin/system/health`,
+        variant: hasFailures ? 'gold' : 'blue',
+      },
+    }),
+    tags: ['daily-sync-report', hasFailures ? 'sync-failure' : 'sync-success'],
+  });
+}
