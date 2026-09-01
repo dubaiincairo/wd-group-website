@@ -28,7 +28,8 @@ import {
   ShoppingCart,
   Package,
   Truck,
-  TrendingUp
+  TrendingUp,
+  Mail
 } from 'lucide-react';
 import type { AdminRole } from '@/lib/admin/types';
 
@@ -237,6 +238,14 @@ const NAV_GROUPS: NavGroup[] = [
         icon: Settings,
         iconBg: 'bg-slate-500/15 text-slate-300 border-slate-500/25 group-hover:bg-slate-500/25',
         allowedRoles: ['owner', 'admin'],
+      },
+      {
+        label: 'Email Templates',
+        labelAr: 'قوالب البريد الإلكتروني',
+        href: '/admin/system/emails',
+        icon: Mail,
+        iconBg: 'bg-[#C9A86A]/15 text-[#C9A86A] border-[#C9A86A]/25 group-hover:bg-[#C9A86A]/25',
+        allowedRoles: ['owner', 'admin', 'editor'],
       },
       {
         label: 'System Health',
