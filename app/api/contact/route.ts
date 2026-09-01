@@ -1,12 +1,60 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { submitContactInquiry } from '@/lib/supabase';
-import { sendContactConfirmationEmail, sendContactAdminNotificationEmail } from '@/lib/email/brevo';
+import { 
+  sendContactConfirmationEmail, 
+  sendContactAdminNotificationEmail, 
+  sendOrderConfirmationEmail 
+} from '@/lib/email/brevo';
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { fullName, name, email, phone, company, sector, subject, message } = body;
 
+    // Check if it's an ecommerce order placement
+    if (body.type === 'furniture_checkout' && body.customer) {
+      const { orderRef, customer, items, total, paymentMethod } = body;
+      const customerName = `${customer.firstName || ''} ${customer.lastName || ''}`.trim() || 'Valued Customer';
+      const customerEmail = customer.email;
+      const fullAddress = `${customer.address || ''}, ${customer.district || ''}, ${customer.city || ''}`.trim();
+
+      if (customerEmail && customerEmail.includes('@')) {
+        try {
+          await Promise.allSettled([
+            sendOrderConfirmationEmail({
+              customerName,
+              customerEmail,
+              orderNumber: orderRef || `WD-ORD-${Date.now().toString().slice(-6)}`,
+              items: (items || []).map((i: any) => ({
+                title: i.name || 'Furniture Item',
+                quantity: i.qty || 1,
+                price: i.unitPrice || 0,
+              })),
+              totalAmount: total || 0,
+              currency: 'ر.س',
+              shippingAddress: fullAddress,
+            }),
+            sendContactAdminNotificationEmail({
+              fullName: customerName,
+              email: customerEmail,
+              phone: customer.phone,
+              company: `Order ${orderRef} (${paymentMethod})`,
+              sector: 'manufacturing',
+              subject: `New Store Order: ${orderRef}`,
+              message: `New furniture store order placed by ${customerName}. Total: ${total} SAR. Delivery Address: ${fullAddress}. Items: ${(items || []).map((i: any) => `${i.name} (x${i.qty})`).join(', ')}`,
+            }),
+          ]);
+        } catch (err) {
+          console.error('Order confirmation email error:', err);
+        }
+      }
+
+      return NextResponse.json({
+        success: true,
+        message: 'Order received and confirmation dispatched',
+      });
+    }
+
+    const { fullName, name, email, phone, company, sector, subject, message } = body;
     const contactName = fullName || name;
 
     if (!contactName || typeof contactName !== 'string' || !contactName.trim()) {
