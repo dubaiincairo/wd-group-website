@@ -1260,8 +1260,8 @@ export default function PagesContentEditor() {
                 <MediaFieldUploader
                   label={isAr ? 'الملف التعريفي باللغة العربية (PDF - Arabic)' : 'Corporate Profile PDF (Arabic Version)'}
                   description={isAr ? 'الملف الذي سيتم تحميله عند تصفح الموقع باللغة العربية' : 'Downloaded when visitor is on Arabic version'}
-                  bucket="assets"
-                  accept="any"
+                  bucket="documents"
+                  accept="pdf"
                   value={content.about.corporate_profile_pdf_ar || content.about.corporate_profile_pdf || ''}
                   onChange={(url) => setContent({ 
                     ...content, 
@@ -1273,8 +1273,8 @@ export default function PagesContentEditor() {
                 <MediaFieldUploader
                   label={isAr ? 'الملف التعريفي باللغة الإنجليزية (PDF - English)' : 'Corporate Profile PDF (English Version)'}
                   description={isAr ? 'الملف الذي سيتم تحميله عند تصفح الموقع باللغة الإنجليزية' : 'Downloaded when visitor is on English version'}
-                  bucket="assets"
-                  accept="any"
+                  bucket="documents"
+                  accept="pdf"
                   value={content.about.corporate_profile_pdf_en || content.about.corporate_profile_pdf || ''}
                   onChange={(url) => setContent({ 
                     ...content, 
