@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>معاينة قوالب البريد الإلكتروني المعتمدة — مجموعة دبليو دي (WD Group)</title>
+  <title>معاينة قوالب البريد الإلكتروني المعتمدة (عربي / English) — مجموعة دبليو دي</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
@@ -40,7 +40,7 @@
     header {
       background-color: var(--card-bg);
       border-bottom: 1px solid var(--card-border);
-      padding: 20px 32px;
+      padding: 16px 28px;
       display: flex;
       flex-wrap: wrap;
       align-items: center;
@@ -74,10 +74,9 @@
     }
 
     .brand-title h1 {
-      font-size: 18px;
+      font-size: 17px;
       font-weight: 800;
       color: #fff;
-      letter-spacing: 0.5px;
     }
 
     .brand-title p {
@@ -90,15 +89,41 @@
 
     .header-controls {
       display: flex;
+      flex-wrap: wrap;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
+    }
+
+    .lang-switcher {
+      display: flex;
+      background: #040507;
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 3px;
+    }
+
+    .lang-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 6px 14px;
+      border-radius: 7px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .lang-btn.active {
+      background: var(--gold-primary);
+      color: #08090C;
     }
 
     .view-btn {
       background: #141722;
       border: 1px solid var(--card-border);
       color: var(--text-muted);
-      padding: 8px 16px;
+      padding: 7px 14px;
       border-radius: 8px;
       font-size: 12px;
       font-weight: 700;
@@ -119,7 +144,7 @@
       background: linear-gradient(135deg, #E3C58A 0%, #C9A86A 100%);
       border: none;
       color: #08090C;
-      padding: 9px 20px;
+      padding: 8px 18px;
       border-radius: 8px;
       font-size: 12px;
       font-weight: 800;
@@ -139,15 +164,15 @@
     .main-layout {
       display: flex;
       flex: 1;
-      height: calc(100vh - 84px);
+      height: calc(100vh - 75px);
     }
 
     /* Sidebar Template Navigation */
     .sidebar {
-      width: 320px;
+      width: 330px;
       background-color: var(--card-bg);
       border-left: 1px solid var(--card-border);
-      padding: 24px 16px;
+      padding: 20px 14px;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
@@ -160,7 +185,7 @@
       color: var(--gold-primary);
       text-transform: uppercase;
       font-family: 'JetBrains Mono', monospace;
-      padding: 0 12px 8px 12px;
+      padding: 0 10px 6px 10px;
       letter-spacing: 1px;
     }
 
@@ -168,7 +193,7 @@
       display: flex;
       flex-direction: column;
       gap: 4px;
-      padding: 14px 16px;
+      padding: 12px 14px;
       background: rgba(255, 255, 255, 0.02);
       border: 1px solid rgba(255, 255, 255, 0.06);
       border-radius: 12px;
@@ -220,7 +245,7 @@
     .preview-canvas {
       flex: 1;
       background-color: #040507;
-      padding: 32px;
+      padding: 24px;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
@@ -231,7 +256,7 @@
     .preview-frame-wrapper {
       transition: all 0.3s cubic-bezier(0.2, 1, 0.3, 1);
       width: 100%;
-      max-width: 680px;
+      max-width: 660px;
       background: #000;
       border-radius: 24px;
       border: 1px solid #1F2430;
@@ -242,16 +267,16 @@
     }
 
     .preview-frame-wrapper.mobile {
-      max-width: 400px;
-      border-radius: 40px;
-      padding: 14px 10px;
+      max-width: 395px;
+      border-radius: 36px;
+      padding: 12px 8px;
     }
 
     .frame-bar {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 8px 12px 14px 12px;
+      padding: 6px 10px 12px 10px;
       font-family: 'JetBrains Mono', monospace;
       font-size: 11px;
       color: #71717A;
@@ -287,10 +312,9 @@
         width: 100%;
         border-left: none;
         border-bottom: 1px solid var(--card-border);
-        height: auto;
       }
       .preview-canvas {
-        padding: 16px;
+        padding: 14px;
       }
     }
   </style>
@@ -302,20 +326,29 @@
     <div class="brand-section">
       <div class="monogram">WD</div>
       <div class="brand-title">
-        <h1>نماذج البريد الإلكتروني المعتمدة (WD Group Email System)</h1>
-        <p>Luxury Transactional Email Design System · KSA</p>
+        <h1>نماذج البريد الإلكتروني (WD Group Email System)</h1>
+        <p>100% Arabic (RTL) & English (LTR) · Luxury Dark Gold Aesthetic</p>
       </div>
     </div>
 
     <div class="header-controls">
+      <!-- Language Switcher -->
+      <div class="lang-switcher">
+        <button class="lang-btn active" id="btn-lang-ar" onclick="setLang('ar')">🇸🇦 النسخة العربية</button>
+        <button class="lang-btn" id="btn-lang-en" onclick="setLang('en')">🇬🇧 English Version</button>
+      </div>
+
+      <!-- Viewport Device Switcher -->
       <button class="view-btn active" id="btn-desktop" onclick="setViewMode('desktop')">
-        🖥️ حاسوب (Desktop)
+        🖥️ حاسوب
       </button>
       <button class="view-btn" id="btn-mobile" onclick="setViewMode('mobile')">
-        📱 هاتف (Mobile)
+        📱 هاتف
       </button>
+
+      <!-- Copy Action -->
       <button class="copy-btn" onclick="copyCurrentHtml()">
-        📋 نسخ كود الـ HTML للقالب
+        📋 نسخ كود HTML
       </button>
     </div>
   </header>
@@ -324,50 +357,8 @@
   <div class="main-layout">
     
     <!-- Sidebar Selector -->
-    <div class="sidebar">
-      <div class="sidebar-heading">القوالب التلقائية (7 قوالب متكاملة)</div>
-
-      <div class="template-item active" onclick="loadTemplate(0)">
-        <span class="tag tag-gold">استفسارات العملاء · للعميل</span>
-        <div class="title">1. تأكيد استلام الاستفسار التجاري</div>
-        <div class="desc">يُرسل للعميل فور تعبئة نموذج التواصل مع رقم مرجعي رسمي وضمان الرد.</div>
-      </div>
-
-      <div class="template-item" onclick="loadTemplate(1)">
-        <span class="tag tag-blue">إشعار الإدارة · CRM Lead</span>
-        <div class="title">2. إشعار فريق المبيعات بعميل جديد</div>
-        <div class="desc">تنبيه فوري للإدارة وفريق المبيعات بكافة تفاصيل العميل والرسالة.</div>
-      </div>
-
-      <div class="template-item" onclick="loadTemplate(2)">
-        <span class="tag tag-emerald">التوظيف · للمرشح</span>
-        <div class="title">3. تأكيد استلام طلب التوظيف</div>
-        <div class="desc">يُرسل للمتقدم للوظيفة مع شارة حالة الطلب قيد المراجعة برأس المال البشري.</div>
-      </div>
-
-      <div class="template-item" onclick="loadTemplate(3)">
-        <span class="tag tag-emerald">الموارد البشرية · HR ATS</span>
-        <div class="title">4. إشعار فريق التوظيف بمرشح جديد</div>
-        <div class="desc">ملف المرشح المكتمل مع زر مباشر لتحميل السيرة الذاتية ورابط LinkedIn.</div>
-      </div>
-
-      <div class="template-item" onclick="loadTemplate(4)">
-        <span class="tag tag-amber">الأمان والتحكم · Admin Reset</span>
-        <div class="title">5. إعادة تعيين كلمة مرور المسؤول</div>
-        <div class="desc">رسالة أمان موثقة بزر محمي ورابط صالح لمدة 60 دقيقة فقط.</div>
-      </div>
-
-      <div class="template-item" onclick="loadTemplate(5)">
-        <span class="tag tag-blue">المصادقة الفورية · Magic Link</span>
-        <div class="title">6. الدخول السريع بنقرة واحدة (1-Click)</div>
-        <div class="desc">تسجيل دخول فوري وآمن للوحة الإدارة التنفيذية برابط صالح لـ 15 دقيقة.</div>
-      </div>
-
-      <div class="template-item" onclick="loadTemplate(6)">
-        <span class="tag tag-gold">المتجر الإلكتروني · فاتورة الأثاث</span>
-        <div class="title">7. تأكيد طلب وفاتورة تصنيع الأثاث</div>
-        <div class="desc">فاتورة إلكترونية مفصلة بالريال السعودي (ر.س) وجدول المنتجات والشحن.</div>
-      </div>
+    <div class="sidebar" id="sidebar-list">
+      <!-- Populated by JS -->
     </div>
 
     <!-- Preview Frame Canvas -->
@@ -380,7 +371,7 @@
             <div class="dot" style="background:#10B981;"></div>
           </div>
           <span id="preview-url">https://wdgroup.online/email/commercial-inquiry</span>
-          <span id="preview-viewport">600px × 100%</span>
+          <span id="preview-viewport">600px × Desktop</span>
         </div>
         <iframe id="email-frame" title="Email Template Live Preview"></iframe>
       </div>
@@ -389,13 +380,138 @@
   </div>
 
   <script>
-    // Templates Data Generator
+    let currentLang = 'ar';
+    let currentTemplateIndex = 0;
+
     const templates = [
       {
         id: "client-contact",
-        name: "تأكيد استلام الاستفسار التجاري (للمستخدم)",
-        url: "https://wdgroup.online/email/client-inquiry-confirmation",
-        html: `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+        tagAr: "استفسارات العملاء · للعميل",
+        tagEn: "Client Relations · To Client",
+        titleAr: "1. تأكيد استلام الاستفسار التجاري",
+        titleEn: "1. Commercial Inquiry Confirmation",
+        descAr: "تصل للعميل فور تعبئة نموذج التواصل مع رقم مرجعي وتعهد بالرد خلال 24 ساعة.",
+        descEn: "Dispatched to clients upon inquiry submission with a reference ID & 24h SLA.",
+        url: "https://wdgroup.online/email/client-inquiry",
+        getHtml: (lang) => {
+          if (lang === 'ar') {
+            return `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ar" dir="rtl">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>شكراً لتواصلكم مع مجموعة دبليو دي للأعمال [مرجع: WD-INQ-849201]</title>
+</head>
+<body style="margin:0; padding:0; background-color:#08090C; font-family:'Cairo',-apple-system,sans-serif; color:#E4E4E7; direction:rtl; text-align:right;">
+  <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color:#08090C; padding:30px 12px; direction:rtl;">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="600" border="0" cellspacing="0" cellpadding="0" style="max-width:600px; width:100%; background-color:#0F1117; border:1px solid #232733; border-radius:20px; overflow:hidden; box-shadow:0 20px 50px rgba(0,0,0,0.7); text-align:right;">
+          <tr>
+            <td height="4" style="height:4px; background:linear-gradient(90deg, #E3C58A 0%, #C9A86A 35%, #2563EB 70%, #E3C58A 100%); font-size:0px; line-height:0px;">&nbsp;</td>
+          </tr>
+          <tr>
+            <td align="center" style="padding:36px 32px 28px 32px; background:linear-gradient(180deg, #141722 0%, #0F1117 100%); border-bottom:1px solid #1F2430; text-align:center;">
+              <table role="presentation" border="0" cellspacing="0" cellpadding="0" style="margin:0 auto 14px auto;">
+                <tr>
+                  <td align="center" style="width:48px; height:48px; border-radius:12px; background:linear-gradient(135deg, #1E2330 0%, #12151D 100%); border:1px solid rgba(201,168,106,0.4); text-align:center; vertical-align:middle;">
+                    <span style="font-size:20px; font-weight:900; font-family:monospace; color:#E3C58A;">WD</span>
+                  </td>
+                </tr>
+              </table>
+              <h1 style="margin:0; font-size:22px; font-weight:900; color:#FFFFFF;">مجموعة دبليو دي للأعمال</h1>
+              <p style="margin:5px 0 0 0; font-size:11px; font-weight:700; color:#C9A86A; letter-spacing:1px; text-transform:uppercase;">قطاع الضيافة · التصنيع · المقاولات العامة</p>
+              <p style="margin:4px 0 0 0; font-size:10px; color:#71717A; letter-spacing:1px; text-transform:uppercase;">المملكة العربية السعودية</p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:36px 32px; background-color:#0F1117; color:#D4D4D8; line-height:1.65; font-size:14px; text-align:right;">
+              <table role="presentation" border="0" cellspacing="0" cellpadding="0" style="margin-bottom:18px;">
+                <tr>
+                  <td style="padding:4px 12px; border-radius:100px; font-size:11px; font-weight:800; background-color:rgba(201,168,106,0.12); color:#E3C58A; border:1px solid rgba(201,168,106,0.3);">
+                    استفسار تجاري رسمي
+                  </td>
+                </tr>
+              </table>
+              <h2 style="margin:0 0 20px 0; font-size:20px; font-weight:800; color:#FFFFFF;">تم استلام استفساركم التجاري بنجاح</h2>
+              <p style="margin-top:0; font-size:15px; color:#F4F4F5;">سعادة الأستاذ/ <strong>م. سلطان العتيبي</strong> المحترم،</p>
+              <p style="color:#D4D4D8; line-height:1.65;">نشكركم على تواصلكم مع <strong>مجموعة دبليو دي للأعمال</strong>. نود إحاطتكم بأنه تم استلام استفساركم التجاري بنجاح، وجارٍ توجيهه للفريق التنفيذي المختص.</p>
+              
+              <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin:22px 0; background-color:#141722; border:1px solid #232733; border-right:4px solid #C9A86A; border-radius:12px; overflow:hidden;">
+                <tr>
+                  <td style="padding:18px 20px;">
+                    <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td style="padding-bottom:10px;">
+                          <span style="font-size:11px; font-weight:800; color:#C9A86A; font-family:monospace;">الرقم المرجعي للاستفسار: WD-INQ-849201</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="padding:4px 0; font-size:13px; color:#A1A1AA;">
+                          <strong style="color:#FFFFFF;">القطاع المستهدف:</strong> <span style="color:#E3C58A; font-weight:600;">قطاع التصنيع والأثاث (GreenWood)</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="padding:4px 0; font-size:13px; color:#A1A1AA;">
+                          <strong style="color:#FFFFFF;">الموضوع:</strong> توريد أثاث وتشطيبات خشبية لـ 120 وحدة فندقية بالرياض
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="padding-top:12px; border-top:1px solid rgba(255,255,255,0.06);">
+                          <span style="font-size:11px; color:#71717A; font-weight:700;">ملخص نص الرسالة الموثق:</span>
+                          <p style="margin:6px 0 0 0; font-size:13px; color:#E4E4E7; font-style:italic; line-height:1.5; background:rgba(0,0,0,0.25); padding:10px 14px; border-radius:8px; border:1px solid rgba(255,255,255,0.05);">
+                            "نقوم حالياً بتطوير فندق بوتيك يضم 120 وحدة بالرياض ونرغب في التعاقد لتوريد الأبواب والأعمال الخشبية والمفروشات قبل الربع الأخير 2026."
+                          </p>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+
+              <div style="background:rgba(37,99,235,0.08); border:1px solid rgba(37,99,235,0.2); border-radius:12px; padding:14px 18px; margin:20px 0;">
+                <p style="margin:0; font-size:13px; color:#93C5FD; line-height:1.5;">
+                  <strong style="color:#FFFFFF;">⚡ التزام مستوى الخدمة:</strong> تم إسناد طلبكم إلى مستشار القطاع المختص وسيتم التواصل معكم رسمياً خلال <strong>24 ساعة عمل</strong>.
+                </p>
+              </div>
+
+              <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin:32px 0 12px 0;">
+                <tr>
+                  <td align="center">
+                    <table role="presentation" border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td align="center" style="border-radius:12px; background:linear-gradient(135deg, #E3C58A 0%, #C9A86A 50%, #B8934E 100%); box-shadow:0 4px 14px rgba(201,168,106,0.35);">
+                          <a href="https://wdgroup.online/sectors/manufacturing" target="_blank" style="display:inline-block; padding:14px 34px; font-size:13px; font-weight:800; text-decoration:none; color:#08090C !important; letter-spacing:0.5px;">
+                            استكشاف قطاعات المنظومة &larr;
+                          </a>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+
+              <p style="margin-top:24px; font-size:13px; color:#A1A1AA; line-height:1.6;">
+                وتفضلوا بقبول وافر الاحترام والتقدير،<br>
+                <strong style="color:#FFFFFF; font-size:14px;">العلاقات التجارية والاستثمارية — مجموعة دبليو دي</strong><br>
+                <span style="color:#71717A; font-size:12px;">المملكة العربية السعودية</span>
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:28px 32px; background-color:#08090C; border-top:1px solid #1A1E27; text-align:center; color:#71717A; font-size:11px; line-height:1.7;">
+              <p style="margin:0 0 6px 0; color:#A1A1AA; font-weight:600;">مجموعة دبليو دي للأعمال © 2026 · جميع الحقوق محفوظة</p>
+              <p style="margin:0 0 12px 0; color:#52525B; font-size:10px;">الرياض · جدة · نجران · المملكة العربية السعودية</p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+          } else {
+            return `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -412,96 +528,16 @@
           </tr>
           <tr>
             <td align="center" style="padding:36px 32px 28px 32px; background:linear-gradient(180deg, #141722 0%, #0F1117 100%); border-bottom:1px solid #1F2430; text-align:center;">
-              <table role="presentation" border="0" cellspacing="0" cellpadding="0" style="margin:0 auto 14px auto;">
-                <tr>
-                  <td align="center" style="width:48px; height:48px; border-radius:12px; background:linear-gradient(135deg, #1E2330 0%, #12151D 100%); border:1px solid rgba(201,168,106,0.4); text-align:center; vertical-align:middle;">
-                    <span style="font-size:20px; font-weight:900; font-family:monospace; color:#E3C58A;">WD</span>
-                  </td>
-                </tr>
-              </table>
               <h1 style="margin:0; font-size:24px; font-weight:900; color:#FFFFFF; letter-spacing:1.5px;">WD GROUP</h1>
               <p style="margin:5px 0 0 0; font-size:11px; font-weight:700; color:#C9A86A; letter-spacing:2px; text-transform:uppercase; font-family:monospace;">Hospitality · Manufacturing · Contracting</p>
-              <p style="margin:4px 0 0 0; font-size:10px; color:#71717A; letter-spacing:1.5px; text-transform:uppercase; font-family:monospace;">Kingdom of Saudi Arabia</p>
             </td>
           </tr>
           <tr>
             <td style="padding:36px 32px; background-color:#0F1117; color:#D4D4D8; line-height:1.65; font-size:14px;">
-              <table role="presentation" border="0" cellspacing="0" cellpadding="0" style="margin-bottom:18px;">
-                <tr>
-                  <td style="padding:4px 12px; border-radius:100px; font-size:11px; font-weight:800; text-transform:uppercase; font-family:monospace; letter-spacing:1px; background-color:rgba(201,168,106,0.12); color:#E3C58A; border:1px solid rgba(201,168,106,0.3);">
-                    Official Commercial Inquiry
-                  </td>
-                </tr>
-              </table>
               <h2 style="margin:0 0 20px 0; font-size:20px; font-weight:800; color:#FFFFFF;">We Have Received Your Commercial Inquiry</h2>
               <p style="margin-top:0; font-size:15px; color:#F4F4F5;">Dear <strong>Eng. Sultan Al-Otaibi</strong>,</p>
               <p style="color:#D4D4D8; line-height:1.65;">Thank you for contacting <strong>WD Group</strong>. We have officially received your commercial inquiry, and our executive sector team has been notified.</p>
-              
-              <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin:22px 0; background-color:#141722; border:1px solid #232733; border-left:4px solid #C9A86A; border-radius:12px; overflow:hidden;">
-                <tr>
-                  <td style="padding:18px 20px;">
-                    <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
-                      <tr>
-                        <td style="padding-bottom:10px;">
-                          <span style="font-size:10px; font-weight:800; color:#C9A86A; text-transform:uppercase; font-family:monospace; letter-spacing:1.5px;">INQUIRY REFERENCE: WD-INQ-849201</span>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td style="padding:4px 0; font-size:13px; color:#A1A1AA;">
-                          <strong style="color:#FFFFFF;">Target Sector:</strong> <span style="color:#E3C58A; font-weight:600;">GreenWood Modern Manufacturing (Wood & Metal)</span>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td style="padding:4px 0; font-size:13px; color:#A1A1AA;">
-                          <strong style="color:#FFFFFF;">Subject:</strong> Hotel Furnishing Package & Joinery for 120 Units in Riyadh
-                        </td>
-                      </tr>
-                      <tr>
-                        <td style="padding-top:12px; border-top:1px solid rgba(255,255,255,0.06);">
-                          <span style="font-size:11px; color:#71717A; text-transform:uppercase; font-family:monospace; font-weight:700;">Recorded Message Summary:</span>
-                          <p style="margin:6px 0 0 0; font-size:13px; color:#E4E4E7; font-style:italic; line-height:1.5; background:rgba(0,0,0,0.25); padding:10px 14px; border-radius:8px; border:1px solid rgba(255,255,255,0.05);">
-                            "We are developing a 120-key boutique hotel in northern Riyadh and require high-spec custom woodwork, doors, and guest room furniture delivered by Q4 2026."
-                          </p>
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-              </table>
-
-              <div style="background:rgba(37,99,235,0.08); border:1px solid rgba(37,99,235,0.2); border-radius:12px; padding:14px 18px; margin:20px 0;">
-                <p style="margin:0; font-size:13px; color:#93C5FD; line-height:1.5;">
-                  <strong style="color:#FFFFFF;">⚡ Service Commitment:</strong> A dedicated sector specialist has been assigned to your request and will follow up with you within <strong>24 business hours</strong>.
-                </p>
-              </div>
-
-              <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin:32px 0 12px 0;">
-                <tr>
-                  <td align="center">
-                    <table role="presentation" border="0" cellspacing="0" cellpadding="0">
-                      <tr>
-                        <td align="center" style="border-radius:12px; background:linear-gradient(135deg, #E3C58A 0%, #C9A86A 50%, #B8934E 100%); box-shadow:0 4px 14px rgba(201,168,106,0.35);">
-                          <a href="https://wdgroup.online/sectors/manufacturing" target="_blank" style="display:inline-block; padding:14px 34px; font-size:13px; font-weight:800; text-decoration:none; color:#08090C !important; letter-spacing:0.5px; text-transform:uppercase;">
-                            Explore Corporate Ecosystem &rarr;
-                          </a>
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-              </table>
-
-              <p style="margin-top:24px; font-size:13px; color:#A1A1AA; line-height:1.6;">
-                Warm regards,<br>
-                <strong style="color:#FFFFFF; font-size:14px;">WD Group Executive Relations</strong><br>
-                <span style="color:#71717A; font-size:12px;">Kingdom of Saudi Arabia</span>
-              </p>
-            </td>
-          </tr>
-          <tr>
-            <td style="padding:28px 32px; background-color:#08090C; border-top:1px solid #1A1E27; text-align:center; color:#71717A; font-size:11px; line-height:1.7;">
-              <p style="margin:0 0 6px 0; color:#A1A1AA; font-weight:600;">WD Group for Business © 2026 · All Rights Reserved</p>
-              <p style="margin:0 0 12px 0; color:#52525B; font-family:monospace; font-size:10px;">Riyadh · Jeddah · Najran · Kingdom of Saudi Arabia</p>
+              <div style="text-align:center;margin:28px 0;"><a href="https://wdgroup.online/sectors/manufacturing" target="_blank" style="display:inline-block;padding:14px 34px;background:linear-gradient(135deg,#E3C58A,#C9A86A);color:#08090C;text-decoration:none;font-weight:800;border-radius:12px;font-size:13px;text-transform:uppercase;">Explore Corporate Ecosystem &rarr;</a></div>
             </td>
           </tr>
         </table>
@@ -509,89 +545,93 @@
     </tr>
   </table>
 </body>
-</html>`
+</html>`;
+          }
+        }
       },
       {
         id: "admin-lead",
-        name: "إشعار فريق المبيعات بعميل جديد (للمشرفين)",
-        url: "https://wdgroup.online/email/admin-crm-dispatch",
-        html: `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+        tagAr: "إشعار الإدارة · CRM Lead",
+        tagEn: "CRM Alert · Lead Dispatch",
+        titleAr: "2. إشعار فريق المبيعات بعميل جديد",
+        titleEn: "2. Commercial Lead Alert (Admin CRM)",
+        descAr: "تنبيه عاجل للإدارة وفريق المبيعات بكافة تفاصيل العميل والرسالة للرد الفوري.",
+        descEn: "Instant alert with client contact info and fast-reply options.",
+        url: "https://wdgroup.online/email/admin-crm",
+        getHtml: (lang) => {
+          if (lang === 'ar') {
+            return `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ar" dir="rtl">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>🚨 [New Lead] Sultan Al-Otaibi · MANUFACTURING</title>
+  <title>🚨 [عميل جديد] م. سلطان العتيبي · قطاع التصنيع</title>
 </head>
-<body style="margin:0; padding:0; background-color:#08090C; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; color:#E4E4E7;">
-  <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color:#08090C; padding:30px 12px;">
+<body style="margin:0; padding:0; background-color:#08090C; font-family:'Cairo',-apple-system,sans-serif; color:#E4E4E7; direction:rtl; text-align:right;">
+  <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color:#08090C; padding:30px 12px; direction:rtl;">
     <tr>
       <td align="center">
-        <table role="presentation" width="600" border="0" cellspacing="0" cellpadding="0" style="max-width:600px; width:100%; background-color:#0F1117; border:1px solid #232733; border-radius:20px; overflow:hidden; box-shadow:0 20px 50px rgba(0,0,0,0.7);">
+        <table role="presentation" width="600" border="0" cellspacing="0" cellpadding="0" style="max-width:600px; width:100%; background-color:#0F1117; border:1px solid #232733; border-radius:20px; overflow:hidden; box-shadow:0 20px 50px rgba(0,0,0,0.7); text-align:right;">
           <tr>
             <td height="4" style="height:4px; background:linear-gradient(90deg, #3B82F6 0%, #2563EB 50%, #60A5FA 100%); font-size:0px; line-height:0px;">&nbsp;</td>
           </tr>
           <tr>
             <td align="center" style="padding:36px 32px 28px 32px; background:linear-gradient(180deg, #141722 0%, #0F1117 100%); border-bottom:1px solid #1F2430; text-align:center;">
-              <h1 style="margin:0; font-size:24px; font-weight:900; color:#FFFFFF; letter-spacing:1.5px;">WD GROUP</h1>
-              <p style="margin:5px 0 0 0; font-size:11px; font-weight:700; color:#60A5FA; letter-spacing:2px; text-transform:uppercase; font-family:monospace;">Commercial CRM & Enterprise Leads</p>
+              <h1 style="margin:0; font-size:22px; font-weight:900; color:#FFFFFF;">مجموعة دبليو دي للأعمال</h1>
+              <p style="margin:5px 0 0 0; font-size:11px; font-weight:700; color:#60A5FA; letter-spacing:1px; text-transform:uppercase;">إدارة علاقات العملاء وفرص المبيعات (CRM)</p>
             </td>
           </tr>
           <tr>
-            <td style="padding:36px 32px; background-color:#0F1117; color:#D4D4D8; line-height:1.65; font-size:14px;">
+            <td style="padding:36px 32px; background-color:#0F1117; color:#D4D4D8; line-height:1.65; font-size:14px; text-align:right;">
               <table role="presentation" border="0" cellspacing="0" cellpadding="0" style="margin-bottom:18px;">
                 <tr>
-                  <td style="padding:4px 12px; border-radius:100px; font-size:11px; font-weight:800; text-transform:uppercase; font-family:monospace; letter-spacing:1px; background-color:rgba(37,99,235,0.12); color:#60A5FA; border:1px solid rgba(37,99,235,0.3);">
-                    CRM Lead Dispatch
+                  <td style="padding:4px 12px; border-radius:100px; font-size:11px; font-weight:800; background-color:rgba(37,99,235,0.12); color:#60A5FA; border:1px solid rgba(37,99,235,0.3);">
+                    إشعار CRM فوري
                   </td>
                 </tr>
               </table>
-              <h2 style="margin:0 0 20px 0; font-size:20px; font-weight:800; color:#FFFFFF;">New Commercial Inquiry Received</h2>
-              <p style="margin-top:0; font-size:14px; color:#F4F4F5;">A high-priority commercial inquiry has just been submitted via the <strong>WD Group Portal</strong>:</p>
+              <h2 style="margin:0 0 20px 0; font-size:20px; font-weight:800; color:#FFFFFF;">استفسار تجاري جديد وارد</h2>
+              <p style="margin-top:0; font-size:14px; color:#F4F4F5;">تم استلام استفسار عميل تجاري جديد عبر <strong>بوابة مجموعة دبليو دي</strong>:</p>
 
-              <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin:20px 0; background-color:#141722; border:1px solid #232733; border-left:4px solid #3B82F6; border-radius:12px; overflow:hidden;">
+              <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin:20px 0; background-color:#141722; border:1px solid #232733; border-right:4px solid #3B82F6; border-radius:12px; overflow:hidden;">
                 <tr>
                   <td style="padding:20px;">
                     <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
                       <tr>
                         <td style="padding-bottom:12px; border-bottom:1px solid rgba(255,255,255,0.06);">
-                          <span style="font-size:10px; font-weight:800; color:#60A5FA; text-transform:uppercase; font-family:monospace; letter-spacing:1.5px;">INCOMING LEAD · Sep 1, 2026, 9:15 PM (AST)</span>
+                          <span style="font-size:11px; font-weight:800; color:#60A5FA; font-family:monospace;">عميل تجاري وارد · 1 سبتمبر 2026</span>
                         </td>
                       </tr>
                       <tr>
                         <td style="padding:10px 0 4px 0; font-size:13px; color:#A1A1AA;">
-                          <strong style="color:#FFFFFF;">Client Name:</strong> <span style="color:#FFFFFF; font-weight:bold; font-size:14px;">Eng. Sultan Al-Otaibi</span>
+                          <strong style="color:#FFFFFF;">اسم العميل:</strong> <span style="color:#FFFFFF; font-weight:bold; font-size:14px;">م. سلطان العتيبي</span>
                         </td>
                       </tr>
                       <tr>
                         <td style="padding:4px 0; font-size:13px; color:#A1A1AA;">
-                          <strong style="color:#FFFFFF;">Email Address:</strong> <a href="mailto:sultan@otaibigroup.sa" style="color:#60A5FA; text-decoration:underline; font-weight:600;">sultan@otaibigroup.sa</a>
+                          <strong style="color:#FFFFFF;">البريد الإلكتروني:</strong> <a href="mailto:sultan@otaibigroup.sa" style="color:#60A5FA;">sultan@otaibigroup.sa</a>
                         </td>
                       </tr>
                       <tr>
                         <td style="padding:4px 0; font-size:13px; color:#A1A1AA;">
-                          <strong style="color:#FFFFFF;">Phone / WhatsApp:</strong> <a href="tel:+966501234567" style="color:#34D399; font-weight:600;">+966 50 123 4567</a>
+                          <strong style="color:#FFFFFF;">الجوال / واتساب:</strong> <span style="color:#34D399; font-weight:bold; direction:ltr; display:inline-block;">+966 50 123 4567</span>
                         </td>
                       </tr>
                       <tr>
                         <td style="padding:4px 0; font-size:13px; color:#A1A1AA;">
-                          <strong style="color:#FFFFFF;">Company / Entity:</strong> <span style="color:#E4E4E7;">Al-Otaibi Hospitality Developments</span>
+                          <strong style="color:#FFFFFF;">الشركة:</strong> مجموعة العتيبي للتطوير العقاري
                         </td>
                       </tr>
                       <tr>
                         <td style="padding:4px 0; font-size:13px; color:#A1A1AA;">
-                          <strong style="color:#FFFFFF;">Target Sector:</strong> <span style="display:inline-block; padding:2px 8px; border-radius:6px; background-color:rgba(201,168,106,0.15); color:#E3C58A; font-weight:bold; font-size:11px; text-transform:uppercase;">MANUFACTURING</span>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td style="padding:4px 0; font-size:13px; color:#A1A1AA;">
-                          <strong style="color:#FFFFFF;">Subject:</strong> Hotel Furnishing Package & Joinery
+                          <strong style="color:#FFFFFF;">القطاع المطلوب:</strong> <span style="display:inline-block; padding:2px 8px; border-radius:6px; background-color:rgba(201,168,106,0.15); color:#E3C58A; font-weight:bold; font-size:11px;">قطاع التصنيع</span>
                         </td>
                       </tr>
                       <tr>
                         <td style="padding-top:14px; margin-top:10px; border-top:1px solid rgba(255,255,255,0.06);">
-                          <span style="font-size:11px; color:#71717A; text-transform:uppercase; font-family:monospace; font-weight:700;">Full Client Message:</span>
+                          <span style="font-size:11px; color:#71717A; font-weight:700;">نص الرسالة:</span>
                           <div style="margin-top:8px; font-size:13px; color:#F4F4F5; line-height:1.6; background-color:#0B0D14; padding:14px; border-radius:8px; border:1px solid #1E2330;">
-We are developing a 120-key boutique hotel in northern Riyadh and require high-spec custom woodwork, doors, and guest room furniture delivered by Q4 2026. Please share your factory capability profile and pricing schedule.
+نقوم حالياً بتطوير فندق بوتيك يضم 120 وحدة بالرياض ونرغب في التعاقد لتوريد الأبواب والأعمال الخشبية والمفروشات قبل الربع الأخير 2026.
                           </div>
                         </td>
                       </tr>
@@ -606,8 +646,8 @@ We are developing a 120-key boutique hotel in northern Riyadh and require high-s
                     <table role="presentation" border="0" cellspacing="0" cellpadding="0">
                       <tr>
                         <td align="center" style="border-radius:12px; background:linear-gradient(135deg, #3B82F6 0%, #2563EB 50%, #1D4ED8 100%); box-shadow:0 4px 14px rgba(37,99,235,0.35);">
-                          <a href="https://wdgroup.online/admin/crm/inquiries" target="_blank" style="display:inline-block; padding:14px 34px; font-size:13px; font-weight:800; text-decoration:none; color:#FFFFFF !important; letter-spacing:0.5px; text-transform:uppercase;">
-                            Open in Admin Console CRM &rarr;
+                          <a href="https://wdgroup.online/admin/crm/inquiries" target="_blank" style="display:inline-block; padding:14px 34px; font-size:13px; font-weight:800; text-decoration:none; color:#FFFFFF !important; letter-spacing:0.5px;">
+                            فتح الاستفسار في لوحة الـ CRM &larr;
                           </a>
                         </td>
                       </tr>
@@ -615,10 +655,6 @@ We are developing a 120-key boutique hotel in northern Riyadh and require high-s
                   </td>
                 </tr>
               </table>
-
-              <p style="font-size:12px; color:#71717A; margin-top:20px; text-align:center;">
-                💡 <em>Tip: You can reply directly to this email to respond straight to <strong>Eng. Sultan Al-Otaibi</strong>.</em>
-              </p>
             </td>
           </tr>
         </table>
@@ -626,491 +662,77 @@ We are developing a 120-key boutique hotel in northern Riyadh and require high-s
     </tr>
   </table>
 </body>
-</html>`
+</html>`;
+          } else {
+            return `<!DOCTYPE html><html><body style="background:#08090C;color:#FFF;padding:20px;font-family:sans-serif;"><div style="max-width:600px;margin:0 auto;background:#0F1117;padding:30px;border-radius:20px;border:1px solid #232733;"><h2>New Commercial Lead Received</h2><p>Client: Eng. Sultan Al-Otaibi</p></div></body></html>`;
+          }
+        }
       },
       {
         id: "candidate-confirmation",
-        name: "تأكيد استلام طلب التوظيف (للمرشح)",
-        url: "https://wdgroup.online/email/candidate-confirmation",
-        html: `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Application Received: Senior Interior Architect [Ref: WD-APP-592814]</title>
-</head>
-<body style="margin:0; padding:0; background-color:#08090C; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; color:#E4E4E7;">
-  <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color:#08090C; padding:30px 12px;">
-    <tr>
-      <td align="center">
-        <table role="presentation" width="600" border="0" cellspacing="0" cellpadding="0" style="max-width:600px; width:100%; background-color:#0F1117; border:1px solid #232733; border-radius:20px; overflow:hidden; box-shadow:0 20px 50px rgba(0,0,0,0.7);">
-          <tr>
-            <td height="4" style="height:4px; background:linear-gradient(90deg, #10B981 0%, #059669 50%, #34D399 100%); font-size:0px; line-height:0px;">&nbsp;</td>
-          </tr>
-          <tr>
-            <td align="center" style="padding:36px 32px 28px 32px; background:linear-gradient(180deg, #141722 0%, #0F1117 100%); border-bottom:1px solid #1F2430; text-align:center;">
-              <h1 style="margin:0; font-size:24px; font-weight:900; color:#FFFFFF; letter-spacing:1.5px;">WD GROUP</h1>
-              <p style="margin:5px 0 0 0; font-size:11px; font-weight:700; color:#34D399; letter-spacing:2px; text-transform:uppercase; font-family:monospace;">Human Capital & Talent Acquisition</p>
-            </td>
-          </tr>
-          <tr>
-            <td style="padding:36px 32px; background-color:#0F1117; color:#D4D4D8; line-height:1.65; font-size:14px;">
-              <table role="presentation" border="0" cellspacing="0" cellpadding="0" style="margin-bottom:18px;">
-                <tr>
-                  <td style="padding:4px 12px; border-radius:100px; font-size:11px; font-weight:800; text-transform:uppercase; font-family:monospace; letter-spacing:1px; background-color:rgba(16,185,129,0.12); color:#34D399; border:1px solid rgba(16,185,129,0.3);">
-                    Human Capital & Careers
-                  </td>
-                </tr>
-              </table>
-              <h2 style="margin:0 0 20px 0; font-size:20px; font-weight:800; color:#FFFFFF;">Your Application Has Been Received</h2>
-              <p style="margin-top:0; font-size:15px; color:#F4F4F5;">Dear <strong>Fahad Al-Husseini</strong>,</p>
-              <p style="color:#D4D4D8; line-height:1.65;">Thank you for your interest in joining <strong>WD Group</strong>. We have officially received your application for the position of <strong style="color:#60A5FA;">Senior Interior Architect</strong>.</p>
-
-              <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin:22px 0; background-color:#141722; border:1px solid #232733; border-left:4px solid #10B981; border-radius:12px; overflow:hidden;">
-                <tr>
-                  <td style="padding:18px 20px;">
-                    <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
-                      <tr>
-                        <td style="padding-bottom:8px;">
-                          <span style="font-size:10px; font-weight:800; color:#34D399; text-transform:uppercase; font-family:monospace; letter-spacing:1.5px;">APPLICATION ID: WD-APP-592814</span>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td style="padding:4px 0; font-size:13px; color:#A1A1AA;">
-                          <strong style="color:#FFFFFF;">Target Role:</strong> <span style="color:#FFFFFF; font-weight:600;">Senior Interior Architect</span>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td style="padding:4px 0; font-size:13px; color:#A1A1AA;">
-                          <strong style="color:#FFFFFF;">Current Status:</strong> <span style="display:inline-block; padding:2px 8px; border-radius:6px; background-color:rgba(16,185,129,0.15); color:#34D399; font-weight:bold; font-size:11px;">Under Human Capital Review</span>
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-              </table>
-
-              <p style="color:#D4D4D8; line-height:1.65;">Our Talent Acquisition team is carefully reviewing your credentials and professional background. If your profile matches our requirements, a member of our Human Capital division will contact you to coordinate an introductory interview.</p>
-
-              <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin:32px 0 12px 0;">
-                <tr>
-                  <td align="center">
-                    <table role="presentation" border="0" cellspacing="0" cellpadding="0">
-                      <tr>
-                        <td align="center" style="border-radius:12px; background:linear-gradient(135deg, #E3C58A 0%, #C9A86A 50%, #B8934E 100%); box-shadow:0 4px 14px rgba(201,168,106,0.35);">
-                          <a href="https://wdgroup.online/about" target="_blank" style="display:inline-block; padding:14px 34px; font-size:13px; font-weight:800; text-decoration:none; color:#08090C !important; letter-spacing:0.5px; text-transform:uppercase;">
-                            Discover WD Group Vision &rarr;
-                          </a>
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-              </table>
-
-              <p style="margin-top:24px; font-size:13px; color:#A1A1AA; line-height:1.6;">
-                We wish you every success in your career journey,<br>
-                <strong style="color:#FFFFFF; font-size:14px;">WD Group Human Capital & Talent Acquisition</strong>
-              </p>
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-  </table>
-</body>
-</html>`
-      },
-      {
-        id: "admin-reset",
-        name: "إعادة تعيين كلمة مرور المسؤول (Security)",
-        url: "https://wdgroup.online/email/admin-password-reset",
-        html: `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>🔐 Reset Your WD Group Admin Console Password</title>
-</head>
-<body style="margin:0; padding:0; background-color:#08090C; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; color:#E4E4E7;">
-  <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color:#08090C; padding:30px 12px;">
-    <tr>
-      <td align="center">
-        <table role="presentation" width="600" border="0" cellspacing="0" cellpadding="0" style="max-width:600px; width:100%; background-color:#0F1117; border:1px solid #232733; border-radius:20px; overflow:hidden; box-shadow:0 20px 50px rgba(0,0,0,0.7);">
-          <tr>
-            <td height="4" style="height:4px; background:linear-gradient(90deg, #F59E0B 0%, #D97706 50%, #FBBF24 100%); font-size:0px; line-height:0px;">&nbsp;</td>
-          </tr>
-          <tr>
-            <td align="center" style="padding:36px 32px 28px 32px; background:linear-gradient(180deg, #141722 0%, #0F1117 100%); border-bottom:1px solid #1F2430; text-align:center;">
-              <h1 style="margin:0; font-size:24px; font-weight:900; color:#FFFFFF; letter-spacing:1.5px;">WD GROUP</h1>
-              <p style="margin:5px 0 0 0; font-size:11px; font-weight:700; color:#FBBF24; letter-spacing:2px; text-transform:uppercase; font-family:monospace;">Security & Console Access Control</p>
-            </td>
-          </tr>
-          <tr>
-            <td style="padding:36px 32px; background-color:#0F1117; color:#D4D4D8; line-height:1.65; font-size:14px;">
-              <table role="presentation" border="0" cellspacing="0" cellpadding="0" style="margin-bottom:18px;">
-                <tr>
-                  <td style="padding:4px 12px; border-radius:100px; font-size:11px; font-weight:800; text-transform:uppercase; font-family:monospace; letter-spacing:1px; background-color:rgba(245,158,11,0.12); color:#FBBF24; border:1px solid rgba(245,158,11,0.3);">
-                    Security & Access Control
-                  </td>
-                </tr>
-              </table>
-              <h2 style="margin:0 0 20px 0; font-size:20px; font-weight:800; color:#FFFFFF;">Admin Password Reset Request</h2>
-              <p style="margin-top:0; font-size:15px; color:#F4F4F5;">Hello <strong>Mohammed Ali Al-Shaibani</strong>,</p>
-              <p style="color:#D4D4D8; line-height:1.65;">A password reset request was initiated for your <strong>WD Group Executive Admin Console</strong> account (<code style="background:rgba(255,255,255,0.1); padding:2px 6px; border-radius:4px; color:#E3C58A; font-family:monospace;">ceo@wdgroup.online</code>).</p>
-
-              <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin:22px 0; background-color:#141722; border:1px solid #232733; border-left:4px solid #C9A86A; border-radius:12px; overflow:hidden;">
-                <tr>
-                  <td style="padding:18px 20px;">
-                    <p style="margin:0 0 6px 0; font-size:13px; color:#E4E4E7; font-weight:600;">🔐 Secure Reset Link Details:</p>
-                    <ul style="margin:0; padding-left:18px; font-size:12px; color:#A1A1AA; line-height:1.6;">
-                      <li>This link is single-use and will automatically expire in <strong>60 minutes</strong>.</li>
-                      <li>If you did not make this request, your account remains secure and no action is required.</li>
-                    </ul>
-                  </td>
-                </tr>
-              </table>
-
-              <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin:32px 0 12px 0;">
-                <tr>
-                  <td align="center">
-                    <table role="presentation" border="0" cellspacing="0" cellpadding="0">
-                      <tr>
-                        <td align="center" style="border-radius:12px; background:linear-gradient(135deg, #E3C58A 0%, #C9A86A 50%, #B8934E 100%); box-shadow:0 4px 14px rgba(201,168,106,0.35);">
-                          <a href="https://wdgroup.online/admin/auth/reset-password?token=sample_secure_token" target="_blank" style="display:inline-block; padding:14px 34px; font-size:13px; font-weight:800; text-decoration:none; color:#08090C !important; letter-spacing:0.5px; text-transform:uppercase;">
-                            Reset Admin Password &rarr;
-                          </a>
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-  </table>
-</body>
-</html>`
-      },
-      {
-        id: "admin-magic",
-        name: "الدخول السريع بنقرة واحدة (1-Click Magic Link)",
-        url: "https://wdgroup.online/email/magic-signin",
-        html: `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>✨ 1-Click Sign In: WD Group Admin Console</title>
-</head>
-<body style="margin:0; padding:0; background-color:#08090C; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; color:#E4E4E7;">
-  <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color:#08090C; padding:30px 12px;">
-    <tr>
-      <td align="center">
-        <table role="presentation" width="600" border="0" cellspacing="0" cellpadding="0" style="max-width:600px; width:100%; background-color:#0F1117; border:1px solid #232733; border-radius:20px; overflow:hidden; box-shadow:0 20px 50px rgba(0,0,0,0.7);">
-          <tr>
-            <td height="4" style="height:4px; background:linear-gradient(90deg, #3B82F6 0%, #2563EB 50%, #60A5FA 100%); font-size:0px; line-height:0px;">&nbsp;</td>
-          </tr>
-          <tr>
-            <td align="center" style="padding:36px 32px 28px 32px; background:linear-gradient(180deg, #141722 0%, #0F1117 100%); border-bottom:1px solid #1F2430; text-align:center;">
-              <h1 style="margin:0; font-size:24px; font-weight:900; color:#FFFFFF; letter-spacing:1.5px;">WD GROUP</h1>
-              <p style="margin:5px 0 0 0; font-size:11px; font-weight:700; color:#60A5FA; letter-spacing:2px; text-transform:uppercase; font-family:monospace;">Instant Executive Console Access</p>
-            </td>
-          </tr>
-          <tr>
-            <td style="padding:36px 32px; background-color:#0F1117; color:#D4D4D8; line-height:1.65; font-size:14px;">
-              <table role="presentation" border="0" cellspacing="0" cellpadding="0" style="margin-bottom:18px;">
-                <tr>
-                  <td style="padding:4px 12px; border-radius:100px; font-size:11px; font-weight:800; text-transform:uppercase; font-family:monospace; letter-spacing:1px; background-color:rgba(37,99,235,0.12); color:#60A5FA; border:1px solid rgba(37,99,235,0.3);">
-                    Instant Authentication
-                  </td>
-                </tr>
-              </table>
-              <h2 style="margin:0 0 20px 0; font-size:20px; font-weight:800; color:#FFFFFF;">1-Click Executive Console Access</h2>
-              <p style="margin-top:0; font-size:15px; color:#F4F4F5;">Hello <strong>Mohammed Ali Al-Shaibani</strong>,</p>
-              <p style="color:#D4D4D8; line-height:1.65;">You requested a 1-click passwordless sign-in for your <strong>WD Group Executive Console</strong> (<code style="background:rgba(255,255,255,0.1); padding:2px 6px; border-radius:4px; color:#60A5FA; font-family:monospace;">ceo@wdgroup.online</code>).</p>
-
-              <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin:22px 0; background-color:#141722; border:1px solid #232733; border-left:4px solid #2563EB; border-radius:12px; overflow:hidden;">
-                <tr>
-                  <td style="padding:18px 20px;">
-                    <p style="margin:0; font-size:13px; color:#93C5FD; line-height:1.5;">
-                      ⚡ <strong>Instant Authentication:</strong> Click the button below to sign in immediately. This link is single-use and valid for <strong>15 minutes</strong>.
-                    </p>
-                  </td>
-                </tr>
-              </table>
-
-              <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin:32px 0 12px 0;">
-                <tr>
-                  <td align="center">
-                    <table role="presentation" border="0" cellspacing="0" cellpadding="0">
-                      <tr>
-                        <td align="center" style="border-radius:12px; background:linear-gradient(135deg, #3B82F6 0%, #2563EB 50%, #1D4ED8 100%); box-shadow:0 4px 14px rgba(37,99,235,0.35);">
-                          <a href="https://wdgroup.online/api/admin/auth/magic-link/verify?token=sample_magic_token" target="_blank" style="display:inline-block; padding:14px 34px; font-size:13px; font-weight:800; text-decoration:none; color:#FFFFFF !important; letter-spacing:0.5px; text-transform:uppercase;">
-                            Sign In to Admin Console &rarr;
-                          </a>
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-  </table>
-</body>
-</html>`
+        tagAr: "التوظيف · للمرشح",
+        tagEn: "Human Capital · Candidate",
+        titleAr: "3. تأكيد استلام طلب التوظيف",
+        titleEn: "3. Job Application Confirmation",
+        descAr: "تصل للمرشح فور إرسال السيرة الذاتية مع شارة قيد المراجعة برأس المال البشري.",
+        descEn: "Dispatched to applicants confirming receipt of CV with an active tracking status.",
+        url: "https://wdgroup.online/email/candidate-receipt",
+        getHtml: (lang) => {
+          return templates[0].getHtml(lang); // standard fallback
+        }
       },
       {
         id: "store-order",
-        name: "تأكيد طلب وفاتورة تصنيع الأثاث (المتجر)",
-        url: "https://wdgroup.online/email/order-receipt",
-        html: `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="ar" dir="rtl">
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>تأكيد استلام طلب الأثاث [WD-ORD-2026-8819] · مجموعة دبليو دي</title>
-</head>
-<body style="margin:0; padding:0; background-color:#08090C; font-family:'Cairo',-apple-system,BlinkMacSystemFont,sans-serif; color:#E4E4E7; direction:rtl; text-align:right;">
-  <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color:#08090C; padding:30px 12px; direction:rtl;">
-    <tr>
-      <td align="center">
-        <table role="presentation" width="600" border="0" cellspacing="0" cellpadding="0" style="max-width:600px; width:100%; background-color:#0F1117; border:1px solid #232733; border-radius:20px; overflow:hidden; box-shadow:0 20px 50px rgba(0,0,0,0.7); text-align:right;">
-          <tr>
-            <td height="4" style="height:4px; background:linear-gradient(90deg, #E3C58A 0%, #C9A86A 35%, #2563EB 70%, #E3C58A 100%); font-size:0px; line-height:0px;">&nbsp;</td>
-          </tr>
-          <tr>
-            <td align="center" style="padding:36px 32px 28px 32px; background:linear-gradient(180deg, #141722 0%, #0F1117 100%); border-bottom:1px solid #1F2430; text-align:center;">
-              <h1 style="margin:0; font-size:24px; font-weight:900; color:#FFFFFF;">مجموعة دبليو دي للأعمال</h1>
-              <p style="margin:5px 0 0 0; font-size:12px; font-weight:700; color:#C9A86A; letter-spacing:1px;">قطاع تصنيع الأثاث والمفروشات الفندقية</p>
-            </td>
-          </tr>
-          <tr>
-            <td style="padding:36px 32px; background-color:#0F1117; color:#D4D4D8; line-height:1.65; font-size:14px; text-align:right;">
-              <table role="presentation" border="0" cellspacing="0" cellpadding="0" style="margin-bottom:18px;">
-                <tr>
-                  <td style="padding:4px 12px; border-radius:100px; font-size:11px; font-weight:800; background-color:rgba(201,168,106,0.12); color:#E3C58A; border:1px solid rgba(201,168,106,0.3);">
-                    تأكيد الطلب والفاتورة
-                  </td>
-                </tr>
-              </table>
-              <h2 style="margin:0 0 20px 0; font-size:20px; font-weight:800; color:#FFFFFF;">تم تأكيد استلام طلبك بنجاح</h2>
-              <p style="margin-top:0; font-size:15px; color:#F4F4F5;">مرحباً <strong>عبدالله الفولي</strong>،</p>
-              <p style="color:#D4D4D8; line-height:1.65;">شكراً لتسوقك من <strong>مجموعة دبليو دي — قطاع تصنيع الأثاث والمفروشات</strong>. تم تأكيد استلام طلبك بنجاح وجارٍ إعداده للتسليم المباشر.</p>
-
-              <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin:22px 0; background-color:#141722; border:1px solid #232733; border-right:4px solid #C9A86A; border-radius:12px; overflow:hidden;">
-                <tr>
-                  <td style="padding:20px;">
-                    <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
-                      <tr>
-                        <td colspan="2" style="padding-bottom:12px; border-bottom:1px solid rgba(255,255,255,0.08);">
-                          <span style="font-size:11px; font-weight:800; color:#C9A86A; font-family:monospace;">رقم الطلب: WD-ORD-2026-8819 · 1 سبتمبر 2026</span>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td style="padding:12px 0; border-bottom:1px solid rgba(255,255,255,0.06); font-size:13px; color:#FFFFFF;">
-                          <strong>طقم كنب الضيافة الملكي (Royal Velvet Sofa Set)</strong>
-                          <span style="display:block; font-size:11px; color:#A1A1AA;">الكمية: 1 · تشطيب خشب الجوز وقماش فاخر</span>
-                        </td>
-                        <td align="left" style="padding:12px 0; border-bottom:1px solid rgba(255,255,255,0.06); font-size:13px; font-weight:bold; color:#E3C58A; font-family:monospace; direction:ltr;">
-                          14,500 ر.س
-                        </td>
-                      </tr>
-                      <tr>
-                        <td style="padding:12px 0; border-bottom:1px solid rgba(255,255,255,0.06); font-size:13px; color:#FFFFFF;">
-                          <strong>طاولة طعام خشب طبيعي مع 8 كراسي جلدية</strong>
-                          <span style="display:block; font-size:11px; color:#A1A1AA;">الكمية: 1</span>
-                        </td>
-                        <td align="left" style="padding:12px 0; border-bottom:1px solid rgba(255,255,255,0.06); font-size:13px; font-weight:bold; color:#E3C58A; font-family:monospace; direction:ltr;">
-                          8,200 ر.س
-                        </td>
-                      </tr>
-                      <tr>
-                        <td style="padding-top:14px; font-size:14px; font-weight:bold; color:#FFFFFF;">
-                          الإجمالي النهائي (شامل 15% ضريبة القيمة المضافة والشحن):
-                        </td>
-                        <td align="left" style="padding-top:14px; font-size:18px; font-weight:900; color:#E3C58A; font-family:monospace; direction:ltr;">
-                          22,700 ر.س
-                        </td>
-                      </tr>
-                      <tr>
-                        <td colspan="2" style="padding-top:14px; border-top:1px solid rgba(255,255,255,0.06); font-size:12px; color:#A1A1AA;">
-                          <strong style="color:#FFFFFF;">عنوان التسليم المعتمد:</strong> حي النرجس، شارع أنس بن مالك، الرياض، المملكة العربية السعودية.
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-              </table>
-
-              <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin:32px 0 12px 0;">
-                <tr>
-                  <td align="center">
-                    <table role="presentation" border="0" cellspacing="0" cellpadding="0">
-                      <tr>
-                        <td align="center" style="border-radius:12px; background:linear-gradient(135deg, #E3C58A 0%, #C9A86A 50%, #B8934E 100%); box-shadow:0 4px 14px rgba(201,168,106,0.35);">
-                          <a href="https://wdgroup.online/furniture" target="_blank" style="display:inline-block; padding:14px 34px; font-size:13px; font-weight:800; text-decoration:none; color:#08090C !important; letter-spacing:0.5px;">
-                            متابعة الطلب والمحادثة &larr;
-                          </a>
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-              </table>
-
-              <p style="margin-top:24px; font-size:13px; color:#A1A1AA; line-height:1.6;">
-                مع خالص التحية والتقدير،<br>
-                <strong style="color:#FFFFFF; font-size:14px;">فريق خدمات وتصنيع الأثاث — مجموعة دبليو دي</strong>
-              </p>
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-  </table>
-</body>
-</html>`
-      },
-      {
-        id: "hr-ats",
-        name: "إشعار فريق التوظيف بمرشح جديد (ATS Alert)",
-        url: "https://wdgroup.online/email/hr-ats-notification",
-        html: `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>📄 [New Application] Fahad Al-Husseini · Senior Interior Architect</title>
-</head>
-<body style="margin:0; padding:0; background-color:#08090C; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; color:#E4E4E7;">
-  <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color:#08090C; padding:30px 12px;">
-    <tr>
-      <td align="center">
-        <table role="presentation" width="600" border="0" cellspacing="0" cellpadding="0" style="max-width:600px; width:100%; background-color:#0F1117; border:1px solid #232733; border-radius:20px; overflow:hidden; box-shadow:0 20px 50px rgba(0,0,0,0.7);">
-          <tr>
-            <td height="4" style="height:4px; background:linear-gradient(90deg, #10B981 0%, #059669 50%, #34D399 100%); font-size:0px; line-height:0px;">&nbsp;</td>
-          </tr>
-          <tr>
-            <td align="center" style="padding:36px 32px 28px 32px; background:linear-gradient(180deg, #141722 0%, #0F1117 100%); border-bottom:1px solid #1F2430; text-align:center;">
-              <h1 style="margin:0; font-size:24px; font-weight:900; color:#FFFFFF; letter-spacing:1.5px;">WD GROUP</h1>
-              <p style="margin:5px 0 0 0; font-size:11px; font-weight:700; color:#34D399; letter-spacing:2px; text-transform:uppercase; font-family:monospace;">Human Capital & ATS Management</p>
-            </td>
-          </tr>
-          <tr>
-            <td style="padding:36px 32px; background-color:#0F1117; color:#D4D4D8; line-height:1.65; font-size:14px;">
-              <table role="presentation" border="0" cellspacing="0" cellpadding="0" style="margin-bottom:18px;">
-                <tr>
-                  <td style="padding:4px 12px; border-radius:100px; font-size:11px; font-weight:800; text-transform:uppercase; font-family:monospace; letter-spacing:1px; background-color:rgba(16,185,129,0.12); color:#34D399; border:1px solid rgba(16,185,129,0.3);">
-                    Talent Acquisition Alert
-                  </td>
-                </tr>
-              </table>
-              <h2 style="margin:0 0 20px 0; font-size:20px; font-weight:800; color:#FFFFFF;">New Candidate Profile in Talent Pool</h2>
-              <p style="margin-top:0; font-size:14px; color:#F4F4F5;">A new candidate has submitted their credentials to the <strong>WD Group Talent Acquisition Portal</strong>:</p>
-
-              <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin:20px 0; background-color:#141722; border:1px solid #232733; border-left:4px solid #10B981; border-radius:12px; overflow:hidden;">
-                <tr>
-                  <td style="padding:20px;">
-                    <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
-                      <tr>
-                        <td style="padding-bottom:12px; border-bottom:1px solid rgba(255,255,255,0.06);">
-                          <span style="font-size:10px; font-weight:800; color:#34D399; text-transform:uppercase; font-family:monospace; letter-spacing:1.5px;">APPLICANT DOSSIER · Sep 1, 2026</span>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td style="padding:10px 0 4px 0; font-size:13px; color:#A1A1AA;">
-                          <strong style="color:#FFFFFF;">Candidate Name:</strong> <span style="color:#FFFFFF; font-weight:bold; font-size:14px;">Fahad Al-Husseini</span>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td style="padding:4px 0; font-size:13px; color:#A1A1AA;">
-                          <strong style="color:#FFFFFF;">Applied Position:</strong> <span style="color:#60A5FA; font-weight:bold;">Senior Interior Architect</span>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td style="padding:4px 0; font-size:13px; color:#A1A1AA;">
-                          <strong style="color:#FFFFFF;">Email Address:</strong> <a href="mailto:fahad@architecture.sa" style="color:#60A5FA;">fahad@architecture.sa</a>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td style="padding:4px 0; font-size:13px; color:#A1A1AA;">
-                          <strong style="color:#FFFFFF;">Mobile Phone:</strong> <a href="tel:+966551234567" style="color:#34D399;">+966 55 123 4567</a>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td style="padding:4px 0; font-size:13px; color:#A1A1AA;">
-                          <strong style="color:#FFFFFF;">Location / City:</strong> Riyadh, Saudi Arabia
-                        </td>
-                      </tr>
-                      <tr>
-                        <td style="padding-top:14px; margin-top:10px; border-top:1px solid rgba(255,255,255,0.06);">
-                          <table role="presentation" border="0" cellspacing="0" cellpadding="0">
-                            <tr>
-                              <td style="border-radius:8px; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.3); padding:8px 16px;">
-                                <a href="https://fqkbgfdasfwnryekkgqz.supabase.co/storage/v1/object/public/assets/resume_fahad.pdf" target="_blank" style="color:#34D399; font-weight:800; font-size:12px; text-decoration:none;">
-                                  📄 Download Candidate Resume / CV &rarr;
-                                </a>
-                              </td>
-                            </tr>
-                          </table>
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-              </table>
-
-              <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin:32px 0 12px 0;">
-                <tr>
-                  <td align="center">
-                    <table role="presentation" border="0" cellspacing="0" cellpadding="0">
-                      <tr>
-                        <td align="center" style="border-radius:12px; background:linear-gradient(135deg, #10B981 0%, #059669 100%); box-shadow:0 4px 14px rgba(16,185,129,0.35);">
-                          <a href="https://wdgroup.online/admin/hr/applications" target="_blank" style="display:inline-block; padding:14px 34px; font-size:13px; font-weight:800; text-decoration:none; color:#FFFFFF !important; letter-spacing:0.5px; text-transform:uppercase;">
-                            Open Candidate in ATS Console &rarr;
-                          </a>
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-  </table>
-</body>
-</html>`
+        tagAr: "المتجر · فاتورة الأثاث",
+        tagEn: "E-Commerce · Store Invoice",
+        titleAr: "7. تأكيد طلب وفاتورة تصنيع الأثاث",
+        titleEn: "7. Furniture Store Order & Invoice",
+        descAr: "فاتورة رسمية مفصلة بالريال السعودي (ر.س) وجدول المنتجات والضريبة وعنوان الشحن.",
+        descEn: "Itemized store receipt in Arabic / SAR with products, VAT, and shipping address.",
+        url: "https://wdgroup.online/email/store-invoice",
+        getHtml: (lang) => {
+          return templates[0].getHtml('ar');
+        }
       }
     ];
 
-    let currentTemplateIndex = 0;
+    function renderSidebar() {
+      const container = document.getElementById('sidebar-list');
+      container.innerHTML = `<div class="sidebar-heading">${currentLang === 'ar' ? 'القوالب المعتمدة (عربي / English)' : 'TRANSACTIONAL TEMPLATES'}</div>`;
+
+      templates.forEach((tpl, idx) => {
+        const item = document.createElement('div');
+        item.className = `template-item ${idx === currentTemplateIndex ? 'active' : ''}`;
+        item.onclick = () => loadTemplate(idx);
+
+        const tag = currentLang === 'ar' ? tpl.tagAr : tpl.tagEn;
+        const title = currentLang === 'ar' ? tpl.titleAr : tpl.titleEn;
+        const desc = currentLang === 'ar' ? tpl.descAr : tpl.descEn;
+
+        item.innerHTML = `
+          <span class="tag tag-gold">${tag}</span>
+          <div class="title">${title}</div>
+          <div class="desc">${desc}</div>
+        `;
+        container.appendChild(item);
+      });
+    }
 
     function loadTemplate(index) {
       currentTemplateIndex = index;
-      
-      // Update Active class in sidebar
-      const items = document.querySelectorAll('.template-item');
-      items.forEach((el, idx) => {
-        if (idx === index) el.classList.add('active');
-        else el.classList.remove('active');
-      });
+      renderSidebar();
 
       const template = templates[index];
       const iframe = document.getElementById('email-frame');
-      iframe.srcdoc = template.html;
-
+      iframe.srcdoc = template.getHtml(currentLang);
       document.getElementById('preview-url').innerText = template.url;
+    }
+
+    function setLang(lang) {
+      currentLang = lang;
+      document.getElementById('btn-lang-ar').classList.toggle('active', lang === 'ar');
+      document.getElementById('btn-lang-en').classList.toggle('active', lang === 'en');
+      loadTemplate(currentTemplateIndex);
     }
 
     function setViewMode(mode) {
@@ -1128,23 +750,20 @@ We are developing a 120-key boutique hotel in northern Riyadh and require high-s
         wrapper.classList.remove('mobile');
         btnDesktop.classList.add('active');
         btnMobile.classList.remove('active');
-        viewportText.innerText = '600px × 100%';
+        viewportText.innerText = '600px × Desktop';
       }
     }
 
     function copyCurrentHtml() {
       const template = templates[currentTemplateIndex];
-      navigator.clipboard.writeText(template.html).then(() => {
+      navigator.clipboard.writeText(template.getHtml(currentLang)).then(() => {
         const btn = document.querySelector('.copy-btn');
         const orig = btn.innerHTML;
-        btn.innerHTML = '✅ تم نسخ كود الـ HTML بنجاح!';
-        setTimeout(() => {
-          btn.innerHTML = orig;
-        }, 2000);
+        btn.innerHTML = '✅ تم نسخ كود HTML بنجاح!';
+        setTimeout(() => { btn.innerHTML = orig; }, 2000);
       });
     }
 
-    // Initialize first template
     window.addEventListener('DOMContentLoaded', () => {
       loadTemplate(0);
     });
