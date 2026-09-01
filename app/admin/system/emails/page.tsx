@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Mail, 
   Sparkles, 
@@ -44,17 +44,22 @@ interface EmailTemplateMeta {
 }
 
 export default function EmailTemplatesAdminPage() {
-  const { lang: uiLang } = useLanguage();
-  const isArUi = uiLang === 'ar';
+  const { lang } = useLanguage();
+  const isAr = lang === 'ar';
   const { showToast } = useToast();
 
-  const [templateLang, setTemplateLang] = useState<'ar' | 'en'>('ar');
   const [activeTab, setActiveTab] = useState<number>(0);
+  const [templateLang, setTemplateLang] = useState<'ar' | 'en'>(isAr ? 'ar' : 'en');
   const [viewMode, setViewMode] = useState<'desktop' | 'tablet' | 'mobile'>('desktop');
   const [viewSource, setViewSource] = useState(false);
   const [testEmail, setTestEmail] = useState('');
   const [isSendingTest, setIsSendingTest] = useState(false);
   const [isTestModalOpen, setIsTestModalOpen] = useState(false);
+
+  // Sync template language whenever the admin panel language changes
+  useEffect(() => {
+    setTemplateLang(isAr ? 'ar' : 'en');
+  }, [isAr]);
 
   const isTemplateAr = templateLang === 'ar';
 
@@ -73,8 +78,94 @@ export default function EmailTemplatesAdminPage() {
       subjectEn: 'Thank you for contacting WD Group [Ref: WD-INQ-849201]',
       triggerAr: 'عند إرسال زائر استفساراً من صفحة /contact أو صفحات القطاعات.',
       triggerEn: 'Triggered when a visitor submits an inquiry via /contact or sector pages.',
-      iframeDocAr: `<!DOCTYPE html><html><head><meta charset="utf-8"><style>body{margin:0;padding:20px;background:#08090C;color:#E4E4E7;font-family:'Cairo',-apple-system,sans-serif;direction:rtl;text-align:right;}</style></head><body><div style="max-width:600px;margin:0 auto;background:#0F1117;border:1px solid #232733;border-radius:20px;overflow:hidden;"><div style="height:4px;background:linear-gradient(90deg,#E3C58A,#C9A86A,#2563EB,#E3C58A);"></div><div style="padding:32px 24px;text-align:center;background:#141722;border-bottom:1px solid #1F2430;"><div style="width:44px;height:44px;margin:0 auto 10px;background:#1E2330;border:1px solid rgba(201,168,106,0.4);border-radius:10px;line-height:44px;font-weight:900;color:#E3C58A;font-family:monospace;font-size:18px;">WD</div><h1 style="margin:0;color:#FFF;font-size:22px;">مجموعة دبليو دي للأعمال</h1><p style="margin:4px 0 0;color:#C9A86A;font-size:11px;font-weight:bold;">قطاع الضيافة · التصنيع · المقاولات العامة</p></div><div style="padding:32px 24px;line-height:1.65;font-size:14px;"><span style="display:inline-block;padding:3px 10px;border-radius:100px;font-size:10px;font-weight:bold;background:rgba(201,168,106,0.15);color:#E3C58A;border:1px solid rgba(201,168,106,0.3);margin-bottom:14px;">استفسار تجاري رسمي</span><h2 style="margin:0 0 16px;color:#FFF;font-size:18px;">تم استلام استفساركم التجاري بنجاح</h2><p style="margin-top:0;">سعادة الأستاذ/ <strong>م. سلطان العتيبي</strong> المحترم،</p><p>نشكركم على تواصلكم مع <strong>مجموعة دبليو دي للأعمال</strong>. نود إحاطتكم بأنه تم استلام استفساركم التجاري بنجاح، وجارٍ توجيهه للفريق التنفيذي المختص.</p><div style="background:#141722;border:1px solid #232733;border-right:4px solid #C9A86A;border-radius:12px;padding:16px;margin:20px 0;"><p style="margin:0 0 8px;font-size:11px;color:#C9A86A;font-weight:bold;font-family:monospace;">الرقم المرجعي للاستفسار: WD-INQ-849201</p><p style="margin:4px 0;font-size:13px;color:#A1A1AA;"><strong style="color:#FFF;">القطاع المستهدف:</strong> <span style="color:#E3C58A;">قطاع التصنيع والأثاث (GreenWood)</span></p><p style="margin:4px 0;font-size:13px;color:#A1A1AA;"><strong style="color:#FFF;">الموضوع:</strong> توريد أثاث وتشطيبات خشبية لـ 120 وحدة فندقية بالرياض</p></div><div style="background:rgba(37,99,235,0.08);border:1px solid rgba(37,99,235,0.2);border-radius:12px;padding:12px 16px;margin:20px 0;color:#93C5FD;font-size:12px;">⚡ <strong>التزام مستوى الخدمة:</strong> تم إسناد طلبكم إلى مستشار القطاع المختص وسيتم التواصل معكم رسمياً خلال <strong>24 ساعة عمل</strong>.</div><div style="text-align:center;margin:28px 0;"><a href="https://wdgroup.online/sectors/manufacturing" target="_blank" style="display:inline-block;padding:12px 30px;background:linear-gradient(135deg,#E3C58A,#C9A86A);color:#08090C;text-decoration:none;font-weight:bold;border-radius:10px;font-size:12px;">استكشاف قطاعات المنظومة &larr;</a></div><p style="margin-top:24px;font-size:12px;color:#A1A1AA;">وتفضلوا بقبول وافر الاحترام والتقدير،<br><strong style="color:#FFF;">العلاقات التجارية — مجموعة دبليو دي</strong></p></div><div style="padding:20px;background:#08090C;border-top:1px solid #1A1E27;text-align:center;font-size:10px;color:#71717A;">مجموعة دبليو دي للأعمال © 2026 · الرياض · جدة · نجران · المملكة العربية السعودية</div></div></body></html>`,
-      iframeDocEn: `<!DOCTYPE html><html><head><meta charset="utf-8"><style>body{margin:0;padding:20px;background:#08090C;color:#E4E4E7;font-family:-apple-system,sans-serif;}</style></head><body><div style="max-width:600px;margin:0 auto;background:#0F1117;border:1px solid #232733;border-radius:20px;overflow:hidden;"><div style="height:4px;background:linear-gradient(90deg,#E3C58A,#C9A86A,#2563EB,#E3C58A);"></div><div style="padding:32px 24px;text-align:center;background:#141722;border-bottom:1px solid #1F2430;"><div style="width:44px;height:44px;margin:0 auto 10px;background:#1E2330;border:1px solid rgba(201,168,106,0.4);border-radius:10px;line-height:44px;font-weight:900;color:#E3C58A;font-family:monospace;font-size:18px;">WD</div><h1 style="margin:0;color:#FFF;font-size:22px;letter-spacing:1px;">WD GROUP</h1><p style="margin:4px 0 0;color:#C9A86A;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;font-family:monospace;">Hospitality · Manufacturing · Contracting</p></div><div style="padding:32px 24px;line-height:1.65;font-size:14px;"><span style="display:inline-block;padding:3px 10px;border-radius:100px;font-size:10px;font-weight:bold;background:rgba(201,168,106,0.15);color:#E3C58A;border:1px solid rgba(201,168,106,0.3);margin-bottom:14px;text-transform:uppercase;font-family:monospace;">Official Commercial Inquiry</span><h2 style="margin:0 0 16px;color:#FFF;font-size:18px;">We Have Received Your Commercial Inquiry</h2><p style="margin-top:0;">Dear <strong>Eng. Sultan Al-Otaibi</strong>,</p><p>Thank you for contacting <strong>WD Group</strong>. We have officially received your commercial inquiry, and our executive sector team has been notified.</p><div style="background:#141722;border:1px solid #232733;border-left:4px solid #C9A86A;border-radius:12px;padding:16px;margin:20px 0;"><p style="margin:0 0 8px;font-size:10px;color:#C9A86A;font-weight:bold;font-family:monospace;">INQUIRY REFERENCE: WD-INQ-849201</p><p style="margin:4px 0;font-size:13px;color:#A1A1AA;"><strong style="color:#FFF;">Target Sector:</strong> <span style="color:#E3C58A;">GreenWood Manufacturing</span></p><p style="margin:4px 0;font-size:13px;color:#A1A1AA;"><strong style="color:#FFF;">Subject:</strong> Hotel Furnishing Package & Joinery for 120 Units</p></div><div style="text-align:center;margin:28px 0;"><a href="https://wdgroup.online/sectors/manufacturing" target="_blank" style="display:inline-block;padding:12px 30px;background:linear-gradient(135deg,#E3C58A,#C9A86A);color:#08090C;text-decoration:none;font-weight:bold;border-radius:10px;font-size:12px;text-transform:uppercase;">Explore Corporate Ecosystem &rarr;</a></div></div><div style="padding:20px;background:#08090C;border-top:1px solid #1A1E27;text-align:center;font-size:10px;color:#71717A;">WD Group © 2026 · Riyadh · Jeddah · Najran · Kingdom of Saudi Arabia</div></div></body></html>`,
+      iframeDocAr: `<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { margin: 0; padding: 20px; background: #08090C; color: #E4E4E7; font-family: 'Cairo', -apple-system, sans-serif; direction: rtl; text-align: right; }
+  </style>
+</head>
+<body>
+  <div style="max-width: 600px; margin: 0 auto; background: #0F1117; border: 1px solid #232733; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.7);">
+    <div style="height: 4px; background: linear-gradient(90deg, #E3C58A, #C9A86A, #2563EB, #E3C58A);"></div>
+    <div style="padding: 32px 24px; text-align: center; background: #141722; border-bottom: 1px solid #1F2430;">
+      <div style="width: 44px; height: 44px; margin: 0 auto 10px; background: #1E2330; border: 1px solid rgba(201,168,106,0.4); border-radius: 10px; line-height: 44px; font-weight: 900; color: #E3C58A; font-family: monospace; font-size: 18px;">WD</div>
+      <h1 style="margin: 0; color: #FFF; font-size: 22px;">مجموعة دبليو دي للأعمال</h1>
+      <p style="margin: 4px 0 0; color: #C9A86A; font-size: 11px; font-weight: bold;">قطاع الضيافة · التصنيع · المقاولات العامة</p>
+      <p style="margin: 3px 0 0; color: #71717A; font-size: 10px;">المملكة العربية السعودية</p>
+    </div>
+    <div style="padding: 32px 24px; line-height: 1.65; font-size: 14px;">
+      <span style="display: inline-block; padding: 3px 10px; border-radius: 100px; font-size: 10px; font-weight: bold; background: rgba(201,168,106,0.15); color: #E3C58A; border: 1px solid rgba(201,168,106,0.3); margin-bottom: 14px;">استفسار تجاري رسمي</span>
+      <h2 style="margin: 0 0 16px; color: #FFF; font-size: 18px;">تم استلام استفساركم التجاري بنجاح</h2>
+      <p style="margin-top: 0;">سعادة الأستاذ/ <strong>م. سلطان العتيبي</strong> المحترم،</p>
+      <p>نشكركم على تواصلكم مع <strong>مجموعة دبليو دي للأعمال</strong>. نود إحاطتكم بأنه تم استلام استفساركم التجاري بنجاح، وجارٍ توجيهه للفريق التنفيذي المختص.</p>
+      <div style="background: #141722; border: 1px solid #232733; border-right: 4px solid #C9A86A; border-radius: 12px; padding: 16px; margin: 20px 0;">
+        <p style="margin: 0 0 8px; font-size: 11px; color: #C9A86A; font-weight: bold; font-family: monospace;">الرقم المرجعي للاستفسار: WD-INQ-849201</p>
+        <p style="margin: 4px 0; font-size: 13px; color: #A1A1AA;"><strong style="color: #FFF;">القطاع المستهدف:</strong> <span style="color: #E3C58A;">قطاع التصنيع والأثاث (GreenWood)</span></p>
+        <p style="margin: 4px 0; font-size: 13px; color: #A1A1AA;"><strong style="color: #FFF;">الموضوع:</strong> توريد أثاث وتشطيبات خشبية لـ 120 وحدة فندقية بالرياض</p>
+        <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.06); font-size: 12px; color: #E4E4E7; font-style: italic; background: rgba(0,0,0,0.25); padding: 8px 12px; border-radius: 6px;">
+          "نقوم حالياً بتطوير فندق بوتيك يضم 120 وحدة بالرياض ونرغب في التعاقد لتوريد الأبواب والأعمال الخشبية والمفروشات قبل الربع الأخير 2026."
+        </div>
+      </div>
+      <div style="background: rgba(37,99,235,0.08); border: 1px solid rgba(37,99,235,0.2); border-radius: 12px; padding: 12px 16px; margin: 20px 0; color: #93C5FD; font-size: 12px;">
+        ⚡ <strong>التزام مستوى الخدمة:</strong> تم إسناد طلبكم إلى مستشار القطاع المختص وسيتم التواصل معكم رسمياً خلال <strong>24 ساعة عمل</strong>.
+      </div>
+      <div style="text-align: center; margin: 28px 0;">
+        <a href="https://wdgroup.online/sectors/manufacturing" target="_blank" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #E3C58A, #C9A86A); color: #08090C; text-decoration: none; font-weight: bold; border-radius: 10px; font-size: 12px;">استكشاف قطاعات المنظومة &larr;</a>
+      </div>
+      <p style="margin-top: 24px; font-size: 12px; color: #A1A1AA;">وتفضلوا بقبول وافر الاحترام والتقدير،<br><strong style="color: #FFF;">العلاقات التجارية — مجموعة دبليو دي</strong></p>
+    </div>
+    <div style="padding: 20px; background: #08090C; border-top: 1px solid #1A1E27; text-align: center; font-size: 10px; color: #71717A;">
+      مجموعة دبليو دي للأعمال © 2026 · الرياض · جدة · نجران · المملكة العربية السعودية
+    </div>
+  </div>
+</body>
+</html>`,
+      iframeDocEn: `<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { margin: 0; padding: 20px; background: #08090C; color: #E4E4E7; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; direction: ltr; text-align: left; }
+  </style>
+</head>
+<body>
+  <div style="max-width: 600px; margin: 0 auto; background: #0F1117; border: 1px solid #232733; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.7);">
+    <div style="height: 4px; background: linear-gradient(90deg, #E3C58A, #C9A86A, #2563EB, #E3C58A);"></div>
+    <div style="padding: 32px 24px; text-align: center; background: #141722; border-bottom: 1px solid #1F2430;">
+      <div style="width: 44px; height: 44px; margin: 0 auto 10px; background: #1E2330; border: 1px solid rgba(201,168,106,0.4); border-radius: 10px; line-height: 44px; font-weight: 900; color: #E3C58A; font-family: monospace; font-size: 18px;">WD</div>
+      <h1 style="margin: 0; color: #FFF; font-size: 22px; letter-spacing: 1.5px;">WD GROUP</h1>
+      <p style="margin: 4px 0 0; color: #C9A86A; font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; font-family: monospace;">Hospitality · Manufacturing · Contracting</p>
+      <p style="margin: 3px 0 0; color: #71717A; font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; font-family: monospace;">Kingdom of Saudi Arabia</p>
+    </div>
+    <div style="padding: 32px 24px; line-height: 1.65; font-size: 14px;">
+      <span style="display: inline-block; padding: 3px 10px; border-radius: 100px; font-size: 10px; font-weight: bold; background: rgba(201,168,106,0.15); color: #E3C58A; border: 1px solid rgba(201,168,106,0.3); margin-bottom: 14px; text-transform: uppercase; font-family: monospace;">Official Commercial Inquiry</span>
+      <h2 style="margin: 0 0 16px; color: #FFF; font-size: 18px;">We Have Received Your Commercial Inquiry</h2>
+      <p style="margin-top: 0;">Dear <strong>Eng. Sultan Al-Otaibi</strong>,</p>
+      <p>Thank you for contacting <strong>WD Group</strong>. We have officially received your commercial inquiry, and our executive sector team has been notified.</p>
+      <div style="background: #141722; border: 1px solid #232733; border-left: 4px solid #C9A86A; border-radius: 12px; padding: 16px; margin: 20px 0;">
+        <p style="margin: 0 0 8px; font-size: 10px; color: #C9A86A; font-weight: bold; font-family: monospace;">INQUIRY REFERENCE: WD-INQ-849201</p>
+        <p style="margin: 4px 0; font-size: 13px; color: #A1A1AA;"><strong style="color: #FFF;">Target Sector:</strong> <span style="color: #E3C58A;">GreenWood Manufacturing (Wood & Metal)</span></p>
+        <p style="margin: 4px 0; font-size: 13px; color: #A1A1AA;"><strong style="color: #FFF;">Subject:</strong> Hotel Furnishing Package & Joinery for 120 Units in Riyadh</p>
+        <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.06); font-size: 12px; color: #E4E4E7; font-style: italic; background: rgba(0,0,0,0.25); padding: 8px 12px; border-radius: 6px;">
+          "We are developing a 120-key boutique hotel in northern Riyadh and require high-spec custom woodwork, doors, and guest room furniture delivered by Q4 2026."
+        </div>
+      </div>
+      <div style="background: rgba(37,99,235,0.08); border: 1px solid rgba(37,99,235,0.2); border-radius: 12px; padding: 12px 16px; margin: 20px 0; color: #93C5FD; font-size: 12px;">
+        ⚡ <strong>Service Commitment:</strong> A dedicated sector specialist will follow up with you within <strong>24 business hours</strong>.
+      </div>
+      <div style="text-align: center; margin: 28px 0;">
+        <a href="https://wdgroup.online/sectors/manufacturing" target="_blank" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #E3C58A, #C9A86A); color: #08090C; text-decoration: none; font-weight: bold; border-radius: 10px; font-size: 12px; text-transform: uppercase;">Explore Corporate Ecosystem &rarr;</a>
+      </div>
+      <p style="margin-top: 24px; font-size: 12px; color: #A1A1AA;">Warm regards,<br><strong style="color: #FFF;">WD Group Executive Relations</strong></p>
+    </div>
+    <div style="padding: 20px; background: #08090C; border-top: 1px solid #1A1E27; text-align: center; font-size: 10px; color: #71717A;">
+      WD Group for Business © 2026 · Riyadh · Jeddah · Najran · Kingdom of Saudi Arabia
+    </div>
+  </div>
+</body>
+</html>`,
     },
     {
       id: 'admin-lead',
@@ -90,8 +181,82 @@ export default function EmailTemplatesAdminPage() {
       subjectEn: '🚨 [New Lead] Eng. Sultan Al-Otaibi · MANUFACTURING',
       triggerAr: 'يُرسل فوراً إلى بريد الإدارة (ceo@wdgroup.online) عند وصول أي استفسار تجاري.',
       triggerEn: 'Sent immediately to admin inbox whenever a new business inquiry arrives.',
-      iframeDocAr: `<!DOCTYPE html><html><head><meta charset="utf-8"><style>body{margin:0;padding:20px;background:#08090C;color:#E4E4E7;font-family:'Cairo',-apple-system,sans-serif;direction:rtl;text-align:right;}</style></head><body><div style="max-width:600px;margin:0 auto;background:#0F1117;border:1px solid #232733;border-radius:20px;overflow:hidden;"><div style="height:4px;background:linear-gradient(90deg,#3B82F6,#2563EB,#60A5FA);"></div><div style="padding:32px 24px;text-align:center;background:#141722;border-bottom:1px solid #1F2430;"><h1 style="margin:0;color:#FFF;font-size:22px;">مجموعة دبليو دي للأعمال</h1><p style="margin:4px 0 0;color:#60A5FA;font-size:11px;font-weight:bold;">إدارة علاقات العملاء وفرص المبيعات (CRM)</p></div><div style="padding:32px 24px;line-height:1.65;font-size:14px;"><span style="display:inline-block;padding:3px 10px;border-radius:100px;font-size:10px;font-weight:bold;background:rgba(37,99,235,0.15);color:#60A5FA;border:1px solid rgba(37,99,235,0.3);margin-bottom:14px;">إشعار CRM فوري</span><h2 style="margin:0 0 16px;color:#FFF;font-size:18px;">استفسار تجاري جديد وارد</h2><div style="background:#141722;border:1px solid #232733;border-right:4px solid #3B82F6;border-radius:12px;padding:16px;margin:20px 0;"><p style="margin:4px 0;font-size:13px;color:#A1A1AA;"><strong style="color:#FFF;">اسم العميل:</strong> <span style="color:#FFF;font-weight:bold;">م. سلطان العتيبي</span></p><p style="margin:4px 0;font-size:13px;color:#A1A1AA;"><strong style="color:#FFF;">البريد الإلكتروني:</strong> <span style="color:#60A5FA;">sultan@otaibigroup.sa</span></p><p style="margin:4px 0;font-size:13px;color:#A1A1AA;"><strong style="color:#FFF;">الجوال:</strong> <span style="color:#34D399;font-weight:bold;direction:ltr;display:inline-block;">+966 50 123 4567</span></p><p style="margin:4px 0;font-size:13px;color:#A1A1AA;"><strong style="color:#FFF;">الشركة:</strong> مجموعة العتيبي للتطوير العقاري</p><p style="margin:4px 0;font-size:13px;color:#A1A1AA;"><strong style="color:#FFF;">القطاع المطلوب:</strong> <span style="color:#E3C58A;font-weight:bold;">قطاع التصنيع والأثاث</span></p><div style="margin-top:10px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.06);color:#F4F4F5;font-size:12px;background:#0B0D14;padding:10px;border-radius:6px;">"نقوم حالياً بتطوير فندق بوتيك يضم 120 وحدة بالرياض ونرغب في التعاقد لتوريد الأبواب والأعمال الخشبية والمفروشات."</div></div><div style="text-align:center;margin:28px 0;"><a href="https://wdgroup.online/admin/crm/inquiries" target="_blank" style="display:inline-block;padding:12px 30px;background:linear-gradient(135deg,#3B82F6,#2563EB);color:#FFF;text-decoration:none;font-weight:bold;border-radius:10px;font-size:12px;">فتح الاستفسار في لوحة التحكم &larr;</a></div></div><div style="padding:20px;background:#08090C;border-top:1px solid #1A1E27;text-align:center;font-size:10px;color:#71717A;">مجموعة دبليو دي للأعمال © 2026 · المملكة العربية السعودية</div></div></body></html>`,
-      iframeDocEn: `<!DOCTYPE html><html><head><meta charset="utf-8"><style>body{margin:0;padding:20px;background:#08090C;color:#E4E4E7;font-family:-apple-system,sans-serif;}</style></head><body><div style="max-width:600px;margin:0 auto;background:#0F1117;border:1px solid #232733;border-radius:20px;overflow:hidden;"><div style="height:4px;background:linear-gradient(90deg,#3B82F6,#2563EB,#60A5FA);"></div><div style="padding:32px 24px;text-align:center;background:#141722;border-bottom:1px solid #1F2430;"><h1 style="margin:0;color:#FFF;font-size:22px;letter-spacing:1px;">WD GROUP</h1><p style="margin:4px 0 0;color:#60A5FA;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;font-family:monospace;">Commercial CRM & Enterprise Leads</p></div><div style="padding:32px 24px;line-height:1.65;font-size:14px;"><h2 style="margin:0 0 16px;color:#FFF;font-size:18px;">New Commercial Inquiry Received</h2><div style="background:#141722;border:1px solid #232733;border-left:4px solid #3B82F6;border-radius:12px;padding:16px;margin:20px 0;"><p style="margin:4px 0;font-size:13px;color:#A1A1AA;"><strong style="color:#FFF;">Client:</strong> Sultan Al-Otaibi</p><p style="margin:4px 0;font-size:13px;color:#A1A1AA;"><strong style="color:#FFF;">Email:</strong> sultan@otaibigroup.sa</p></div><div style="text-align:center;margin:28px 0;"><a href="https://wdgroup.online/admin/crm/inquiries" target="_blank" style="display:inline-block;padding:12px 30px;background:linear-gradient(135deg,#3B82F6,#2563EB);color:#FFF;text-decoration:none;font-weight:bold;border-radius:10px;font-size:12px;text-transform:uppercase;">Open in Admin Console CRM &rarr;</a></div></div></body></html>`,
+      iframeDocAr: `<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { margin: 0; padding: 20px; background: #08090C; color: #E4E4E7; font-family: 'Cairo', -apple-system, sans-serif; direction: rtl; text-align: right; }
+  </style>
+</head>
+<body>
+  <div style="max-width: 600px; margin: 0 auto; background: #0F1117; border: 1px solid #232733; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.7);">
+    <div style="height: 4px; background: linear-gradient(90deg, #3B82F6, #2563EB, #60A5FA);"></div>
+    <div style="padding: 32px 24px; text-align: center; background: #141722; border-bottom: 1px solid #1F2430;">
+      <h1 style="margin: 0; color: #FFF; font-size: 22px;">مجموعة دبليو دي للأعمال</h1>
+      <p style="margin: 4px 0 0; color: #60A5FA; font-size: 11px; font-weight: bold;">إدارة علاقات العملاء وفرص المبيعات (CRM)</p>
+    </div>
+    <div style="padding: 32px 24px; line-height: 1.65; font-size: 14px;">
+      <span style="display: inline-block; padding: 3px 10px; border-radius: 100px; font-size: 10px; font-weight: bold; background: rgba(37,99,235,0.15); color: #60A5FA; border: 1px solid rgba(37,99,235,0.3); margin-bottom: 14px;">إشعار CRM فوري</span>
+      <h2 style="margin: 0 0 16px; color: #FFF; font-size: 18px;">استفسار تجاري جديد وارد</h2>
+      <div style="background: #141722; border: 1px solid #232733; border-right: 4px solid #3B82F6; border-radius: 12px; padding: 16px; margin: 20px 0;">
+        <p style="margin: 4px 0; font-size: 13px; color: #A1A1AA;"><strong style="color: #FFF;">اسم العميل:</strong> <span style="color: #FFF; font-weight: bold;">م. سلطان العتيبي</span></p>
+        <p style="margin: 4px 0; font-size: 13px; color: #A1A1AA;"><strong style="color: #FFF;">البريد الإلكتروني:</strong> <span style="color: #60A5FA;">sultan@otaibigroup.sa</span></p>
+        <p style="margin: 4px 0; font-size: 13px; color: #A1A1AA;"><strong style="color: #FFF;">الجوال:</strong> <span style="color: #34D399; font-weight: bold; direction: ltr; display: inline-block;">+966 50 123 4567</span></p>
+        <p style="margin: 4px 0; font-size: 13px; color: #A1A1AA;"><strong style="color: #FFF;">الشركة:</strong> مجموعة العتيبي للتطوير العقاري</p>
+        <p style="margin: 4px 0; font-size: 13px; color: #A1A1AA;"><strong style="color: #FFF;">القطاع المطلوب:</strong> <span style="color: #E3C58A; font-weight: bold;">قطاع التصنيع والأثاث</span></p>
+        <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.06); color: #F4F4F5; font-size: 12px; background: #0B0D14; padding: 10px; border-radius: 6px;">
+          "نقوم حالياً بتطوير فندق بوتيك يضم 120 وحدة بالرياض ونرغب في التعاقد لتوريد الأبواب والأعمال الخشبية والمفروشات قبل الربع الأخير 2026."
+        </div>
+      </div>
+      <div style="text-align: center; margin: 28px 0;">
+        <a href="https://wdgroup.online/admin/crm/inquiries" target="_blank" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #3B82F6, #2563EB); color: #FFF; text-decoration: none; font-weight: bold; border-radius: 10px; font-size: 12px;">فتح الاستفسار في لوحة التحكم &larr;</a>
+      </div>
+    </div>
+    <div style="padding: 20px; background: #08090C; border-top: 1px solid #1A1E27; text-align: center; font-size: 10px; color: #71717A;">
+      مجموعة دبليو دي للأعمال © 2026 · المملكة العربية السعودية
+    </div>
+  </div>
+</body>
+</html>`,
+      iframeDocEn: `<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { margin: 0; padding: 20px; background: #08090C; color: #E4E4E7; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; direction: ltr; text-align: left; }
+  </style>
+</head>
+<body>
+  <div style="max-width: 600px; margin: 0 auto; background: #0F1117; border: 1px solid #232733; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.7);">
+    <div style="height: 4px; background: linear-gradient(90deg, #3B82F6, #2563EB, #60A5FA);"></div>
+    <div style="padding: 32px 24px; text-align: center; background: #141722; border-bottom: 1px solid #1F2430;">
+      <h1 style="margin: 0; color: #FFF; font-size: 22px; letter-spacing: 1.5px;">WD GROUP</h1>
+      <p style="margin: 4px 0 0; color: #60A5FA; font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; font-family: monospace;">Commercial CRM & Enterprise Leads</p>
+    </div>
+    <div style="padding: 32px 24px; line-height: 1.65; font-size: 14px;">
+      <span style="display: inline-block; padding: 3px 10px; border-radius: 100px; font-size: 10px; font-weight: bold; background: rgba(37,99,235,0.15); color: #60A5FA; border: 1px solid rgba(37,99,235,0.3); margin-bottom: 14px; text-transform: uppercase; font-family: monospace;">CRM Lead Dispatch</span>
+      <h2 style="margin: 0 0 16px; color: #FFF; font-size: 18px;">New Commercial Inquiry Received</h2>
+      <div style="background: #141722; border: 1px solid #232733; border-left: 4px solid #3B82F6; border-radius: 12px; padding: 16px; margin: 20px 0;">
+        <p style="margin: 4px 0; font-size: 13px; color: #A1A1AA;"><strong style="color: #FFF;">Client Name:</strong> <span style="color: #FFF; font-weight: bold;">Eng. Sultan Al-Otaibi</span></p>
+        <p style="margin: 4px 0; font-size: 13px; color: #A1A1AA;"><strong style="color: #FFF;">Email:</strong> <span style="color: #60A5FA;">sultan@otaibigroup.sa</span></p>
+        <p style="margin: 4px 0; font-size: 13px; color: #A1A1AA;"><strong style="color: #FFF;">Phone:</strong> <span style="color: #34D399; font-weight: 600;">+966 50 123 4567</span></p>
+        <p style="margin: 4px 0; font-size: 13px; color: #A1A1AA;"><strong style="color: #FFF;">Company:</strong> Al-Otaibi Developments</p>
+        <p style="margin: 4px 0; font-size: 13px; color: #A1A1AA;"><strong style="color: #FFF;">Target Sector:</strong> <span style="color: #E3C58A; font-weight: bold;">MANUFACTURING</span></p>
+        <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.06); font-size: 12px; color: #F4F4F5; line-height: 1.5; background: #0B0D14; padding: 10px; border-radius: 6px;">
+          "We are developing a 120-key boutique hotel in northern Riyadh and require high-spec custom woodwork, doors, and guest room furniture delivered by Q4 2026."
+        </div>
+      </div>
+      <div style="text-align: center; margin: 28px 0;">
+        <a href="https://wdgroup.online/admin/crm/inquiries" target="_blank" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #3B82F6, #2563EB); color: #FFF; text-decoration: none; font-weight: bold; border-radius: 10px; font-size: 12px; text-transform: uppercase;">Open in Admin Console CRM &rarr;</a>
+      </div>
+    </div>
+    <div style="padding: 20px; background: #08090C; border-top: 1px solid #1A1E27; text-align: center; font-size: 10px; color: #71717A;">
+      WD Group for Business © 2026 · Riyadh · Jeddah · Najran · Kingdom of Saudi Arabia
+    </div>
+  </div>
+</body>
+</html>`,
     },
     {
       id: 'career-candidate',
@@ -107,8 +272,78 @@ export default function EmailTemplatesAdminPage() {
       subjectEn: 'Application Received: Senior Interior Architect [Ref: WD-APP-592814]',
       triggerAr: 'يُرسل للمرشح عند التقديم على وظيفة شاغرة عبر بوابة /careers.',
       triggerEn: 'Sent to candidates when applying for any job on the /careers portal.',
-      iframeDocAr: `<!DOCTYPE html><html><head><meta charset="utf-8"><style>body{margin:0;padding:20px;background:#08090C;color:#E4E4E7;font-family:'Cairo',-apple-system,sans-serif;direction:rtl;text-align:right;}</style></head><body><div style="max-width:600px;margin:0 auto;background:#0F1117;border:1px solid #232733;border-radius:20px;overflow:hidden;"><div style="height:4px;background:linear-gradient(90deg,#10B981,#059669,#34D399);"></div><div style="padding:32px 24px;text-align:center;background:#141722;border-bottom:1px solid #1F2430;"><h1 style="margin:0;color:#FFF;font-size:22px;">مجموعة دبليو دي للأعمال</h1><p style="margin:4px 0 0;color:#34D399;font-size:11px;font-weight:bold;">إدارة رأس المال البشري واستقطاب الكفاءات</p></div><div style="padding:32px 24px;line-height:1.65;font-size:14px;"><span style="display:inline-block;padding:3px 10px;border-radius:100px;font-size:10px;font-weight:bold;background:rgba(16,185,129,0.15);color:#34D399;border:1px solid rgba(16,185,129,0.3);margin-bottom:14px;">رأس المال البشري والتوظيف</span><h2 style="margin:0 0 16px;color:#FFF;font-size:18px;">تم استلام طلب توظيفكم بنجاح</h2><p style="margin-top:0;">الأستاذ/ <strong>فهد الحسيني</strong> المحترم،</p><p>نشكركم على رغبتكم في الانضمام إلى فريق <strong>مجموعة دبليو دي</strong>. نود إشعاركم باستلام طلب التقديم لشغل وظيفة <strong style="color:#60A5FA;">مهندس معماري وتصميم داخلي أول</strong>.</p><div style="background:#141722;border:1px solid #232733;border-right:4px solid #10B981;border-radius:12px;padding:16px;margin:20px 0;"><p style="margin:0 0 6px;font-size:11px;color:#34D399;font-weight:bold;font-family:monospace;">رقم ملف التقديم: WD-APP-592814</p><p style="margin:4px 0;font-size:13px;color:#A1A1AA;"><strong style="color:#FFF;">المسمى الوظيفي:</strong> مهندس معماري أول</p><p style="margin:4px 0;font-size:13px;color:#A1A1AA;"><strong style="color:#FFF;">حالة الطلب:</strong> <span style="color:#34D399;font-weight:bold;">قيد المراجعة برأس المال البشري</span></p></div><p>يقوم فريق التوظيف بمراجعة مؤهلاتكم وخبراتكم وسيتم التواصل معكم لتنسيق المقابلة الشخصية.</p><div style="text-align:center;margin:28px 0;"><a href="https://wdgroup.online/about" target="_blank" style="display:inline-block;padding:12px 30px;background:linear-gradient(135deg,#E3C58A,#C9A86A);color:#08090C;text-decoration:none;font-weight:bold;border-radius:10px;font-size:12px;">استكشاف رؤية المنظومة &larr;</a></div></div><div style="padding:20px;background:#08090C;border-top:1px solid #1A1E27;text-align:center;font-size:10px;color:#71717A;">مجموعة دبليو دي للأعمال © 2026 · المملكة العربية السعودية</div></div></body></html>`,
-      iframeDocEn: `<!DOCTYPE html><html><head><meta charset="utf-8"><style>body{margin:0;padding:20px;background:#08090C;color:#E4E4E7;font-family:-apple-system,sans-serif;}</style></head><body><div style="max-width:600px;margin:0 auto;background:#0F1117;border:1px solid #232733;border-radius:20px;overflow:hidden;"><div style="height:4px;background:linear-gradient(90deg,#10B981,#059669,#34D399);"></div><div style="padding:32px 24px;text-align:center;background:#141722;border-bottom:1px solid #1F2430;"><h1 style="margin:0;color:#FFF;font-size:22px;letter-spacing:1px;">WD GROUP</h1><p style="margin:4px 0 0;color:#34D399;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;font-family:monospace;">Human Capital & Talent Acquisition</p></div><div style="padding:32px 24px;line-height:1.65;font-size:14px;"><h2 style="margin:0 0 16px;color:#FFF;font-size:18px;">Your Application Has Been Received</h2><p>Dear <strong>Fahad Al-Husseini</strong>, thank you for applying for <strong style="color:#60A5FA;">Senior Interior Architect</strong>.</p></div></div></body></html>`,
+      iframeDocAr: `<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { margin: 0; padding: 20px; background: #08090C; color: #E4E4E7; font-family: 'Cairo', -apple-system, sans-serif; direction: rtl; text-align: right; }
+  </style>
+</head>
+<body>
+  <div style="max-width: 600px; margin: 0 auto; background: #0F1117; border: 1px solid #232733; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.7);">
+    <div style="height: 4px; background: linear-gradient(90deg, #10B981, #059669, #34D399);"></div>
+    <div style="padding: 32px 24px; text-align: center; background: #141722; border-bottom: 1px solid #1F2430;">
+      <h1 style="margin: 0; color: #FFF; font-size: 22px;">مجموعة دبليو دي للأعمال</h1>
+      <p style="margin: 4px 0 0; color: #34D399; font-size: 11px; font-weight: bold;">إدارة رأس المال البشري واستقطاب الكفاءات</p>
+    </div>
+    <div style="padding: 32px 24px; line-height: 1.65; font-size: 14px;">
+      <span style="display: inline-block; padding: 3px 10px; border-radius: 100px; font-size: 10px; font-weight: bold; background: rgba(16,185,129,0.15); color: #34D399; border: 1px solid rgba(16,185,129,0.3); margin-bottom: 14px;">رأس المال البشري والتوظيف</span>
+      <h2 style="margin: 0 0 16px; color: #FFF; font-size: 18px;">تم استلام طلب توظيفكم بنجاح</h2>
+      <p style="margin-top: 0;">الأستاذ/ <strong>فهد الحسيني</strong> المحترم،</p>
+      <p>نشكركم على رغبتكم في الانضمام إلى فريق <strong>مجموعة دبليو دي</strong>. نود إشعاركم باستلام طلب التقديم لشغل وظيفة <strong style="color: #60A5FA;">مهندس معماري وتصميم داخلي أول</strong>.</p>
+      <div style="background: #141722; border: 1px solid #232733; border-right: 4px solid #10B981; border-radius: 12px; padding: 16px; margin: 20px 0;">
+        <p style="margin: 0 0 6px; font-size: 11px; color: #34D399; font-weight: bold; font-family: monospace;">رقم ملف التقديم: WD-APP-592814</p>
+        <p style="margin: 4px 0; font-size: 13px; color: #A1A1AA;"><strong style="color: #FFF;">المسمى الوظيفي:</strong> <span style="color: #FFF; font-weight: 600;">مهندس معماري أول</span></p>
+        <p style="margin: 4px 0; font-size: 13px; color: #A1A1AA;"><strong style="color: #FFF;">حالة الطلب:</strong> <span style="display: inline-block; padding: 2px 8px; border-radius: 6px; background: rgba(16,185,129,0.15); color: #34D399; font-weight: bold; font-size: 11px;">قيد المراجعة برأس المال البشري</span></p>
+      </div>
+      <p>يقوم فريق استقطاب الكفاءات بمراجعة مؤهلاتكم وخبراتكم بعناية، وسيتم التواصل معكم لتنسيق المقابلة الشخصية في حال مطابقة الشروط.</p>
+      <div style="text-align: center; margin: 28px 0;">
+        <a href="https://wdgroup.online/about" target="_blank" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #E3C58A, #C9A86A); color: #08090C; text-decoration: none; font-weight: bold; border-radius: 10px; font-size: 12px;">استكشاف رؤية المنظومة &larr;</a>
+      </div>
+    </div>
+    <div style="padding: 20px; background: #08090C; border-top: 1px solid #1A1E27; text-align: center; font-size: 10px; color: #71717A;">
+      مجموعة دبليو دي للأعمال © 2026 · الرياض · جدة · نجران · المملكة العربية السعودية
+    </div>
+  </div>
+</body>
+</html>`,
+      iframeDocEn: `<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { margin: 0; padding: 20px; background: #08090C; color: #E4E4E7; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; direction: ltr; text-align: left; }
+  </style>
+</head>
+<body>
+  <div style="max-width: 600px; margin: 0 auto; background: #0F1117; border: 1px solid #232733; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.7);">
+    <div style="height: 4px; background: linear-gradient(90deg, #10B981, #059669, #34D399);"></div>
+    <div style="padding: 32px 24px; text-align: center; background: #141722; border-bottom: 1px solid #1F2430;">
+      <h1 style="margin: 0; color: #FFF; font-size: 22px; letter-spacing: 1.5px;">WD GROUP</h1>
+      <p style="margin: 4px 0 0; color: #34D399; font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; font-family: monospace;">Human Capital & Talent Acquisition</p>
+    </div>
+    <div style="padding: 32px 24px; line-height: 1.65; font-size: 14px;">
+      <span style="display: inline-block; padding: 3px 10px; border-radius: 100px; font-size: 10px; font-weight: bold; background: rgba(16,185,129,0.15); color: #34D399; border: 1px solid rgba(16,185,129,0.3); margin-bottom: 14px; text-transform: uppercase; font-family: monospace;">Human Capital & Careers</span>
+      <h2 style="margin: 0 0 16px; color: #FFF; font-size: 18px;">Your Application Has Been Received</h2>
+      <p style="margin-top: 0;">Dear <strong>Fahad Al-Husseini</strong>,</p>
+      <p>Thank you for applying to <strong>WD Group</strong> for the position of <strong style="color: #60A5FA;">Senior Interior Architect</strong>.</p>
+      <div style="background: #141722; border: 1px solid #232733; border-left: 4px solid #10B981; border-radius: 12px; padding: 16px; margin: 20px 0;">
+        <p style="margin: 0 0 6px; font-size: 10px; color: #34D399; font-weight: bold; font-family: monospace;">APPLICATION ID: WD-APP-592814</p>
+        <p style="margin: 4px 0; font-size: 13px; color: #A1A1AA;"><strong style="color: #FFF;">Target Role:</strong> <span style="color: #FFF; font-weight: 600;">Senior Interior Architect</span></p>
+        <p style="margin: 4px 0; font-size: 13px; color: #A1A1AA;"><strong style="color: #FFF;">Status:</strong> <span style="display: inline-block; padding: 2px 8px; border-radius: 6px; background: rgba(16,185,129,0.15); color: #34D399; font-weight: bold; font-size: 11px;">Under Human Capital Review</span></p>
+      </div>
+      <p>Our Talent Acquisition team is reviewing your profile and will connect with you if your qualifications match our active requirements.</p>
+      <div style="text-align: center; margin: 28px 0;">
+        <a href="https://wdgroup.online/about" target="_blank" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #E3C58A, #C9A86A); color: #08090C; text-decoration: none; font-weight: bold; border-radius: 10px; font-size: 12px; text-transform: uppercase;">Discover WD Group Vision &rarr;</a>
+      </div>
+    </div>
+    <div style="padding: 20px; background: #08090C; border-top: 1px solid #1A1E27; text-align: center; font-size: 10px; color: #71717A;">
+      WD Group for Business © 2026 · Riyadh · Jeddah · Najran · Kingdom of Saudi Arabia
+    </div>
+  </div>
+</body>
+</html>`,
     },
     {
       id: 'hr-ats',
@@ -124,8 +359,74 @@ export default function EmailTemplatesAdminPage() {
       subjectEn: '📄 [New Application] Fahad Al-Husseini · Senior Interior Architect',
       triggerAr: 'يُرسل لفريق التوظيف بمجرد رفع أي مرشح لسيرته الذاتية.',
       triggerEn: 'Sent to the HR department when a new CV is uploaded on the site.',
-      iframeDocAr: `<!DOCTYPE html><html><head><meta charset="utf-8"><style>body{margin:0;padding:20px;background:#08090C;color:#E4E4E7;font-family:'Cairo',-apple-system,sans-serif;direction:rtl;text-align:right;}</style></head><body><div style="max-width:600px;margin:0 auto;background:#0F1117;border:1px solid #232733;border-radius:20px;overflow:hidden;"><div style="height:4px;background:linear-gradient(90deg,#10B981,#059669,#34D399);"></div><div style="padding:32px 24px;text-align:center;background:#141722;border-bottom:1px solid #1F2430;"><h1 style="margin:0;color:#FFF;font-size:22px;">مجموعة دبليو دي للأعمال</h1><p style="margin:4px 0 0;color:#34D399;font-size:11px;font-weight:bold;">نظام استقطاب وإدارة الكفاءات (ATS)</p></div><div style="padding:32px 24px;line-height:1.65;font-size:14px;"><span style="display:inline-block;padding:3px 10px;border-radius:100px;font-size:10px;font-weight:bold;background:rgba(16,185,129,0.15);color:#34D399;border:1px solid rgba(16,185,129,0.3);margin-bottom:14px;">تنبيه استقطاب الكفاءات</span><h2 style="margin:0 0 16px;color:#FFF;font-size:18px;">ملف مرشح جديد في نظام التوظيف</h2><div style="background:#141722;border:1px solid #232733;border-right:4px solid #10B981;border-radius:12px;padding:16px;margin:20px 0;"><p style="margin:4px 0;font-size:13px;color:#A1A1AA;"><strong style="color:#FFF;">الاسم:</strong> <span style="color:#FFF;font-weight:bold;">فهد الحسيني</span></p><p style="margin:4px 0;font-size:13px;color:#A1A1AA;"><strong style="color:#FFF;">الوظيفة:</strong> <span style="color:#60A5FA;font-weight:bold;">مهندس معماري وتصميم داخلي أول</span></p><p style="margin:4px 0;font-size:13px;color:#A1A1AA;"><strong style="color:#FFF;">البريد:</strong> fahad@architecture.sa</p><p style="margin:4px 0;font-size:13px;color:#A1A1AA;"><strong style="color:#FFF;">الجوال:</strong> <span style="direction:ltr;display:inline-block;">+966 55 123 4567</span></p><div style="margin-top:12px;"><a href="#" style="display:inline-block;padding:8px 16px;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.3);color:#34D399;text-decoration:none;font-weight:bold;font-size:12px;border-radius:6px;">📄 تحميل ومطالعة السيرة الذاتية (CV) &larr;</a></div></div><div style="text-align:center;margin:28px 0;"><a href="https://wdgroup.online/admin/hr/applications" target="_blank" style="display:inline-block;padding:12px 30px;background:linear-gradient(135deg,#10B981,#059669);color:#FFF;text-decoration:none;font-weight:bold;border-radius:10px;font-size:12px;">عرض المرشح في لوحة التوظيف &larr;</a></div></div></body></html>`,
-      iframeDocEn: `<!DOCTYPE html><html><body style="background:#08090C;color:#FFF;padding:20px;font-family:sans-serif;"><div style="max-width:600px;margin:0 auto;background:#0F1117;padding:30px;border-radius:20px;border:1px solid #232733;"><h2>New Candidate Profile in Talent Pool</h2><p>Candidate: Fahad Al-Husseini (Senior Interior Architect)</p></div></body></html>`,
+      iframeDocAr: `<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { margin: 0; padding: 20px; background: #08090C; color: #E4E4E7; font-family: 'Cairo', -apple-system, sans-serif; direction: rtl; text-align: right; }
+  </style>
+</head>
+<body>
+  <div style="max-width: 600px; margin: 0 auto; background: #0F1117; border: 1px solid #232733; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.7);">
+    <div style="height: 4px; background: linear-gradient(90deg, #10B981, #059669, #34D399);"></div>
+    <div style="padding: 32px 24px; text-align: center; background: #141722; border-bottom: 1px solid #1F2430;">
+      <h1 style="margin: 0; color: #FFF; font-size: 22px;">مجموعة دبليو دي للأعمال</h1>
+      <p style="margin: 4px 0 0; color: #34D399; font-size: 11px; font-weight: bold;">نظام استقطاب وإدارة الكفاءات (ATS)</p>
+    </div>
+    <div style="padding: 32px 24px; line-height: 1.65; font-size: 14px;">
+      <span style="display: inline-block; padding: 3px 10px; border-radius: 100px; font-size: 10px; font-weight: bold; background: rgba(16,185,129,0.15); color: #34D399; border: 1px solid rgba(16,185,129,0.3); margin-bottom: 14px;">تنبيه استقطاب الكفاءات</span>
+      <h2 style="margin: 0 0 16px; color: #FFF; font-size: 18px;">ملف مرشح جديد في نظام التوظيف</h2>
+      <div style="background: #141722; border: 1px solid #232733; border-right: 4px solid #10B981; border-radius: 12px; padding: 16px; margin: 20px 0;">
+        <p style="margin: 4px 0; font-size: 13px; color: #A1A1AA;"><strong style="color: #FFF;">الاسم:</strong> <span style="color: #FFF; font-weight: bold;">فهد الحسيني</span></p>
+        <p style="margin: 4px 0; font-size: 13px; color: #A1A1AA;"><strong style="color: #FFF;">الوظيفة:</strong> <span style="color: #60A5FA; font-weight: bold;">مهندس معماري وتصميم داخلي أول</span></p>
+        <p style="margin: 4px 0; font-size: 13px; color: #A1A1AA;"><strong style="color: #FFF;">البريد:</strong> fahad@architecture.sa</p>
+        <p style="margin: 4px 0; font-size: 13px; color: #A1A1AA;"><strong style="color: #FFF;">الجوال:</strong> <span style="direction: ltr; display: inline-block;">+966 55 123 4567</span></p>
+        <div style="margin-top: 12px;">
+          <a href="#" style="display: inline-block; padding: 8px 16px; background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.3); color: #34D399; text-decoration: none; font-weight: bold; font-size: 12px; border-radius: 6px;">📄 تحميل ومطالعة السيرة الذاتية (CV) &larr;</a>
+        </div>
+      </div>
+      <div style="text-align: center; margin: 28px 0;">
+        <a href="https://wdgroup.online/admin/hr/applications" target="_blank" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #10B981, #059669); color: #FFF; text-decoration: none; font-weight: bold; border-radius: 10px; font-size: 12px;">عرض المرشح في لوحة التوظيف &larr;</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>`,
+      iframeDocEn: `<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { margin: 0; padding: 20px; background: #08090C; color: #E4E4E7; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; direction: ltr; text-align: left; }
+  </style>
+</head>
+<body>
+  <div style="max-width: 600px; margin: 0 auto; background: #0F1117; border: 1px solid #232733; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.7);">
+    <div style="height: 4px; background: linear-gradient(90deg, #10B981, #059669, #34D399);"></div>
+    <div style="padding: 32px 24px; text-align: center; background: #141722; border-bottom: 1px solid #1F2430;">
+      <h1 style="margin: 0; color: #FFF; font-size: 22px; letter-spacing: 1.5px;">WD GROUP</h1>
+      <p style="margin: 4px 0 0; color: #34D399; font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; font-family: monospace;">Human Capital & ATS Management</p>
+    </div>
+    <div style="padding: 32px 24px; line-height: 1.65; font-size: 14px;">
+      <span style="display: inline-block; padding: 3px 10px; border-radius: 100px; font-size: 10px; font-weight: bold; background: rgba(16,185,129,0.15); color: #34D399; border: 1px solid rgba(16,185,129,0.3); margin-bottom: 14px; text-transform: uppercase; font-family: monospace;">Talent Acquisition Alert</span>
+      <h2 style="margin: 0 0 16px; color: #FFF; font-size: 18px;">New Candidate Profile in Talent Pool</h2>
+      <div style="background: #141722; border: 1px solid #232733; border-left: 4px solid #10B981; border-radius: 12px; padding: 16px; margin: 20px 0;">
+        <p style="margin: 4px 0; font-size: 13px; color: #A1A1AA;"><strong style="color: #FFF;">Candidate Name:</strong> <span style="color: #FFF; font-weight: bold;">Fahad Al-Husseini</span></p>
+        <p style="margin: 4px 0; font-size: 13px; color: #A1A1AA;"><strong style="color: #FFF;">Applied Role:</strong> <span style="color: #60A5FA; font-weight: bold;">Senior Interior Architect</span></p>
+        <p style="margin: 4px 0; font-size: 13px; color: #A1A1AA;"><strong style="color: #FFF;">Email:</strong> fahad@architecture.sa</p>
+        <p style="margin: 4px 0; font-size: 13px; color: #A1A1AA;"><strong style="color: #FFF;">Phone:</strong> +966 55 123 4567</p>
+        <div style="margin-top: 12px;">
+          <a href="#" style="display: inline-block; padding: 8px 16px; background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.3); color: #34D399; text-decoration: none; font-weight: bold; font-size: 12px; border-radius: 6px;">📄 Download Candidate Resume / CV &rarr;</a>
+        </div>
+      </div>
+      <div style="text-align: center; margin: 28px 0;">
+        <a href="https://wdgroup.online/admin/hr/applications" target="_blank" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #10B981, #059669); color: #FFF; text-decoration: none; font-weight: bold; border-radius: 10px; font-size: 12px; text-transform: uppercase;">Open Candidate in ATS Console &rarr;</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>`,
     },
     {
       id: 'admin-reset',
@@ -141,8 +442,74 @@ export default function EmailTemplatesAdminPage() {
       subjectEn: '🔐 Reset Your WD Group Admin Console Password',
       triggerAr: 'يُطلب من صفحة تسجيل الدخول عند نسيان كلمة المرور للمسؤول.',
       triggerEn: 'Triggered when an admin requests a password reset from the login screen.',
-      iframeDocAr: `<!DOCTYPE html><html><head><meta charset="utf-8"><style>body{margin:0;padding:20px;background:#08090C;color:#E4E4E7;font-family:'Cairo',-apple-system,sans-serif;direction:rtl;text-align:right;}</style></head><body><div style="max-width:600px;margin:0 auto;background:#0F1117;border:1px solid #232733;border-radius:20px;overflow:hidden;"><div style="height:4px;background:linear-gradient(90deg,#F59E0B,#D97706,#FBBF24);"></div><div style="padding:32px 24px;text-align:center;background:#141722;border-bottom:1px solid #1F2430;"><h1 style="margin:0;color:#FFF;font-size:22px;">مجموعة دبليو دي للأعمال</h1><p style="margin:4px 0 0;color:#FBBF24;font-size:11px;font-weight:bold;">الأمان والتحكم بصلاحيات المنصة</p></div><div style="padding:32px 24px;line-height:1.65;font-size:14px;"><span style="display:inline-block;padding:3px 10px;border-radius:100px;font-size:10px;font-weight:bold;background:rgba(245,158,11,0.15);color:#FBBF24;border:1px solid rgba(245,158,11,0.3);margin-bottom:14px;">الأمان والتحكم بالنظام</span><h2 style="margin:0 0 16px;color:#FFF;font-size:18px;">طلب إعادة تعيين كلمة المرور</h2><p style="margin-top:0;">مرحباً <strong>محمد علي الشيباني</strong>،</p><p>تم استلام طلب إعادة تعيين كلمة المرور لحسابكم في <strong>لوحة الإدارة التنفيذية لمجموعة دبليو دي</strong> (<code style="background:rgba(255,255,255,0.1);padding:2px 6px;border-radius:4px;color:#E3C58A;font-family:monospace;">ceo@wdgroup.online</code>).</p><div style="background:#141722;border:1px solid #232733;border-right:4px solid #C9A86A;border-radius:12px;padding:16px;margin:20px 0;"><p style="margin:0 0 6px;font-size:13px;color:#E4E4E7;font-weight:bold;">🔐 تفاصيل رابط الأمان:</p><ul style="margin:0;padding-right:18px;font-size:12px;color:#A1A1AA;line-height:1.6;"><li>هذا الرابط صالح للاستخدام مرة واحدة فقط وينتهي تلقائياً خلال <strong>60 دقيقة</strong>.</li><li>إذا لم تقم بطلب إعادة التعيين، فحسابك محمي تماماً ولا يلزم اتخاذ أي إجراء.</li></ul></div><div style="text-align:center;margin:28px 0;"><a href="#" target="_blank" style="display:inline-block;padding:12px 30px;background:linear-gradient(135deg,#E3C58A,#C9A86A);color:#08090C;text-decoration:none;font-weight:bold;border-radius:10px;font-size:12px;">تعيين كلمة مرور جديدة &larr;</a></div></div></body></html>`,
-      iframeDocEn: `<!DOCTYPE html><html><body style="background:#08090C;color:#FFF;padding:20px;font-family:sans-serif;"><div style="max-width:600px;margin:0 auto;background:#0F1117;padding:30px;border-radius:20px;border:1px solid #232733;"><h2>Admin Password Reset Request</h2><p>Hello Mohammed Ali Al-Shaibani, click below to reset your console password.</p></div></body></html>`,
+      iframeDocAr: `<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { margin: 0; padding: 20px; background: #08090C; color: #E4E4E7; font-family: 'Cairo', -apple-system, sans-serif; direction: rtl; text-align: right; }
+  </style>
+</head>
+<body>
+  <div style="max-width: 600px; margin: 0 auto; background: #0F1117; border: 1px solid #232733; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.7);">
+    <div style="height: 4px; background: linear-gradient(90deg, #F59E0B, #D97706, #FBBF24);"></div>
+    <div style="padding: 32px 24px; text-align: center; background: #141722; border-bottom: 1px solid #1F2430;">
+      <h1 style="margin: 0; color: #FFF; font-size: 22px;">مجموعة دبليو دي للأعمال</h1>
+      <p style="margin: 4px 0 0; color: #FBBF24; font-size: 11px; font-weight: bold;">الأمان والتحكم بصلاحيات المنصة</p>
+    </div>
+    <div style="padding: 32px 24px; line-height: 1.65; font-size: 14px;">
+      <span style="display: inline-block; padding: 3px 10px; border-radius: 100px; font-size: 10px; font-weight: bold; background: rgba(245,158,11,0.15); color: #FBBF24; border: 1px solid rgba(245,158,11,0.3); margin-bottom: 14px;">الأمان والتحكم بالنظام</span>
+      <h2 style="margin: 0 0 16px; color: #FFF; font-size: 18px;">طلب إعادة تعيين كلمة المرور</h2>
+      <p style="margin-top: 0;">مرحباً <strong>محمد علي الشيباني</strong>،</p>
+      <p>تم استلام طلب إعادة تعيين كلمة المرور لحسابكم في <strong>لوحة الإدارة التنفيذية لمجموعة دبليو دي</strong> (<code style="background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 4px; color: #E3C58A; font-family: monospace;">ceo@wdgroup.online</code>).</p>
+      <div style="background: #141722; border: 1px solid #232733; border-right: 4px solid #C9A86A; border-radius: 12px; padding: 16px; margin: 20px 0;">
+        <p style="margin: 0 0 6px; font-size: 13px; color: #E4E4E7; font-weight: bold;">🔐 تفاصيل رابط الأمان:</p>
+        <ul style="margin: 0; padding-right: 18px; font-size: 12px; color: #A1A1AA; line-height: 1.6;">
+          <li>هذا الرابط صالح للاستخدام مرة واحدة فقط وينتهي تلقائياً خلال <strong>60 دقيقة</strong>.</li>
+          <li>إذا لم تقم بطلب إعادة التعيين، فحسابك محمي تماماً ولا يلزم اتخاذ أي إجراء.</li>
+        </ul>
+      </div>
+      <div style="text-align: center; margin: 28px 0;">
+        <a href="#" target="_blank" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #E3C58A, #C9A86A); color: #08090C; text-decoration: none; font-weight: bold; border-radius: 10px; font-size: 12px;">تعيين كلمة مرور جديدة &larr;</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>`,
+      iframeDocEn: `<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { margin: 0; padding: 20px; background: #08090C; color: #E4E4E7; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; direction: ltr; text-align: left; }
+  </style>
+</head>
+<body>
+  <div style="max-width: 600px; margin: 0 auto; background: #0F1117; border: 1px solid #232733; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.7);">
+    <div style="height: 4px; background: linear-gradient(90deg, #F59E0B, #D97706, #FBBF24);"></div>
+    <div style="padding: 32px 24px; text-align: center; background: #141722; border-bottom: 1px solid #1F2430;">
+      <h1 style="margin: 0; color: #FFF; font-size: 22px; letter-spacing: 1.5px;">WD GROUP</h1>
+      <p style="margin: 4px 0 0; color: #FBBF24; font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; font-family: monospace;">Security & Console Access Control</p>
+    </div>
+    <div style="padding: 32px 24px; line-height: 1.65; font-size: 14px;">
+      <span style="display: inline-block; padding: 3px 10px; border-radius: 100px; font-size: 10px; font-weight: bold; background: rgba(245,158,11,0.15); color: #FBBF24; border: 1px solid rgba(245,158,11,0.3); margin-bottom: 14px; text-transform: uppercase; font-family: monospace;">Security & Access Control</span>
+      <h2 style="margin: 0 0 16px; color: #FFF; font-size: 18px;">Admin Password Reset Request</h2>
+      <p style="margin-top: 0;">Hello <strong>Mohammed Ali Al-Shaibani</strong>,</p>
+      <p>A password reset request was initiated for your <strong>WD Group Executive Console</strong> account (<code style="background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 4px; color: #E3C58A; font-family: monospace;">ceo@wdgroup.online</code>).</p>
+      <div style="background: #141722; border: 1px solid #232733; border-left: 4px solid #C9A86A; border-radius: 12px; padding: 16px; margin: 20px 0;">
+        <p style="margin: 0 0 6px; font-size: 13px; color: #E4E4E7; font-weight: 600;">🔐 Secure Reset Link Details:</p>
+        <ul style="margin: 0; padding-left: 18px; font-size: 12px; color: #A1A1AA; line-height: 1.6;">
+          <li>This link is single-use and will automatically expire in <strong>60 minutes</strong>.</li>
+          <li>If you did not make this request, your account remains fully protected.</li>
+        </ul>
+      </div>
+      <div style="text-align: center; margin: 28px 0;">
+        <a href="#" target="_blank" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #E3C58A, #C9A86A); color: #08090C; text-decoration: none; font-weight: bold; border-radius: 10px; font-size: 12px; text-transform: uppercase;">Reset Admin Password &rarr;</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>`,
     },
     {
       id: 'magic-link',
@@ -158,8 +525,66 @@ export default function EmailTemplatesAdminPage() {
       subjectEn: '✨ 1-Click Sign In: WD Group Admin Console',
       triggerAr: 'يُطلب عند اختيار الدخول السريع عبر رابط سحري في صفحة الدخول.',
       triggerEn: 'Dispatched when an admin requests passwordless login via magic link.',
-      iframeDocAr: `<!DOCTYPE html><html><head><meta charset="utf-8"><style>body{margin:0;padding:20px;background:#08090C;color:#E4E4E7;font-family:'Cairo',-apple-system,sans-serif;direction:rtl;text-align:right;}</style></head><body><div style="max-width:600px;margin:0 auto;background:#0F1117;border:1px solid #232733;border-radius:20px;overflow:hidden;"><div style="height:4px;background:linear-gradient(90deg,#3B82F6,#2563EB,#60A5FA);"></div><div style="padding:32px 24px;text-align:center;background:#141722;border-bottom:1px solid #1F2430;"><h1 style="margin:0;color:#FFF;font-size:22px;">مجموعة دبليو دي للأعمال</h1><p style="margin:4px 0 0;color:#60A5FA;font-size:11px;font-weight:bold;">المصادقة الفورية والدخول الآمن</p></div><div style="padding:32px 24px;line-height:1.65;font-size:14px;"><span style="display:inline-block;padding:3px 10px;border-radius:100px;font-size:10px;font-weight:bold;background:rgba(37,99,235,0.15);color:#60A5FA;border:1px solid rgba(37,99,235,0.3);margin-bottom:14px;">المصادقة الفورية السريعة</span><h2 style="margin:0 0 16px;color:#FFF;font-size:18px;">تسجيل الدخول الفوري للوحة الإدارة</h2><p style="margin-top:0;">مرحباً <strong>محمد علي الشيباني</strong>،</p><p>طلبتم تسجيل دخول سريع وآمن بنقرة واحدة لحسابكم في <strong>لوحة الإدارة لمجموعة دبليو دي</strong> (<code style="background:rgba(255,255,255,0.1);padding:2px 6px;border-radius:4px;color:#60A5FA;font-family:monospace;">ceo@wdgroup.online</code>).</p><div style="background:#141722;border:1px solid #232733;border-right:4px solid #2563EB;border-radius:12px;padding:16px;margin:20px 0;"><p style="margin:0;font-size:13px;color:#93C5FD;line-height:1.5;">⚡ <strong>المصادقة الفورية:</strong> انقر على الزر أدناه لتسجيل الدخول مباشرة. هذا الرابط صالح للاستخدام مرة واحدة ولمدة <strong>15 دقيقة</strong> فقط.</p></div><div style="text-align:center;margin:28px 0;"><a href="#" target="_blank" style="display:inline-block;padding:12px 30px;background:linear-gradient(135deg,#3B82F6,#2563EB);color:#FFF;text-decoration:none;font-weight:bold;border-radius:10px;font-size:12px;">الدخول الآن للوحة التحكم &larr;</a></div></div></body></html>`,
-      iframeDocEn: `<!DOCTYPE html><html><body style="background:#08090C;color:#FFF;padding:20px;font-family:sans-serif;"><div style="max-width:600px;margin:0 auto;background:#0F1117;padding:30px;border-radius:20px;border:1px solid #232733;"><h2>1-Click Executive Console Access</h2><p>Click below to sign in immediately (valid for 15 minutes).</p></div></body></html>`,
+      iframeDocAr: `<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { margin: 0; padding: 20px; background: #08090C; color: #E4E4E7; font-family: 'Cairo', -apple-system, sans-serif; direction: rtl; text-align: right; }
+  </style>
+</head>
+<body>
+  <div style="max-width: 600px; margin: 0 auto; background: #0F1117; border: 1px solid #232733; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.7);">
+    <div style="height: 4px; background: linear-gradient(90deg, #3B82F6, #2563EB, #60A5FA);"></div>
+    <div style="padding: 32px 24px; text-align: center; background: #141722; border-bottom: 1px solid #1F2430;">
+      <h1 style="margin: 0; color: #FFF; font-size: 22px;">مجموعة دبليو دي للأعمال</h1>
+      <p style="margin: 4px 0 0; color: #60A5FA; font-size: 11px; font-weight: bold;">المصادقة الفورية والدخول الآمن</p>
+    </div>
+    <div style="padding: 32px 24px; line-height: 1.65; font-size: 14px;">
+      <span style="display: inline-block; padding: 3px 10px; border-radius: 100px; font-size: 10px; font-weight: bold; background: rgba(37,99,235,0.15); color: #60A5FA; border: 1px solid rgba(37,99,235,0.3); margin-bottom: 14px;">المصادقة الفورية السريعة</span>
+      <h2 style="margin: 0 0 16px; color: #FFF; font-size: 18px;">تسجيل الدخول الفوري للوحة الإدارة</h2>
+      <p style="margin-top: 0;">مرحباً <strong>محمد علي الشيباني</strong>،</p>
+      <p>طلبتم تسجيل دخول سريع وآمن بنقرة واحدة لحسابكم في <strong>لوحة الإدارة لمجموعة دبليو دي</strong> (<code style="background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 4px; color: #60A5FA; font-family: monospace;">ceo@wdgroup.online</code>).</p>
+      <div style="background: #141722; border: 1px solid #232733; border-right: 4px solid #2563EB; border-radius: 12px; padding: 16px; margin: 20px 0;">
+        <p style="margin: 0; font-size: 13px; color: #93C5FD; line-height: 1.5;">⚡ <strong>المصادقة الفورية:</strong> انقر على الزر أدناه لتسجيل الدخول مباشرة. هذا الرابط صالح للاستخدام مرة واحدة ولمدة <strong>15 دقيقة</strong> فقط.</p>
+      </div>
+      <div style="text-align: center; margin: 28px 0;">
+        <a href="#" target="_blank" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #3B82F6, #2563EB); color: #FFF; text-decoration: none; font-weight: bold; border-radius: 10px; font-size: 12px;">الدخول الآن للوحة التحكم &larr;</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>`,
+      iframeDocEn: `<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { margin: 0; padding: 20px; background: #08090C; color: #E4E4E7; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; direction: ltr; text-align: left; }
+  </style>
+</head>
+<body>
+  <div style="max-width: 600px; margin: 0 auto; background: #0F1117; border: 1px solid #232733; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.7);">
+    <div style="height: 4px; background: linear-gradient(90deg, #3B82F6, #2563EB, #60A5FA);"></div>
+    <div style="padding: 32px 24px; text-align: center; background: #141722; border-bottom: 1px solid #1F2430;">
+      <h1 style="margin: 0; color: #FFF; font-size: 22px; letter-spacing: 1.5px;">WD GROUP</h1>
+      <p style="margin: 4px 0 0; color: #60A5FA; font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; font-family: monospace;">Instant Executive Console Access</p>
+    </div>
+    <div style="padding: 32px 24px; line-height: 1.65; font-size: 14px;">
+      <span style="display: inline-block; padding: 3px 10px; border-radius: 100px; font-size: 10px; font-weight: bold; background: rgba(37,99,235,0.15); color: #60A5FA; border: 1px solid rgba(37,99,235,0.3); margin-bottom: 14px; text-transform: uppercase; font-family: monospace;">Instant Authentication</span>
+      <h2 style="margin: 0 0 16px; color: #FFF; font-size: 18px;">1-Click Executive Console Access</h2>
+      <p style="margin-top: 0;">Hello <strong>Mohammed Ali Al-Shaibani</strong>,</p>
+      <p>You requested a 1-click passwordless sign-in for your <strong>WD Group Executive Console</strong> (<code style="background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 4px; color: #60A5FA; font-family: monospace;">ceo@wdgroup.online</code>).</p>
+      <div style="background: #141722; border: 1px solid #232733; border-left: 4px solid #2563EB; border-radius: 12px; padding: 16px; margin: 20px 0;">
+        <p style="margin: 0; font-size: 13px; color: #93C5FD; line-height: 1.5;">⚡ <strong>Instant Authentication:</strong> Click below to sign in immediately. Valid for <strong>15 minutes</strong>.</p>
+      </div>
+      <div style="text-align: center; margin: 28px 0;">
+        <a href="#" target="_blank" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #3B82F6, #2563EB); color: #FFF; text-decoration: none; font-weight: bold; border-radius: 10px; font-size: 12px; text-transform: uppercase;">Sign In to Admin Console &rarr;</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>`,
     },
     {
       id: 'furniture-order',
@@ -175,8 +600,109 @@ export default function EmailTemplatesAdminPage() {
       subjectEn: 'Furniture Order Confirmation [WD-ORD-2026-8819] · WD Group',
       triggerAr: 'تُرسل لمشتري الأثاث فور تأكيد الطلب في صفحة /furniture/checkout.',
       triggerEn: 'Dispatched to furniture store buyers upon successful checkout completion.',
-      iframeDocAr: `<!DOCTYPE html><html><head><meta charset="utf-8"><style>body{margin:0;padding:20px;background:#08090C;color:#E4E4E7;font-family:'Cairo',-apple-system,sans-serif;direction:rtl;text-align:right;}</style></head><body><div style="max-width:600px;margin:0 auto;background:#0F1117;border:1px solid #232733;border-radius:20px;overflow:hidden;"><div style="height:4px;background:linear-gradient(90deg,#E3C58A,#C9A86A,#2563EB,#E3C58A);"></div><div style="padding:32px 24px;text-align:center;background:#141722;border-bottom:1px solid #1F2430;"><h1 style="margin:0;color:#FFF;font-size:22px;">مجموعة دبليو دي للأعمال</h1><p style="margin:4px 0 0;color:#C9A86A;font-size:11px;font-weight:bold;">قطاع تصنيع الأثاث والمفروشات الفندقية</p></div><div style="padding:32px 24px;line-height:1.65;font-size:14px;"><span style="display:inline-block;padding:3px 10px;border-radius:100px;font-size:10px;font-weight:bold;background:rgba(201,168,106,0.15);color:#E3C58A;border:1px solid rgba(201,168,106,0.3);margin-bottom:14px;">تأكيد الطلب والفاتورة</span><h2 style="margin:0 0 16px;color:#FFF;font-size:18px;">تم تأكيد استلام طلبك بنجاح</h2><p style="margin-top:0;">مرحباً <strong>عبدالله الفولي</strong>،</p><p>شكراً لتسوقكم من <strong>مجموعة دبليو دي — قطاع تصنيع الأثاث والمفروشات</strong>. تم تأكيد طلبكم وجارٍ إعداده للتسليم المباشر.</p><div style="background:#141722;border:1px solid #232733;border-right:4px solid #C9A86A;border-radius:12px;padding:16px;margin:20px 0;"><table width="100%" style="border-collapse:collapse;"><tr><td colspan="2" style="padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,0.08);font-size:11px;color:#C9A86A;font-weight:bold;font-family:monospace;">رقم الطلب: WD-ORD-2026-8819</td></tr><tr><td style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.06);font-size:13px;color:#FFF;"><strong>طقم كنب الضيافة الملكي الفاخر</strong><br><span style="font-size:11px;color:#A1A1AA;">الكمية: 1</span></td><td align="left" style="font-size:13px;font-weight:bold;color:#E3C58A;font-family:monospace;direction:ltr;">14,500 ر.س</td></tr><tr><td style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.06);font-size:13px;color:#FFF;"><strong>طاولة طعام خشب الجوز الطبيعي مع 8 كراسي</strong><br><span style="font-size:11px;color:#A1A1AA;">الكمية: 1</span></td><td align="left" style="font-size:13px;font-weight:bold;color:#E3C58A;font-family:monospace;direction:ltr;">8,200 ر.س</td></tr><tr><td style="padding-top:12px;font-size:14px;font-weight:bold;color:#FFF;">الإجمالي النهائي (شامل 15% ضريبة القيمة المضافة):</td><td align="left" style="padding-top:12px;font-size:16px;font-weight:bold;color:#E3C58A;font-family:monospace;direction:ltr;">22,700 ر.س</td></tr></table></div><div style="text-align:center;margin:28px 0;"><a href="https://wdgroup.online/furniture" target="_blank" style="display:inline-block;padding:12px 30px;background:linear-gradient(135deg,#E3C58A,#C9A86A);color:#08090C;text-decoration:none;font-weight:bold;border-radius:10px;font-size:12px;">متابعة الطلب في المتجر &larr;</a></div></div><div style="padding:20px;background:#08090C;border-top:1px solid #1A1E27;text-align:center;font-size:10px;color:#71717A;">مجموعة دبليو دي للأعمال © 2026 · المملكة العربية السعودية</div></div></body></html>`,
-      iframeDocEn: `<!DOCTYPE html><html><body style="background:#08090C;color:#FFF;padding:20px;font-family:sans-serif;"><div style="max-width:600px;margin:0 auto;background:#0F1117;padding:30px;border-radius:20px;border:1px solid #232733;"><h2>Furniture Store Order Receipt</h2><p>Order Ref: WD-ORD-2026-8819 · Total: 22,700 SAR</p></div></body></html>`,
+      iframeDocAr: `<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { margin: 0; padding: 20px; background: #08090C; color: #E4E4E7; font-family: 'Cairo', -apple-system, sans-serif; direction: rtl; text-align: right; }
+  </style>
+</head>
+<body>
+  <div style="max-width: 600px; margin: 0 auto; background: #0F1117; border: 1px solid #232733; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.7);">
+    <div style="height: 4px; background: linear-gradient(90deg, #E3C58A, #C9A86A, #2563EB, #E3C58A);"></div>
+    <div style="padding: 32px 24px; text-align: center; background: #141722; border-bottom: 1px solid #1F2430;">
+      <h1 style="margin: 0; color: #FFF; font-size: 22px;">مجموعة دبليو دي للأعمال</h1>
+      <p style="margin: 4px 0 0; color: #C9A86A; font-size: 11px; font-weight: bold;">قطاع تصنيع الأثاث والمفروشات الفندقية</p>
+    </div>
+    <div style="padding: 32px 24px; line-height: 1.65; font-size: 14px;">
+      <span style="display: inline-block; padding: 3px 10px; border-radius: 100px; font-size: 10px; font-weight: bold; background: rgba(201,168,106,0.15); color: #E3C58A; border: 1px solid rgba(201,168,106,0.3); margin-bottom: 14px;">تأكيد الطلب والفاتورة</span>
+      <h2 style="margin: 0 0 16px; color: #FFF; font-size: 18px;">تم تأكيد استلام طلبك بنجاح</h2>
+      <p style="margin-top: 0;">مرحباً <strong>عبدالله الفولي</strong>،</p>
+      <p>شكراً لتسوقكم من <strong>مجموعة دبليو دي — قطاع تصنيع الأثاث والمفروشات</strong>. تم تأكيد طلبكم وجارٍ إعداده للتسليم المباشر.</p>
+      <div style="background: #141722; border: 1px solid #232733; border-right: 4px solid #C9A86A; border-radius: 12px; padding: 16px; margin: 20px 0;">
+        <table width="100%" style="border-collapse: collapse;">
+          <tr>
+            <td colspan="2" style="padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 11px; color: #C9A86A; font-weight: bold; font-family: monospace;">رقم الطلب: WD-ORD-2026-8819</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 13px; color: #FFF;">
+              <strong>طقم كنب الضيافة الملكي الفاخر</strong><br><span style="font-size: 11px; color: #A1A1AA;">الكمية: 1</span>
+            </td>
+            <td align="left" style="font-size: 13px; font-weight: bold; color: #E3C58A; font-family: monospace; direction: ltr;">14,500 ر.س</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 13px; color: #FFF;">
+              <strong>طاولة طعام خشب الجوز الطبيعي مع 8 كراسي</strong><br><span style="font-size: 11px; color: #A1A1AA;">الكمية: 1</span>
+            </td>
+            <td align="left" style="font-size: 13px; font-weight: bold; color: #E3C58A; font-family: monospace; direction: ltr;">8,200 ر.س</td>
+          </tr>
+          <tr>
+            <td style="padding-top: 12px; font-size: 14px; font-weight: bold; color: #FFF;">الإجمالي النهائي (شامل 15% ضريبة القيمة المضافة):</td>
+            <td align="left" style="padding-top: 12px; font-size: 16px; font-weight: bold; color: #E3C58A; font-family: monospace; direction: ltr;">22,700 ر.س</td>
+          </tr>
+        </table>
+      </div>
+      <div style="text-align: center; margin: 28px 0;">
+        <a href="https://wdgroup.online/furniture" target="_blank" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #E3C58A, #C9A86A); color: #08090C; text-decoration: none; font-weight: bold; border-radius: 10px; font-size: 12px;">متابعة الطلب في المتجر &larr;</a>
+      </div>
+    </div>
+    <div style="padding: 20px; background: #08090C; border-top: 1px solid #1A1E27; text-align: center; font-size: 10px; color: #71717A;">
+      مجموعة دبليو دي للأعمال © 2026 · المملكة العربية السعودية
+    </div>
+  </div>
+</body>
+</html>`,
+      iframeDocEn: `<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { margin: 0; padding: 20px; background: #08090C; color: #E4E4E7; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; direction: ltr; text-align: left; }
+  </style>
+</head>
+<body>
+  <div style="max-width: 600px; margin: 0 auto; background: #0F1117; border: 1px solid #232733; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.7);">
+    <div style="height: 4px; background: linear-gradient(90deg, #E3C58A, #C9A86A, #2563EB, #E3C58A);"></div>
+    <div style="padding: 32px 24px; text-align: center; background: #141722; border-bottom: 1px solid #1F2430;">
+      <h1 style="margin: 0; color: #FFF; font-size: 22px; letter-spacing: 1.5px;">WD GROUP</h1>
+      <p style="margin: 4px 0 0; color: #C9A86A; font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; font-family: monospace;">Modern Furniture & Manufacturing Division</p>
+    </div>
+    <div style="padding: 32px 24px; line-height: 1.65; font-size: 14px;">
+      <span style="display: inline-block; padding: 3px 10px; border-radius: 100px; font-size: 10px; font-weight: bold; background: rgba(201,168,106,0.15); color: #E3C58A; border: 1px solid rgba(201,168,106,0.3); margin-bottom: 14px; text-transform: uppercase; font-family: monospace;">Order & Invoice Receipt</span>
+      <h2 style="margin: 0 0 16px; color: #FFF; font-size: 18px;">Order Confirmed Successfully</h2>
+      <p style="margin-top: 0;">Dear <strong>Abdallah Elfouly</strong>,</p>
+      <p>Thank you for your order with <strong>WD Group — Modern Furniture Division</strong>. Your order has been officially scheduled for delivery.</p>
+      <div style="background: #141722; border: 1px solid #232733; border-left: 4px solid #C9A86A; border-radius: 12px; padding: 16px; margin: 20px 0;">
+        <table width="100%" style="border-collapse: collapse;">
+          <tr>
+            <td colspan="2" style="padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 10px; color: #C9A86A; font-weight: bold; font-family: monospace;">ORDER NUMBER: WD-ORD-2026-8819</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 13px; color: #FFF;">
+              <strong>Royal Velvet Luxury Sofa Set</strong><br><span style="font-size: 11px; color: #A1A1AA;">Quantity: 1</span>
+            </td>
+            <td align="right" style="font-size: 13px; font-weight: bold; color: #E3C58A; font-family: monospace;">14,500 SAR</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 13px; color: #FFF;">
+              <strong>Solid Walnut Dining Table (8-Seat)</strong><br><span style="font-size: 11px; color: #A1A1AA;">Quantity: 1</span>
+            </td>
+            <td align="right" style="font-size: 13px; font-weight: bold; color: #E3C58A; font-family: monospace;">8,200 SAR</td>
+          </tr>
+          <tr>
+            <td style="padding-top: 12px; font-size: 14px; font-weight: bold; color: #FFF;">Total Amount (Incl. 15% VAT & Delivery):</td>
+            <td align="right" style="padding-top: 12px; font-size: 16px; font-weight: bold; color: #E3C58A; font-family: monospace;">22,700 SAR</td>
+          </tr>
+        </table>
+      </div>
+      <div style="text-align: center; margin: 28px 0;">
+        <a href="https://wdgroup.online/furniture" target="_blank" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #E3C58A, #C9A86A); color: #08090C; text-decoration: none; font-weight: bold; border-radius: 10px; font-size: 12px; text-transform: uppercase;">Track Order Status &rarr;</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>`,
     },
   ];
 
@@ -185,13 +711,18 @@ export default function EmailTemplatesAdminPage() {
 
   const handleCopyHtml = () => {
     navigator.clipboard.writeText(activeHtml);
-    showToast(isArUi ? `تم نسخ كود الـ HTML للنسخة ${isTemplateAr ? 'العربية' : 'الإنجليزية'} بنجاح!` : 'Email HTML copied to clipboard!', 'success');
+    showToast(
+      isAr 
+        ? `تم نسخ كود الـ HTML للنسخة ${isTemplateAr ? 'العربية' : 'الإنجليزية'} بنجاح!` 
+        : `Email HTML for ${isTemplateAr ? 'Arabic' : 'English'} copied to clipboard!`, 
+      'success'
+    );
   };
 
   const handleSendTestEmail = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!testEmail || !testEmail.includes('@')) {
-      showToast(isArUi ? 'يرجى إدخال بريد إلكتروني صحيح' : 'Please provide a valid email', 'error');
+      showToast(isAr ? 'يرجى إدخال بريد إلكتروني صحيح' : 'Please provide a valid email', 'error');
       return;
     }
 
@@ -213,14 +744,14 @@ export default function EmailTemplatesAdminPage() {
       }
 
       showToast(
-        isArUi 
+        isAr 
           ? `تم إرسال نموذج البريد (${isTemplateAr ? 'باللغة العربية' : 'باللغة الإنجليزية'}) بنجاح إلى ${testEmail}!`
           : `Test email dispatched successfully in ${isTemplateAr ? 'Arabic' : 'English'} to ${testEmail}!`,
         'success'
       );
       setIsTestModalOpen(false);
     } catch (err: any) {
-      showToast(err.message || (isArUi ? 'فشل إرسال الإيميل التجريبي' : 'Failed to send test email'), 'error');
+      showToast(err.message || (isAr ? 'فشل إرسال الإيميل التجريبي' : 'Failed to send test email'), 'error');
     } finally {
       setIsSendingTest(false);
     }
@@ -234,18 +765,20 @@ export default function EmailTemplatesAdminPage() {
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#C9A86A]/10 border border-[#C9A86A]/20 text-[#C9A86A] text-xs font-mono font-bold mb-2">
             <Sparkles className="w-3.5 h-3.5" />
-            <span>{isArUi ? 'منظومة رسائل البريد الإلكتروني (عربي 100% / English)' : 'TRANSACTIONAL EMAIL SYSTEM'}</span>
+            <span>{isAr ? 'منظومة رسائل البريد الإلكتروني الفاخرة' : 'TRANSACTIONAL EMAIL SYSTEM'}</span>
           </div>
           <h1 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
-            {isArUi ? 'قوالب ونماذج البريد الإلكتروني' : 'Email Templates & Live Previews'}
+            {isAr ? 'قوالب ونماذج البريد الإلكتروني' : 'Email Templates & Live Previews'}
           </h1>
           <p className="text-xs sm:text-sm text-zinc-400 mt-1">
-            {isArUi ? 'معاينة واختبار وتصدير كافة القوالب باللغتين العربية والإنجليزية بتصميم فاخر متوافق مع كافة برامج البريد.' : 'Review, test, and export all 7 branded transactional email templates in Arabic & English.'}
+            {isAr 
+              ? 'معاينة واختبار وتصدير كافة رسائل البريد الإلكتروني التلقائية المعتمدة لمجموعة دبليو دي باللغتين العربية والإنجليزية.'
+              : 'Review, test, and export all 7 branded transactional email templates for WD Group in Arabic and English.'}
           </p>
         </div>
 
         <div className="flex flex-wrap items-center gap-2.5">
-          {/* Language Switcher */}
+          {/* Language Switcher for Previewed Template */}
           <div className="flex items-center bg-black/60 border border-white/15 rounded-xl p-1 shadow-inner">
             <button
               onClick={() => setTemplateLang('ar')}
@@ -253,7 +786,7 @@ export default function EmailTemplatesAdminPage() {
                 templateLang === 'ar' ? 'bg-[#C9A86A] text-[#08090C] shadow-sm' : 'text-zinc-400 hover:text-white'
               }`}
             >
-              <span>🇸🇦 النسخة العربية</span>
+              <span>{isAr ? '🇸🇦 النسخة العربية' : '🇸🇦 Arabic'}</span>
             </button>
             <button
               onClick={() => setTemplateLang('en')}
@@ -261,7 +794,7 @@ export default function EmailTemplatesAdminPage() {
                 templateLang === 'en' ? 'bg-[#C9A86A] text-[#08090C] shadow-sm' : 'text-zinc-400 hover:text-white'
               }`}
             >
-              <span>🇬🇧 English</span>
+              <span>{isAr ? '🇬🇧 النسخة الإنجليزية' : '🇬🇧 English'}</span>
             </button>
           </div>
 
@@ -271,7 +804,7 @@ export default function EmailTemplatesAdminPage() {
             className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition-all shadow-glow-blue cursor-pointer"
           >
             <Send className="w-3.5 h-3.5" />
-            <span>{isArUi ? 'إرسال بريد تجريبي' : 'Send Test Email'}</span>
+            <span>{isAr ? 'إرسال بريد تجريبي' : 'Send Test Email'}</span>
           </button>
 
           <a
@@ -281,7 +814,7 @@ export default function EmailTemplatesAdminPage() {
             className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white text-xs font-bold transition-all"
           >
             <ExternalLink className="w-3.5 h-3.5 text-[#C9A86A]" />
-            <span>{isArUi ? 'صفحة المعاينة المستقلة' : 'Open Showcase'}</span>
+            <span>{isAr ? 'فتح المعاينة في صفحة كاملة' : 'Open Fullscreen'}</span>
           </a>
         </div>
       </div>
@@ -293,10 +826,10 @@ export default function EmailTemplatesAdminPage() {
         <div className="lg:col-span-4 space-y-3">
           <div className="flex items-center justify-between px-2">
             <span className="text-xs font-mono font-bold text-[#C9A86A] uppercase tracking-wider">
-              {isArUi ? 'القوالب المعتمدة (7 قوالب)' : 'TEMPLATES (7 TOTAL)'}
+              {isAr ? 'القوالب المعتمدة (7 قوالب)' : 'SYSTEM TEMPLATES (7 TOTAL)'}
             </span>
             <span className="text-[10px] font-mono text-zinc-400 bg-white/5 px-2 py-0.5 rounded border border-white/10">
-              {isTemplateAr ? '🇸🇦 عربي (RTL)' : '🇬🇧 English (LTR)'}
+              {isTemplateAr ? (isAr ? '🇸🇦 عربي (RTL)' : '🇸🇦 Arabic (RTL)') : (isAr ? '🇬🇧 إنجليزي (LTR)' : '🇬🇧 English (LTR)')}
             </span>
           </div>
 
@@ -324,17 +857,17 @@ export default function EmailTemplatesAdminPage() {
                       tpl.badgeType === 'emerald' ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30' :
                       'bg-amber-500/15 text-amber-400 border-amber-500/30'
                     }`}>
-                      {isArUi ? tpl.badgeAr : tpl.badgeEn}
+                      {isAr ? tpl.badgeAr : tpl.badgeEn}
                     </span>
                     <Icon className={`w-4 h-4 ${isActive ? 'text-[#C9A86A]' : 'text-zinc-500'}`} />
                   </div>
 
                   <div className="text-sm font-bold text-white mt-0.5">
-                    {isArUi ? tpl.titleAr : tpl.titleEn}
+                    {isAr ? tpl.titleAr : tpl.titleEn}
                   </div>
 
                   <p className="text-xs text-zinc-400 line-clamp-2 leading-relaxed">
-                    {isArUi ? tpl.descAr : tpl.descEn}
+                    {isAr ? tpl.descAr : tpl.descEn}
                   </p>
                 </button>
               );
@@ -350,10 +883,10 @@ export default function EmailTemplatesAdminPage() {
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-white/10 pb-3">
               <div>
                 <h2 className="text-base font-bold text-white flex items-center gap-2">
-                  <span>{isArUi ? currentTemplate.titleAr : currentTemplate.titleEn}</span>
+                  <span>{isAr ? currentTemplate.titleAr : currentTemplate.titleEn}</span>
                 </h2>
                 <p className="text-xs text-zinc-400 mt-0.5">
-                  {isArUi ? currentTemplate.descAr : currentTemplate.descEn}
+                  {isAr ? currentTemplate.descAr : currentTemplate.descEn}
                 </p>
               </div>
 
@@ -363,7 +896,7 @@ export default function EmailTemplatesAdminPage() {
                   className="px-3 py-1.5 rounded-xl bg-[#C9A86A] hover:bg-[#E3C58A] text-[#08090C] text-xs font-extrabold flex items-center gap-1.5 transition-all shadow-sm cursor-pointer"
                 >
                   <Copy className="w-3.5 h-3.5" />
-                  <span>{isArUi ? 'نسخ كود HTML' : 'Copy HTML'}</span>
+                  <span>{isAr ? 'نسخ كود HTML' : 'Copy HTML'}</span>
                 </button>
 
                 <button
@@ -375,7 +908,7 @@ export default function EmailTemplatesAdminPage() {
                   }`}
                 >
                   {viewSource ? <Eye className="w-3.5 h-3.5" /> : <Code2 className="w-3.5 h-3.5" />}
-                  <span>{viewSource ? (isArUi ? 'معاينة بصرية' : 'Visual Preview') : (isArUi ? 'كود المصدر' : 'Source Code')}</span>
+                  <span>{viewSource ? (isAr ? 'معاينة بصرية' : 'Visual Preview') : (isAr ? 'كود المصدر' : 'Source Code')}</span>
                 </button>
               </div>
             </div>
@@ -383,12 +916,12 @@ export default function EmailTemplatesAdminPage() {
             {/* Subject & Trigger info */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
               <div className="p-2.5 rounded-xl bg-black/40 border border-white/5">
-                <span className="text-[10px] font-mono text-zinc-500 uppercase block mb-0.5">{isArUi ? 'عنوان الرسالة المعتمد (Subject)' : 'Subject Line'}</span>
+                <span className="text-[10px] font-mono text-zinc-500 uppercase block mb-0.5">{isAr ? 'عنوان الرسالة المعتمد (Subject)' : 'Subject Line'}</span>
                 <span className="text-white font-mono text-xs">{isTemplateAr ? currentTemplate.subjectAr : currentTemplate.subjectEn}</span>
               </div>
               <div className="p-2.5 rounded-xl bg-black/40 border border-white/5">
-                <span className="text-[10px] font-mono text-zinc-500 uppercase block mb-0.5">{isArUi ? 'حالة الإرسال التلقائي' : 'Automation Trigger'}</span>
-                <span className="text-zinc-300 text-xs">{isArUi ? currentTemplate.triggerAr : currentTemplate.triggerEn}</span>
+                <span className="text-[10px] font-mono text-zinc-500 uppercase block mb-0.5">{isAr ? 'حالة الإرسال التلقائي' : 'Automation Trigger'}</span>
+                <span className="text-zinc-300 text-xs">{isAr ? currentTemplate.triggerAr : currentTemplate.triggerEn}</span>
               </div>
             </div>
           </div>
@@ -398,7 +931,7 @@ export default function EmailTemplatesAdminPage() {
             <div className="flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
               <span className="text-xs font-mono text-zinc-400">
-                {isTemplateAr ? '🇸🇦 العرض باللغة العربية (RTL)' : '🇬🇧 English Display (LTR)'} · {viewMode === 'desktop' ? 'Desktop Viewport (600px)' : viewMode === 'tablet' ? 'Tablet Viewport (520px)' : 'Mobile Viewport (375px)'}
+                {isTemplateAr ? (isAr ? '🇸🇦 العرض باللغة العربية (RTL)' : '🇸🇦 Arabic View (RTL)') : (isAr ? '🇬🇧 العرض باللغة الإنجليزية (LTR)' : '🇬🇧 English View (LTR)')} · {viewMode === 'desktop' ? (isAr ? 'حاسوب (600px)' : 'Desktop (600px)') : viewMode === 'tablet' ? (isAr ? 'لوحي (520px)' : 'Tablet (520px)') : (isAr ? 'هاتف (375px)' : 'Mobile (375px)')}
               </span>
             </div>
 
@@ -410,7 +943,7 @@ export default function EmailTemplatesAdminPage() {
                 }`}
               >
                 <Monitor className="w-3.5 h-3.5" />
-                <span>{isArUi ? 'حاسوب' : 'Desktop'}</span>
+                <span>{isAr ? 'حاسوب' : 'Desktop'}</span>
               </button>
               <button
                 onClick={() => setViewMode('tablet')}
@@ -419,7 +952,7 @@ export default function EmailTemplatesAdminPage() {
                 }`}
               >
                 <Tablet className="w-3.5 h-3.5" />
-                <span>{isArUi ? 'لوحي' : 'Tablet'}</span>
+                <span>{isAr ? 'لوحي' : 'Tablet'}</span>
               </button>
               <button
                 onClick={() => setViewMode('mobile')}
@@ -428,7 +961,7 @@ export default function EmailTemplatesAdminPage() {
                 }`}
               >
                 <Smartphone className="w-3.5 h-3.5" />
-                <span>{isArUi ? 'هاتف' : 'Mobile'}</span>
+                <span>{isAr ? 'هاتف' : 'Mobile'}</span>
               </button>
             </div>
           </div>
@@ -453,7 +986,7 @@ export default function EmailTemplatesAdminPage() {
                   key={`${currentTemplate.id}-${viewMode}-${templateLang}`}
                   srcDoc={activeHtml}
                   className="w-full h-[620px] rounded-xl border-none bg-[#08090C]"
-                  title={currentTemplate.titleEn}
+                  title={isAr ? currentTemplate.titleAr : currentTemplate.titleEn}
                 />
               </div>
             )}
@@ -470,7 +1003,7 @@ export default function EmailTemplatesAdminPage() {
             <div className="flex items-center justify-between border-b border-white/10 pb-4">
               <div className="flex items-center gap-2 text-white font-bold text-base">
                 <Send className="w-5 h-5 text-blue-400" />
-                <span>{isArUi ? 'إرسال نموذج بريد تجريبي' : 'Dispatch Live Test Email'}</span>
+                <span>{isAr ? 'إرسال نموذج بريد تجريبي' : 'Dispatch Live Test Email'}</span>
               </div>
               <button
                 onClick={() => setIsTestModalOpen(false)}
@@ -482,24 +1015,24 @@ export default function EmailTemplatesAdminPage() {
 
             <form onSubmit={handleSendTestEmail} className="space-y-4">
               <div className="p-3.5 rounded-xl bg-[#141722] border border-white/10 space-y-2">
-                <span className="text-[10px] font-mono text-zinc-500 uppercase block">{isArUi ? 'القالب المحدد للإرسال:' : 'Selected Template:'}</span>
-                <div className="text-xs font-bold text-[#E3C58A]">{isArUi ? currentTemplate.titleAr : currentTemplate.titleEn}</div>
+                <span className="text-[10px] font-mono text-zinc-500 uppercase block">{isAr ? 'القالب المحدد للإرسال:' : 'Selected Template:'}</span>
+                <div className="text-xs font-bold text-[#E3C58A]">{isAr ? currentTemplate.titleAr : currentTemplate.titleEn}</div>
                 <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-white/5 text-[11px] text-zinc-300 font-mono">
-                  <span>اللغة:</span>
-                  <strong className="text-white">{isTemplateAr ? '🇸🇦 العربية (RTL)' : '🇬🇧 English'}</strong>
+                  <span>{isAr ? 'لغة الإيميل:' : 'Language:'}</span>
+                  <strong className="text-white">{isTemplateAr ? (isAr ? '🇸🇦 العربية (RTL)' : '🇸🇦 Arabic (RTL)') : (isAr ? '🇬🇧 الإنجليزية (LTR)' : '🇬🇧 English (LTR)')}</strong>
                 </div>
               </div>
 
               <div className="space-y-1.5">
                 <label className="text-xs font-bold text-zinc-300">
-                  {isArUi ? 'البريد الإلكتروني المستلم' : 'Recipient Email Address'}
+                  {isAr ? 'البريد الإلكتروني المستلم' : 'Recipient Email Address'}
                 </label>
                 <input
                   type="email"
                   required
                   value={testEmail}
                   onChange={(e) => setTestEmail(e.target.value)}
-                  placeholder="name@domain.com"
+                  placeholder={isAr ? "name@domain.com" : "name@domain.com"}
                   className="w-full px-4 py-2.5 rounded-xl bg-black/50 border border-white/15 text-white text-xs font-mono placeholder:text-zinc-600 focus:outline-none focus:border-blue-500"
                 />
               </div>
@@ -510,7 +1043,7 @@ export default function EmailTemplatesAdminPage() {
                   onClick={() => setIsTestModalOpen(false)}
                   className="px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-300 text-xs font-bold cursor-pointer"
                 >
-                  {isArUi ? 'إلغاء' : 'Cancel'}
+                  {isAr ? 'إلغاء' : 'Cancel'}
                 </button>
                 <button
                   type="submit"
@@ -518,7 +1051,7 @@ export default function EmailTemplatesAdminPage() {
                   className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white text-xs font-bold transition-all shadow-glow-blue flex items-center gap-2 cursor-pointer"
                 >
                   {isSendingTest ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Send className="w-3.5 h-3.5" />}
-                  <span>{isSendingTest ? (isArUi ? 'جارٍ الإرسال…' : 'Sending…') : (isArUi ? 'إرسال فوري' : 'Send Now')}</span>
+                  <span>{isSendingTest ? (isAr ? 'جارٍ الإرسال…' : 'Sending…') : (isAr ? 'إرسال فوري' : 'Send Now')}</span>
                 </button>
               </div>
             </form>
