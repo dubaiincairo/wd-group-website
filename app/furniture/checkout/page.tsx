@@ -558,6 +558,7 @@ export default function FurnitureCheckoutPage() {
                       <input
                         type="text"
                         required
+                        autoComplete="given-name"
                         value={deliveryForm.firstName}
                         onChange={(e) => setDeliveryForm({ ...deliveryForm, firstName: e.target.value })}
                         className="w-full px-3.5 py-2.5 rounded-xl bg-[#141721] border border-white/10 text-white focus:outline-none focus:border-[#C9A86A]"
@@ -571,6 +572,7 @@ export default function FurnitureCheckoutPage() {
                       <input
                         type="text"
                         required
+                        autoComplete="family-name"
                         value={deliveryForm.lastName}
                         onChange={(e) => setDeliveryForm({ ...deliveryForm, lastName: e.target.value })}
                         className="w-full px-3.5 py-2.5 rounded-xl bg-[#141721] border border-white/10 text-white focus:outline-none focus:border-[#C9A86A]"
@@ -587,6 +589,8 @@ export default function FurnitureCheckoutPage() {
                       <input
                         type="tel"
                         required
+                        autoComplete="tel"
+                        inputMode="tel"
                         value={deliveryForm.phone}
                         onChange={(e) => setDeliveryForm({ ...deliveryForm, phone: e.target.value })}
                         className="w-full px-3.5 py-2.5 rounded-xl bg-[#141721] border border-white/10 text-white focus:outline-none focus:border-[#C9A86A] font-mono"
@@ -601,6 +605,8 @@ export default function FurnitureCheckoutPage() {
                       <input
                         type="email"
                         required
+                        autoComplete="email"
+                        inputMode="email"
                         value={deliveryForm.email}
                         onChange={(e) => setDeliveryForm({ ...deliveryForm, email: e.target.value })}
                         className="w-full px-3.5 py-2.5 rounded-xl bg-[#141721] border border-white/10 text-white focus:outline-none focus:border-[#C9A86A]"

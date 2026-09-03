@@ -549,7 +549,7 @@ export default function LiveEditorDock() {
   ];
 
   return (
-    <div dir={isAr ? 'rtl' : 'ltr'} lang={lang} className="fixed bottom-5 inset-x-0 z-50 pointer-events-none flex justify-center px-4">
+    <div dir={isAr ? 'rtl' : 'ltr'} lang={lang} className="fixed bottom-20 sm:bottom-5 inset-x-0 z-50 pointer-events-none flex justify-center px-4">
       
       {/* Minimized Floating Launcher Badge */}
       {isMinimized ? (

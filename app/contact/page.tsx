@@ -12,7 +12,8 @@ import {
   Send, 
   ShieldCheck, 
   UploadCloud, 
-  ChevronDown 
+  ChevronDown,
+  ArrowDown
 } from 'lucide-react';
 
 export default function ContactPage() {
@@ -80,6 +81,16 @@ export default function ContactPage() {
           <p className="text-base sm:text-lg text-zinc-300 leading-relaxed font-normal">
             {dict.contact.hero.body}
           </p>
+
+          <div className="pt-2">
+            <a
+              href="#inquiry-form"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-blue-600/90 hover:bg-blue-600 text-white font-bold text-xs sm:text-sm border border-blue-400/40 shadow-[0_0_25px_rgba(37,99,235,0.35)] transition-all transform hover:scale-105 active:scale-95 cursor-pointer"
+            >
+              <span>{lang === 'ar' ? 'الانتقال إلى نموذج الاستفسار' : 'Go to Inquiry Form'}</span>
+              <ArrowDown className="w-4 h-4 animate-bounce" />
+            </a>
+          </div>
         </motion.section>
 
         {/* 2. Official Contact Cards (Najran HQ, Emails, Phones) */}
@@ -170,11 +181,12 @@ export default function ContactPage() {
 
         {/* 3. Integrated Multi-Sector Inquiry Form */}
         <motion.section 
+          id="inquiry-form"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-60px' }}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="glass-card rounded-3xl p-8 sm:p-12 border border-blue-500/30 bg-brand-surface/90"
+          className="glass-card rounded-3xl p-8 sm:p-12 border border-blue-500/30 bg-brand-surface/90 scroll-mt-28"
         >
           <div className="max-w-2xl mx-auto text-center space-y-3 mb-8">
             <h2 className="text-2xl sm:text-3xl font-extrabold text-white">

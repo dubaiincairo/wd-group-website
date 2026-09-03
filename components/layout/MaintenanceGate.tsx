@@ -86,14 +86,25 @@ export default function MaintenanceGate({ children }: MaintenanceGateProps) {
     checkMaintenanceStatus();
   }, [isAdminRoute, dynamicContent]);
 
+  // 2. Determine active maintenance state from API settings or Context
+  const activeSettings = settings || (dynamicContent?.settings as SiteSettings | undefined);
+  const isMaintenanceActive = activeSettings?.maintenance_mode_enabled ?? true;
+
+  useEffect(() => {
+    if (isMaintenanceActive && isAdminBypassed && !isTestDomain) {
+      document.body.classList.add('has-admin-preview-banner');
+    } else {
+      document.body.classList.remove('has-admin-preview-banner');
+    }
+    return () => {
+      document.body.classList.remove('has-admin-preview-banner');
+    };
+  }, [isMaintenanceActive, isAdminBypassed, isTestDomain]);
+
   // 1. Admin routes are never blocked
   if (isAdminRoute) {
     return <>{children}</>;
   }
-
-  // 2. Determine active maintenance state from API settings or Context
-  const activeSettings = settings || (dynamicContent?.settings as SiteSettings | undefined);
-  const isMaintenanceActive = activeSettings?.maintenance_mode_enabled ?? true;
 
   // 3. If maintenance mode is active and user is NOT on test domain / authorized admin bypass
   if (isMaintenanceActive && !isAdminBypassed) {
@@ -113,11 +124,11 @@ export default function MaintenanceGate({ children }: MaintenanceGateProps) {
   return (
     <>
       {isMaintenanceActive && isAdminBypassed && !isTestDomain && (
-        <div className="bg-amber-500 text-black px-4 py-1.5 text-[11px] font-mono font-bold text-center relative z-40 shadow-sm flex items-center justify-center gap-2">
+        <div className="bg-amber-500 text-black px-4 py-1.5 sm:py-1 text-[10.5px] sm:text-xs font-mono font-bold text-center fixed top-0 inset-x-0 z-[60] shadow-sm flex items-center justify-center gap-2">
           <span>⚠️ MAINTENANCE MODE IS ACTIVE ON LIVE SITE — YOU ARE VIEWING ADMIN PREVIEW</span>
         </div>
       )}
-      <div>
+      <div className={isMaintenanceActive && isAdminBypassed && !isTestDomain ? 'pt-7 sm:pt-6' : ''}>
         {children}
       </div>
     </>
