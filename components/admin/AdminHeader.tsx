@@ -54,7 +54,7 @@ export default function AdminHeader({ user, onOpenMobileSidebar }: AdminHeaderPr
   };
 
   return (
-    <header className="sticky top-0 z-30 bg-[#08090C]/90 backdrop-blur-xl border-b border-white/10 px-4 sm:px-8 py-3.5 flex items-center justify-between gap-4">
+    <header className="sticky top-0 z-50 bg-[#08090C]/90 backdrop-blur-xl border-b border-white/10 px-4 sm:px-8 py-3.5 flex items-center justify-between gap-4">
       
       {/* Left: Mobile Menu & Breadcrumbs */}
       <div className="flex items-center gap-3">

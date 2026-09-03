@@ -262,7 +262,7 @@ export default function BankingAccessModal({ isOpen, onClose }: BankingAccessMod
 
                     return (
                       <div 
-                        key={idx}
+                        key={idx} 
                         className="bg-black/50 border border-white/10 hover:border-[#C9A86A]/40 rounded-2xl p-5 space-y-3.5 transition-all"
                       >
                         {/* Bank Card Title */}

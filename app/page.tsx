@@ -5,6 +5,7 @@ import BrandPortfolio from '@/components/home/BrandPortfolio';
 import HoldingSynergy from '@/components/home/HoldingSynergy';
 import VisionMissionValues from '@/components/home/VisionMissionValues';
 import CEOQuote from '@/components/home/CEOQuote';
+import HomeTestimonials from '@/components/home/HomeTestimonials';
 import ContactCTA from '@/components/home/ContactCTA';
 import SectionDivider from '@/components/layout/SectionDivider';
 
@@ -39,9 +40,14 @@ export default function Home() {
       {/* Section 6: CEO Quote & Governance */}
       <CEOQuote />
 
+      <SectionDivider label="CLIENT ENDORSEMENTS" />
+
+      {/* Section 7: Client & Strategic Partner Endorsements */}
+      <HomeTestimonials />
+
       <SectionDivider label="PARTNERSHIP & INQUIRIES" />
 
-      {/* Section 7: Main Contact & Partnership CTA */}
+      {/* Section 8: Main Contact & Partnership CTA */}
       <ContactCTA />
     </>
   );

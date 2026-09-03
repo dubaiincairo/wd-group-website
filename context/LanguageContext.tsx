@@ -35,6 +35,18 @@ function resolveField(isAr: boolean, valAr: any, valEn: any, baseAr: any, baseEn
   }
 }
 
+function resolveUrl(isAr: boolean, valAr: any, valEn: any, baseAr: any, baseEn: any): string {
+  if (isAr) {
+    if (valAr && typeof valAr === 'string' && valAr.trim().length > 0) return valAr.trim();
+    if (valEn && typeof valEn === 'string' && valEn.trim().length > 0) return valEn.trim();
+    return (baseAr && typeof baseAr === 'string') ? baseAr.trim() : (baseEn || '');
+  } else {
+    if (valEn && typeof valEn === 'string' && valEn.trim().length > 0) return valEn.trim();
+    if (valAr && typeof valAr === 'string' && valAr.trim().length > 0) return valAr.trim();
+    return (baseEn && typeof baseEn === 'string') ? baseEn.trim() : (baseAr || '');
+  }
+}
+
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [lang, setLang] = useState<Language>(() => {
     if (typeof window !== 'undefined') {
@@ -218,9 +230,13 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
           quote: resolveField(isAr, c.home?.ceo?.quote_ar, c.home?.ceo?.quote_en, arDict.home.ceo.quote, enDict.home.ceo.quote),
           name: resolveField(isAr, c.home?.ceo?.name_ar, c.home?.ceo?.name_en, arDict.home.ceo.name, enDict.home.ceo.name),
           title: resolveField(isAr, c.home?.ceo?.title_ar, c.home?.ceo?.title_en, arDict.home.ceo.title, enDict.home.ceo.title),
-          photo_url: resolveField(isAr, c.home?.ceo?.photo_url_ar || c.home?.ceo?.photo_url, c.home?.ceo?.photo_url_en || c.home?.ceo?.photo_url, (arDict.home.ceo as any).photo_url, (enDict.home.ceo as any).photo_url)
-            || c.home?.media?.ceo_photo
-            || (baseDict.home.ceo as any).photo_url,
+          photo_url: resolveUrl(
+            isAr,
+            c.home?.ceo?.photo_url_ar,
+            c.home?.ceo?.photo_url_en,
+            c.home?.ceo?.photo_url || (arDict.home.ceo as any).photo_url,
+            c.home?.ceo?.photo_url || (enDict.home.ceo as any).photo_url
+          ) || c.home?.media?.ceo_photo || (baseDict.home.ceo as any).photo_url,
         },
         partnership: {
           ...baseDict.home.partnership,

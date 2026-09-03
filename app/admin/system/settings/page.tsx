@@ -313,7 +313,7 @@ export default function GlobalSettingsAdminPage() {
                 valueEn={s.maintenance_message_en || 'We are currently preparing and upgrading the official digital platform for WD Group. We look forward to welcoming you soon.'}
                 valueAr={s.maintenance_message_ar || 'نعمل حالياً على تطوير وتجهيز المنصة الرقمية الرسمية لمجموعة دبليو دي للأعمال. سنكون معكم قريباً بحلتنا الجديدة.'}
                 onChangeEn={(v) => setContent({ ...content, settings: { ...s, maintenance_message_en: v } })}
-                onChangeAr={(v) => setContent({ ...content, settings: { ...s, maintenance_message_ar: v } })}
+                onChangeAr={(v) => setContent({ ...content, settings: { ...s, maintenance_headline_ar: v } })}
               />
 
               <div className="space-y-1.5 max-w-xs">
