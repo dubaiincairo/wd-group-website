@@ -619,34 +619,38 @@ export async function getOrderTrackingStatus(orderRef: string, customConfig?: Od
           // stock module check
         }
 
-        // Map Odoo states to the exact 6 user-specified lifecycle stages (0 to 5):
-        // 0: Sales Order Created & Verified
-        // 1: Manufacturing in Process (MRP Created)
-        // 2: Quality Control & Fine Finishing
-        // 3: Ready for Dispatch & Delivery
-        // 4: Out for Delivery (White-Glove Fleet)
-        // 5: Delivered & Site Installed
+        // Map Odoo states to the exact 7 user-specified lifecycle stages (0 to 6):
+        // 0: Order Received & Confirmed (تم استلام وتأكيد الطلب)
+        // 1: Sales Order Created (تم إنشاء أمر البيع)
+        // 2: Manufacturing in Progress (جاري التصنيع)
+        // 3: Quality Control & Inspection (جاري فحص الجودة)
+        // 4: Ready for Dispatch & Delivery (جاهز للشحن والتسليم)
+        // 5: Out for Delivery (جاري التوصيل)
+        // 6: Delivered & Installed (تم التسليم والتركيب)
         let stageIdx = 0;
-        let statusLabel = 'Sales Order Created & Verified';
+        let statusLabel = 'Order Received & Confirmed (تم استلام وتأكيد الطلب)';
 
         if (pickingState === 'done') {
-          stageIdx = 5;
-          statusLabel = 'Delivered & Site Installed';
+          stageIdx = 6;
+          statusLabel = 'Delivered & Installed (تم التسليم والتركيب)';
         } else if (pickingState === 'assigned' && mrpState === 'done') {
-          stageIdx = 4;
-          statusLabel = 'Out for Delivery (White-Glove Fleet)';
+          stageIdx = 5;
+          statusLabel = 'Out for Delivery (جاري التوصيل)';
         } else if (mrpState === 'done') {
-          stageIdx = 3;
-          statusLabel = 'Ready for Dispatch & Delivery';
+          stageIdx = 4;
+          statusLabel = 'Ready for Dispatch & Delivery (جاهز للشحن والتسليم)';
         } else if (mrpState === 'to_close') {
-          stageIdx = 2;
-          statusLabel = 'Quality Control & Inspection';
+          stageIdx = 3;
+          statusLabel = 'Quality Control & Inspection (جاري فحص الجودة)';
         } else if (mrpState === 'progress' || mrpState === 'confirmed') {
+          stageIdx = 2;
+          statusLabel = 'Manufacturing in Progress (جاري التصنيع)';
+        } else if (so.state === 'sale') {
           stageIdx = 1;
-          statusLabel = 'Manufacturing in Process (MRP Issued)';
+          statusLabel = 'Sales Order Created (تم إنشاء أمر البيع)';
         } else {
           stageIdx = 0;
-          statusLabel = 'Sales Order Created & Verified';
+          statusLabel = 'Order Received & Confirmed (تم استلام وتأكيد الطلب)';
         }
 
         return {
@@ -691,7 +695,7 @@ export async function getOrderTrackingStatus(orderRef: string, customConfig?: Od
     factory: 'GreenWood Factory 1 & 3 — Riyadh',
     leadTechnician: 'Eng. Fahad Al-Ghamdi',
     currentStageIdx: stageIdx,
-    statusText: stageIdx === 2 ? 'Quality Control & Fine Finishing' : 'Manufacturing in Process (MRP Issued)',
+    statusText: stageIdx === 2 ? 'Manufacturing in Progress (جاري التصنيع)' : 'Sales Order Created (تم إنشاء أمر البيع)',
     isLiveOdoo: false,
     items: [
       {
@@ -713,12 +717,13 @@ export async function getOrderTrackingStatus(orderRef: string, customConfig?: Od
 
 function buildStagesLog(activeIdx: number) {
   const STAGES_DEF = [
-    { num: 1, en: 'Sales Order Created & Verified', ar: 'تم إنشاء أمر البيع والمواصفات' },
-    { num: 2, en: 'Manufacturing in Process (MRP Issued)', ar: 'بدء التصنيع وأمر الإنتاج' },
-    { num: 3, en: 'Quality Control & Fine Finishing', ar: 'فحص الجودة والمطابقة الفندقية' },
-    { num: 4, en: 'Ready for Dispatch & Delivery', ar: 'جاهز للشحن والتسليم' },
-    { num: 5, en: 'Out for Delivery (White-Glove Fleet)', ar: 'خرج للتوصيل والتركيب الميداني' },
-    { num: 6, en: 'Delivered & Site Installed', ar: 'تم التسليم والتركيب بنجاح' },
+    { num: 1, en: 'Order Received & Confirmed', ar: 'تم استلام وتأكيد الطلب' },
+    { num: 2, en: 'Sales Order Created', ar: 'تم إنشاء أمر البيع' },
+    { num: 3, en: 'Manufacturing in Progress', ar: 'جاري التصنيع' },
+    { num: 4, en: 'Quality Control & Inspection', ar: 'جاري فحص الجودة' },
+    { num: 5, en: 'Ready for Dispatch & Delivery', ar: 'جاهز للشحن والتسليم' },
+    { num: 6, en: 'Out for Delivery', ar: 'جاري التوصيل' },
+    { num: 7, en: 'Delivered & Installed', ar: 'تم التسليم والتركيب' },
   ];
 
   return STAGES_DEF.map((s, idx) => ({

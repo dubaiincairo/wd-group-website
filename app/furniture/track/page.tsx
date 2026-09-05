@@ -27,7 +27,8 @@ import {
   UserCheck,
   Zap,
   RefreshCw,
-  FileCheck
+  FileCheck,
+  ShoppingBag
 } from 'lucide-react';
 
 function OrderTrackerContent() {
@@ -151,46 +152,54 @@ function OrderTrackerContent() {
       num: 1,
       title: dict.furniture.tracking.stages.stage1,
       desc: dict.furniture.tracking.stages.stage1_desc,
-      icon: FileCheck,
-      location: isAr ? 'إدارة المبيعات والهندسة — الرياض' : 'Sales & Engineering Dept — Riyadh',
-      timestamp: isAr ? 'تم الإنشاء والاعتماد' : 'Verified & Registered',
+      icon: ShoppingBag,
+      location: isAr ? 'بوابة المتجر وخدمة العملاء' : 'E-Commerce Gateway & Support',
+      timestamp: isAr ? '28 أغسطس · 10:15 ص' : 'Aug 28 · 10:15 AM',
     },
     {
       num: 2,
       title: dict.furniture.tracking.stages.stage2,
       desc: dict.furniture.tracking.stages.stage2_desc,
-      icon: Factory,
-      location: isAr ? 'مصنع جرين وود 1 و 3 — الرياض' : 'GreenWood CNC Workcenters — Factory 1 & 3',
-      timestamp: isAr ? 'أمر التصنيع (MRP) نشط' : 'MRP Production Active',
+      icon: FileCheck,
+      location: isAr ? 'إدارة المبيعات والهندسة — الرياض' : 'Sales & Engineering Dept — Riyadh',
+      timestamp: isAr ? '28 أغسطس · 11:30 ص' : 'Aug 28 · 11:30 AM',
     },
     {
       num: 3,
       title: dict.furniture.tracking.stages.stage3,
       desc: dict.furniture.tracking.stages.stage3_desc,
-      icon: ShieldCheck,
-      location: isAr ? 'مركز فحص الجودة والمطابقة الفندقية' : 'Quality Assurance & Finishing Hub',
-      timestamp: isAr ? 'جارٍ الفحص النهائي' : 'Finishing & Tolerance Audit',
+      icon: Factory,
+      location: isAr ? 'مصنع جرين وود 1 و 3 — الرياض' : 'GreenWood CNC Workcenters — Factory 1 & 3',
+      timestamp: isAr ? 'جارٍ التصنيع والتشكيل' : 'Active Manufacturing',
     },
     {
       num: 4,
       title: dict.furniture.tracking.stages.stage4,
       desc: dict.furniture.tracking.stages.stage4_desc,
-      icon: PackageCheck,
-      location: isAr ? 'مستودع التغليف المقاوم للصدمات' : 'Shockproof Packaging & Crating Warehouse',
-      timestamp: isAr ? 'مجدول: الشحن والتسليم' : 'Ready for Dispatch',
+      icon: ShieldCheck,
+      location: isAr ? 'مركز فحص الجودة والمطابقة الفندقية' : 'Quality Assurance & Finishing Hub',
+      timestamp: isAr ? 'مجدول: فحص الجودة' : 'Scheduled: Quality Audit',
     },
     {
       num: 5,
       title: dict.furniture.tracking.stages.stage5,
       desc: dict.furniture.tracking.stages.stage5_desc,
-      icon: Truck,
-      location: isAr ? 'أسطول التوصيل الفندقي المبرد' : 'White-Glove Climate-Controlled Fleet',
-      timestamp: isAr ? 'في الطريق إلى الموقع' : 'En Route to Site',
+      icon: PackageCheck,
+      location: isAr ? 'مستودع التغليف المقاوم للصدمات' : 'Shockproof Packaging & Crating Warehouse',
+      timestamp: isAr ? 'مجدول: الشحن والتجهيز' : 'Scheduled: Staging',
     },
     {
       num: 6,
       title: dict.furniture.tracking.stages.stage6,
       desc: dict.furniture.tracking.stages.stage6_desc,
+      icon: Truck,
+      location: isAr ? 'أسطول التوصيل الفندقي المبرد' : 'White-Glove Climate-Controlled Fleet',
+      timestamp: isAr ? 'مجدول: النقل المبرد' : 'Scheduled: Transport',
+    },
+    {
+      num: 7,
+      title: dict.furniture.tracking.stages.stage7,
+      desc: dict.furniture.tracking.stages.stage7_desc,
       icon: CheckCircle2,
       location: isAr ? 'موقع تركيب العميل' : 'Client Installation Site',
       timestamp: isAr ? 'مجدول: التسليم والتركيب' : 'Site Delivery & Assembly',
@@ -425,11 +434,11 @@ function OrderTrackerContent() {
                   <div className="text-left sm:text-right rtl:sm:text-left font-mono">
                     <span className="text-xs font-bold text-[#C9A86A] block">
                       {isAr
-                        ? `المرحلة ${activeOrder.currentStageIdx + 1} من 6 ${activeOrder.currentStageIdx === 5 ? 'مكتملة' : 'قيد التنفيذ'}`
-                        : `Stage ${activeOrder.currentStageIdx + 1} of 6 ${activeOrder.currentStageIdx === 5 ? 'Completed' : 'In Progress'}`}
+                        ? `المرحلة ${activeOrder.currentStageIdx + 1} من ${stages.length} ${activeOrder.currentStageIdx === stages.length - 1 ? 'مكتملة' : 'قيد التنفيذ'}`
+                        : `Stage ${activeOrder.currentStageIdx + 1} of ${stages.length} ${activeOrder.currentStageIdx === stages.length - 1 ? 'Completed' : 'In Progress'}`}
                     </span>
                     <span className="text-[11px] text-emerald-400">
-                      {Math.min(100, Math.round(((activeOrder.currentStageIdx + (activeOrder.currentStageIdx === 5 ? 1 : 0.5)) / 6) * 100))}% Overall Completion
+                      {Math.min(100, Math.round(((activeOrder.currentStageIdx + (activeOrder.currentStageIdx === stages.length - 1 ? 1 : 0.5)) / stages.length) * 100))}% Overall Completion
                     </span>
                   </div>
                 </div>
@@ -438,7 +447,7 @@ function OrderTrackerContent() {
                 <div className="w-full bg-white/5 h-2.5 rounded-full overflow-hidden p-0.5 border border-white/10">
                   <div 
                     className="h-full rounded-full bg-gradient-to-r from-emerald-500 via-[#DFBA73] to-[#C9A86A] shadow-[0_0_20px_rgba(201,168,106,0.6)] transition-all duration-1000"
-                    style={{ width: `${Math.min(100, Math.round(((activeOrder.currentStageIdx + (activeOrder.currentStageIdx === 5 ? 1 : 0.5)) / 6) * 100))}%` }}
+                    style={{ width: `${Math.min(100, Math.round(((activeOrder.currentStageIdx + (activeOrder.currentStageIdx === stages.length - 1 ? 1 : 0.5)) / stages.length) * 100))}%` }}
                   />
                 </div>
               </div>
