@@ -346,6 +346,12 @@ export interface SiteContentPayload {
     maintenance_estimated_date?: string;
     bank_access_code?: string;
     bank_accounts?: BankAccountRecord[];
+    odoo?: {
+      url?: string;
+      db?: string;
+      username?: string;
+      apiKey?: string;
+    };
   };
   seo: {
     global_title_en: string;

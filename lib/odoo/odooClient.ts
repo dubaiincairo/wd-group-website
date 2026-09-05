@@ -62,6 +62,8 @@ export interface OdooTrackResult {
   }>;
 }
 
+import { getSiteContent } from '@/lib/admin/db';
+
 export function getOdooConfig(): OdooConfig {
   return {
     url: (process.env.ODOO_URL || 'https://wdgroup.odoo.com').replace(/\/+$/, ''),
@@ -71,8 +73,34 @@ export function getOdooConfig(): OdooConfig {
   };
 }
 
+export async function getResolvedOdooConfig(): Promise<OdooConfig> {
+  // 1. Check Supabase wdgroup_content for credentials dynamically saved from the Admin Panel
+  try {
+    const siteContent = await getSiteContent();
+    const dbOdoo = siteContent?.settings?.odoo;
+    if (dbOdoo && dbOdoo.apiKey && dbOdoo.apiKey.trim()) {
+      return {
+        url: (dbOdoo.url || process.env.ODOO_URL || 'https://wdgroup.odoo.com').replace(/\/+$/, ''),
+        db: dbOdoo.db || process.env.ODOO_DB || 'wdgroup',
+        username: dbOdoo.username || process.env.ODOO_USERNAME || '',
+        apiKey: dbOdoo.apiKey.trim(),
+      };
+    }
+  } catch (err) {
+    // Fall back to environment variables
+  }
+
+  // 2. Fall back to process.env
+  return getOdooConfig();
+}
+
 export function isOdooConfigured(): boolean {
   const config = getOdooConfig();
+  return Boolean(config.url && config.db && config.username && config.apiKey);
+}
+
+export async function isOdooConfiguredAsync(): Promise<boolean> {
+  const config = await getResolvedOdooConfig();
   return Boolean(config.url && config.db && config.username && config.apiKey);
 }
 
@@ -139,10 +167,11 @@ export async function executeOdooKw(
   model: string,
   method: string,
   args: any[] = [],
-  kwargs: Record<string, any> = {}
+  kwargs: Record<string, any> = {},
+  customConfig?: OdooConfig
 ) {
-  const config = getOdooConfig();
-  if (!isOdooConfigured()) {
+  const config = customConfig || (await getResolvedOdooConfig());
+  if (!config.url || !config.db || !config.username || !config.apiKey) {
     throw new Error('Odoo is not configured. Missing ODOO_URL, ODOO_DB, ODOO_USERNAME, or ODOO_API_KEY');
   }
 
@@ -165,18 +194,18 @@ export async function executeOdooKw(
 /**
  * Test Odoo Connection
  */
-export async function testOdooConnection(): Promise<{
+export async function testOdooConnection(customConfig?: OdooConfig): Promise<{
   connected: boolean;
   message: string;
   uid?: number;
   serverVersion?: string;
   latencyMs?: number;
 }> {
-  const config = getOdooConfig();
-  if (!isOdooConfigured()) {
+  const config = customConfig || (await getResolvedOdooConfig());
+  if (!config.url || !config.db || !config.username || !config.apiKey) {
     return {
       connected: false,
-      message: 'Odoo credentials not fully set in environment (ODOO_URL, ODOO_DB, ODOO_USERNAME, ODOO_API_KEY)',
+      message: 'Odoo credentials not fully configured in system or environment (URL, DB, Username, API Key)',
     };
   }
 
@@ -211,7 +240,10 @@ export async function testOdooConnection(): Promise<{
 /**
  * Feature 2: Website ➔ Odoo (Create Lead in crm.lead)
  */
-export async function createOdooLead(payload: OdooLeadPayload): Promise<{
+export async function createOdooLead(
+  payload: OdooLeadPayload,
+  customConfig?: OdooConfig
+): Promise<{
   success: boolean;
   leadId?: number;
   mode: 'live' | 'fallback';
@@ -231,8 +263,9 @@ export async function createOdooLead(payload: OdooLeadPayload): Promise<{
   ].filter(Boolean);
 
   const fullDescription = descParts.join('\n\n');
+  const config = customConfig || (await getResolvedOdooConfig());
 
-  if (!isOdooConfigured()) {
+  if (!config.apiKey || !config.username || !config.db) {
     console.log('[Odoo Client] Odoo offline or not configured. Lead recorded in local fallback queue:', {
       name: payload.title,
       email: payload.email,
@@ -257,7 +290,7 @@ export async function createOdooLead(payload: OdooLeadPayload): Promise<{
       priority: payload.priority || '2',
     };
 
-    const leadId = await executeOdooKw('crm.lead', 'create', [leadVals]);
+    const leadId = await executeOdooKw('crm.lead', 'create', [leadVals], {}, config);
 
     return {
       success: true,
@@ -278,11 +311,12 @@ export async function createOdooLead(payload: OdooLeadPayload): Promise<{
 /**
  * Feature 1: Odoo ➔ Website (Query Manufacturing & Delivery Status)
  */
-export async function getOrderTrackingStatus(orderRef: string): Promise<OdooTrackResult> {
+export async function getOrderTrackingStatus(orderRef: string, customConfig?: OdooConfig): Promise<OdooTrackResult> {
   const cleanRef = orderRef.trim().toUpperCase();
+  const config = customConfig || (await getResolvedOdooConfig());
 
   // If Odoo is configured, query sale.order, mrp.production, and stock.picking
-  if (isOdooConfigured()) {
+  if (Boolean(config.apiKey && config.apiKey.trim())) {
     try {
       // 1. Search sale.order
       const saleOrders = await executeOdooKw(
@@ -292,7 +326,8 @@ export async function getOrderTrackingStatus(orderRef: string): Promise<OdooTrac
         {
           fields: ['id', 'name', 'state', 'partner_id', 'date_order', 'commitment_date', 'order_line'],
           limit: 1,
-        }
+        },
+        config
       );
 
       if (Array.isArray(saleOrders) && saleOrders.length > 0) {
@@ -309,7 +344,8 @@ export async function getOrderTrackingStatus(orderRef: string): Promise<OdooTrac
             {
               fields: ['id', 'name', 'state', 'workorder_ids', 'date_planned_start', 'date_planned_finished'],
               limit: 1,
-            }
+            },
+            config
           );
           if (Array.isArray(mrpOrders) && mrpOrders.length > 0) {
             mrpState = mrpOrders[0].state; // draft, confirmed, progress, to_close, done, cancel
@@ -328,7 +364,8 @@ export async function getOrderTrackingStatus(orderRef: string): Promise<OdooTrac
             {
               fields: ['id', 'name', 'state', 'scheduled_date', 'date_done'],
               limit: 1,
-            }
+            },
+            config
           );
           if (Array.isArray(pickings) && pickings.length > 0) {
             pickingState = pickings[0].state; // draft, waiting, confirmed, assigned, done, cancel

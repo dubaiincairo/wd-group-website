@@ -13,7 +13,15 @@ import {
   Database,
   ShieldCheck,
   Zap,
-  HelpCircle
+  HelpCircle,
+  Key,
+  Eye,
+  EyeOff,
+  Cloud,
+  Save,
+  Check,
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react';
 import { useToast } from '@/components/admin/ToastProvider';
 import { useLanguage } from '@/context/LanguageContext';
@@ -26,25 +34,126 @@ interface OdooStatus {
   latencyMs?: number;
 }
 
-interface OdooDetails {
-  url: string | null;
-  db: string | null;
-  username: string | null;
-  hasApiKey: boolean;
-}
-
 export default function OdooIntegrationCard() {
   const { showToast } = useToast();
   const { lang } = useLanguage();
   const isAr = lang === 'ar';
 
+  // Form State
+  const [url, setUrl] = useState('https://wdgroup.odoo.com');
+  const [db, setDb] = useState('wdgroup');
+  const [username, setUsername] = useState('');
+  const [apiKey, setApiKey] = useState('');
+  const [syncToVercel, setSyncToVercel] = useState(true);
+  const [showApiKey, setShowApiKey] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(true);
+
+  // Status & Telemetry
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [testing, setTesting] = useState(false);
   const [status, setStatus] = useState<OdooStatus | null>(null);
-  const [details, setDetails] = useState<OdooDetails | null>(null);
-  const [configured, setConfigured] = useState<boolean>(false);
-  const [initialLoaded, setInitialLoaded] = useState(false);
+  const [hasApiKey, setHasApiKey] = useState(false);
+  const [vercelConfigured, setVercelConfigured] = useState(false);
+  const [lastVercelSync, setLastVercelSync] = useState<string | null>(null);
 
-  const testConnection = async (silent = false) => {
+  // Load existing config on mount
+  const loadConfig = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch('/api/admin/odoo/config');
+      const json = await res.json();
+
+      if (json.success) {
+        if (json.config) {
+          setUrl(json.config.url || 'https://wdgroup.odoo.com');
+          setDb(json.config.db || 'wdgroup');
+          setUsername(json.config.username || '');
+          setHasApiKey(Boolean(json.config.hasApiKey));
+          if (json.config.hasApiKey) {
+            setApiKey(json.config.maskedApiKey || '••••••••••••••••');
+          }
+        }
+        setVercelConfigured(Boolean(json.vercelConfigured));
+        if (json.connectionStatus) {
+          setStatus(json.connectionStatus);
+        }
+      }
+    } catch (err) {
+      console.warn('Failed to load Odoo config:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadConfig();
+  }, []);
+
+  // Save Credentials & Sync to Vercel
+  const handleSave = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!url.trim() || !db.trim() || !username.trim()) {
+      showToast(isAr ? 'يرجى إدخال الرابط، اسم القاعدة، واسم المستخدم' : 'Please fill URL, DB name, and Username', 'error');
+      return;
+    }
+
+    try {
+      setSaving(true);
+      const res = await fetch('/api/admin/odoo/config', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          url,
+          db,
+          username,
+          apiKey: apiKey.includes('••••') ? '' : apiKey,
+          syncToVercel,
+        }),
+      });
+
+      const json = await res.json();
+
+      if (json.success) {
+        setStatus(json.connectionStatus);
+        setHasApiKey(Boolean(json.config?.hasApiKey));
+        if (json.config?.hasApiKey && !apiKey.includes('••••')) {
+          setApiKey('••••••••••••••••');
+        }
+
+        if (json.vercelSync?.success) {
+          setLastVercelSync(new Date().toLocaleTimeString());
+          showToast(
+            isAr
+              ? `تم حفظ الإعدادات ومزامنة المتغيرات مع Vercel بنجاح (${json.vercelSync.syncedKeys.length} متغيرات)`
+              : `Credentials saved and synchronized to Vercel (${json.vercelSync.syncedKeys.length} variables)`,
+            'success'
+          );
+        } else if (syncToVercel && json.vercelSync && !json.vercelSync.success) {
+          showToast(
+            isAr
+              ? `تم الحفظ في المنظومة، ولكن تعذرت مزامنة Vercel: ${json.vercelSync.message}`
+              : `Saved locally, but Vercel sync notice: ${json.vercelSync.message}`,
+            'info'
+          );
+        } else {
+          showToast(
+            isAr ? 'تم حفظ إعدادات Odoo وتفعيلها فورياً' : 'Odoo configuration saved successfully',
+            'success'
+          );
+        }
+      } else {
+        showToast(json.error || 'Failed to save Odoo credentials', 'error');
+      }
+    } catch (err: any) {
+      showToast(err.message || 'Error saving credentials', 'error');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  // Test Connection
+  const handleTestConnection = async () => {
     try {
       setTesting(true);
       const res = await fetch('/api/odoo/lead');
@@ -52,46 +161,26 @@ export default function OdooIntegrationCard() {
 
       if (json.success && json.data) {
         setStatus(json.data);
-        setConfigured(Boolean(json.configured));
-        if (json.details) {
-          setDetails(json.details);
-        }
-
-        if (!silent) {
-          if (json.data.connected) {
-            showToast(
-              isAr
-                ? `تم الاتصال بنجاح بـ Odoo ERP (${json.data.latencyMs ?? 0}ms)`
-                : `Successfully connected to Odoo ERP (${json.data.latencyMs ?? 0}ms)`,
-              'success'
-            );
-          } else {
-            showToast(
-              isAr
-                ? `تنبيه الاتصال بـ Odoo: ${json.data.message}`
-                : `Odoo connection notice: ${json.data.message}`,
-              'error'
-            );
-          }
-        }
-      } else {
-        if (!silent) {
-          showToast(json.error || 'Failed to check Odoo connection', 'error');
+        if (json.data.connected) {
+          showToast(
+            isAr
+              ? `الاتصال بـ Odoo سليم ونشط (${json.data.latencyMs ?? 0}ms)`
+              : `Connected to Odoo ERP successfully (${json.data.latencyMs ?? 0}ms)`,
+            'success'
+          );
+        } else {
+          showToast(
+            isAr ? `تنبيه الاتصال: ${json.data.message}` : `Connection notice: ${json.data.message}`,
+            'error'
+          );
         }
       }
     } catch (err: any) {
-      if (!silent) {
-        showToast(err.message || 'Error connecting to Odoo API', 'error');
-      }
+      showToast(err.message || 'Error connecting to Odoo API', 'error');
     } finally {
       setTesting(false);
-      setInitialLoaded(true);
     }
   };
-
-  useEffect(() => {
-    testConnection(true);
-  }, []);
 
   return (
     <div className="bg-[#0F1117]/90 border border-purple-500/20 rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl relative overflow-hidden">
@@ -103,28 +192,28 @@ export default function OdooIntegrationCard() {
         <div className="space-y-1">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-400 text-xs font-mono font-bold">
             <Layers className="w-3.5 h-3.5" />
-            <span>{isAr ? 'الربط المباشر مع Odoo ERP' : 'ODOO ERP INTEGRATION'}</span>
+            <span>{isAr ? 'الربط المباشر مع Odoo ERP' : 'ODOO ERP INTEGRATION & SECRETS MANAGER'}</span>
           </div>
           <h2 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight flex items-center gap-2.5">
             <span>{isAr ? 'منظومة إدارة الموارد والتصنيع Odoo' : 'Odoo Enterprise Resource Planning'}</span>
             <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-purple-950/80 border border-purple-500/40 text-purple-300 font-bold">
-              JSON-RPC
+              JSON-RPC 2.0
             </span>
           </h2>
           <p className="text-xs text-zinc-400">
             {isAr
-              ? 'مزامنة ثنائية الاتجاه: جلب مراحل التصنيع والشحن للموقع، ودفع العملاء المحتملين لـ Odoo CRM تلقائياً.'
-              : 'Bidirectional sync: Pull live manufacturing & dispatch stages to website tracker, and push inquiries directly to Odoo CRM.'}
+              ? 'إدارة المتغيرات والمفاتيح السرية مباشرة من لوحة التحكم، مع مزامنة فورية في قاعدة البيانات وتحديث آلي لـ Vercel.'
+              : 'Manage credentials & secrets directly from this panel with instant database persistence and automated Vercel cloud synchronization.'}
           </p>
         </div>
 
-        {/* Action Button */}
+        {/* Top Actions */}
         <div className="flex items-center gap-2">
           <button
             type="button"
-            onClick={() => testConnection(false)}
-            disabled={testing}
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-mono text-xs font-bold transition-all shadow-[0_0_20px_rgba(147,51,234,0.3)] disabled:opacity-50 cursor-pointer shrink-0"
+            onClick={handleTestConnection}
+            disabled={testing || saving}
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-purple-600/20 hover:bg-purple-600/30 border border-purple-500/40 text-purple-300 font-mono text-xs font-bold transition-all disabled:opacity-50 cursor-pointer shrink-0"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${testing ? 'animate-spin' : ''}`} />
             <span>{testing ? (isAr ? 'جارٍ الفحص…' : 'Testing…') : (isAr ? 'اختبار الاتصال' : 'Test Live Connection')}</span>
@@ -132,7 +221,7 @@ export default function OdooIntegrationCard() {
         </div>
       </div>
 
-      {/* Live Status Indicators */}
+      {/* Live Status Telemetry Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {/* Status Card */}
         <div className="p-4 rounded-2xl bg-[#141721] border border-white/5 space-y-1.5">
@@ -147,31 +236,31 @@ export default function OdooIntegrationCard() {
                   {isAr ? 'متصل بنجاح (Live Online)' : 'Live Online'}
                 </span>
               </>
-            ) : configured ? (
+            ) : hasApiKey ? (
               <>
                 <span className="w-2.5 h-2.5 rounded-full bg-amber-400" />
                 <span className="text-xs font-mono font-bold text-amber-400">
-                  {isAr ? 'غير متصل (تحقق من المفتاح)' : 'Check Credentials'}
+                  {isAr ? 'تحقق من صحة المفتاح' : 'Check Credentials'}
                 </span>
               </>
             ) : (
               <>
                 <span className="w-2.5 h-2.5 rounded-full bg-sky-400 animate-pulse" />
                 <span className="text-xs font-mono font-bold text-sky-400">
-                  {isAr ? 'وضع المحاكاة الذكي (Fallback Demo)' : 'Smart Fallback Mode'}
+                  {isAr ? 'وضع المحاكاة الذكي (Fallback)' : 'Smart Fallback Mode'}
                 </span>
               </>
             )}
           </div>
           <p className="text-[11px] text-zinc-400 line-clamp-1">
-            {status?.message || (isAr ? 'جارٍ الفحص الأولي للاتصال…' : 'Checking connection status…')}
+            {status?.message || (isAr ? 'جاهز للاستعلام…' : 'Ready for queries…')}
           </p>
         </div>
 
         {/* Latency & Server */}
         <div className="p-4 rounded-2xl bg-[#141721] border border-white/5 space-y-1.5">
           <span className="text-[10px] font-mono uppercase text-zinc-500 block">
-            {isAr ? 'سرعة الاستجابة' : 'Response Latency'}
+            {isAr ? 'سرعة الاستجابة والمصادقة' : 'Response Latency & UID'}
           </span>
           <div className="flex items-center gap-2">
             <Activity className="w-4 h-4 text-purple-400" />
@@ -185,26 +274,166 @@ export default function OdooIntegrationCard() {
             )}
           </div>
           <p className="text-[11px] text-zinc-400 font-mono truncate">
-            {details?.url || 'https://wdgroup.odoo.com'}
+            {url || 'https://wdgroup.odoo.com'}
           </p>
         </div>
 
-        {/* Database & Security */}
+        {/* Vercel Cloud Sync Status */}
         <div className="p-4 rounded-2xl bg-[#141721] border border-white/5 space-y-1.5">
           <span className="text-[10px] font-mono uppercase text-zinc-500 block">
-            {isAr ? 'قاعدة البيانات والمصادقة' : 'Database & Auth'}
+            {isAr ? 'حالة مزامنة Vercel السحابية' : 'Vercel Cloud Sync'}
           </span>
           <div className="flex items-center gap-2">
-            <Database className="w-4 h-4 text-[#C9A86A]" />
+            <Cloud className="w-4 h-4 text-blue-400" />
             <span className="text-xs font-mono font-bold text-white">
-              {details?.db || 'wdgroup'}
+              {vercelConfigured ? (isAr ? 'مزامنة Vercel مفعلة' : 'Vercel API Connected') : (isAr ? 'تحديث يدوي' : 'Manual API Mode')}
             </span>
           </div>
-          <div className="flex items-center gap-1.5 text-[11px] text-zinc-400">
-            <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-            <span>{details?.hasApiKey ? (isAr ? 'مفتاح API مفعل' : 'API Key Configured') : (isAr ? 'المفتاح غير ممرر' : 'API Key Missing')}</span>
-          </div>
+          <p className="text-[11px] text-zinc-400 font-mono">
+            {lastVercelSync 
+              ? (isAr ? `آخر مزامنة: ${lastVercelSync}` : `Last synced: ${lastVercelSync}`)
+              : (isAr ? 'جاهز للمزامنة الآلية' : 'Ready for auto-sync')}
+          </p>
         </div>
+      </div>
+
+      {/* Interactive Credentials Form */}
+      <div className="p-5 sm:p-6 rounded-2xl bg-[#141721]/90 border border-purple-500/20 space-y-5">
+        <div className="flex items-center justify-between border-b border-white/10 pb-3">
+          <div className="flex items-center gap-2 text-xs font-mono font-bold text-white">
+            <Key className="w-4 h-4 text-purple-400" />
+            <span>{isAr ? 'بيانات الاعتماد والمفاتيح السرية (Odoo Credentials)' : 'Odoo ERP Credentials & Secrets'}</span>
+          </div>
+          <button
+            type="button"
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="text-xs text-zinc-400 hover:text-white flex items-center gap-1 font-mono cursor-pointer"
+          >
+            <span>{isExpanded ? (isAr ? 'إخفاء الحقول' : 'Hide Fields') : (isAr ? 'تعديل الحقول' : 'Edit Fields')}</span>
+            {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+          </button>
+        </div>
+
+        {isExpanded && (
+          <form onSubmit={handleSave} className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Odoo URL */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold text-zinc-300 flex items-center justify-between">
+                  <span>{isAr ? 'رابط خادم Odoo (ODOO_URL)' : 'Odoo Instance URL (ODOO_URL)'}</span>
+                </label>
+                <input
+                  type="text"
+                  value={url}
+                  onChange={(e) => setUrl(e.target.value)}
+                  placeholder="https://wdgroup.odoo.com"
+                  className="w-full bg-[#08090C] border border-white/15 rounded-xl px-4 py-2.5 text-xs font-mono font-bold text-white focus:outline-none focus:border-purple-500"
+                  dir="ltr"
+                />
+              </div>
+
+              {/* Odoo DB */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold text-zinc-300">
+                  <span>{isAr ? 'اسم قاعدة البيانات (ODOO_DB)' : 'Database Name (ODOO_DB)'}</span>
+                </label>
+                <input
+                  type="text"
+                  value={db}
+                  onChange={(e) => setDb(e.target.value)}
+                  placeholder="wdgroup"
+                  className="w-full bg-[#08090C] border border-white/15 rounded-xl px-4 py-2.5 text-xs font-mono font-bold text-white focus:outline-none focus:border-purple-500"
+                  dir="ltr"
+                />
+              </div>
+
+              {/* Odoo Username */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold text-zinc-300">
+                  <span>{isAr ? 'اسم المستخدم / البريد (ODOO_USERNAME)' : 'Admin Email / Login (ODOO_USERNAME)'}</span>
+                </label>
+                <input
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="admin@wdgroup.online"
+                  className="w-full bg-[#08090C] border border-white/15 rounded-xl px-4 py-2.5 text-xs font-mono font-bold text-white focus:outline-none focus:border-purple-500"
+                  dir="ltr"
+                />
+              </div>
+
+              {/* Odoo API Key */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold text-zinc-300 flex items-center justify-between">
+                  <span>{isAr ? 'مفتاح API السري (ODOO_API_KEY)' : 'Odoo User API Key (ODOO_API_KEY)'}</span>
+                  {hasApiKey && (
+                    <span className="text-[10px] font-mono text-emerald-400">
+                      {isAr ? 'المفتاح محفوظ ومفعل' : 'Saved in System'}
+                    </span>
+                  )}
+                </label>
+                <div className="relative flex items-center">
+                  <input
+                    type={showApiKey ? 'text' : 'password'}
+                    value={apiKey}
+                    onChange={(e) => setApiKey(e.target.value)}
+                    placeholder="e.g. a8d29f0e1c3b4a..."
+                    className="w-full bg-[#08090C] border border-white/15 rounded-xl px-4 py-2.5 pr-10 rtl:pr-4 rtl:pl-10 text-xs font-mono font-bold text-purple-300 focus:outline-none focus:border-purple-500"
+                    dir="ltr"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowApiKey(!showApiKey)}
+                    className="absolute right-3 rtl:right-auto rtl:left-3 text-zinc-400 hover:text-white"
+                  >
+                    {showApiKey ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Vercel Auto-Sync Option */}
+            <div className="flex items-center justify-between p-3.5 rounded-xl bg-purple-950/20 border border-purple-500/20">
+              <label className="flex items-center gap-2.5 cursor-pointer text-xs text-zinc-300 select-none">
+                <input
+                  type="checkbox"
+                  checked={syncToVercel}
+                  onChange={(e) => setSyncToVercel(e.target.checked)}
+                  className="rounded border-white/20 bg-black/40 text-purple-600 focus:ring-purple-500"
+                />
+                <span className="font-medium">
+                  {isAr
+                    ? 'مزامنة المتغيرات آلياً مع Vercel (Production & Preview)'
+                    : 'Automatically push and sync variables to Vercel (Production & Preview)'}
+                </span>
+              </label>
+              <span className="text-[10px] font-mono text-purple-400 hidden sm:inline">
+                REST API /v10/env
+              </span>
+            </div>
+
+            {/* Save Button */}
+            <div className="flex items-center justify-end gap-3 pt-2">
+              <button
+                type="submit"
+                disabled={saving}
+                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-mono text-xs font-bold transition-all shadow-[0_0_20px_rgba(147,51,234,0.4)] disabled:opacity-50 cursor-pointer"
+              >
+                {saving ? (
+                  <>
+                    <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                    <span>{isAr ? 'جارٍ الحفظ والمزامنة مع Vercel…' : 'Saving & Syncing to Vercel…'}</span>
+                  </>
+                ) : (
+                  <>
+                    <Save className="w-3.5 h-3.5" />
+                    <span>{isAr ? 'حفظ وتحديث Vercel' : 'Save & Sync to Vercel'}</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </form>
+        )}
       </div>
 
       {/* Two Integration Channels */}
@@ -266,21 +495,6 @@ export default function OdooIntegrationCard() {
             </span>
           </div>
         </div>
-      </div>
-
-      {/* Setup Guide / Environment Reference */}
-      <div className="p-4 rounded-2xl bg-black/40 border border-white/5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
-        <div className="flex items-center gap-2 text-zinc-400">
-          <HelpCircle className="w-4 h-4 text-zinc-400 shrink-0" />
-          <span>
-            {isAr
-              ? 'لتفعيل الربط الحي الكامل، قم بتعيين المتغيرات: ODOO_URL, ODOO_DB, ODOO_USERNAME, ODOO_API_KEY في Vercel.'
-              : 'To enable full live sync, set environment variables: ODOO_URL, ODOO_DB, ODOO_USERNAME, ODOO_API_KEY in Vercel.'}
-          </span>
-        </div>
-        <span className="text-[11px] font-mono text-zinc-400 shrink-0">
-          Zero External Dependencies · Safe Server-Side JSON-RPC
-        </span>
       </div>
     </div>
   );
