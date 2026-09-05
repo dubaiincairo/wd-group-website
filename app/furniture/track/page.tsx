@@ -25,7 +25,8 @@ import {
   Wrench,
   PackageCheck,
   UserCheck,
-  Zap
+  Zap,
+  RefreshCw
 } from 'lucide-react';
 
 function OrderTrackerContent() {
@@ -67,30 +68,64 @@ function OrderTrackerContent() {
     ]
   };
 
+  const [loadingOrder, setLoadingOrder] = useState(false);
+  const [isLiveOdoo, setIsLiveOdoo] = useState(false);
+
+  const fetchOrder = async (targetRef: string) => {
+    try {
+      setLoadingOrder(true);
+      const res = await fetch(`/api/odoo/track?ref=${encodeURIComponent(targetRef)}`);
+      if (res.ok) {
+        const json = await res.json();
+        if (json.success && json.data) {
+          const d = json.data;
+          setActiveOrder({
+            ...sampleOrder,
+            orderRef: d.orderRef,
+            customerName: d.customerName || sampleOrder.customerName,
+            phone: d.phone || sampleOrder.phone,
+            city: d.city || sampleOrder.city,
+            orderDate: d.orderDate || sampleOrder.orderDate,
+            estimatedDelivery: d.estimatedDelivery || sampleOrder.estimatedDelivery,
+            factory: d.factory || sampleOrder.factory,
+            leadTechnician: d.leadTechnician || sampleOrder.leadTechnician,
+            currentStageIdx: d.currentStageIdx ?? sampleOrder.currentStageIdx,
+            statusText: d.statusText,
+            items: d.items && d.items.length > 0 ? d.items : sampleOrder.items,
+          });
+          setIsLiveOdoo(Boolean(d.isLiveOdoo));
+          setSearched(true);
+          return;
+        }
+      }
+    } catch (err) {
+      console.warn('Odoo tracking query notice:', err);
+    } finally {
+      setLoadingOrder(false);
+    }
+
+    setActiveOrder({
+      ...sampleOrder,
+      orderRef: targetRef,
+    });
+    setIsLiveOdoo(false);
+    setSearched(true);
+  };
+
   useEffect(() => {
     const refFromUrl = searchParams.get('ref');
     if (refFromUrl) {
       setQuery(refFromUrl);
-      setActiveOrder({
-        ...sampleOrder,
-        orderRef: refFromUrl,
-      });
-      setSearched(true);
+      fetchOrder(refFromUrl);
     } else {
-      // Load sample order by default for immediate preview
-      setActiveOrder(sampleOrder);
-      setSearched(true);
+      fetchOrder('WD-ORD-2026-8812');
     }
   }, [searchParams]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (!query.trim()) return;
-    setActiveOrder({
-      ...sampleOrder,
-      orderRef: query.trim().toUpperCase(),
-    });
-    setSearched(true);
+    fetchOrder(query.trim().toUpperCase());
   };
 
   const stages = [
@@ -165,9 +200,17 @@ function OrderTrackerContent() {
             <span>{isAr ? 'العودة إلى معرض الأثاث' : 'Back to Furniture Showroom'}</span>
           </Link>
 
-          <span className="text-[11px] font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-3 py-1 rounded-full flex items-center gap-1.5 shadow-[0_0_15px_rgba(16,185,129,0.15)]">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span>{isAr ? 'مزامنة حية مع مصانع جرين وود' : 'Live Factory Sync Active'}</span>
+          <span className={`text-[11px] font-mono px-3 py-1 rounded-full flex items-center gap-1.5 transition-all ${
+            isLiveOdoo
+              ? 'text-purple-400 bg-purple-500/10 border border-purple-500/30 shadow-[0_0_15px_rgba(168,85,247,0.2)]'
+              : 'text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 shadow-[0_0_15px_rgba(16,185,129,0.15)]'
+          }`}>
+            <span className={`w-2 h-2 rounded-full animate-pulse ${isLiveOdoo ? 'bg-purple-400' : 'bg-emerald-400'}`} />
+            <span>
+              {isLiveOdoo
+                ? (isAr ? 'مزامنة حية مع Odoo ERP' : 'Odoo ERP Live Sync Active')
+                : (isAr ? 'مزامنة حية مع مصانع جرين وود' : 'Live Factory Sync Active')}
+            </span>
           </span>
         </div>
 
@@ -208,9 +251,11 @@ function OrderTrackerContent() {
             <Search className="w-5 h-5 text-zinc-400 absolute left-4 rtl:left-auto rtl:right-4 pointer-events-none" />
             <button
               type="submit"
-              className="absolute right-2 rtl:right-auto rtl:left-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#C9A86A] to-[#DFBA73] text-[#08090C] font-extrabold text-xs hover:shadow-lg transition-all cursor-pointer font-mono shrink-0"
+              disabled={loadingOrder}
+              className="absolute right-2 rtl:right-auto rtl:left-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#C9A86A] to-[#DFBA73] text-[#08090C] font-extrabold text-xs hover:shadow-lg transition-all cursor-pointer font-mono shrink-0 disabled:opacity-60 flex items-center gap-1.5"
             >
-              {dict.furniture.tracking.track_btn}
+              {loadingOrder && <RefreshCw className="w-3 h-3 animate-spin shrink-0" />}
+              <span>{loadingOrder ? (isAr ? 'جارٍ الفحص…' : 'Syncing…') : dict.furniture.tracking.track_btn}</span>
             </button>
           </form>
 
@@ -243,14 +288,24 @@ function OrderTrackerContent() {
             <div className="glass-card rounded-3xl p-6 sm:p-8 border border-[#C9A86A]/30 bg-[#0F1117]/90 shadow-2xl space-y-6">
               <div className="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-white/10">
                 <div className="space-y-1">
-                  <div className="flex items-center gap-3">
+                  <div className="flex flex-wrap items-center gap-3">
                     <h2 className="text-xl sm:text-2xl font-mono font-extrabold text-[#C9A86A]">
                       {activeOrder.orderRef}
                     </h2>
                     <span className="px-3 py-1 rounded-full bg-amber-500/15 border border-amber-500/40 text-amber-400 text-xs font-mono font-bold flex items-center gap-1.5">
                       <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping" />
-                      <span>{dict.furniture.tracking.status_in_progress} (65%)</span>
+                      <span>{activeOrder.statusText || dict.furniture.tracking.status_in_progress}</span>
                     </span>
+                    {isLiveOdoo ? (
+                      <span className="px-2.5 py-1 rounded-full bg-purple-500/15 border border-purple-500/30 text-purple-300 text-[11px] font-mono font-bold flex items-center gap-1.5 shadow-[0_0_10px_rgba(168,85,247,0.2)]">
+                        <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-pulse" />
+                        <span>Odoo ERP Live</span>
+                      </span>
+                    ) : (
+                      <span className="px-2.5 py-1 rounded-full bg-zinc-800/80 border border-white/10 text-zinc-400 text-[11px] font-mono flex items-center gap-1">
+                        <span>GreenWood Factory Sync</span>
+                      </span>
+                    )}
                   </div>
                   <p className="text-xs text-zinc-400">
                     {dict.furniture.tracking.customer_name}: <span className="text-white font-semibold">{activeOrder.customerName}</span> · {activeOrder.phone}
@@ -342,9 +397,13 @@ function OrderTrackerContent() {
 
                   <div className="text-left sm:text-right rtl:sm:text-left font-mono">
                     <span className="text-xs font-bold text-[#C9A86A] block">
-                      {isAr ? 'المرحلة 4 من 6 قيد التنفيذ' : 'Stage 4 of 6 In Progress'}
+                      {isAr
+                        ? `المرحلة ${activeOrder.currentStageIdx + 1} من 6 ${activeOrder.currentStageIdx === 5 ? 'مكتملة' : 'قيد التنفيذ'}`
+                        : `Stage ${activeOrder.currentStageIdx + 1} of 6 ${activeOrder.currentStageIdx === 5 ? 'Completed' : 'In Progress'}`}
                     </span>
-                    <span className="text-[11px] text-emerald-400">65% Overall Completion</span>
+                    <span className="text-[11px] text-emerald-400">
+                      {Math.min(100, Math.round(((activeOrder.currentStageIdx + (activeOrder.currentStageIdx === 5 ? 1 : 0.5)) / 6) * 100))}% Overall Completion
+                    </span>
                   </div>
                 </div>
 
@@ -352,7 +411,7 @@ function OrderTrackerContent() {
                 <div className="w-full bg-white/5 h-2.5 rounded-full overflow-hidden p-0.5 border border-white/10">
                   <div 
                     className="h-full rounded-full bg-gradient-to-r from-emerald-500 via-[#DFBA73] to-[#C9A86A] shadow-[0_0_20px_rgba(201,168,106,0.6)] transition-all duration-1000"
-                    style={{ width: '65%' }}
+                    style={{ width: `${Math.min(100, Math.round(((activeOrder.currentStageIdx + (activeOrder.currentStageIdx === 5 ? 1 : 0.5)) / 6) * 100))}%` }}
                   />
                 </div>
               </div>

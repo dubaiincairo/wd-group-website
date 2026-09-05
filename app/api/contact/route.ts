@@ -5,6 +5,7 @@ import {
   sendContactAdminNotificationEmail, 
   sendOrderConfirmationEmail 
 } from '@/lib/email/brevo';
+import { createOdooLead } from '@/lib/odoo/odooClient';
 
 export async function POST(req: NextRequest) {
   try {
@@ -46,6 +47,31 @@ export async function POST(req: NextRequest) {
         } catch (err) {
           console.error('Order confirmation email error:', err);
         }
+      }
+
+      // Automatically sync order to Odoo ERP (crm.lead / opportunity)
+      try {
+        await createOdooLead({
+          title: `[WD Store Order] ${orderRef || 'New'} — ${customerName}`,
+          contactName: customerName,
+          email: customerEmail,
+          phone: customer.phone,
+          city: customer.city,
+          company: customer.companyName || `Order ${orderRef}`,
+          sector: 'manufacturing',
+          subject: `E-Commerce Store Order: ${orderRef}`,
+          message: `Payment: ${paymentMethod}. Address: ${fullAddress}. Notes: ${customer.deliveryNotes || 'None'}`,
+          orderRef,
+          totalAmount: total,
+          items: (items || []).map((i: any) => ({
+            name: i.name || 'Furniture Piece',
+            qty: i.qty || 1,
+            unitPrice: i.unitPrice || 0,
+          })),
+          priority: '3',
+        });
+      } catch (odooErr) {
+        console.error('Odoo order lead dispatch notice:', odooErr);
       }
 
       return NextResponse.json({
@@ -110,6 +136,23 @@ export async function POST(req: NextRequest) {
       ]);
     } catch (emailErr) {
       console.error('Brevo email sending notice:', emailErr);
+    }
+
+    // Automatically dispatch lead to Odoo CRM (crm.lead)
+    try {
+      await createOdooLead({
+        title: `[Website Lead] ${contactName} — ${sector || 'General'}`,
+        contactName,
+        email,
+        phone,
+        company,
+        sector,
+        subject,
+        message,
+        priority: '2',
+      });
+    } catch (odooErr) {
+      console.error('Odoo inquiry dispatch notice:', odooErr);
     }
 
     return NextResponse.json({

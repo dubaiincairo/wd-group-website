@@ -8,6 +8,7 @@ import { useToast } from '@/components/admin/ToastProvider';
 import AdminLoadingState from '@/components/admin/AdminLoadingState';
 import { useLanguage } from '@/context/LanguageContext';
 import type { SiteContentPayload, BankAccountRecord } from '@/lib/admin/types';
+import OdooIntegrationCard from '@/components/admin/OdooIntegrationCard';
 
 export default function GlobalSettingsAdminPage() {
   const { showToast } = useToast();
@@ -570,6 +571,11 @@ export default function GlobalSettingsAdminPage() {
           )}
         </div>
 
+      </div>
+
+      {/* Odoo Enterprise ERP Integration Card */}
+      <div className="pt-2">
+        <OdooIntegrationCard />
       </div>
 
     </form>
