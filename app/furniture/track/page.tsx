@@ -79,6 +79,23 @@ function OrderTrackerContent() {
         const json = await res.json();
         if (json.success && json.data) {
           const d = json.data;
+          const mappedItems = d.items && d.items.length > 0
+            ? d.items.map((it: any, i: number) => {
+                if (it.product && it.product.images) return it;
+                const matched = FURNITURE_CATALOG.find((c) =>
+                  c.nameEn.toLowerCase().includes(it.name?.toLowerCase() || '') ||
+                  (it.name && c.nameAr.includes(it.name))
+                ) || FURNITURE_CATALOG[i % FURNITURE_CATALOG.length];
+                return {
+                  product: matched,
+                  name: it.name || (isAr ? matched.nameAr : matched.nameEn),
+                  finishName: it.finishName || (isAr ? 'تشطيب مصنعي معتمد' : 'Factory Certified Finish'),
+                  quantity: it.quantity || it.qty || 1,
+                  image: it.image || matched.images[0],
+                };
+              })
+            : sampleOrder.items;
+
           setActiveOrder({
             ...sampleOrder,
             orderRef: d.orderRef,
@@ -91,7 +108,7 @@ function OrderTrackerContent() {
             leadTechnician: d.leadTechnician || sampleOrder.leadTechnician,
             currentStageIdx: d.currentStageIdx ?? sampleOrder.currentStageIdx,
             statusText: d.statusText,
-            items: d.items && d.items.length > 0 ? d.items : sampleOrder.items,
+            items: mappedItems,
           });
           setIsLiveOdoo(Boolean(d.isLiveOdoo));
           setSearched(true);
@@ -354,27 +371,36 @@ function OrderTrackerContent() {
                   {isAr ? 'القطع قيد التصنيع والتجهيز في هذا الطلب' : 'Pieces in Current Manufacturing Batch'}
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  {activeOrder.items.map((item: any, idx: number) => (
-                    <div key={idx} className="p-3 rounded-2xl bg-[#141721] border border-white/5 flex items-center gap-3">
-                      <div className="relative w-14 h-14 rounded-xl overflow-hidden shrink-0 border border-white/10 bg-black/40">
-                        <Image
-                          src={item.product.images[0]}
-                          alt={isAr ? item.product.nameAr : item.product.nameEn}
-                          fill
-                          sizes="56px"
-                          className="object-cover"
-                          unoptimized
-                        />
+                  {(activeOrder.items || []).map((item: any, idx: number) => {
+                    const product = item.product;
+                    const itemImage = item.image || product?.images?.[0] || 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=400&q=80';
+                    const itemName = item.name || (product ? (isAr ? product.nameAr : product.nameEn) : (isAr ? 'قطعة أثاث فاخرة' : 'Bespoke Furniture Piece'));
+                    const itemSku = product?.sku || `GW-PC-${String(idx + 1).padStart(3, '0')}`;
+                    const finishName = item.finishName || (isAr ? 'تشطيب مصنعي معتمد' : 'Factory Certified Finish');
+                    const quantity = item.quantity || item.qty || 1;
+
+                    return (
+                      <div key={idx} className="p-3 rounded-2xl bg-[#141721] border border-white/5 flex items-center gap-3">
+                        <div className="relative w-14 h-14 rounded-xl overflow-hidden shrink-0 border border-white/10 bg-black/40">
+                          <Image
+                            src={itemImage}
+                            alt={itemName}
+                            fill
+                            sizes="56px"
+                            className="object-cover"
+                            unoptimized
+                          />
+                        </div>
+                        <div className="min-w-0 space-y-0.5">
+                          <span className="text-[10px] font-mono text-[#C9A86A] block truncate">{itemSku}</span>
+                          <h4 className="text-xs font-bold text-white truncate">
+                            {itemName}
+                          </h4>
+                          <span className="text-[10px] text-zinc-400 block">{finishName} · ×{quantity}</span>
+                        </div>
                       </div>
-                      <div className="min-w-0 space-y-0.5">
-                        <span className="text-[10px] font-mono text-[#C9A86A] block truncate">{item.product.sku}</span>
-                        <h4 className="text-xs font-bold text-white truncate">
-                          {isAr ? item.product.nameAr : item.product.nameEn}
-                        </h4>
-                        <span className="text-[10px] text-zinc-400 block">{item.finishName} · ×{item.quantity}</span>
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             </div>
