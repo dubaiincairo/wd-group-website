@@ -5,7 +5,7 @@ import {
   sendContactAdminNotificationEmail, 
   sendOrderConfirmationEmail 
 } from '@/lib/email/brevo';
-import { createOdooLead } from '@/lib/odoo/odooClient';
+import { createOdooLead, createOdooSaleOrder } from '@/lib/odoo/odooClient';
 
 export async function POST(req: NextRequest) {
   try {
@@ -49,34 +49,64 @@ export async function POST(req: NextRequest) {
         }
       }
 
-      // Automatically sync order to Odoo ERP (crm.lead / opportunity)
+      // Automatically sync order to Odoo ERP (crm.lead + sale.order)
+      let odooOrderResult: any = null;
       try {
-        await createOdooLead({
-          title: `[WD Store Order] ${orderRef || 'New'} — ${customerName}`,
-          contactName: customerName,
-          email: customerEmail,
-          phone: customer.phone,
-          city: customer.city,
-          company: customer.companyName || `Order ${orderRef}`,
-          sector: 'manufacturing',
-          subject: `E-Commerce Store Order: ${orderRef}`,
-          message: `Payment: ${paymentMethod}. Address: ${fullAddress}. Notes: ${customer.deliveryNotes || 'None'}`,
-          orderRef,
-          totalAmount: total,
-          items: (items || []).map((i: any) => ({
-            name: i.name || 'Furniture Piece',
-            qty: i.qty || 1,
-            unitPrice: i.unitPrice || 0,
-          })),
-          priority: '3',
-        });
+        const [leadResult, saleOrderResult] = await Promise.allSettled([
+          createOdooLead({
+            title: `[WD Store Order] ${orderRef || 'New'} — ${customerName}`,
+            contactName: customerName,
+            email: customerEmail,
+            phone: customer.phone,
+            city: customer.city,
+            company: customer.companyName || `Order ${orderRef}`,
+            sector: 'manufacturing',
+            subject: `E-Commerce Store Order: ${orderRef}`,
+            message: `Payment: ${paymentMethod}. Address: ${fullAddress}. Notes: ${customer.deliveryNotes || 'None'}`,
+            orderRef,
+            totalAmount: total,
+            items: (items || []).map((i: any) => ({
+              name: i.name || 'Furniture Piece',
+              qty: i.qty || 1,
+              unitPrice: i.unitPrice || 0,
+            })),
+            priority: '3',
+          }),
+          createOdooSaleOrder({
+            orderRef: orderRef || `WD-ORD-${Date.now().toString().slice(-6)}`,
+            customer: {
+              name: customerName,
+              email: customerEmail,
+              phone: customer.phone,
+              city: customer.city,
+              address: fullAddress,
+              companyName: customer.companyName,
+            },
+            items: (items || []).map((i: any) => ({
+              name: i.name || 'Furniture Piece',
+              sku: i.sku || i.id,
+              qty: i.qty || 1,
+              unitPrice: i.unitPrice || 0,
+              finishName: i.finishName || i.finish,
+            })),
+            totalAmount: total || 0,
+            paymentMethod: paymentMethod || 'Online Gateway',
+            deliveryNotes: customer.deliveryNotes,
+            autoConfirm: true,
+          }),
+        ]);
+
+        if (saleOrderResult.status === 'fulfilled') {
+          odooOrderResult = saleOrderResult.value;
+        }
       } catch (odooErr) {
-        console.error('Odoo order lead dispatch notice:', odooErr);
+        console.error('Odoo order dispatch notice:', odooErr);
       }
 
       return NextResponse.json({
         success: true,
         message: 'Order received and confirmation dispatched',
+        odooOrder: odooOrderResult,
       });
     }
 

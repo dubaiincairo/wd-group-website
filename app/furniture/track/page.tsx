@@ -26,7 +26,8 @@ import {
   PackageCheck,
   UserCheck,
   Zap,
-  RefreshCw
+  RefreshCw,
+  FileCheck
 } from 'lucide-react';
 
 function OrderTrackerContent() {
@@ -48,7 +49,7 @@ function OrderTrackerContent() {
     estimatedDelivery: isAr ? '08 سبتمبر 2026 (الفترة الصباحية)' : 'September 08, 2026 (Morning Slot)',
     factory: isAr ? 'مصنع جرين وود 1 و 3 — الرياض' : 'GreenWood Factory 1 & 3 — Riyadh',
     leadTechnician: isAr ? 'م. فهد الغامدي' : 'Eng. Fahad Al-Ghamdi',
-    currentStageIdx: 3, // Stage 4 in progress (0-indexed 3)
+    currentStageIdx: 2, // Stage 3 in progress (0-indexed 2)
     items: [
       {
         product: FURNITURE_CATALOG[0], // Al-Diriyah curved sofa
@@ -150,49 +151,49 @@ function OrderTrackerContent() {
       num: 1,
       title: dict.furniture.tracking.stages.stage1,
       desc: dict.furniture.tracking.stages.stage1_desc,
-      icon: CheckCircle2,
-      location: isAr ? 'المكتب الهندسي — الرياض' : 'Engineering Dept — Riyadh',
-      timestamp: isAr ? '28 أغسطس · 10:30 ص' : 'Aug 28 · 10:30 AM',
+      icon: FileCheck,
+      location: isAr ? 'إدارة المبيعات والهندسة — الرياض' : 'Sales & Engineering Dept — Riyadh',
+      timestamp: isAr ? 'تم الإنشاء والاعتماد' : 'Verified & Registered',
     },
     {
       num: 2,
       title: dict.furniture.tracking.stages.stage2,
       desc: dict.furniture.tracking.stages.stage2_desc,
-      icon: Layers,
-      location: isAr ? 'مستودع الأخشاب والأحجار — نجران' : 'Timber & Stone Yard — Najran',
-      timestamp: isAr ? '29 أغسطس · 02:15 م' : 'Aug 29 · 02:15 PM',
+      icon: Factory,
+      location: isAr ? 'مصنع جرين وود 1 و 3 — الرياض' : 'GreenWood CNC Workcenters — Factory 1 & 3',
+      timestamp: isAr ? 'أمر التصنيع (MRP) نشط' : 'MRP Production Active',
     },
     {
       num: 3,
       title: dict.furniture.tracking.stages.stage3,
       desc: dict.furniture.tracking.stages.stage3_desc,
-      icon: Factory,
-      location: isAr ? 'ورشة ماكينات 5-CNC — مصنع 1' : '5-Axis CNC Milling — Factory 1',
-      timestamp: isAr ? '30 أغسطس · 04:00 م' : 'Aug 30 · 04:00 PM',
+      icon: ShieldCheck,
+      location: isAr ? 'مركز فحص الجودة والمطابقة الفندقية' : 'Quality Assurance & Finishing Hub',
+      timestamp: isAr ? 'جارٍ الفحص النهائي' : 'Finishing & Tolerance Audit',
     },
     {
       num: 4,
       title: dict.furniture.tracking.stages.stage4,
       desc: dict.furniture.tracking.stages.stage4_desc,
-      icon: Wrench,
-      location: isAr ? 'مركز التنجيد والدهان — مصنع 3' : 'Upholstery & PU Coating — Factory 3',
-      timestamp: isAr ? 'جارٍ التنفيذ حالياً' : 'Currently Active',
+      icon: PackageCheck,
+      location: isAr ? 'مستودع التغليف المقاوم للصدمات' : 'Shockproof Packaging & Crating Warehouse',
+      timestamp: isAr ? 'مجدول: الشحن والتسليم' : 'Ready for Dispatch',
     },
     {
       num: 5,
       title: dict.furniture.tracking.stages.stage5,
       desc: dict.furniture.tracking.stages.stage5_desc,
-      icon: PackageCheck,
-      location: isAr ? 'مركز ضبط الجودة والتغليف' : 'Quality Assurance & Crating Hub',
-      timestamp: isAr ? 'مجدول: 05 سبتمبر' : 'Scheduled: Sep 05',
+      icon: Truck,
+      location: isAr ? 'أسطول التوصيل الفندقي المبرد' : 'White-Glove Climate-Controlled Fleet',
+      timestamp: isAr ? 'في الطريق إلى الموقع' : 'En Route to Site',
     },
     {
       num: 6,
       title: dict.furniture.tracking.stages.stage6,
       desc: dict.furniture.tracking.stages.stage6_desc,
-      icon: Truck,
-      location: isAr ? 'الأسطول اللوجستي المباشر' : 'Dedicated White-Glove Fleet',
-      timestamp: isAr ? 'مجدول: 08 سبتمبر' : 'Scheduled: Sep 08',
+      icon: CheckCircle2,
+      location: isAr ? 'موقع تركيب العميل' : 'Client Installation Site',
+      timestamp: isAr ? 'مجدول: التسليم والتركيب' : 'Site Delivery & Assembly',
     },
   ];
 
@@ -516,9 +517,9 @@ function OrderTrackerContent() {
                               ? 'text-amber-400' 
                               : 'text-zinc-500'
                           }`}>
-                            {isDone && '✓ Verified & Cleared'}
-                            {isCurrent && '⚡ Active on CNC / Hand-Craft Line'}
-                            {isPending && '⏳ Scheduled in Queue'}
+                            {isDone && (isAr ? '✓ تم الفحص والاعتماد' : '✓ Completed & Cleared')}
+                            {isCurrent && (isAr ? '⚡ قيد التنفيذ والمتابعة الحالية' : '⚡ Currently Active & Monitored')}
+                            {isPending && (isAr ? '⏳ مجدول في خط الإنتاج' : '⏳ Scheduled in Queue')}
                           </span>
                         </div>
                       </div>

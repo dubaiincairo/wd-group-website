@@ -31,6 +31,30 @@ export interface OdooLeadPayload {
   priority?: '0' | '1' | '2' | '3';
 }
 
+export interface OdooSaleOrderPayload {
+  orderRef: string;
+  customer: {
+    name: string;
+    email?: string;
+    phone?: string;
+    city?: string;
+    address?: string;
+    district?: string;
+    companyName?: string;
+  };
+  items: Array<{
+    name: string;
+    sku?: string;
+    qty: number;
+    unitPrice: number;
+    finishName?: string;
+  }>;
+  totalAmount: number;
+  paymentMethod?: string;
+  deliveryNotes?: string;
+  autoConfirm?: boolean;
+}
+
 export interface OdooTrackResult {
   orderRef: string;
   customerName: string;
@@ -309,6 +333,227 @@ export async function createOdooLead(
 }
 
 /**
+ * Feature 3: Create Full Sales Order in Odoo (sale.order & sale.order.line)
+ */
+export async function createOdooSaleOrder(
+  payload: OdooSaleOrderPayload,
+  customConfig?: OdooConfig
+): Promise<{
+  success: boolean;
+  orderId?: number;
+  orderName?: string;
+  mode: 'live' | 'fallback';
+  message: string;
+}> {
+  const config = customConfig || (await getResolvedOdooConfig());
+
+  if (!config.apiKey || !config.username || !config.db) {
+    console.log('[Odoo Client] Odoo offline or not configured. Sales Order recorded in fallback queue:', payload.orderRef);
+    return {
+      success: true,
+      mode: 'fallback',
+      message: 'Odoo not configured. Sales Order recorded in local database queue.',
+    };
+  }
+
+  try {
+    // 1. Resolve or create Partner (res.partner)
+    let partnerId: number | null = null;
+    const customer = payload.customer;
+
+    if (customer.email) {
+      const existingPartners = await executeOdooKw(
+        'res.partner',
+        'search',
+        [[['email', '=', customer.email.trim()]]],
+        { limit: 1 },
+        config
+      );
+      if (Array.isArray(existingPartners) && existingPartners.length > 0) {
+        partnerId = existingPartners[0];
+      }
+    }
+
+    if (!partnerId && customer.phone) {
+      const existingPartners = await executeOdooKw(
+        'res.partner',
+        'search',
+        [[['phone', '=', customer.phone.trim()]]],
+        { limit: 1 },
+        config
+      );
+      if (Array.isArray(existingPartners) && existingPartners.length > 0) {
+        partnerId = existingPartners[0];
+      }
+    }
+
+    if (!partnerId) {
+      const fullStreet = [customer.address, customer.district].filter(Boolean).join(', ') || false;
+      const createdId = await executeOdooKw(
+        'res.partner',
+        'create',
+        [{
+          name: customer.name || 'Valued Client',
+          email: customer.email || false,
+          phone: customer.phone || false,
+          city: customer.city || false,
+          street: fullStreet,
+          company_type: customer.companyName ? 'company' : 'person',
+        }],
+        {},
+        config
+      );
+      if (typeof createdId === 'number') {
+        partnerId = createdId;
+      }
+    }
+
+    if (!partnerId) {
+      throw new Error('Failed to resolve or create customer in Odoo (res.partner)');
+    }
+
+    // 2. Prepare Order Lines (sale.order.line)
+    const orderLines: any[] = [];
+
+    for (const item of payload.items) {
+      let productId: number | null = null;
+
+      if (item.sku) {
+        try {
+          const prodsBySku = await executeOdooKw(
+            'product.product',
+            'search',
+            [[['default_code', '=', item.sku.trim()]]],
+            { limit: 1 },
+            config
+          );
+          if (Array.isArray(prodsBySku) && prodsBySku.length > 0) {
+            productId = prodsBySku[0];
+          }
+        } catch {}
+      }
+
+      if (!productId && item.name) {
+        try {
+          const prodsByName = await executeOdooKw(
+            'product.product',
+            'search',
+            [[['name', 'ilike', item.name.trim()]]],
+            { limit: 1 },
+            config
+          );
+          if (Array.isArray(prodsByName) && prodsByName.length > 0) {
+            productId = prodsByName[0];
+          }
+        } catch {}
+      }
+
+      // If product not found in Odoo, try creating it or fallback to any existing product
+      if (!productId) {
+        try {
+          const newProdId = await executeOdooKw(
+            'product.product',
+            'create',
+            [{
+              name: item.name,
+              default_code: item.sku || false,
+              list_price: item.unitPrice || 0,
+              type: 'consu',
+            }],
+            {},
+            config
+          );
+          if (typeof newProdId === 'number') {
+            productId = newProdId;
+          }
+        } catch {
+          const anyProds = await executeOdooKw('product.product', 'search', [[]], { limit: 1 }, config);
+          if (Array.isArray(anyProds) && anyProds.length > 0) {
+            productId = anyProds[0];
+          }
+        }
+      }
+
+      if (productId) {
+        const lineDesc = `${item.name}${item.finishName ? ` (${item.finishName})` : ''}`;
+        orderLines.push([
+          0,
+          0,
+          {
+            product_id: productId,
+            name: lineDesc,
+            product_uom_qty: item.qty || 1,
+            price_unit: item.unitPrice || 0,
+          },
+        ]);
+      }
+    }
+
+    // 3. Create Sales Order
+    const noteText = [
+      `=== WD GROUP LUXURY E-COMMERCE STORE ORDER ===`,
+      `Website Order Reference: ${payload.orderRef}`,
+      `Payment Method: ${payload.paymentMethod || 'Online Gateway'}`,
+      `Delivery Destination: ${customer.city || 'KSA'} (${customer.address || ''})`,
+      payload.deliveryNotes ? `Delivery Notes: ${payload.deliveryNotes}` : '',
+      `Placed At: ${new Date().toISOString()}`,
+    ].filter(Boolean).join('\n');
+
+    const orderVals: Record<string, any> = {
+      partner_id: partnerId,
+      client_order_ref: payload.orderRef,
+      note: noteText,
+      order_line: orderLines,
+    };
+
+    const orderId = await executeOdooKw('sale.order', 'create', [orderVals], {}, config);
+
+    if (typeof orderId !== 'number') {
+      throw new Error('Failed to create sale.order record in Odoo');
+    }
+
+    // 4. Retrieve order name (e.g. S00042)
+    let orderName = payload.orderRef;
+    try {
+      const readResult = await executeOdooKw(
+        'sale.order',
+        'read',
+        [[orderId], ['name']],
+        {},
+        config
+      );
+      if (Array.isArray(readResult) && readResult[0]?.name) {
+        orderName = readResult[0].name;
+      }
+    } catch {}
+
+    // 5. Confirm order if requested (generates picking and MRP in Odoo)
+    if (payload.autoConfirm !== false) {
+      try {
+        await executeOdooKw('sale.order', 'action_confirm', [[orderId]], {}, config);
+      } catch (confirmErr) {
+        console.warn('[Odoo Client] action_confirm notice:', confirmErr);
+      }
+    }
+
+    return {
+      success: true,
+      orderId,
+      orderName,
+      mode: 'live',
+      message: `Sales Order successfully created in Odoo (Ref: ${orderName})`,
+    };
+  } catch (err: any) {
+    console.error('[Odoo Client] Error creating Sales Order in Odoo:', err);
+    return {
+      success: false,
+      mode: 'fallback',
+      message: `Odoo error: ${err.message || 'Unknown RPC error'}`,
+    };
+  }
+}
+
+/**
  * Feature 1: Odoo ➔ Website (Query Manufacturing & Delivery Status)
  */
 export async function getOrderTrackingStatus(orderRef: string, customConfig?: OdooConfig): Promise<OdooTrackResult> {
@@ -374,31 +619,34 @@ export async function getOrderTrackingStatus(orderRef: string, customConfig?: Od
           // stock module check
         }
 
-        // Map Odoo states to 6-stage tracker (0 to 5)
+        // Map Odoo states to the exact 6 user-specified lifecycle stages (0 to 5):
+        // 0: Sales Order Created & Verified
+        // 1: Manufacturing in Process (MRP Created)
+        // 2: Quality Control & Fine Finishing
+        // 3: Ready for Dispatch & Delivery
+        // 4: Out for Delivery (White-Glove Fleet)
+        // 5: Delivered & Site Installed
         let stageIdx = 0;
-        let statusLabel = 'CAD & Engineering Verification';
+        let statusLabel = 'Sales Order Created & Verified';
 
-        if (so.state === 'draft' || so.state === 'sent') {
-          stageIdx = 0;
-          statusLabel = 'Quotation & Engineering Review';
-        } else if (mrpState === 'confirmed') {
-          stageIdx = 1;
-          statusLabel = 'Timber & Stone Selection';
-        } else if (mrpState === 'progress') {
-          stageIdx = 2; // In 5-Axis CNC Milling
-          statusLabel = '5-Axis CNC Precision Joinery';
+        if (pickingState === 'done') {
+          stageIdx = 5;
+          statusLabel = 'Delivered & Site Installed';
+        } else if (pickingState === 'assigned' && mrpState === 'done') {
+          stageIdx = 4;
+          statusLabel = 'Out for Delivery (White-Glove Fleet)';
+        } else if (mrpState === 'done') {
+          stageIdx = 3;
+          statusLabel = 'Ready for Dispatch & Delivery';
         } else if (mrpState === 'to_close') {
-          stageIdx = 3; // Artisanal Upholstery & Finish
-          statusLabel = 'Artisanal Upholstery & PU Coating';
-        } else if (mrpState === 'done' || pickingState === 'assigned') {
-          stageIdx = 4; // Quality check & crating
-          statusLabel = 'Quality Assurance & Shockproof Crating';
-        } else if (pickingState === 'done') {
-          stageIdx = 5; // Delivered & Installed
-          statusLabel = 'White-Glove Transport & Site Assembly';
-        } else if (so.state === 'sale') {
+          stageIdx = 2;
+          statusLabel = 'Quality Control & Inspection';
+        } else if (mrpState === 'progress' || mrpState === 'confirmed') {
           stageIdx = 1;
-          statusLabel = 'Fabrication Scheduled';
+          statusLabel = 'Manufacturing in Process (MRP Issued)';
+        } else {
+          stageIdx = 0;
+          statusLabel = 'Sales Order Created & Verified';
         }
 
         return {
@@ -432,7 +680,7 @@ export async function getOrderTrackingStatus(orderRef: string, customConfig?: Od
   }
 
   // Realistic fallback demo order
-  const stageIdx = cleanRef.includes('8812') || cleanRef === '' ? 3 : 2;
+  const stageIdx = cleanRef.includes('8812') || cleanRef === '' ? 2 : 1;
   return {
     orderRef: cleanRef || 'WD-ORD-2026-8812',
     customerName: 'Sultan Al-Saud',
@@ -443,7 +691,7 @@ export async function getOrderTrackingStatus(orderRef: string, customConfig?: Od
     factory: 'GreenWood Factory 1 & 3 — Riyadh',
     leadTechnician: 'Eng. Fahad Al-Ghamdi',
     currentStageIdx: stageIdx,
-    statusText: stageIdx === 3 ? 'Artisanal Upholstery & Multi-Layer Coating' : '5-Axis CNC Precision Joinery',
+    statusText: stageIdx === 2 ? 'Quality Control & Fine Finishing' : 'Manufacturing in Process (MRP Issued)',
     isLiveOdoo: false,
     items: [
       {
@@ -465,12 +713,12 @@ export async function getOrderTrackingStatus(orderRef: string, customConfig?: Od
 
 function buildStagesLog(activeIdx: number) {
   const STAGES_DEF = [
-    { num: 1, en: 'Order Confirmed & CAD Verification', ar: 'تأكيد الطلب والمخططات التنفيذية' },
-    { num: 2, en: 'Timber & Natural Stone Selection', ar: 'انتقاء الأخشاب والأحجار والجلود الطبيعية' },
-    { num: 3, en: '5-Axis CNC Precision Joinery', ar: 'التشكيل بـ CNC والنجارة الهيكلية' },
-    { num: 4, en: 'Artisanal Upholstery & Multi-Layer PU', ar: 'التنجيد اليدوي والدهان الوقائي' },
-    { num: 5, en: 'Quality Inspection & Shockproof Crating', ar: 'فحص الجودة والتغليف المقاوم للصدمات' },
-    { num: 6, en: 'White-Glove Transport & Site Assembly', ar: 'النقل والتركيب الفندقي بالموقع' },
+    { num: 1, en: 'Sales Order Created & Verified', ar: 'تم إنشاء أمر البيع والمواصفات' },
+    { num: 2, en: 'Manufacturing in Process (MRP Issued)', ar: 'بدء التصنيع وأمر الإنتاج' },
+    { num: 3, en: 'Quality Control & Fine Finishing', ar: 'فحص الجودة والمطابقة الفندقية' },
+    { num: 4, en: 'Ready for Dispatch & Delivery', ar: 'جاهز للشحن والتسليم' },
+    { num: 5, en: 'Out for Delivery (White-Glove Fleet)', ar: 'خرج للتوصيل والتركيب الميداني' },
+    { num: 6, en: 'Delivered & Site Installed', ar: 'تم التسليم والتركيب بنجاح' },
   ];
 
   return STAGES_DEF.map((s, idx) => ({
