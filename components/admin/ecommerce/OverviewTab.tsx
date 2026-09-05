@@ -27,9 +27,16 @@ interface OverviewTabProps {
   currency: 'SAR' | 'USD';
   onSelectOrder: (order: EcommerceOrderRecord) => void;
   onNavigateTab: (tab: string) => void;
+  onOpenAiStudio?: () => void;
 }
 
-export default function OverviewTab({ orders, currency, onSelectOrder, onNavigateTab }: OverviewTabProps) {
+export default function OverviewTab({
+  orders,
+  currency,
+  onSelectOrder,
+  onNavigateTab,
+  onOpenAiStudio,
+}: OverviewTabProps) {
   const { lang } = useLanguage();
   const isAr = lang === 'ar';
 
@@ -230,6 +237,46 @@ export default function OverviewTab({ orders, currency, onSelectOrder, onNavigat
           </div>
         </div>
 
+      </div>
+
+      {/* 2.5 AI Product Studio Quick Launch Banner */}
+      <div className="glass-card rounded-3xl p-6 border border-purple-500/35 bg-gradient-to-r from-purple-950/40 via-[#141726]/90 to-[#0F1117] flex flex-col md:flex-row md:items-center justify-between gap-5 shadow-2xl relative overflow-hidden group">
+        <div className="absolute top-0 right-0 w-80 h-full bg-gradient-to-l from-purple-600/10 to-transparent pointer-events-none" />
+        
+        <div className="flex items-start sm:items-center gap-4 relative z-10">
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center text-white shadow-[0_0_25px_rgba(168,85,247,0.4)] shrink-0 group-hover:scale-105 transition-transform">
+            <Sparkles className="w-7 h-7 text-amber-300 animate-pulse" />
+          </div>
+
+          <div className="space-y-1">
+            <div className="flex items-center gap-2 flex-wrap">
+              <h3 className="text-base sm:text-lg font-bold text-white tracking-tight">
+                {isAr ? 'استوديو الذكاء الاصطناعي للمنتجات (AI Product Studio)' : 'AI Multi-Photo Product Studio & Enhancer'}
+              </h3>
+              <span className="px-2.5 py-0.5 rounded-full bg-purple-500/20 border border-purple-500/30 text-purple-300 text-[10px] font-mono font-bold flex items-center gap-1 shadow-sm">
+                <span>OpenAI Vision + NanoBanana Pro</span>
+              </span>
+            </div>
+            <p className="text-xs text-zinc-300 max-w-2xl leading-relaxed">
+              {isAr
+                ? 'ارفع دفعة صور لقطع الأثاث الفاخرة، وسيقوم الذكاء الاصطناعي بتحليل المواد والأبعاد وتوليد الأسعار والمواصفات باللغتين مع تحسين إضاءة الصور بضغطة زر وإضافتها للكتالوج مباشرة.'
+                : 'Upload multi-angle furniture photos to auto-extract dimensions, materials, and pricing, enhance studio lighting with AI, and insert into the catalog in 1 click.'}
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3 relative z-10 shrink-0">
+          <button
+            onClick={() => {
+              if (onOpenAiStudio) onOpenAiStudio();
+              else onNavigateTab('products');
+            }}
+            className="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-600 hover:from-purple-500 hover:to-indigo-500 text-white font-mono font-bold text-xs sm:text-sm shadow-[0_0_25px_rgba(168,85,247,0.4)] hover:shadow-[0_0_35px_rgba(168,85,247,0.6)] transition-all flex items-center justify-center gap-2.5 cursor-pointer"
+          >
+            <Sparkles className="w-4 h-4 text-amber-300" />
+            <span>{isAr ? 'فتح استوديو المنتجات الذكي الآن' : 'Launch AI Product Studio'}</span>
+          </button>
+        </div>
       </div>
 
       {/* 3. Sales Trend Visual Chart & Factory Production Gauge */}
