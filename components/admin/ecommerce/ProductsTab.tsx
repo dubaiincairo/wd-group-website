@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import Image from 'next/image';
 import { useLanguage } from '@/context/LanguageContext';
 import { useToast } from '@/components/admin/ToastProvider';
@@ -36,6 +36,8 @@ interface ProductsTabProps {
   onAddProduct: (product: FurnitureItem) => void;
   onUpdateProduct: (product: FurnitureItem) => void;
   onDeleteProduct: (productId: string) => void;
+  initialOpenAiStudio?: boolean;
+  onResetAiStudio?: () => void;
 }
 
 export default function ProductsTab({
@@ -44,6 +46,8 @@ export default function ProductsTab({
   onAddProduct,
   onUpdateProduct,
   onDeleteProduct,
+  initialOpenAiStudio,
+  onResetAiStudio,
 }: ProductsTabProps) {
   const { lang } = useLanguage();
   const isAr = lang === 'ar';
@@ -92,6 +96,13 @@ export default function ProductsTab({
   const [aiItems, setAiItems] = useState<AiStudioItem[]>([]);
   const [aiHints, setAiHints] = useState('');
   const [isProcessingAi, setIsProcessingAi] = useState(false);
+
+  useEffect(() => {
+    if (initialOpenAiStudio) {
+      setIsAiStudioOpen(true);
+      if (onResetAiStudio) onResetAiStudio();
+    }
+  }, [initialOpenAiStudio, onResetAiStudio]);
 
   // Handle Multi-file Upload for AI Studio
   const handleBulkFilesUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {

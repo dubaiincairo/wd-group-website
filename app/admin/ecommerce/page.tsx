@@ -279,6 +279,8 @@ function EcommerceAdminContent() {
     'overview' | 'orders' | 'products' | 'inventory' | 'customers' | 'analytics' | 'marketing' | 'settings'
   >('overview');
 
+  const [openAiStudioDirectly, setOpenAiStudioDirectly] = useState(false);
+
   const [orders, setOrders] = useState<EcommerceOrderRecord[]>(INITIAL_ORDERS);
   const [products, setProducts] = useState<FurnitureItem[]>(FURNITURE_CATALOG);
 
@@ -294,8 +296,15 @@ function EcommerceAdminContent() {
   useEffect(() => {
     const syncTabFromUrl = () => {
       const tabParam = searchParams?.get('tab');
+      const studioParam = searchParams?.get('studio') || searchParams?.get('ai');
       const hash = typeof window !== 'undefined' ? window.location.hash.replace('#', '') : '';
       const target = (tabParam || hash || '').toLowerCase();
+
+      if (target === 'studio' || target === 'aistudio' || target === 'ai' || studioParam === 'true' || studioParam === '1') {
+        setActiveTab('products');
+        setOpenAiStudioDirectly(true);
+        return;
+      }
 
       if (target) {
         if (target === 'orders' || target === 'order') {
@@ -580,6 +589,19 @@ function EcommerceAdminContent() {
             </button>
           </div>
 
+          {/* Direct AI Product Studio Launcher */}
+          <button
+            type="button"
+            onClick={() => {
+              setActiveTab('products');
+              setOpenAiStudioDirectly(true);
+            }}
+            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-600 hover:from-purple-500 hover:to-indigo-500 text-white text-xs font-mono font-bold shadow-lg shadow-purple-900/40 transition-all cursor-pointer shrink-0 whitespace-nowrap"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-amber-300 animate-pulse" />
+            <span>{isAr ? 'استوديو الذكاء الاصطناعي ✨' : 'AI Product Studio ✨'}</span>
+          </button>
+
           <Link
             href="/furniture"
             target="_blank"
@@ -604,7 +626,7 @@ function EcommerceAdminContent() {
           {[
             { id: 'overview', icon: LayoutDashboard, labelEn: '1. Overview', labelAr: '1. الرئيسية والمؤشرات' },
             { id: 'orders', icon: ShoppingCart, labelEn: '2. Orders', labelAr: '2. إدارة الطلبات', badge: orders.length, badgeColor: 'bg-emerald-500/20 text-emerald-300' },
-            { id: 'products', icon: Layers, labelEn: '3. Products', labelAr: '3. المنتجات والكتالوج', badge: products.length, badgeColor: 'bg-white/10 text-zinc-300' },
+            { id: 'products', icon: Layers, labelEn: '3. Products & AI Studio', labelAr: '3. المنتجات واستوديو الذكاء', badge: '✨ AI Studio', badgeColor: 'bg-purple-500/25 text-purple-300 border border-purple-500/40 shadow-[0_0_10px_rgba(168,85,247,0.3)]' },
             { id: 'inventory', icon: Warehouse, labelEn: '4. Inventory & Plants', labelAr: '4. المستودعات والمصانع' },
             { id: 'customers', icon: Users, labelEn: '5. Customers & CRM', labelAr: '5. العملاء وCRM' },
             { id: 'analytics', icon: TrendingUp, labelEn: '6. Reports & Intelligence', labelAr: '6. التقارير والذكاء المالي' },
@@ -656,6 +678,10 @@ function EcommerceAdminContent() {
             currency={currency}
             onSelectOrder={setSelectedOrder}
             onNavigateTab={(t) => setActiveTab(t as any)}
+            onOpenAiStudio={() => {
+              setActiveTab('products');
+              setOpenAiStudioDirectly(true);
+            }}
           />
         )}
 
@@ -676,6 +702,8 @@ function EcommerceAdminContent() {
             onAddProduct={handleAddProduct}
             onUpdateProduct={handleUpdateProduct}
             onDeleteProduct={handleDeleteProduct}
+            initialOpenAiStudio={openAiStudioDirectly}
+            onResetAiStudio={() => setOpenAiStudioDirectly(false)}
           />
         )}
 
