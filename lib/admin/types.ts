@@ -109,6 +109,34 @@ export interface BankAccountRecord {
   is_active?: boolean;
 }
 
+export interface CustomVariableRecord {
+  id: string;
+  key: string;
+  value: string;
+  description?: string;
+  isSecret?: boolean;
+}
+
+export interface IntegrationsConfig {
+  brevo_api_key?: string;
+  brevo_sender_email?: string;
+  brevo_sender_name?: string;
+  admin_notification_email?: string;
+  resend_api_key?: string;
+  resend_sender_email?: string;
+  whatsapp_provider?: 'cloud_api' | 'twilio' | 'ultramsg' | 'wasapi' | 'custom';
+  whatsapp_api_key?: string;
+  whatsapp_phone_number_id?: string;
+  whatsapp_business_account_id?: string;
+  whatsapp_dispatch_phone?: string;
+  openai_api_key?: string;
+  openai_model?: string;
+  google_cloud_api_key?: string;
+  nanobanana_api_key?: string;
+  site_password?: string;
+  custom_variables?: CustomVariableRecord[];
+}
+
 export interface SiteContentPayload {
   home: {
     hero: {
@@ -352,6 +380,7 @@ export interface SiteContentPayload {
       username?: string;
       apiKey?: string;
     };
+    integrations?: IntegrationsConfig;
   };
   seo: {
     global_title_en: string;

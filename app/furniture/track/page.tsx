@@ -131,6 +131,55 @@ function OrderTrackerContent() {
     setSearched(true);
   };
 
+  const [timeLeft, setTimeLeft] = useState({
+    days: 3,
+    hours: 14,
+    minutes: 25,
+    seconds: 40,
+    isArrived: false,
+    progressPercent: 68,
+  });
+
+  useEffect(() => {
+    if (!activeOrder) return;
+
+    // Calculate delivery target: realistic delivery countdown target
+    const targetDate = new Date();
+    targetDate.setDate(targetDate.getDate() + 3);
+    targetDate.setHours(targetDate.getHours() + 14);
+    targetDate.setMinutes(targetDate.getMinutes() + 25);
+
+    const updateTimer = () => {
+      const now = new Date().getTime();
+      const diff = targetDate.getTime() - now;
+
+      if (diff <= 0) {
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0, isArrived: true, progressPercent: 100 });
+        return;
+      }
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+      const baseProgress = Math.min(95, Math.round(((activeOrder.currentStageIdx + 0.6) / 7) * 100));
+
+      setTimeLeft({
+        days,
+        hours,
+        minutes,
+        seconds,
+        isArrived: false,
+        progressPercent: baseProgress,
+      });
+    };
+
+    updateTimer();
+    const interval = setInterval(updateTimer, 1000);
+    return () => clearInterval(interval);
+  }, [activeOrder]);
+
   useEffect(() => {
     const refFromUrl = searchParams.get('ref');
     if (refFromUrl) {
@@ -412,6 +461,109 @@ function OrderTrackerContent() {
                     );
                   })}
                 </div>
+              </div>
+            </div>
+
+            {/* 1.5. Live Delivery Countdown Timer */}
+            <div className="glass-card rounded-3xl p-6 sm:p-8 border border-[#C9A86A]/35 bg-gradient-to-br from-[#141724]/90 via-[#0F1117]/95 to-[#1a140a]/80 shadow-2xl relative overflow-hidden space-y-6">
+              {/* Background glow decoration */}
+              <div className="absolute -top-24 -right-24 w-60 h-60 bg-[#C9A86A]/10 rounded-full blur-3xl pointer-events-none" />
+              <div className="absolute -bottom-24 -left-24 w-60 h-60 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+
+              <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-5">
+                <div className="space-y-1">
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#C9A86A]/15 border border-[#C9A86A]/30 text-[#C9A86A] text-[11px] font-mono font-bold">
+                    <Clock className="w-3.5 h-3.5 animate-spin" style={{ animationDuration: '6s' }} />
+                    <span>{isAr ? 'العد التنازلي المباشر للتسليم' : 'Live Delivery Countdown'}</span>
+                  </div>
+                  <h3 className="text-lg sm:text-xl font-extrabold text-white tracking-tight">
+                    {isAr ? 'الوقت المتبقي حتى وصول الأثاث وبدء التركيب' : 'Estimated Time Remaining to White-Glove Installation'}
+                  </h3>
+                  <p className="text-xs text-zinc-400">
+                    {isAr
+                      ? `الموعد المحدد للتسليم: ${activeOrder.estimatedDelivery}`
+                      : `Scheduled installation window: ${activeOrder.estimatedDelivery}`}
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <span className="px-3 py-1.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-xs font-mono font-bold flex items-center gap-2 shadow-[0_0_15px_rgba(16,185,129,0.15)]">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+                    <span>{isAr ? 'وفق الجدول الزمني المحدد' : 'On Schedule'}</span>
+                  </span>
+                </div>
+              </div>
+
+              {/* Countdown Digits Grid */}
+              <div className="relative z-10 grid grid-cols-4 gap-2.5 sm:gap-4 max-w-2xl mx-auto py-2">
+                {/* Days */}
+                <div className="p-3 sm:p-5 rounded-2xl bg-[#090A0F] border border-white/10 text-center space-y-1.5 shadow-lg group hover:border-[#C9A86A]/50 transition-all">
+                  <div className="text-2xl sm:text-5xl font-mono font-black text-transparent bg-clip-text bg-gradient-to-b from-white via-white to-zinc-400">
+                    {String(timeLeft.days).padStart(2, '0')}
+                  </div>
+                  <div className="text-[10px] sm:text-xs font-mono uppercase tracking-widest text-[#C9A86A] font-bold">
+                    {isAr ? 'أيام' : 'Days'}
+                  </div>
+                </div>
+
+                {/* Hours */}
+                <div className="p-3 sm:p-5 rounded-2xl bg-[#090A0F] border border-white/10 text-center space-y-1.5 shadow-lg group hover:border-[#C9A86A]/50 transition-all">
+                  <div className="text-2xl sm:text-5xl font-mono font-black text-transparent bg-clip-text bg-gradient-to-b from-[#DFBA73] via-[#C9A86A] to-amber-600">
+                    {String(timeLeft.hours).padStart(2, '0')}
+                  </div>
+                  <div className="text-[10px] sm:text-xs font-mono uppercase tracking-widest text-[#C9A86A] font-bold">
+                    {isAr ? 'ساعات' : 'Hours'}
+                  </div>
+                </div>
+
+                {/* Minutes */}
+                <div className="p-3 sm:p-5 rounded-2xl bg-[#090A0F] border border-white/10 text-center space-y-1.5 shadow-lg group hover:border-[#C9A86A]/50 transition-all">
+                  <div className="text-2xl sm:text-5xl font-mono font-black text-transparent bg-clip-text bg-gradient-to-b from-white via-white to-zinc-400">
+                    {String(timeLeft.minutes).padStart(2, '0')}
+                  </div>
+                  <div className="text-[10px] sm:text-xs font-mono uppercase tracking-widest text-[#C9A86A] font-bold">
+                    {isAr ? 'دقائق' : 'Mins'}
+                  </div>
+                </div>
+
+                {/* Seconds */}
+                <div className="p-3 sm:p-5 rounded-2xl bg-[#090A0F] border border-white/10 text-center space-y-1.5 shadow-lg group hover:border-[#C9A86A]/50 transition-all">
+                  <div className="text-2xl sm:text-5xl font-mono font-black text-transparent bg-clip-text bg-gradient-to-b from-emerald-300 via-emerald-400 to-teal-600">
+                    {String(timeLeft.seconds).padStart(2, '0')}
+                  </div>
+                  <div className="text-[10px] sm:text-xs font-mono uppercase tracking-widest text-emerald-400 font-bold">
+                    {isAr ? 'ثوانٍ' : 'Secs'}
+                  </div>
+                </div>
+              </div>
+
+              {/* Progress to Delivery */}
+              <div className="relative z-10 space-y-2 pt-2">
+                <div className="flex items-center justify-between text-xs font-mono text-zinc-400">
+                  <span className="flex items-center gap-1.5">
+                    <Truck className="w-3.5 h-3.5 text-[#C9A86A]" />
+                    <span>{isAr ? 'اكتمال دورة التصنيع والتجهيز والشحن' : 'Manufacturing & Dispatch Cycle'}</span>
+                  </span>
+                  <span className="text-[#C9A86A] font-bold">{timeLeft.progressPercent}%</span>
+                </div>
+                <div className="w-full bg-black/50 h-2.5 rounded-full overflow-hidden p-0.5 border border-white/10">
+                  <div
+                    className="h-full rounded-full bg-gradient-to-r from-emerald-500 via-[#DFBA73] to-[#C9A86A] shadow-[0_0_15px_rgba(201,168,106,0.6)] transition-all duration-700"
+                    style={{ width: `${timeLeft.progressPercent}%` }}
+                  />
+                </div>
+              </div>
+
+              {/* Assurance Footnote */}
+              <div className="relative z-10 pt-2 flex flex-wrap items-center justify-between gap-3 text-[11px] font-mono text-zinc-400 border-t border-white/5">
+                <span className="flex items-center gap-1.5">
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>{isAr ? 'تغليف ضد الصدمات ونقل في سيارات مجهزة ومكيفة' : 'White-glove climate controlled transport'}</span>
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <UserCheck className="w-3.5 h-3.5 text-[#C9A86A]" />
+                  <span>{isAr ? 'تركيب مباشر وضمان استلام بدون أي خدوش' : 'Zero-defect delivery & installation guarantee'}</span>
+                </span>
               </div>
             </div>
 

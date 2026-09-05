@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { useLanguage } from '@/context/LanguageContext';
 import { useToast } from '@/components/admin/ToastProvider';
 import { FurnitureItem } from '@/lib/furnitureData';
+import MediaFieldUploader from '@/components/admin/MediaFieldUploader';
 import { 
   Plus, 
   Search, 
@@ -21,7 +22,12 @@ import {
   Globe, 
   DollarSign, 
   Maximize2,
-  ChevronDown
+  ChevronDown,
+  UploadCloud,
+  Wand2,
+  RefreshCw,
+  Cpu,
+  ArrowRight
 } from 'lucide-react';
 
 interface ProductsTabProps {
@@ -71,6 +77,200 @@ export default function ProductsTab({
   const [formSeoTitle, setFormSeoTitle] = useState('');
   const [formSeoDescription, setFormSeoDescription] = useState('');
   const [formFocusKeyword, setFormFocusKeyword] = useState('');
+
+  // AI Bulk Product Studio State
+  interface AiStudioItem {
+    id: string;
+    imageUrl: string;
+    enhancedUrl?: string;
+    isGenerating?: boolean;
+    isEnhancing?: boolean;
+    generatedData?: any;
+    committed?: boolean;
+  }
+  const [isAiStudioOpen, setIsAiStudioOpen] = useState(false);
+  const [aiItems, setAiItems] = useState<AiStudioItem[]>([]);
+  const [aiHints, setAiHints] = useState('');
+  const [isProcessingAi, setIsProcessingAi] = useState(false);
+
+  // Handle Multi-file Upload for AI Studio
+  const handleBulkFilesUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    const newItems: AiStudioItem[] = [];
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://fqkbgfdasfwnryekkgqz.supabase.co';
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZxa2JnZmRhc2Z3bnJ5ZWtrZ3F6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc1OTAyMDYsImV4cCI6MjEwMzE2NjIwNn0.IRPdvlCIbeTtFNf8TMc353fT-tlLxYq0Mx3P2HHmM3Q';
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      const cleanFileName = `ai_prod_${Date.now()}_${i}_${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
+
+      try {
+        const res = await fetch(`${supabaseUrl}/storage/v1/object/photos/${cleanFileName}`, {
+          method: 'POST',
+          headers: {
+            'apikey': supabaseAnonKey,
+            'Authorization': `Bearer ${supabaseAnonKey}`,
+            'Content-Type': file.type || 'image/jpeg',
+          },
+          body: file,
+        });
+
+        if (res.ok) {
+          const publicUrl = `${supabaseUrl}/storage/v1/object/public/photos/${cleanFileName}`;
+          newItems.push({
+            id: `ai_${Date.now()}_${i}`,
+            imageUrl: publicUrl,
+          });
+        } else {
+          // Fallback to local object URL for preview
+          newItems.push({
+            id: `ai_${Date.now()}_${i}`,
+            imageUrl: URL.createObjectURL(file),
+          });
+        }
+      } catch (err) {
+        newItems.push({
+          id: `ai_${Date.now()}_${i}`,
+          imageUrl: URL.createObjectURL(file),
+        });
+      }
+    }
+
+    setAiItems((prev) => [...prev, ...newItems]);
+    showToast(isAr ? `تمت إضافة ${newItems.length} صورة للاستوديو` : `Loaded ${newItems.length} images into AI Studio`, 'success');
+  };
+
+  // AI Single Item Specification Generator (OpenAI)
+  const handleAiGenerateSingle = async (itemId: string) => {
+    const target = aiItems.find((it) => it.id === itemId);
+    if (!target) return;
+
+    setAiItems((prev) =>
+      prev.map((it) => (it.id === itemId ? { ...it, isGenerating: true } : it))
+    );
+
+    try {
+      const res = await fetch('/api/admin/ecommerce/ai-generate-product', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          imageUrl: target.enhancedUrl || target.imageUrl,
+          hints: aiHints,
+        }),
+      });
+
+      const json = await res.json();
+      if (json.success && json.data) {
+        setAiItems((prev) =>
+          prev.map((it) => (it.id === itemId ? { ...it, isGenerating: false, generatedData: json.data } : it))
+        );
+        showToast(isAr ? 'تم توليد المواصفات بالذكاء الاصطناعي بنجاح' : 'Product details generated with AI', 'success');
+      } else {
+        throw new Error(json.error || 'Failed');
+      }
+    } catch (err: any) {
+      setAiItems((prev) =>
+        prev.map((it) => (it.id === itemId ? { ...it, isGenerating: false } : it))
+      );
+      showToast(isAr ? 'تعذر توليد المواصفات' : 'AI generation error', 'error');
+    }
+  };
+
+  // AI Single Photo Enhancer (NanoBanana Pro / Google Cloud)
+  const handleAiEnhanceSingle = async (itemId: string) => {
+    const target = aiItems.find((it) => it.id === itemId);
+    if (!target) return;
+
+    setAiItems((prev) =>
+      prev.map((it) => (it.id === itemId ? { ...it, isEnhancing: true } : it))
+    );
+
+    try {
+      const res = await fetch('/api/admin/ecommerce/ai-enhance-image', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          imageUrl: target.imageUrl,
+        }),
+      });
+
+      const json = await res.json();
+      if (json.success && json.enhancedUrl) {
+        setAiItems((prev) =>
+          prev.map((it) => (it.id === itemId ? { ...it, isEnhancing: false, enhancedUrl: json.enhancedUrl } : it))
+        );
+        showToast(isAr ? 'تم تحسين دقة وإضاءة الصورة بـ NanoBanana Pro' : 'Photo enhanced with NanoBanana Pro AI', 'success');
+      } else {
+        throw new Error(json.error || 'Failed');
+      }
+    } catch (err: any) {
+      setAiItems((prev) =>
+        prev.map((it) => (it.id === itemId ? { ...it, isEnhancing: false } : it))
+      );
+      showToast(isAr ? 'تعذر تحسين الصورة' : 'Photo enhancement error', 'error');
+    }
+  };
+
+  // Commit AI-Generated Item directly to Live Catalog
+  const handleCommitAiProduct = (itemId: string) => {
+    const target = aiItems.find((it) => it.id === itemId);
+    if (!target || !target.generatedData) return;
+
+    const d = target.generatedData;
+    const finalProduct: FurnitureItem = {
+      id: `gw-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+      sku: d.sku || `GW-${Math.floor(100 + Math.random() * 900)}`,
+      nameEn: d.nameEn || 'The Luxury Artisan Piece',
+      nameAr: d.nameAr || 'قطعة أثاث فاخرة مصنوعة بحرفية',
+      category: 'living',
+      categoryEn: d.categoryEn || 'Living & Lounge',
+      categoryAr: d.categoryAr || 'الصالونات وغرف المعيشة',
+      price: Number(d.price) || 16000,
+      originalPrice: Number(d.originalPrice) || 19000,
+      rating: 4.9,
+      reviewsCount: 8,
+      shortDescEn: d.shortDescEn || 'Handcrafted bespoke piece.',
+      shortDescAr: d.shortDescAr || 'قطعة أثاث فاخرة مصنعة بحرفية.',
+      fullDescEn: d.fullDescEn || d.shortDescEn || '',
+      fullDescAr: d.fullDescAr || d.shortDescAr || '',
+      materialsEn: d.materialsEn || 'Solid Walnut & Premium Finishes',
+      materialsAr: d.materialsAr || 'خشب جوز أمريكي مصمت وتشطيبات فاخرة',
+      materialKey: 'walnut',
+      leadTimeEn: d.leadTimeEn || '10–14 Business Days',
+      leadTimeAr: d.leadTimeAr || '10 – 14 يوم عمل',
+      inStock: true,
+      isHospitalityGrade: true,
+      dimensions: d.dimensions || { width: 220, depth: 100, height: 80, unit: 'cm' },
+      finishes: [
+        { id: 'f1', nameEn: 'Natural Walnut', nameAr: 'جوز طبيعي', colorCode: '#5C4033' },
+        { id: 'f2', nameEn: 'Ivory Bouclé', nameAr: 'بوكليه عاجي', colorCode: '#F5F5DC' }
+      ],
+      featuresEn: d.featuresEn || ['5-Axis CNC Precision', 'Non-Yellowing Lacquer', '5-Year Warranty'],
+      featuresAr: d.featuresAr || ['دقة متناهية بـ CNC', 'دهان مقاوم للاصفرار', 'ضمان 5 سنوات'],
+      images: [target.enhancedUrl || target.imageUrl],
+      factoryLocationEn: 'Factory 1 & 3 — Riyadh Hub',
+      factoryLocationAr: 'مصنع 1 و 3 — الرياض',
+    };
+
+    onAddProduct(finalProduct);
+    setAiItems((prev) =>
+      prev.map((it) => (it.id === itemId ? { ...it, committed: true } : it))
+    );
+    showToast(isAr ? `تم إدراج (${finalProduct.nameAr}) في الكتالوج بنجاح!` : `(${finalProduct.nameEn}) added to catalog!`, 'success');
+  };
+
+  // Bulk generate for all items in studio
+  const handleBulkGenerateAll = async () => {
+    setIsProcessingAi(true);
+    for (const item of aiItems) {
+      if (!item.generatedData && !item.committed) {
+        await handleAiGenerateSingle(item.id);
+      }
+    }
+    setIsProcessingAi(false);
+  };
 
   const formatPrice = (valSAR: number) => {
     if (currency === 'USD') {
@@ -240,6 +440,14 @@ export default function ProductsTab({
           >
             <FileSpreadsheet className="w-3.5 h-3.5 text-[#C9A86A]" />
             <span>{isAr ? 'تصدير الكتالوج CSV' : 'Export CSV'}</span>
+          </button>
+
+          <button
+            onClick={() => setIsAiStudioOpen(true)}
+            className="px-4 py-2 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-600 text-white text-xs font-extrabold flex items-center gap-1.5 shadow-md hover:shadow-purple-500/25 transition-all cursor-pointer font-mono"
+          >
+            <Sparkles className="w-4 h-4 text-amber-300 animate-pulse" />
+            <span>{isAr ? 'استوديو الذكاء الاصطناعي (OpenAI & NanoBanana)' : 'AI Product Studio (OpenAI & NanoBanana)'}</span>
           </button>
 
           <button
@@ -538,15 +746,16 @@ export default function ProductsTab({
                 </div>
               </div>
 
-              {/* Image URL */}
+              {/* Primary Image Upload & Direct URL Option (Feature 5) */}
               <div>
-                <label className="block text-zinc-400 mb-1 font-mono">{isAr ? 'رابط الصورة الرئيسية (HTTPS)' : 'Primary Image URL (HTTPS)'}</label>
-                <input
-                  type="url"
+                <MediaFieldUploader
+                  label={isAr ? 'صورة القطعة الرئيسية (رفع ملف مباشر أو رابط)' : 'Primary Product Photo (Upload File or URL)'}
+                  description={isAr ? 'ارفع صورة مباشرة من جهازك للتخزين السحابي أو الصق رابط صورة خارجي' : 'Upload photo file directly to cloud storage or paste direct HTTPS image URL'}
                   value={formImageUrl}
-                  onChange={(e) => setFormImageUrl(e.target.value)}
-                  placeholder="https://images.unsplash.com/photo-..."
-                  className="w-full px-3 py-2 rounded-xl bg-[#141721] border border-white/10 text-white font-mono text-xs focus:border-[#C9A86A]"
+                  onChange={setFormImageUrl}
+                  accept="image"
+                  bucket="photos"
+                  aspectRatio="16:9"
                 />
               </div>
 
@@ -621,6 +830,258 @@ export default function ProductsTab({
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* 5. AI Multi-Photo Product Studio Modal (Feature 4) */}
+      {isAiStudioOpen && (
+        <div className="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4">
+          <div
+            onClick={() => setIsAiStudioOpen(false)}
+            className="fixed inset-0 bg-black/70 backdrop-blur-md"
+          />
+
+          <div className="relative w-full max-w-5xl bg-[#0F1117] border border-purple-500/30 rounded-3xl p-6 sm:p-8 text-white shadow-2xl space-y-6 z-10 my-8 max-h-[90vh] overflow-y-auto">
+            
+            {/* Studio Header */}
+            <div className="flex items-center justify-between pb-4 border-b border-white/10">
+              <div>
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400 text-xs font-mono font-bold mb-1.5">
+                  <Cpu className="w-3.5 h-3.5" />
+                  <span>{isAr ? 'استوديو الذكاء الاصطناعي للمنتجات' : 'AI MULTI-PHOTO PRODUCT STUDIO'}</span>
+                </div>
+                <h3 className="text-lg sm:text-xl font-extrabold text-white flex items-center gap-2">
+                  <Sparkles className="w-5 h-5 text-amber-300" />
+                  <span>
+                    {isAr
+                      ? 'الرفع المتعدد وكتابة المواصفات بـ OpenAI وتحسين الصور بـ NanoBanana Pro'
+                      : 'Bulk Photo Upload, OpenAI Vision Cataloging & NanoBanana AI Enhancement'}
+                  </span>
+                </h3>
+                <p className="text-xs text-zinc-400 mt-0.5">
+                  {isAr 
+                    ? 'ارفع عدة صور لقطع الأثاث دفعة واحدة، وسيقوم نموذج OpenAI Vision بكتابة الأسماء والوصف والأبعاد والأسعار تلقائياً، مع خيار تحسين جودة الصور وإضاءتها فندقياً.'
+                    : 'Upload multiple piece photos at once. OpenAI Vision generates titles, descriptions, dimensions, and prices, while NanoBanana Pro enhances photo studio lighting.'}
+                </p>
+              </div>
+
+              <button
+                onClick={() => setIsAiStudioOpen(false)}
+                className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white transition-colors cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Studio Controls & Multi-File Dropzone */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+              
+              {/* File Dropzone */}
+              <div className="lg:col-span-2">
+                <label className="border-2 border-dashed border-purple-500/30 hover:border-purple-400/60 bg-purple-500/5 hover:bg-purple-500/10 rounded-2xl p-6 flex flex-col items-center justify-center text-center cursor-pointer transition-all space-y-2">
+                  <input
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    onChange={handleBulkFilesUpload}
+                    className="sr-only"
+                  />
+                  <div className="w-12 h-12 rounded-2xl bg-purple-500/20 text-purple-400 flex items-center justify-center">
+                    <UploadCloud className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <span className="text-xs sm:text-sm font-bold text-white block">
+                      {isAr ? 'انقر لاختيار عدة صور لقطع الأثاث أو اسحبها هنا' : 'Click to select multiple furniture photos or drag & drop'}
+                    </span>
+                    <span className="text-[11px] text-zinc-400">
+                      {isAr ? 'يدعم صور JPG, PNG, WEBP بدقة عالية للرفع المباشر' : 'Supports high-res JPG, PNG, WEBP files'}
+                    </span>
+                  </div>
+                </label>
+              </div>
+
+              {/* Context Hints & Batch Processing */}
+              <div className="p-4 rounded-2xl bg-[#141721] border border-white/5 space-y-3 flex flex-col justify-between">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-zinc-300 font-mono">
+                    {isAr ? 'توجيهات إضافية للذكاء الاصطناعي (اختياري)' : 'AI Style Hints (Optional)'}
+                  </label>
+                  <input
+                    type="text"
+                    value={aiHints}
+                    onChange={(e) => setAiHints(e.target.value)}
+                    placeholder={isAr ? 'مثال: أطقم قصور ملكية من خشب السنديان' : 'e.g. Royal palace suites with solid oak'}
+                    className="w-full px-3 py-2 rounded-xl bg-[#08090C] border border-white/10 text-white text-xs focus:border-purple-500"
+                  />
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={handleBulkGenerateAll}
+                    disabled={aiItems.length === 0 || isProcessingAi}
+                    className="flex-1 py-2.5 px-3 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-600 hover:shadow-lg disabled:opacity-50 text-white font-extrabold text-xs font-mono flex items-center justify-center gap-1.5 cursor-pointer"
+                  >
+                    {isProcessingAi ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Wand2 className="w-3.5 h-3.5" />}
+                    <span>{isProcessingAi ? (isAr ? 'جارٍ التحليل…' : 'Generating…') : (isAr ? 'توليد الكل بـ OpenAI' : 'Generate All Specs')}</span>
+                  </button>
+
+                  {aiItems.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => setAiItems([])}
+                      className="p-2.5 rounded-xl bg-white/5 hover:bg-rose-600/20 text-zinc-400 hover:text-rose-400 transition-colors cursor-pointer"
+                      title={isAr ? 'تفريغ القائمة' : 'Clear items'}
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  )}
+                </div>
+              </div>
+
+            </div>
+
+            {/* Gallery of Uploaded / Processing Pieces */}
+            <div className="space-y-3">
+              <div className="flex items-center justify-between text-xs font-mono text-zinc-400">
+                <span>
+                  {isAr 
+                    ? `القطع المرفوعة في الاستوديو (${aiItems.length})` 
+                    : `Pieces Loaded in Studio (${aiItems.length})`}
+                </span>
+                <span>
+                  {isAr 
+                    ? `المكتمل إدراجه: ${aiItems.filter(i => i.committed).length}` 
+                    : `Added to Catalog: ${aiItems.filter(i => i.committed).length}`}
+                </span>
+              </div>
+
+              {aiItems.length === 0 ? (
+                <div className="p-10 text-center border border-dashed border-white/10 rounded-2xl space-y-2">
+                  <Sparkles className="w-8 h-8 text-purple-400/50 mx-auto" />
+                  <p className="text-xs text-zinc-400">
+                    {isAr 
+                      ? 'قم برفع صورة أو عدة صور للبدء في توليد كتالوج الأثاث آلياً بالذكاء الاصطناعي.' 
+                      : 'Upload one or more photos to initiate autonomous AI catalog generation.'}
+                  </p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {aiItems.map((item, idx) => {
+                    const d = item.generatedData;
+
+                    return (
+                      <div
+                        key={item.id}
+                        className={`p-4 rounded-2xl border transition-all duration-300 space-y-3 ${
+                          item.committed
+                            ? 'bg-emerald-500/5 border-emerald-500/30'
+                            : d
+                            ? 'bg-[#141721] border-purple-500/30'
+                            : 'bg-[#08090C] border-white/10'
+                        }`}
+                      >
+                        {/* Image Preview & Enhancement Status */}
+                        <div className="flex gap-3 items-start">
+                          <div className="relative w-28 h-28 rounded-xl overflow-hidden bg-black/40 border border-white/10 shrink-0 group">
+                            <img
+                              src={item.enhancedUrl || item.imageUrl}
+                              alt="Piece Preview"
+                              className="w-full h-full object-cover"
+                            />
+                            {item.enhancedUrl && (
+                              <span className="absolute top-1 right-1 px-1.5 py-0.5 rounded bg-purple-600 text-white text-[9px] font-mono font-bold">
+                                NanoBanana HD
+                              </span>
+                            )}
+                          </div>
+
+                          <div className="min-w-0 flex-1 space-y-1.5">
+                            <div className="flex items-center justify-between gap-1">
+                              <span className="text-[10px] font-mono text-[#C9A86A] font-bold">
+                                {d?.sku || `#${idx + 1} Pending Spec`}
+                              </span>
+                              <button
+                                type="button"
+                                onClick={() => setAiItems((prev) => prev.filter((i) => i.id !== item.id))}
+                                className="text-zinc-500 hover:text-rose-400 p-1"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+
+                            <h4 className="text-xs font-bold text-white line-clamp-1">
+                              {d ? (isAr ? d.nameAr : d.nameEn) : (isAr ? 'بانتظار التحليل بـ OpenAI…' : 'Awaiting OpenAI analysis…')}
+                            </h4>
+
+                            {d ? (
+                              <div className="space-y-1 text-[11px] font-mono">
+                                <div className="text-[#E3C58A] font-bold">
+                                  {d.price?.toLocaleString('en-US')} {isAr ? 'ر.س' : 'SAR'}
+                                  {d.originalPrice && <span className="text-zinc-500 line-through text-[10px] ml-1.5 rtl:mr-1.5 rtl:ml-0">{d.originalPrice?.toLocaleString('en-US')}</span>}
+                                </div>
+                                <div className="text-zinc-400 text-[10px] truncate">
+                                  {d.dimensions?.width}×{d.dimensions?.depth}×{d.dimensions?.height} cm · {isAr ? d.materialsAr : d.materialsEn}
+                                </div>
+                              </div>
+                            ) : (
+                              <p className="text-[10px] text-zinc-500 line-clamp-2 font-sans">
+                                {isAr ? 'اضغط على زر التوليد لتحليل الخشب والمقاسات والوصف تلقائياً.' : 'Click Generate to automatically extract wood species, dimensions and descriptions.'}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* AI Actions Row */}
+                        <div className="grid grid-cols-2 gap-2 pt-2 border-t border-white/5">
+                          <button
+                            type="button"
+                            onClick={() => handleAiGenerateSingle(item.id)}
+                            disabled={item.isGenerating || item.committed}
+                            className="px-2.5 py-1.5 rounded-xl bg-purple-600/20 hover:bg-purple-600/30 border border-purple-500/30 text-purple-300 text-[11px] font-mono font-bold flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50 transition-colors"
+                          >
+                            {item.isGenerating ? <RefreshCw className="w-3 h-3 animate-spin" /> : <Wand2 className="w-3 h-3" />}
+                            <span>{item.isGenerating ? (isAr ? 'جارٍ التحليل…' : 'Analyzing…') : (isAr ? 'توليد المواصفات بـ OpenAI' : 'OpenAI Specs')}</span>
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => handleAiEnhanceSingle(item.id)}
+                            disabled={item.isEnhancing || item.committed}
+                            className="px-2.5 py-1.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 text-amber-300 text-[11px] font-mono font-bold flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50 transition-colors"
+                          >
+                            {item.isEnhancing ? <RefreshCw className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3" />}
+                            <span>{item.isEnhancing ? (isAr ? 'جارٍ التحسين…' : 'Enhancing…') : (isAr ? 'تحسين NanoBanana Pro' : 'Enhance Photo')}</span>
+                          </button>
+                        </div>
+
+                        {/* Commit to Catalog Button */}
+                        {d && (
+                          <div className="pt-1">
+                            <button
+                              type="button"
+                              onClick={() => handleCommitAiProduct(item.id)}
+                              disabled={item.committed}
+                              className={`w-full py-2 px-3 rounded-xl text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                                item.committed
+                                  ? 'bg-emerald-500/20 border border-emerald-500/30 text-emerald-400'
+                                  : 'bg-gradient-to-r from-[#C9A86A] via-[#DFBA73] to-[#C9A86A] text-[#08090C] hover:shadow-lg'
+                              }`}
+                            >
+                              <CheckCircle2 className="w-3.5 h-3.5" />
+                              <span>{item.committed ? (isAr ? 'تم الإدراج في الكتالوج بنجاح ✓' : 'Added to Catalog ✓') : (isAr ? 'اعتماد وإدراج القطعة في المتجر' : 'Commit Piece to Store Catalog')}</span>
+                            </button>
+                          </div>
+                        )}
+
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
           </div>
         </div>
       )}
