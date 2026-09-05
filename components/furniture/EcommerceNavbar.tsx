@@ -15,8 +15,10 @@ import {
   Search, 
   ArrowRight,
   Sparkles,
-  ExternalLink
+  ExternalLink,
+  ChevronDown
 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface EcommerceNavbarProps {
   cartCount?: number;
@@ -80,15 +82,261 @@ export default function EcommerceNavbar({
     store_sub: isAr ? 'أتيليه الأثاث الفاخر والتجهيزات' : 'Luxury Furniture Atelier & FF&E',
     collections: isAr ? 'المجموعات' : 'Collections',
     living: isAr ? 'الصالونات' : 'Living',
-    bedroom: isAr ? 'أجنحة النوم' : 'Bedroom',
-    dining: isAr ? 'طاولات الطعام' : 'Dining',
-    joinery: isAr ? 'التجاليد المعمارية' : 'Joinery',
-    b2b: isAr ? 'مشروعات الفنادق B2B' : 'B2B & Hospitality',
-    lookbook: isAr ? 'كتالوج المساحات' : 'Room Inspiration',
-    track_order: isAr ? 'تتبع طلبك' : 'Track Order',
+    bedroom: isAr ? 'النوم' : 'Bedrooms',
+    dining: isAr ? 'الطعام' : 'Dining',
+    joinery: isAr ? 'التجاليد' : 'Joinery',
+    b2b: isAr ? 'المشاريع' : 'Projects',
+    lookbook: isAr ? 'المساحات' : 'Spaces',
+    track_order: isAr ? 'تتبع' : 'Track',
     search_label: isAr ? 'ابحث في قطع الأثاث...' : 'Search furniture pieces...',
     cart: isAr ? 'السلة' : 'Cart',
     wishlist: isAr ? 'المفضلة' : 'Wishlist',
+  };
+
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const timeoutRef = React.useRef<NodeJS.Timeout | null>(null);
+
+  const handleMouseEnter = (id: string) => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+    setActiveDropdown(id);
+  };
+
+  const handleMouseLeave = () => {
+    timeoutRef.current = setTimeout(() => {
+      setActiveDropdown(null);
+    }, 180);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
+
+  interface NavDropdownItem {
+    label: string;
+    desc: string;
+    actionType: 'category' | 'anchor';
+    value: string;
+    badge?: string;
+  }
+
+  interface NavSection {
+    id: string;
+    label: string;
+    actionType: 'category' | 'anchor';
+    value: string;
+    items: NavDropdownItem[];
+  }
+
+  const navSections: NavSection[] = [
+    {
+      id: 'collections',
+      label: ecomDict.collections,
+      actionType: 'category',
+      value: 'all',
+      items: [
+        {
+          label: isAr ? 'جميع القطع والتصاميم' : 'All Curated Pieces',
+          desc: isAr ? 'استعراض الكتالوج الكامل بمصنعنا' : 'Explore full factory collection',
+          actionType: 'category',
+          value: 'all',
+        },
+        {
+          label: isAr ? 'أيقونات التصميم المعماري' : 'Signature Masterpieces',
+          desc: isAr ? 'القطع الحصرية الأكثر تميزاً' : 'Iconic limited atelier designs',
+          actionType: 'anchor',
+          value: '#spotlight',
+          badge: isAr ? 'مميز' : 'Signature',
+        },
+        {
+          label: isAr ? 'معايير التصنيع الفندقي' : 'Hospitality Standards',
+          desc: isAr ? 'أخشاب الجوز والأحجار الطبيعية' : 'American walnut & natural stone',
+          actionType: 'anchor',
+          value: '#craft',
+        },
+      ],
+    },
+    {
+      id: 'living',
+      label: ecomDict.living,
+      actionType: 'category',
+      value: 'living',
+      items: [
+        {
+          label: isAr ? 'الصالونات والأرائك المنحنية' : 'Curved & Modular Sofas',
+          desc: isAr ? 'أريكة الدرعية وجلسات البوكليه' : 'Al-Diriyah & luxury bouclé lounges',
+          actionType: 'category',
+          value: 'living',
+        },
+        {
+          label: isAr ? 'كراسي مفردة نحتية' : 'Sculptural Armchairs',
+          desc: isAr ? 'كرسي العلا بجلود إيطالية طبيعية' : 'Al-Ula Italian leather seating',
+          actionType: 'category',
+          value: 'living',
+        },
+        {
+          label: isAr ? 'طاولات وسط وضيافة' : 'Coffee & Accent Tables',
+          desc: isAr ? 'رخام الترافرتين وخشب الجوز' : 'Najran travertine & walnut tables',
+          actionType: 'category',
+          value: 'living',
+        },
+      ],
+    },
+    {
+      id: 'bedroom',
+      label: ecomDict.bedroom,
+      actionType: 'category',
+      value: 'bedroom',
+      items: [
+        {
+          label: isAr ? 'أسرّة ماستر فندقية' : 'Master Hotel Beds',
+          desc: isAr ? 'سرير الحمراء والهياكل الصلبة' : 'Solid beechwood bespoke bedframes',
+          actionType: 'category',
+          value: 'bedroom',
+        },
+        {
+          label: isAr ? 'كمودينات وتخزين جانبي' : 'Nightstands & Side Tables',
+          desc: isAr ? 'تفاصيل خشبية مخددة وأسطح رخامية' : 'Fluted joinery & stone surfaces',
+          actionType: 'category',
+          value: 'bedroom',
+        },
+        {
+          label: isAr ? 'مقاعد أجنحة وبوفيه' : 'Suite Benches & Seating',
+          desc: isAr ? 'تنجيد يدوي متقن بميموري فوم' : 'Hand-tufted memory foam suites',
+          actionType: 'category',
+          value: 'bedroom',
+        },
+      ],
+    },
+    {
+      id: 'dining',
+      label: ecomDict.dining,
+      actionType: 'category',
+      value: 'dining',
+      items: [
+        {
+          label: isAr ? 'طاولات طعام ملكية' : 'Grand Dining Tables',
+          desc: isAr ? 'طاولة نجد وقواعد الحجر الطبيعي' : 'Solid walnut & natural stone tops',
+          actionType: 'category',
+          value: 'dining',
+        },
+        {
+          label: isAr ? 'كراسي طعام حرفية' : 'Artisan Dining Chairs',
+          desc: isAr ? 'راحة مريحة للولائم والاجتماعات' : 'Ergonomic hospitality comfort',
+          actionType: 'category',
+          value: 'dining',
+        },
+        {
+          label: isAr ? 'مكاتب تنفيذية للمنزل' : 'Executive Home Desks',
+          desc: isAr ? 'تصاميم معمارية بمسارات كابلات ذكية' : 'Architectural study work desks',
+          actionType: 'category',
+          value: 'dining',
+        },
+      ],
+    },
+    {
+      id: 'joinery',
+      label: ecomDict.joinery,
+      actionType: 'category',
+      value: 'joinery',
+      items: [
+        {
+          label: isAr ? 'تجاليد حوائط مخددة CNC' : '5-Axis Fluted Wall Panels',
+          desc: isAr ? 'تكسيات جدارية عازلة وعصرية' : 'Acoustic architectural cladding',
+          actionType: 'category',
+          value: 'joinery',
+        },
+        {
+          label: isAr ? 'خزائن ملابس مدمجة' : 'Bespoke Built-in Closets',
+          desc: isAr ? 'إضاءة LED مخفية وأدراج ذكية' : 'Integrated LED & glass millwork',
+          actionType: 'category',
+          value: 'joinery',
+        },
+        {
+          label: isAr ? 'قواطع وفواصل معمارية' : 'Architectural Partitions',
+          desc: isAr ? 'فواصل خشبية ومعدنية مخصصة' : 'Custom decorative room dividers',
+          actionType: 'category',
+          value: 'joinery',
+        },
+      ],
+    },
+    {
+      id: 'lookbook',
+      label: ecomDict.lookbook,
+      actionType: 'anchor',
+      value: '#lookbook',
+      items: [
+        {
+          label: isAr ? 'صالات كبار الشخصيات' : 'VIP Living Spaces',
+          desc: isAr ? 'إلهام تأثيث الفلل والقصور' : 'Penthouse & villa inspiration',
+          actionType: 'anchor',
+          value: '#lookbook',
+        },
+        {
+          label: isAr ? 'أجنحة فندقية ملكية' : 'Royal Hospitality Suites',
+          desc: isAr ? 'مشاريع سويس بلو وفنادق 5 نجوم' : 'SwissBlue & luxury hotel suites',
+          actionType: 'anchor',
+          value: '#lookbook',
+        },
+        {
+          label: isAr ? 'مجالس ضيافة سعودية' : 'Heritage Modern Majlis',
+          desc: isAr ? 'أصالة نجدية بروح عصرية متقدمة' : 'Contemporary Saudi hospitality',
+          actionType: 'anchor',
+          value: '#lookbook',
+        },
+      ],
+    },
+    {
+      id: 'b2b',
+      label: ecomDict.b2b,
+      actionType: 'anchor',
+      value: '#bespoke-b2b',
+      items: [
+        {
+          label: isAr ? 'توريد وتأثيث فندقي FF&E' : 'Hospitality FF&E Fitout',
+          desc: isAr ? 'تصنيع معتمد وتوريد شامل للمشاريع' : 'Turnkey hotel procurement',
+          actionType: 'anchor',
+          value: '#bespoke-b2b',
+          badge: 'B2B',
+        },
+        {
+          label: isAr ? 'تأثيث مقرات الشركات' : 'Corporate & HQ Fitout',
+          desc: isAr ? 'قاعات اجتماعات ومكاتب تنفيذية' : 'Executive offices & boardrooms',
+          actionType: 'anchor',
+          value: '#bespoke-b2b',
+        },
+        {
+          label: isAr ? 'طلب دراسة وتسعير B2B' : 'Request Commercial Quote',
+          desc: isAr ? 'استشارات مباشرة مع مهندسي المصنع' : 'Direct factory contract pricing',
+          actionType: 'anchor',
+          value: '#bespoke-b2b',
+        },
+      ],
+    },
+  ];
+
+  const handleSectionClick = (sec: NavSection) => {
+    setActiveDropdown(null);
+    if (sec.actionType === 'category') {
+      handleNavCategoryClick(sec.value);
+    } else if (sec.actionType === 'anchor') {
+      const el = document.querySelector(sec.value);
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const handleSubItemClick = (sub: NavDropdownItem) => {
+    setActiveDropdown(null);
+    if (sub.actionType === 'category') {
+      handleNavCategoryClick(sub.value);
+    } else if (sub.actionType === 'anchor') {
+      const el = document.querySelector(sub.value);
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   return (
@@ -170,55 +418,78 @@ export default function EcommerceNavbar({
               </div>
             </Link>
 
-            {/* Desktop Department Links */}
-            <nav className="hidden xl:flex items-center gap-1 px-4 py-1 rounded-full bg-[#12151F]/80 border border-white/10 backdrop-blur-xl">
-              <button
-                type="button"
-                onClick={() => handleNavCategoryClick('all')}
-                className="px-3 py-1.5 rounded-full text-xs font-semibold text-zinc-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer"
-              >
-                {ecomDict.collections}
-              </button>
-              <button
-                type="button"
-                onClick={() => handleNavCategoryClick('living')}
-                className="px-3 py-1.5 rounded-full text-xs font-semibold text-zinc-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer"
-              >
-                {ecomDict.living}
-              </button>
-              <button
-                type="button"
-                onClick={() => handleNavCategoryClick('bedroom')}
-                className="px-3 py-1.5 rounded-full text-xs font-semibold text-zinc-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer"
-              >
-                {ecomDict.bedroom}
-              </button>
-              <button
-                type="button"
-                onClick={() => handleNavCategoryClick('dining')}
-                className="px-3 py-1.5 rounded-full text-xs font-semibold text-zinc-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer"
-              >
-                {ecomDict.dining}
-              </button>
-              <button
-                type="button"
-                onClick={() => handleNavCategoryClick('joinery')}
-                className="px-3 py-1.5 rounded-full text-xs font-semibold text-zinc-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer"
-              >
-                {ecomDict.joinery}
-              </button>
-              <a
-                href="#lookbook"
-                className="px-3 py-1.5 rounded-full text-xs font-semibold text-zinc-300 hover:text-white hover:bg-white/5 transition-all"
-              >
-                {ecomDict.lookbook}
-              </a>
-              <a
-                href="#bespoke-b2b"
-                className="px-3 py-1.5 rounded-full text-xs font-bold text-[#C9A86A] hover:bg-[#C9A86A]/10 transition-all"
-              >
-                {ecomDict.b2b}
-              </a>
+            {/* Desktop 1-Word Department Links with Luxury Dropdown Flyout */}
+            <nav className="hidden xl:flex items-center gap-1 px-3 py-1 rounded-full bg-[#12151F]/90 border border-white/10 backdrop-blur-xl relative">
+              {navSections.map((sec) => {
+                const isOpen = activeDropdown === sec.id;
+                const isB2B = sec.id === 'b2b';
+                return (
+                  <div
+                    key={sec.id}
+                    className="relative"
+                    onMouseEnter={() => handleMouseEnter(sec.id)}
+                    onMouseLeave={handleMouseLeave}
+                  >
+                    <button
+                      type="button"
+                      onClick={() => handleSectionClick(sec)}
+                      className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer flex items-center gap-1 group ${
+                        isB2B
+                          ? 'text-[#C9A86A] font-bold hover:bg-[#C9A86A]/15'
+                          : isOpen
+                          ? 'text-white bg-white/10 shadow-sm'
+                          : 'text-zinc-300 hover:text-white hover:bg-white/5'
+                      }`}
+                    >
+                      <span>{sec.label}</span>
+                      <ChevronDown
+                        className={`w-3 h-3 transition-transform duration-200 ${
+                          isOpen ? 'rotate-180 text-[#C9A86A]' : 'text-zinc-500 group-hover:text-zinc-300'
+                        }`}
+                      />
+                    </button>
+
+                    {/* Luxury Frosted Dropdown Menu */}
+                    <AnimatePresence>
+                      {isOpen && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 8, scale: 0.96 }}
+                          animate={{ opacity: 1, y: 0, scale: 1 }}
+                          exit={{ opacity: 0, y: 6, scale: 0.96 }}
+                          transition={{ duration: 0.16, ease: [0.22, 1, 0.36, 1] }}
+                          className="absolute top-full mt-2 left-1/2 -translate-x-1/2 rtl:left-auto rtl:right-1/2 rtl:translate-x-1/2 w-72 p-2 rounded-2xl bg-[#0A0C13]/95 backdrop-blur-2xl border border-white/15 shadow-[0_20px_50px_rgba(0,0,0,0.85)] ring-1 ring-[#C9A86A]/25 z-50 before:absolute before:-top-3 before:inset-x-0 before:h-3"
+                        >
+                          <div className="space-y-1">
+                            {sec.items.map((sub, sIdx) => (
+                              <button
+                                key={sIdx}
+                                type="button"
+                                onClick={() => handleSubItemClick(sub)}
+                                className="w-full p-2.5 rounded-xl hover:bg-white/5 transition-all text-left rtl:text-right group/item cursor-pointer flex items-start justify-between gap-2"
+                              >
+                                <div>
+                                  <div className="text-xs font-bold text-zinc-200 group-hover/item:text-[#C9A86A] transition-colors flex items-center gap-1.5">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-[#C9A86A]/40 group-hover/item:bg-[#C9A86A] transition-colors" />
+                                    <span>{sub.label}</span>
+                                  </div>
+                                  <p className="text-[10px] text-zinc-400 mt-0.5 leading-tight">
+                                    {sub.desc}
+                                  </p>
+                                </div>
+                                {sub.badge && (
+                                  <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-[#C9A86A]/20 text-[#C9A86A] border border-[#C9A86A]/30 shrink-0">
+                                    {sub.badge}
+                                  </span>
+                                )}
+                              </button>
+                            ))}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                );
+              })}
             </nav>
 
             {/* Right Action Icons: Search, Wishlist, Cart */}
@@ -311,62 +582,49 @@ export default function EcommerceNavbar({
 
         {/* Mobile Slide-Out Navigation */}
         {mobileMenuOpen && (
-          <div className="xl:hidden bg-[#0C0E14] border-t border-white/10 px-4 py-4 space-y-2 animate-in slide-in-from-top-2 duration-200">
-            <div className="grid grid-cols-2 gap-2 pb-3 border-b border-white/10">
-              <button
-                type="button"
-                onClick={() => handleNavCategoryClick('all')}
-                className="p-2.5 rounded-lg bg-white/5 text-left rtl:text-right text-xs font-semibold text-zinc-200 hover:bg-[#C9A86A]/15 hover:text-[#C9A86A]"
-              >
-                {ecomDict.collections}
-              </button>
-              <button
-                type="button"
-                onClick={() => handleNavCategoryClick('living')}
-                className="p-2.5 rounded-lg bg-white/5 text-left rtl:text-right text-xs font-semibold text-zinc-200 hover:bg-[#C9A86A]/15 hover:text-[#C9A86A]"
-              >
-                {ecomDict.living}
-              </button>
-              <button
-                type="button"
-                onClick={() => handleNavCategoryClick('bedroom')}
-                className="p-2.5 rounded-lg bg-white/5 text-left rtl:text-right text-xs font-semibold text-zinc-200 hover:bg-[#C9A86A]/15 hover:text-[#C9A86A]"
-              >
-                {ecomDict.bedroom}
-              </button>
-              <button
-                type="button"
-                onClick={() => handleNavCategoryClick('dining')}
-                className="p-2.5 rounded-lg bg-white/5 text-left rtl:text-right text-xs font-semibold text-zinc-200 hover:bg-[#C9A86A]/15 hover:text-[#C9A86A]"
-              >
-                {ecomDict.dining}
-              </button>
-              <button
-                type="button"
-                onClick={() => handleNavCategoryClick('joinery')}
-                className="p-2.5 rounded-lg bg-white/5 text-left rtl:text-right text-xs font-semibold text-zinc-200 hover:bg-[#C9A86A]/15 hover:text-[#C9A86A]"
-              >
-                {ecomDict.joinery}
-              </button>
-              <a
-                href="#lookbook"
-                onClick={() => setMobileMenuOpen(false)}
-                className="p-2.5 rounded-lg bg-white/5 text-left rtl:text-right text-xs font-semibold text-zinc-200 hover:bg-[#C9A86A]/15 hover:text-[#C9A86A]"
-              >
-                {ecomDict.lookbook}
-              </a>
+          <div className="xl:hidden bg-[#0C0E14]/98 backdrop-blur-2xl border-t border-white/10 px-4 py-4 space-y-3 animate-in slide-in-from-top-2 duration-200 max-h-[82vh] overflow-y-auto">
+            <div className="space-y-2">
+              {navSections.map((sec) => (
+                <div key={sec.id} className="p-2.5 rounded-xl bg-white/5 border border-white/5">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      handleSectionClick(sec);
+                      setMobileMenuOpen(false);
+                    }}
+                    className="w-full text-left rtl:text-right flex items-center justify-between text-xs font-bold text-white hover:text-[#C9A86A] transition-colors py-1"
+                  >
+                    <span className="flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#C9A86A]" />
+                      <span>{sec.label}</span>
+                    </span>
+                    <ArrowRight className="w-3 h-3 text-zinc-500 rtl:rotate-180" />
+                  </button>
+                  <div className="mt-1 pt-1 border-t border-white/5 space-y-1">
+                    {sec.items.map((sub, sIdx) => (
+                      <button
+                        key={sIdx}
+                        type="button"
+                        onClick={() => {
+                          handleSubItemClick(sub);
+                          setMobileMenuOpen(false);
+                        }}
+                        className="w-full text-left rtl:text-right py-1 px-2 rounded-lg text-[11px] text-zinc-400 hover:text-white hover:bg-white/5 transition-all flex items-center justify-between"
+                      >
+                        <span>{sub.label}</span>
+                        {sub.badge && (
+                          <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-[#C9A86A]/20 text-[#C9A86A]">
+                            {sub.badge}
+                          </span>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ))}
             </div>
 
-            <div className="flex items-center justify-between pt-1">
-              <a
-                href="#bespoke-b2b"
-                onClick={() => setMobileMenuOpen(false)}
-                className="text-xs font-bold text-[#C9A86A] flex items-center gap-1"
-              >
-                <span>{ecomDict.b2b}</span>
-                <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
-              </a>
-
+            <div className="flex items-center justify-between pt-2 border-t border-white/10">
               <Link
                 href="/furniture/track"
                 onClick={() => setMobileMenuOpen(false)}
