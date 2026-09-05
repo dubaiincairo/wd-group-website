@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '@/context/LanguageContext';
@@ -29,15 +29,37 @@ import {
 interface FurnitureCatalogProps {
   onQuickView: (product: FurnitureItem) => void;
   onAddToCart: (product: FurnitureItem, selectedFinish: string, quantity: number) => void;
+  controlledCategory?: string;
+  onCategoryChange?: (cat: string) => void;
+  controlledSearch?: string;
 }
 
-export default function FurnitureCatalog({ onQuickView, onAddToCart }: FurnitureCatalogProps) {
+export default function FurnitureCatalog({ 
+  onQuickView, 
+  onAddToCart,
+  controlledCategory,
+  onCategoryChange,
+  controlledSearch
+}: FurnitureCatalogProps) {
   const { lang, dict } = useLanguage();
   const isAr = lang === 'ar';
   const { toggleWishlist, isInWishlist } = useWishlist();
 
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [internalCategory, setInternalCategory] = useState<string>('all');
+  const selectedCategory = controlledCategory !== undefined ? controlledCategory : internalCategory;
+
+  const handleSelectCategory = (catId: string) => {
+    setInternalCategory(catId);
+    if (onCategoryChange) onCategoryChange(catId);
+  };
+
+  useEffect(() => {
+    if (controlledSearch !== undefined) {
+      setSearchQuery(controlledSearch);
+    }
+  }, [controlledSearch]);
+
   const [selectedMaterial, setSelectedMaterial] = useState<string>('all');
   const [selectedSort, setSelectedSort] = useState<string>('featured');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
@@ -109,7 +131,7 @@ export default function FurnitureCatalog({ onQuickView, onAddToCart }: Furniture
 
   const resetAllFilters = () => {
     setSearchQuery('');
-    setSelectedCategory('all');
+    handleSelectCategory('all');
     setSelectedMaterial('all');
     setSelectedSort('featured');
   };
@@ -199,7 +221,7 @@ export default function FurnitureCatalog({ onQuickView, onAddToCart }: Furniture
             return (
               <button
                 key={cat.id}
-                onClick={() => setSelectedCategory(cat.id)}
+                onClick={() => handleSelectCategory(cat.id)}
                 className={`px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-2 border shrink-0 ${
                   isSelected
                     ? 'bg-gradient-to-r from-[#C9A86A] to-[#DFBA73] text-[#08090C] border-[#E3C58A] shadow-[0_0_15px_rgba(201,168,106,0.3)] font-bold'

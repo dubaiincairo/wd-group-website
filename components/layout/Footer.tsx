@@ -14,7 +14,7 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
   const [isBankingModalOpen, setIsBankingModalOpen] = useState(false);
 
-  if (pathname?.startsWith('/admin') || pathname === '/maintenance') {
+  if (pathname?.startsWith('/admin') || pathname === '/maintenance' || pathname?.startsWith('/furniture')) {
     return null;
   }
 

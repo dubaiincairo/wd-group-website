@@ -4,6 +4,8 @@
  * Full Bilingual Support: 100% Arabic RTL & 100% English LTR
  */
 
+import { getIntegrationsConfig } from '@/lib/admin/secrets';
+
 interface SendEmailParams {
   to: { name?: string; email: string }[];
   subject: string;
@@ -21,9 +23,10 @@ export async function sendEmailWithBrevo({
   replyTo,
   tags = ['wd-group'],
 }: SendEmailParams): Promise<{ success: boolean; messageId?: string; error?: string; simulated?: boolean }> {
-  const apiKey = process.env.BREVO_API_KEY || process.env.SENDINBLUE_API_KEY;
-  const senderEmail = process.env.BREVO_SENDER_EMAIL || process.env.SMTP_FROM || 'noreply@wdgroup.online';
-  const senderName = process.env.BREVO_SENDER_NAME || 'WD Group';
+  const integrations = await getIntegrationsConfig().catch(() => null);
+  const apiKey = integrations?.brevo_api_key || process.env.BREVO_API_KEY || process.env.SENDINBLUE_API_KEY;
+  const senderEmail = integrations?.brevo_sender_email || process.env.BREVO_SENDER_EMAIL || process.env.SMTP_FROM || 'noreply@wdgroup.online';
+  const senderName = integrations?.brevo_sender_name || process.env.BREVO_SENDER_NAME || 'WD Group';
 
   if (!apiKey) {
     console.warn(`[Brevo Email Warning] BREVO_API_KEY is not set in environment. Email simulated to: ${to.map(t => t.email).join(', ')} | Subject: "${subject}"`);

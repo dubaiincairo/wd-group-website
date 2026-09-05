@@ -371,6 +371,38 @@ export default function SettingsTab() {
         </div>
       </div>
 
+      {/* 6. Integrations & Dynamic Secrets Gateway Link */}
+      <div className="glass-card rounded-3xl p-6 sm:p-7 border border-purple-500/30 bg-[#0F1117]/90 space-y-4 shadow-xl">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-purple-500/20 text-purple-400 flex items-center justify-center shrink-0">
+              <Lock className="w-5 h-5" />
+            </div>
+            <div>
+              <h4 className="text-sm font-bold text-white flex items-center gap-2">
+                <span>{isAr ? 'إدارة مفاتيح الربط البرمجي والمتغيرات السرية' : 'Integrations & Dynamic Secrets Hub'}</span>
+                <span className="text-[10px] bg-purple-500/20 text-purple-300 font-mono px-2 py-0.5 rounded-full font-bold">
+                  {isAr ? 'مُفعّل سحابياً' : 'CLOUD MANAGED'}
+                </span>
+              </h4>
+              <p className="text-xs text-zinc-400 mt-0.5">
+                {isAr 
+                  ? 'يمكنك تعديل مفاتيح Brevo, WhatsApp, Resend, OpenAI, NanoBanana Pro والمتغيرات المخصصة عبر بوابة الإعدادات العامة.'
+                  : 'Manage credentials for Brevo, WhatsApp, Resend, OpenAI, NanoBanana Pro, and custom variables in Global Settings.'}
+              </p>
+            </div>
+          </div>
+
+          <a
+            href="/admin/system/settings"
+            className="px-4 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs font-mono flex items-center gap-2 transition-colors cursor-pointer shrink-0"
+          >
+            <span>{isAr ? 'فتح بوابة المفاتيح والتكاملات' : 'Open Secrets Hub'}</span>
+            <span className="rtl:rotate-180">&rarr;</span>
+          </a>
+        </div>
+      </div>
+
     </form>
   );
 }

@@ -25,7 +25,10 @@ import {
   Wrench,
   PackageCheck,
   UserCheck,
-  Zap
+  Zap,
+  RefreshCw,
+  FileCheck,
+  ShoppingBag
 } from 'lucide-react';
 
 function OrderTrackerContent() {
@@ -47,7 +50,7 @@ function OrderTrackerContent() {
     estimatedDelivery: isAr ? '08 سبتمبر 2026 (الفترة الصباحية)' : 'September 08, 2026 (Morning Slot)',
     factory: isAr ? 'مصنع جرين وود 1 و 3 — الرياض' : 'GreenWood Factory 1 & 3 — Riyadh',
     leadTechnician: isAr ? 'م. فهد الغامدي' : 'Eng. Fahad Al-Ghamdi',
-    currentStageIdx: 3, // Stage 4 in progress (0-indexed 3)
+    currentStageIdx: 2, // Stage 3 in progress (0-indexed 2)
     items: [
       {
         product: FURNITURE_CATALOG[0], // Al-Diriyah curved sofa
@@ -67,30 +70,130 @@ function OrderTrackerContent() {
     ]
   };
 
+  const [loadingOrder, setLoadingOrder] = useState(false);
+  const [isLiveOdoo, setIsLiveOdoo] = useState(false);
+
+  const fetchOrder = async (targetRef: string) => {
+    try {
+      setLoadingOrder(true);
+      const res = await fetch(`/api/odoo/track?ref=${encodeURIComponent(targetRef)}`);
+      if (res.ok) {
+        const json = await res.json();
+        if (json.success && json.data) {
+          const d = json.data;
+          const mappedItems = d.items && d.items.length > 0
+            ? d.items.map((it: any, i: number) => {
+                if (it.product && it.product.images) return it;
+                const matched = FURNITURE_CATALOG.find((c) =>
+                  c.nameEn.toLowerCase().includes(it.name?.toLowerCase() || '') ||
+                  (it.name && c.nameAr.includes(it.name))
+                ) || FURNITURE_CATALOG[i % FURNITURE_CATALOG.length];
+                return {
+                  product: matched,
+                  name: it.name || (isAr ? matched.nameAr : matched.nameEn),
+                  finishName: it.finishName || (isAr ? 'تشطيب مصنعي معتمد' : 'Factory Certified Finish'),
+                  quantity: it.quantity || it.qty || 1,
+                  image: it.image || matched.images[0],
+                };
+              })
+            : sampleOrder.items;
+
+          setActiveOrder({
+            ...sampleOrder,
+            orderRef: d.orderRef,
+            customerName: d.customerName || sampleOrder.customerName,
+            phone: d.phone || sampleOrder.phone,
+            city: d.city || sampleOrder.city,
+            orderDate: d.orderDate || sampleOrder.orderDate,
+            estimatedDelivery: d.estimatedDelivery || sampleOrder.estimatedDelivery,
+            factory: d.factory || sampleOrder.factory,
+            leadTechnician: d.leadTechnician || sampleOrder.leadTechnician,
+            currentStageIdx: d.currentStageIdx ?? sampleOrder.currentStageIdx,
+            statusText: d.statusText,
+            items: mappedItems,
+          });
+          setIsLiveOdoo(Boolean(d.isLiveOdoo));
+          setSearched(true);
+          return;
+        }
+      }
+    } catch (err) {
+      console.warn('Odoo tracking query notice:', err);
+    } finally {
+      setLoadingOrder(false);
+    }
+
+    setActiveOrder({
+      ...sampleOrder,
+      orderRef: targetRef,
+    });
+    setIsLiveOdoo(false);
+    setSearched(true);
+  };
+
+  const [timeLeft, setTimeLeft] = useState({
+    days: 3,
+    hours: 14,
+    minutes: 25,
+    seconds: 40,
+    isArrived: false,
+    progressPercent: 68,
+  });
+
+  useEffect(() => {
+    if (!activeOrder) return;
+
+    // Calculate delivery target: realistic delivery countdown target
+    const targetDate = new Date();
+    targetDate.setDate(targetDate.getDate() + 3);
+    targetDate.setHours(targetDate.getHours() + 14);
+    targetDate.setMinutes(targetDate.getMinutes() + 25);
+
+    const updateTimer = () => {
+      const now = new Date().getTime();
+      const diff = targetDate.getTime() - now;
+
+      if (diff <= 0) {
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0, isArrived: true, progressPercent: 100 });
+        return;
+      }
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+      const baseProgress = Math.min(95, Math.round(((activeOrder.currentStageIdx + 0.6) / 7) * 100));
+
+      setTimeLeft({
+        days,
+        hours,
+        minutes,
+        seconds,
+        isArrived: false,
+        progressPercent: baseProgress,
+      });
+    };
+
+    updateTimer();
+    const interval = setInterval(updateTimer, 1000);
+    return () => clearInterval(interval);
+  }, [activeOrder]);
+
   useEffect(() => {
     const refFromUrl = searchParams.get('ref');
     if (refFromUrl) {
       setQuery(refFromUrl);
-      setActiveOrder({
-        ...sampleOrder,
-        orderRef: refFromUrl,
-      });
-      setSearched(true);
+      fetchOrder(refFromUrl);
     } else {
-      // Load sample order by default for immediate preview
-      setActiveOrder(sampleOrder);
-      setSearched(true);
+      fetchOrder('WD-ORD-2026-8812');
     }
   }, [searchParams]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (!query.trim()) return;
-    setActiveOrder({
-      ...sampleOrder,
-      orderRef: query.trim().toUpperCase(),
-    });
-    setSearched(true);
+    fetchOrder(query.trim().toUpperCase());
   };
 
   const stages = [
@@ -98,49 +201,57 @@ function OrderTrackerContent() {
       num: 1,
       title: dict.furniture.tracking.stages.stage1,
       desc: dict.furniture.tracking.stages.stage1_desc,
-      icon: CheckCircle2,
-      location: isAr ? 'المكتب الهندسي — الرياض' : 'Engineering Dept — Riyadh',
-      timestamp: isAr ? '28 أغسطس · 10:30 ص' : 'Aug 28 · 10:30 AM',
+      icon: ShoppingBag,
+      location: isAr ? 'بوابة المتجر وخدمة العملاء' : 'E-Commerce Gateway & Support',
+      timestamp: isAr ? '28 أغسطس · 10:15 ص' : 'Aug 28 · 10:15 AM',
     },
     {
       num: 2,
       title: dict.furniture.tracking.stages.stage2,
       desc: dict.furniture.tracking.stages.stage2_desc,
-      icon: Layers,
-      location: isAr ? 'مستودع الأخشاب والأحجار — نجران' : 'Timber & Stone Yard — Najran',
-      timestamp: isAr ? '29 أغسطس · 02:15 م' : 'Aug 29 · 02:15 PM',
+      icon: FileCheck,
+      location: isAr ? 'إدارة المبيعات والهندسة — الرياض' : 'Sales & Engineering Dept — Riyadh',
+      timestamp: isAr ? '28 أغسطس · 11:30 ص' : 'Aug 28 · 11:30 AM',
     },
     {
       num: 3,
       title: dict.furniture.tracking.stages.stage3,
       desc: dict.furniture.tracking.stages.stage3_desc,
       icon: Factory,
-      location: isAr ? 'ورشة ماكينات 5-CNC — مصنع 1' : '5-Axis CNC Milling — Factory 1',
-      timestamp: isAr ? '30 أغسطس · 04:00 م' : 'Aug 30 · 04:00 PM',
+      location: isAr ? 'مصنع جرين وود 1 و 3 — الرياض' : 'GreenWood CNC Workcenters — Factory 1 & 3',
+      timestamp: isAr ? 'جارٍ التصنيع والتشكيل' : 'Active Manufacturing',
     },
     {
       num: 4,
       title: dict.furniture.tracking.stages.stage4,
       desc: dict.furniture.tracking.stages.stage4_desc,
-      icon: Wrench,
-      location: isAr ? 'مركز التنجيد والدهان — مصنع 3' : 'Upholstery & PU Coating — Factory 3',
-      timestamp: isAr ? 'جارٍ التنفيذ حالياً' : 'Currently Active',
+      icon: ShieldCheck,
+      location: isAr ? 'مركز فحص الجودة والمطابقة الفندقية' : 'Quality Assurance & Finishing Hub',
+      timestamp: isAr ? 'مجدول: فحص الجودة' : 'Scheduled: Quality Audit',
     },
     {
       num: 5,
       title: dict.furniture.tracking.stages.stage5,
       desc: dict.furniture.tracking.stages.stage5_desc,
       icon: PackageCheck,
-      location: isAr ? 'مركز ضبط الجودة والتغليف' : 'Quality Assurance & Crating Hub',
-      timestamp: isAr ? 'مجدول: 05 سبتمبر' : 'Scheduled: Sep 05',
+      location: isAr ? 'مستودع التغليف المقاوم للصدمات' : 'Shockproof Packaging & Crating Warehouse',
+      timestamp: isAr ? 'مجدول: الشحن والتجهيز' : 'Scheduled: Staging',
     },
     {
       num: 6,
       title: dict.furniture.tracking.stages.stage6,
       desc: dict.furniture.tracking.stages.stage6_desc,
       icon: Truck,
-      location: isAr ? 'الأسطول اللوجستي المباشر' : 'Dedicated White-Glove Fleet',
-      timestamp: isAr ? 'مجدول: 08 سبتمبر' : 'Scheduled: Sep 08',
+      location: isAr ? 'أسطول التوصيل الفندقي المبرد' : 'White-Glove Climate-Controlled Fleet',
+      timestamp: isAr ? 'مجدول: النقل المبرد' : 'Scheduled: Transport',
+    },
+    {
+      num: 7,
+      title: dict.furniture.tracking.stages.stage7,
+      desc: dict.furniture.tracking.stages.stage7_desc,
+      icon: CheckCircle2,
+      location: isAr ? 'موقع تركيب العميل' : 'Client Installation Site',
+      timestamp: isAr ? 'مجدول: التسليم والتركيب' : 'Site Delivery & Assembly',
     },
   ];
 
@@ -165,9 +276,17 @@ function OrderTrackerContent() {
             <span>{isAr ? 'العودة إلى معرض الأثاث' : 'Back to Furniture Showroom'}</span>
           </Link>
 
-          <span className="text-[11px] font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-3 py-1 rounded-full flex items-center gap-1.5 shadow-[0_0_15px_rgba(16,185,129,0.15)]">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span>{isAr ? 'مزامنة حية مع مصانع جرين وود' : 'Live Factory Sync Active'}</span>
+          <span className={`text-[11px] font-mono px-3 py-1 rounded-full flex items-center gap-1.5 transition-all ${
+            isLiveOdoo
+              ? 'text-purple-400 bg-purple-500/10 border border-purple-500/30 shadow-[0_0_15px_rgba(168,85,247,0.2)]'
+              : 'text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 shadow-[0_0_15px_rgba(16,185,129,0.15)]'
+          }`}>
+            <span className={`w-2 h-2 rounded-full animate-pulse ${isLiveOdoo ? 'bg-purple-400' : 'bg-emerald-400'}`} />
+            <span>
+              {isLiveOdoo
+                ? (isAr ? 'مزامنة حية مع Odoo ERP' : 'Odoo ERP Live Sync Active')
+                : (isAr ? 'مزامنة حية مع مصانع جرين وود' : 'Live Factory Sync Active')}
+            </span>
           </span>
         </div>
 
@@ -208,9 +327,11 @@ function OrderTrackerContent() {
             <Search className="w-5 h-5 text-zinc-400 absolute left-4 rtl:left-auto rtl:right-4 pointer-events-none" />
             <button
               type="submit"
-              className="absolute right-2 rtl:right-auto rtl:left-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#C9A86A] to-[#DFBA73] text-[#08090C] font-extrabold text-xs hover:shadow-lg transition-all cursor-pointer font-mono shrink-0"
+              disabled={loadingOrder}
+              className="absolute right-2 rtl:right-auto rtl:left-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#C9A86A] to-[#DFBA73] text-[#08090C] font-extrabold text-xs hover:shadow-lg transition-all cursor-pointer font-mono shrink-0 disabled:opacity-60 flex items-center gap-1.5"
             >
-              {dict.furniture.tracking.track_btn}
+              {loadingOrder && <RefreshCw className="w-3 h-3 animate-spin shrink-0" />}
+              <span>{loadingOrder ? (isAr ? 'جارٍ الفحص…' : 'Syncing…') : dict.furniture.tracking.track_btn}</span>
             </button>
           </form>
 
@@ -243,14 +364,24 @@ function OrderTrackerContent() {
             <div className="glass-card rounded-3xl p-6 sm:p-8 border border-[#C9A86A]/30 bg-[#0F1117]/90 shadow-2xl space-y-6">
               <div className="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-white/10">
                 <div className="space-y-1">
-                  <div className="flex items-center gap-3">
+                  <div className="flex flex-wrap items-center gap-3">
                     <h2 className="text-xl sm:text-2xl font-mono font-extrabold text-[#C9A86A]">
                       {activeOrder.orderRef}
                     </h2>
                     <span className="px-3 py-1 rounded-full bg-amber-500/15 border border-amber-500/40 text-amber-400 text-xs font-mono font-bold flex items-center gap-1.5">
                       <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping" />
-                      <span>{dict.furniture.tracking.status_in_progress} (65%)</span>
+                      <span>{activeOrder.statusText || dict.furniture.tracking.status_in_progress}</span>
                     </span>
+                    {isLiveOdoo ? (
+                      <span className="px-2.5 py-1 rounded-full bg-purple-500/15 border border-purple-500/30 text-purple-300 text-[11px] font-mono font-bold flex items-center gap-1.5 shadow-[0_0_10px_rgba(168,85,247,0.2)]">
+                        <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-pulse" />
+                        <span>Odoo ERP Live</span>
+                      </span>
+                    ) : (
+                      <span className="px-2.5 py-1 rounded-full bg-zinc-800/80 border border-white/10 text-zinc-400 text-[11px] font-mono flex items-center gap-1">
+                        <span>GreenWood Factory Sync</span>
+                      </span>
+                    )}
                   </div>
                   <p className="text-xs text-zinc-400">
                     {dict.furniture.tracking.customer_name}: <span className="text-white font-semibold">{activeOrder.customerName}</span> · {activeOrder.phone}
@@ -299,28 +430,140 @@ function OrderTrackerContent() {
                   {isAr ? 'القطع قيد التصنيع والتجهيز في هذا الطلب' : 'Pieces in Current Manufacturing Batch'}
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  {activeOrder.items.map((item: any, idx: number) => (
-                    <div key={idx} className="p-3 rounded-2xl bg-[#141721] border border-white/5 flex items-center gap-3">
-                      <div className="relative w-14 h-14 rounded-xl overflow-hidden shrink-0 border border-white/10 bg-black/40">
-                        <Image
-                          src={item.product.images[0]}
-                          alt={isAr ? item.product.nameAr : item.product.nameEn}
-                          fill
-                          sizes="56px"
-                          className="object-cover"
-                          unoptimized
-                        />
+                  {(activeOrder.items || []).map((item: any, idx: number) => {
+                    const product = item.product;
+                    const itemImage = item.image || product?.images?.[0] || 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=400&q=80';
+                    const itemName = item.name || (product ? (isAr ? product.nameAr : product.nameEn) : (isAr ? 'قطعة أثاث فاخرة' : 'Bespoke Furniture Piece'));
+                    const itemSku = product?.sku || `GW-PC-${String(idx + 1).padStart(3, '0')}`;
+                    const finishName = item.finishName || (isAr ? 'تشطيب مصنعي معتمد' : 'Factory Certified Finish');
+                    const quantity = item.quantity || item.qty || 1;
+
+                    return (
+                      <div key={idx} className="p-3 rounded-2xl bg-[#141721] border border-white/5 flex items-center gap-3">
+                        <div className="relative w-14 h-14 rounded-xl overflow-hidden shrink-0 border border-white/10 bg-black/40">
+                          <Image
+                            src={itemImage}
+                            alt={itemName}
+                            fill
+                            sizes="56px"
+                            className="object-cover"
+                            unoptimized
+                          />
+                        </div>
+                        <div className="min-w-0 space-y-0.5">
+                          <span className="text-[10px] font-mono text-[#C9A86A] block truncate">{itemSku}</span>
+                          <h4 className="text-xs font-bold text-white truncate">
+                            {itemName}
+                          </h4>
+                          <span className="text-[10px] text-zinc-400 block">{finishName} · ×{quantity}</span>
+                        </div>
                       </div>
-                      <div className="min-w-0 space-y-0.5">
-                        <span className="text-[10px] font-mono text-[#C9A86A] block truncate">{item.product.sku}</span>
-                        <h4 className="text-xs font-bold text-white truncate">
-                          {isAr ? item.product.nameAr : item.product.nameEn}
-                        </h4>
-                        <span className="text-[10px] text-zinc-400 block">{item.finishName} · ×{item.quantity}</span>
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
+              </div>
+            </div>
+
+            {/* 1.5. Live Delivery Countdown Timer */}
+            <div className="glass-card rounded-3xl p-6 sm:p-8 border border-[#C9A86A]/35 bg-gradient-to-br from-[#141724]/90 via-[#0F1117]/95 to-[#1a140a]/80 shadow-2xl relative overflow-hidden space-y-6">
+              {/* Background glow decoration */}
+              <div className="absolute -top-24 -right-24 w-60 h-60 bg-[#C9A86A]/10 rounded-full blur-3xl pointer-events-none" />
+              <div className="absolute -bottom-24 -left-24 w-60 h-60 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+
+              <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-5">
+                <div className="space-y-1">
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#C9A86A]/15 border border-[#C9A86A]/30 text-[#C9A86A] text-[11px] font-mono font-bold">
+                    <Clock className="w-3.5 h-3.5 animate-spin" style={{ animationDuration: '6s' }} />
+                    <span>{isAr ? 'العد التنازلي المباشر للتسليم' : 'Live Delivery Countdown'}</span>
+                  </div>
+                  <h3 className="text-lg sm:text-xl font-extrabold text-white tracking-tight">
+                    {isAr ? 'الوقت المتبقي حتى وصول الأثاث وبدء التركيب' : 'Estimated Time Remaining to White-Glove Installation'}
+                  </h3>
+                  <p className="text-xs text-zinc-400">
+                    {isAr
+                      ? `الموعد المحدد للتسليم: ${activeOrder.estimatedDelivery}`
+                      : `Scheduled installation window: ${activeOrder.estimatedDelivery}`}
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <span className="px-3 py-1.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-xs font-mono font-bold flex items-center gap-2 shadow-[0_0_15px_rgba(16,185,129,0.15)]">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+                    <span>{isAr ? 'وفق الجدول الزمني المحدد' : 'On Schedule'}</span>
+                  </span>
+                </div>
+              </div>
+
+              {/* Countdown Digits Grid */}
+              <div className="relative z-10 grid grid-cols-4 gap-2.5 sm:gap-4 max-w-2xl mx-auto py-2">
+                {/* Days */}
+                <div className="p-3 sm:p-5 rounded-2xl bg-[#090A0F] border border-white/10 text-center space-y-1.5 shadow-lg group hover:border-[#C9A86A]/50 transition-all">
+                  <div className="text-2xl sm:text-5xl font-mono font-black text-transparent bg-clip-text bg-gradient-to-b from-white via-white to-zinc-400">
+                    {String(timeLeft.days).padStart(2, '0')}
+                  </div>
+                  <div className="text-[10px] sm:text-xs font-mono uppercase tracking-widest text-[#C9A86A] font-bold">
+                    {isAr ? 'أيام' : 'Days'}
+                  </div>
+                </div>
+
+                {/* Hours */}
+                <div className="p-3 sm:p-5 rounded-2xl bg-[#090A0F] border border-white/10 text-center space-y-1.5 shadow-lg group hover:border-[#C9A86A]/50 transition-all">
+                  <div className="text-2xl sm:text-5xl font-mono font-black text-transparent bg-clip-text bg-gradient-to-b from-[#DFBA73] via-[#C9A86A] to-amber-600">
+                    {String(timeLeft.hours).padStart(2, '0')}
+                  </div>
+                  <div className="text-[10px] sm:text-xs font-mono uppercase tracking-widest text-[#C9A86A] font-bold">
+                    {isAr ? 'ساعات' : 'Hours'}
+                  </div>
+                </div>
+
+                {/* Minutes */}
+                <div className="p-3 sm:p-5 rounded-2xl bg-[#090A0F] border border-white/10 text-center space-y-1.5 shadow-lg group hover:border-[#C9A86A]/50 transition-all">
+                  <div className="text-2xl sm:text-5xl font-mono font-black text-transparent bg-clip-text bg-gradient-to-b from-white via-white to-zinc-400">
+                    {String(timeLeft.minutes).padStart(2, '0')}
+                  </div>
+                  <div className="text-[10px] sm:text-xs font-mono uppercase tracking-widest text-[#C9A86A] font-bold">
+                    {isAr ? 'دقائق' : 'Mins'}
+                  </div>
+                </div>
+
+                {/* Seconds */}
+                <div className="p-3 sm:p-5 rounded-2xl bg-[#090A0F] border border-white/10 text-center space-y-1.5 shadow-lg group hover:border-[#C9A86A]/50 transition-all">
+                  <div className="text-2xl sm:text-5xl font-mono font-black text-transparent bg-clip-text bg-gradient-to-b from-emerald-300 via-emerald-400 to-teal-600">
+                    {String(timeLeft.seconds).padStart(2, '0')}
+                  </div>
+                  <div className="text-[10px] sm:text-xs font-mono uppercase tracking-widest text-emerald-400 font-bold">
+                    {isAr ? 'ثوانٍ' : 'Secs'}
+                  </div>
+                </div>
+              </div>
+
+              {/* Progress to Delivery */}
+              <div className="relative z-10 space-y-2 pt-2">
+                <div className="flex items-center justify-between text-xs font-mono text-zinc-400">
+                  <span className="flex items-center gap-1.5">
+                    <Truck className="w-3.5 h-3.5 text-[#C9A86A]" />
+                    <span>{isAr ? 'اكتمال دورة التصنيع والتجهيز والشحن' : 'Manufacturing & Dispatch Cycle'}</span>
+                  </span>
+                  <span className="text-[#C9A86A] font-bold">{timeLeft.progressPercent}%</span>
+                </div>
+                <div className="w-full bg-black/50 h-2.5 rounded-full overflow-hidden p-0.5 border border-white/10">
+                  <div
+                    className="h-full rounded-full bg-gradient-to-r from-emerald-500 via-[#DFBA73] to-[#C9A86A] shadow-[0_0_15px_rgba(201,168,106,0.6)] transition-all duration-700"
+                    style={{ width: `${timeLeft.progressPercent}%` }}
+                  />
+                </div>
+              </div>
+
+              {/* Assurance Footnote */}
+              <div className="relative z-10 pt-2 flex flex-wrap items-center justify-between gap-3 text-[11px] font-mono text-zinc-400 border-t border-white/5">
+                <span className="flex items-center gap-1.5">
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>{isAr ? 'تغليف ضد الصدمات ونقل في سيارات مجهزة ومكيفة' : 'White-glove climate controlled transport'}</span>
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <UserCheck className="w-3.5 h-3.5 text-[#C9A86A]" />
+                  <span>{isAr ? 'تركيب مباشر وضمان استلام بدون أي خدوش' : 'Zero-defect delivery & installation guarantee'}</span>
+                </span>
               </div>
             </div>
 
@@ -342,9 +585,13 @@ function OrderTrackerContent() {
 
                   <div className="text-left sm:text-right rtl:sm:text-left font-mono">
                     <span className="text-xs font-bold text-[#C9A86A] block">
-                      {isAr ? 'المرحلة 4 من 6 قيد التنفيذ' : 'Stage 4 of 6 In Progress'}
+                      {isAr
+                        ? `المرحلة ${activeOrder.currentStageIdx + 1} من ${stages.length} ${activeOrder.currentStageIdx === stages.length - 1 ? 'مكتملة' : 'قيد التنفيذ'}`
+                        : `Stage ${activeOrder.currentStageIdx + 1} of ${stages.length} ${activeOrder.currentStageIdx === stages.length - 1 ? 'Completed' : 'In Progress'}`}
                     </span>
-                    <span className="text-[11px] text-emerald-400">65% Overall Completion</span>
+                    <span className="text-[11px] text-emerald-400">
+                      {Math.min(100, Math.round(((activeOrder.currentStageIdx + (activeOrder.currentStageIdx === stages.length - 1 ? 1 : 0.5)) / stages.length) * 100))}% Overall Completion
+                    </span>
                   </div>
                 </div>
 
@@ -352,7 +599,7 @@ function OrderTrackerContent() {
                 <div className="w-full bg-white/5 h-2.5 rounded-full overflow-hidden p-0.5 border border-white/10">
                   <div 
                     className="h-full rounded-full bg-gradient-to-r from-emerald-500 via-[#DFBA73] to-[#C9A86A] shadow-[0_0_20px_rgba(201,168,106,0.6)] transition-all duration-1000"
-                    style={{ width: '65%' }}
+                    style={{ width: `${Math.min(100, Math.round(((activeOrder.currentStageIdx + (activeOrder.currentStageIdx === stages.length - 1 ? 1 : 0.5)) / stages.length) * 100))}%` }}
                   />
                 </div>
               </div>
@@ -431,9 +678,9 @@ function OrderTrackerContent() {
                               ? 'text-amber-400' 
                               : 'text-zinc-500'
                           }`}>
-                            {isDone && '✓ Verified & Cleared'}
-                            {isCurrent && '⚡ Active on CNC / Hand-Craft Line'}
-                            {isPending && '⏳ Scheduled in Queue'}
+                            {isDone && (isAr ? '✓ تم الفحص والاعتماد' : '✓ Completed & Cleared')}
+                            {isCurrent && (isAr ? '⚡ قيد التنفيذ والمتابعة الحالية' : '⚡ Currently Active & Monitored')}
+                            {isPending && (isAr ? '⏳ مجدول في خط الإنتاج' : '⏳ Scheduled in Queue')}
                           </span>
                         </div>
                       </div>

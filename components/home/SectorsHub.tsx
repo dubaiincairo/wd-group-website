@@ -10,9 +10,9 @@ import { Building2, Factory, HardHat, ArrowRight, Sparkles, CheckCircle2 } from 
 export default function SectorsHub() {
   const { lang, dict } = useLanguage();
   const mediaConfig = (dict.home as any)?.media || {};
-  const photoHospitality = mediaConfig.sector_photo_hospitality || '';
-  const photoManufacturing = mediaConfig.sector_photo_manufacturing || '';
-  const photoContracting = mediaConfig.sector_photo_contracting || '';
+  const photoHospitality = mediaConfig.sector_photo_hospitality || 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=85';
+  const photoManufacturing = mediaConfig.sector_photo_manufacturing || 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=1200&q=85';
+  const photoContracting = mediaConfig.sector_photo_contracting || 'https://images.unsplash.com/photo-1541888946425-d0fbb186156a?auto=format&fit=crop&w=1200&q=85';
 
   return (
     <section id="sectors" className="py-20 sm:py-24 bg-brand-dark text-white relative overflow-hidden bg-blueprint-grid border-t border-white/5">

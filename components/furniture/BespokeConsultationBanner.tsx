@@ -57,7 +57,7 @@ export default function BespokeConsultationBanner() {
   };
 
   return (
-    <section className="relative overflow-hidden rounded-3xl border border-[#C9A86A]/30 bg-gradient-to-br from-[#0F1117] via-[#141721] to-[#0B5C3D]/30 p-8 sm:p-12 shadow-2xl">
+    <section id="bespoke-b2b" className="scroll-mt-28 relative overflow-hidden rounded-3xl border border-[#C9A86A]/30 bg-gradient-to-br from-[#0F1117] via-[#141721] to-[#0B5C3D]/30 p-8 sm:p-12 shadow-2xl">
       {/* Subtle background glow */}
       <div className="absolute top-0 right-0 w-[500px] h-[300px] bg-[#C9A86A]/10 blur-[130px] pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-[400px] h-[300px] bg-emerald-500/10 blur-[130px] pointer-events-none" />

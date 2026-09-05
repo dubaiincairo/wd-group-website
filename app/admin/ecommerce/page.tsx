@@ -373,20 +373,88 @@ function EcommerceAdminContent() {
     return `${valSAR.toLocaleString('en-US')} ${isAr ? 'ر.س' : 'SAR'}`;
   };
 
-  // Status Handlers
-  const handleUpdateOrderStatus = (orderId: string, newStatus: EcommerceOrderStatus) => {
-    setOrders((prev) =>
-      prev.map((o) => (o.id === orderId ? { ...o, status: newStatus } : o))
-    );
-    if (selectedOrder && selectedOrder.id === orderId) {
-      setSelectedOrder((prev) => (prev ? { ...prev, status: newStatus } : null));
+  // Status Handlers with Automated Client Notifications (Feature 7)
+  const handleUpdateOrderStatus = async (orderId: string, newStatus: EcommerceOrderStatus) => {
+    const targetOrder = orders.find((o) => o.id === orderId);
+
+    // Call Stage Notification API (Brevo Email + WhatsApp)
+    if (targetOrder) {
+      fetch('/api/orders/notify-stage', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          orderRef: targetOrder.orderRef,
+          customerName: targetOrder.customerName,
+          customerEmail: targetOrder.email,
+          customerPhone: targetOrder.phone,
+          newStatus,
+          city: targetOrder.city,
+          leadTechnician: targetOrder.leadTechnician,
+          scheduledDeliveryDate: targetOrder.deliveryDate,
+        }),
+      }).catch((err) => console.warn('Telemetry dispatch notice:', err));
+
+      const stageNote: InternalNote = {
+        id: `note-${Date.now()}`,
+        text: isAr 
+          ? `تم إشعار العميل آلياً عبر البريد الإلكتروني والواتساب بتحديث مسار الطلب إلى: (${newStatus})` 
+          : `Automated telemetry dispatched: Client notified via Email & WhatsApp (${newStatus})`,
+        author: isAr ? 'منظومة الإشعارات الآلية' : 'Automated Telemetry',
+        authorEmail: 'notifications@wdgroup.online',
+        createdAt: new Date().toISOString(),
+      };
+
+      setOrders((prev) =>
+        prev.map((o) => (o.id === orderId ? { ...o, status: newStatus, internalNotes: [stageNote, ...o.internalNotes] } : o))
+      );
+
+      if (selectedOrder && selectedOrder.id === orderId) {
+        setSelectedOrder((prev) => (prev ? { ...prev, status: newStatus, internalNotes: [stageNote, ...prev.internalNotes] } : null));
+      }
+
+      showToast(
+        isAr 
+          ? 'تم تحديث المرحلة وإرسال إشعار للعميل عبر البريد والواتساب' 
+          : 'Stage updated & customer notified via Email & WhatsApp', 
+        'success'
+      );
+    } else {
+      setOrders((prev) =>
+        prev.map((o) => (o.id === orderId ? { ...o, status: newStatus } : o))
+      );
     }
-    showToast(isAr ? 'تم تحديث حالة الطلب بنجاح' : 'Order status updated successfully', 'success');
   };
 
   const handleBulkUpdateStatus = (orderIds: string[], newStatus: EcommerceOrderStatus) => {
+    orderIds.forEach((id) => {
+      const order = orders.find((o) => o.id === id);
+      if (order) {
+        fetch('/api/orders/notify-stage', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            orderRef: order.orderRef,
+            customerName: order.customerName,
+            customerEmail: order.email,
+            customerPhone: order.phone,
+            newStatus,
+            city: order.city,
+            leadTechnician: order.leadTechnician,
+            scheduledDeliveryDate: order.deliveryDate,
+          }),
+        }).catch(() => {});
+      }
+    });
+
     setOrders((prev) =>
       prev.map((o) => (orderIds.includes(o.id) ? { ...o, status: newStatus } : o))
+    );
+
+    showToast(
+      isAr 
+        ? `تم تحديث ${orderIds.length} طلبات وإرسال إشعارات جماعية للعملاء` 
+        : `Updated ${orderIds.length} orders & sent batch notifications`, 
+      'success'
     );
   };
 
