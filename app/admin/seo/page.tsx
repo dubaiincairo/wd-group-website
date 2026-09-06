@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import { 
   Search, 
@@ -14,10 +15,10 @@ import {
   Shield, 
   FileCode2, 
   Bot, 
-  Building,
-  Key,
-  ExternalLink,
-  Code
+  Building, 
+  Key, 
+  ExternalLink, 
+  Code 
 } from 'lucide-react';
 import BilingualInput from '@/components/admin/BilingualInput';
 import MediaFieldUploader from '@/components/admin/MediaFieldUploader';
@@ -30,12 +31,21 @@ export default function SEOAdminPage() {
   const { showToast } = useToast();
   const { lang } = useLanguage();
   const isAr = lang === 'ar';
+  const searchParams = useSearchParams();
 
   const [content, setContent] = useState<SiteContentPayload | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [ogImageError, setOgImageError] = useState(false);
   const [activeTab, setActiveTab] = useState<'google' | 'analytics' | 'meta' | 'social' | 'schema' | 'robots'>('google');
+
+  // Reactively sync active sub-tab from URL searchParams (e.g. from AdminSidebar)
+  useEffect(() => {
+    const tab = searchParams?.get('tab');
+    if (tab && ['google', 'analytics', 'meta', 'social', 'schema', 'robots'].includes(tab)) {
+      setActiveTab(tab as any);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     async function load() {

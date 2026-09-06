@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { 
   Save, 
   RefreshCw, 
@@ -300,18 +301,15 @@ export default function PagesContentEditor() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
+  const searchParams = useSearchParams();
+
   // Sync tab from URL query params when clicked from sidebar
   useEffect(() => {
-    try {
-      const params = new URLSearchParams(window.location.search);
-      const tab = params.get('tab');
-      if (tab && ['home', 'about', 'hospitality', 'manufacturing', 'contracting'].includes(tab)) {
-        setActiveTab(tab as any);
-      }
-    } catch (e) {
-      console.error(e);
+    const tab = searchParams?.get('tab');
+    if (tab && ['home', 'about', 'hospitality', 'manufacturing', 'contracting'].includes(tab)) {
+      setActiveTab(tab as any);
     }
-  }, []);
+  }, [searchParams]);
 
   // Collapsible Accordion State for Modules
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({

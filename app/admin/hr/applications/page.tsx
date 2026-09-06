@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { 
   Users, 
   Search, 
@@ -11,11 +12,11 @@ import {
   Phone, 
   CheckCircle2, 
   Clock, 
-  Star,
-  FileText,
-  ChevronLeft,
-  ChevronRight,
-  ChevronDown
+  Star, 
+  FileText, 
+  ChevronLeft, 
+  ChevronRight, 
+  ChevronDown 
 } from 'lucide-react';
 import CandidateDrawer from '@/components/admin/CandidateDrawer';
 import { useToast } from '@/components/admin/ToastProvider';
@@ -26,6 +27,7 @@ export default function TalentPoolATSPage() {
   const { showToast } = useToast();
   const { lang } = useLanguage();
   const isAr = lang === 'ar';
+  const searchParams = useSearchParams();
 
   const [applications, setApplications] = useState<JobApplicationRecord[]>([]);
   const [loading, setLoading] = useState(true);
@@ -37,6 +39,21 @@ export default function TalentPoolATSPage() {
   const [statusFilter, setStatusFilter] = useState('all');
   const [page, setPage] = useState(0);
   const pageSize = 20;
+
+  // Reactively sync statusFilter from URL query parameters (e.g. from AdminSidebar)
+  useEffect(() => {
+    const status = searchParams?.get('status');
+    if (status && ['all', 'new', 'reviewing', 'shortlisted', 'interview', 'hired', 'rejected'].includes(status)) {
+      setStatusFilter(status);
+    } else if (!status) {
+      setStatusFilter('all');
+    }
+    const sector = searchParams?.get('sector');
+    if (sector) {
+      setSectorFilter(sector);
+    }
+    setPage(0);
+  }, [searchParams]);
 
   const [selectedCandidate, setSelectedCandidate] = useState<JobApplicationRecord | null>(null);
 

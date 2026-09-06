@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { 
   Mail, 
   Sparkles, 
@@ -49,6 +50,7 @@ export default function EmailTemplatesAdminPage() {
   const { lang } = useLanguage();
   const isAr = lang === 'ar';
   const { showToast } = useToast();
+  const searchParams = useSearchParams();
 
   const [activeTab, setActiveTab] = useState<number>(0);
   const [templateLang, setTemplateLang] = useState<'ar' | 'en'>(isAr ? 'ar' : 'en');
@@ -62,6 +64,23 @@ export default function EmailTemplatesAdminPage() {
   useEffect(() => {
     setTemplateLang(isAr ? 'ar' : 'en');
   }, [isAr]);
+
+  // Sync active template from URL query params or hash (e.g. from AdminSidebar)
+  useEffect(() => {
+    const cat = (searchParams?.get('category') || searchParams?.get('template') || '').toLowerCase();
+    const hash = typeof window !== 'undefined' ? window.location.hash.replace('#', '').toLowerCase() : '';
+    const target = cat || hash;
+
+    if (target.includes('order') || target.includes('furniture')) {
+      setActiveTab(6); // furniture-order
+    } else if (target.includes('career') || target.includes('hr') || target.includes('applicant')) {
+      setActiveTab(2); // career-candidate
+    } else if (target.includes('security') || target.includes('auth') || target.includes('reset') || target.includes('login')) {
+      setActiveTab(4); // admin-reset
+    } else if (target.includes('inquiry') || target.includes('lead') || target.includes('rfp')) {
+      setActiveTab(0); // client-inquiry
+    }
+  }, [searchParams]);
 
   const isTemplateAr = templateLang === 'ar';
 
