@@ -309,6 +309,7 @@ export interface SiteContentPayload {
       review_url?: string;
       website_url?: string;
       image_url?: string;
+      stars?: number | string;
     }>;
   };
   manufacturing: {

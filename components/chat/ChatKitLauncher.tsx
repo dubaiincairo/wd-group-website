@@ -31,23 +31,27 @@ export default function ChatKitLauncher() {
   }, [isOpen]);
 
   return (
-    <div
-      dir={isAr ? 'rtl' : 'ltr'}
-      lang={lang}
-      className="fixed bottom-6 end-6 z-40 pointer-events-auto select-none"
-    >
-      {/* 1. Floating ChatKit Modal Container */}
+    <>
+      {/* 1. Floating ChatKit Modal Container (Fixed & strictly inside viewport) */}
       {isOpen && (
-        <div className="fixed sm:absolute bottom-0 end-0 inset-x-4 sm:inset-x-auto w-auto sm:w-[440px] h-[640px] max-h-[85vh] mb-16 sm:mb-20 animate-in fade-in slide-in-from-bottom-8 duration-200">
+        <div
+          dir={isAr ? 'rtl' : 'ltr'}
+          lang={lang}
+          className="fixed z-50 bottom-24 right-4 sm:right-6 rtl:right-auto rtl:left-4 rtl:sm:left-6 w-[calc(100vw-2rem)] sm:w-[420px] max-w-[calc(100vw-2rem)] sm:max-w-[420px] h-[600px] max-h-[calc(100vh-8rem)] rounded-3xl shadow-[0_25px_70px_rgba(0,0,0,0.85)] pointer-events-auto select-none animate-in fade-in slide-in-from-bottom-5 duration-200"
+        >
           <ChatKitWidget onClose={() => setIsOpen(false)} />
         </div>
       )}
 
-      {/* 2. Floating Launcher Button */}
-      <div className="relative flex items-center gap-3">
+      {/* 2. Floating Launcher Button Container */}
+      <div
+        dir={isAr ? 'rtl' : 'ltr'}
+        lang={lang}
+        className="fixed bottom-6 right-4 sm:right-6 rtl:right-auto rtl:left-4 rtl:sm:left-6 z-40 pointer-events-auto select-none flex items-center gap-3"
+      >
         {/* Helper Hint Bubble (shown until first opened) */}
         {!isOpen && !hasInteracted && (
-          <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#0B0D14]/95 border border-[#C9A86A]/40 text-[#C9A86A] text-xs font-semibold shadow-2xl backdrop-blur-xl animate-bounce">
+          <div className="hidden sm:flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0B0D14]/95 border border-[#C9A86A]/40 text-[#C9A86A] text-xs font-semibold shadow-2xl backdrop-blur-xl animate-bounce">
             <Sparkles className="w-3.5 h-3.5" />
             <span>{isAr ? 'المساعد الذكي لمجموعة WD' : 'WD Group AI Concierge'}</span>
           </div>
@@ -92,6 +96,6 @@ export default function ChatKitLauncher() {
           </div>
         </button>
       </div>
-    </div>
+    </>
   );
 }
