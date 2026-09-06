@@ -13,6 +13,9 @@ import {
   Sliders,
   Maximize,
   Palette,
+  Columns3,
+  Compass,
+  Film,
   Eye
 } from 'lucide-react';
 
@@ -21,8 +24,78 @@ import HeroOption1Split from './hero/HeroOption1Split';
 import HeroOption2Editorial from './hero/HeroOption2Editorial';
 import HeroOption3Panoramic from './hero/HeroOption3Panoramic';
 import HeroOption4Asymmetric from './hero/HeroOption4Asymmetric';
+import HeroOption5Portals from './hero/HeroOption5Portals';
+import HeroOption6Blueprint from './hero/HeroOption6Blueprint';
+import HeroOption7Cinematic from './hero/HeroOption7Cinematic';
 
-export type HeroVariant = 'option-1' | 'option-2' | 'option-3' | 'option-4';
+export type HeroVariant = 
+  | 'option-1' 
+  | 'option-2' 
+  | 'option-3' 
+  | 'option-4'
+  | 'option-5'
+  | 'option-6'
+  | 'option-7';
+
+interface VariantTabConfig {
+  id: HeroVariant;
+  num: string;
+  nameAr: string;
+  nameEn: string;
+  icon: React.ComponentType<{ className?: string }>;
+}
+
+const HERO_VARIANTS: VariantTabConfig[] = [
+  {
+    id: 'option-1',
+    num: '1',
+    nameAr: '1. تقسيم متوازن (Showcase)',
+    nameEn: '1. Split Showcase',
+    icon: LayoutGrid,
+  },
+  {
+    id: 'option-2',
+    num: '2',
+    nameAr: '2. نصفين 50/50 (Hotspots)',
+    nameEn: '2. 50/50 Hotspots',
+    icon: Sliders,
+  },
+  {
+    id: 'option-3',
+    num: '3',
+    nameAr: '3. بانوراما واسعة (Console)',
+    nameEn: '3. Panoramic Console',
+    icon: Maximize,
+  },
+  {
+    id: 'option-4',
+    num: '4',
+    nameAr: '4. كولاج المواد (Swatches)',
+    nameEn: '4. Material Collage',
+    icon: Palette,
+  },
+  {
+    id: 'option-5',
+    num: '5',
+    nameAr: '5. بوابات متمددة (Portals)',
+    nameEn: '5. Expanding Portals',
+    icon: Columns3,
+  },
+  {
+    id: 'option-6',
+    num: '6',
+    nameAr: '6. مخطط هندسي (CAD Blueprint)',
+    nameEn: '6. CAD Blueprint',
+    icon: Compass,
+  },
+  {
+    id: 'option-7',
+    num: '7',
+    nameAr: '7. سينمائي VIP (Concierge Reel)',
+    nameEn: '7. VIP Atelier Reel',
+    icon: Film,
+  },
+];
 
 export default function EcommerceHero() {
   const { lang } = useLanguage();
@@ -30,20 +103,22 @@ export default function EcommerceHero() {
   
   const [currentSlide, setCurrentSlide] = useState(0);
   const [heroVariant, setHeroVariant] = useState<HeroVariant>('option-1');
-  const [showSwitcher, setShowSwitcher] = useState(true);
 
-  // Initialize from URL param (?hero=1..4) or localStorage
+  // Initialize from URL param (?hero=1..7) or localStorage
   useEffect(() => {
     try {
       const params = new URLSearchParams(window.location.search);
       const heroParam = params.get('hero');
-      if (heroParam === '1' || heroParam === 'split') setHeroVariant('option-1');
-      else if (heroParam === '2' || heroParam === 'editorial') setHeroVariant('option-2');
-      else if (heroParam === '3' || heroParam === 'panoramic') setHeroVariant('option-3');
-      else if (heroParam === '4' || heroParam === 'asymmetric') setHeroVariant('option-4');
+      if (heroParam === '1') setHeroVariant('option-1');
+      else if (heroParam === '2') setHeroVariant('option-2');
+      else if (heroParam === '3') setHeroVariant('option-3');
+      else if (heroParam === '4') setHeroVariant('option-4');
+      else if (heroParam === '5') setHeroVariant('option-5');
+      else if (heroParam === '6') setHeroVariant('option-6');
+      else if (heroParam === '7') setHeroVariant('option-7');
       else {
         const saved = localStorage.getItem('wd_hero_variant') as HeroVariant;
-        if (saved && ['option-1', 'option-2', 'option-3', 'option-4'].includes(saved)) {
+        if (saved && HERO_VARIANTS.some(v => v.id === saved)) {
           setHeroVariant(saved);
         }
       }
@@ -58,9 +133,11 @@ export default function EcommerceHero() {
       localStorage.setItem('wd_hero_variant', variant);
       // Update URL query string quietly without full reload
       const url = new URL(window.location.href);
-      const num = variant === 'option-1' ? '1' : variant === 'option-2' ? '2' : variant === 'option-3' ? '3' : '4';
-      url.searchParams.set('hero', num);
-      window.history.replaceState({}, '', url.toString());
+      const targetConfig = HERO_VARIANTS.find(v => v.id === variant);
+      if (targetConfig) {
+        url.searchParams.set('hero', targetConfig.num);
+        window.history.replaceState({}, '', url.toString());
+      }
     } catch (e) {
       console.error(e);
     }
@@ -87,72 +164,49 @@ export default function EcommerceHero() {
   return (
     <section className="relative min-h-[90vh] sm:min-h-[95vh] flex flex-col justify-between pt-24 sm:pt-28 pb-8 overflow-hidden">
       
-      {/* 1. Interactive Hero Structure Switcher Bar (For Choosing Between the 4 Options) */}
+      {/* 1. Interactive Live Hero Structure Switcher Bar (7 Options) */}
       <div className="relative z-30 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full mb-3">
-        <div className="flex flex-wrap items-center justify-between gap-2 p-2 rounded-2xl bg-[#0F121C]/90 backdrop-blur-xl border border-[#C9A86A]/30 shadow-2xl">
+        <div className="p-2.5 rounded-2xl bg-[#0F121C]/95 backdrop-blur-2xl border border-[#C9A86A]/35 shadow-2xl space-y-2">
           
-          <div className="flex items-center gap-2 px-2">
-            <span className="w-2 h-2 rounded-full bg-[#C9A86A] animate-pulse" />
-            <span className="text-xs font-bold text-white flex items-center gap-1.5">
-              <Eye className="w-3.5 h-3.5 text-[#C9A86A]" />
-              {isAr ? 'اختر هيكل الواجهة (4 خيارات معمارية):' : 'Select Hero Layout (4 Architectural Options):'}
-            </span>
+          {/* Top Label & Mode Indicator */}
+          <div className="flex items-center justify-between px-2 pb-1 border-b border-white/10">
+            <div className="flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#C9A86A] animate-pulse" />
+              <span className="text-xs font-black text-white flex items-center gap-1.5 font-mono">
+                <Eye className="w-4 h-4 text-[#C9A86A]" />
+                {isAr ? 'معاينة هياكل الواجهة (7 خيارات معمارية فاخرة):' : 'Explore Hero Layouts (7 Architectural Master Options):'}
+              </span>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] font-mono text-[#C9A86A] px-2.5 py-0.5 rounded-full bg-[#C9A86A]/10 border border-[#C9A86A]/30">
+                {isAr ? 'اختر لمعاينة التصميم فوراً' : 'Click to preview live'}
+              </span>
+            </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-1.5">
-            
-            {/* Option 1 */}
-            <button
-              onClick={() => handleSelectVariant('option-1')}
-              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer border ${
-                heroVariant === 'option-1'
-                  ? 'bg-[#C9A86A] text-[#08090C] border-[#E3C58A] shadow-[0_0_15px_rgba(201,168,106,0.5)]'
-                  : 'bg-white/5 text-zinc-300 hover:text-white border-white/10 hover:bg-white/10'
-              }`}
-            >
-              <LayoutGrid className="w-3.5 h-3.5" />
-              <span>{isAr ? '1. تقسيم متوازن (Showcase)' : '1. Split Showcase'}</span>
-            </button>
+          {/* 7 Variant Buttons Pill Strip */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-1.5 pt-1">
+            {HERO_VARIANTS.map((tab) => {
+              const Icon = tab.icon;
+              const isActive = heroVariant === tab.id;
 
-            {/* Option 2 */}
-            <button
-              onClick={() => handleSelectVariant('option-2')}
-              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer border ${
-                heroVariant === 'option-2'
-                  ? 'bg-[#C9A86A] text-[#08090C] border-[#E3C58A] shadow-[0_0_15px_rgba(201,168,106,0.5)]'
-                  : 'bg-white/5 text-zinc-300 hover:text-white border-white/10 hover:bg-white/10'
-              }`}
-            >
-              <Sliders className="w-3.5 h-3.5" />
-              <span>{isAr ? '2. نصفين مع نقاط تفاعلية (50/50 Hotspots)' : '2. 50/50 Hotspots'}</span>
-            </button>
-
-            {/* Option 3 */}
-            <button
-              onClick={() => handleSelectVariant('option-3')}
-              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer border ${
-                heroVariant === 'option-3'
-                  ? 'bg-[#C9A86A] text-[#08090C] border-[#E3C58A] shadow-[0_0_15px_rgba(201,168,106,0.5)]'
-                  : 'bg-white/5 text-zinc-300 hover:text-white border-white/10 hover:bg-white/10'
-              }`}
-            >
-              <Maximize className="w-3.5 h-3.5" />
-              <span>{isAr ? '3. بانوراما واسعة (Console)' : '3. Panoramic Console'}</span>
-            </button>
-
-            {/* Option 4 */}
-            <button
-              onClick={() => handleSelectVariant('option-4')}
-              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer border ${
-                heroVariant === 'option-4'
-                  ? 'bg-[#C9A86A] text-[#08090C] border-[#E3C58A] shadow-[0_0_15px_rgba(201,168,106,0.5)]'
-                  : 'bg-white/5 text-zinc-300 hover:text-white border-white/10 hover:bg-white/10'
-              }`}
-            >
-              <Palette className="w-3.5 h-3.5" />
-              <span>{isAr ? '4. كولاج المواد (Swatches)' : '4. Material Collage'}</span>
-            </button>
-
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => handleSelectVariant(tab.id)}
+                  className={`inline-flex items-center justify-center gap-1.5 px-2.5 py-2 rounded-xl text-[11px] font-bold transition-all cursor-pointer border truncate ${
+                    isActive
+                      ? 'bg-[#C9A86A] text-[#08090C] border-[#E3C58A] shadow-[0_0_20px_rgba(201,168,106,0.6)] scale-[1.02]'
+                      : 'bg-white/5 text-zinc-300 hover:text-white border-white/10 hover:bg-white/10 hover:border-white/20'
+                  }`}
+                  title={isAr ? tab.nameAr : tab.nameEn}
+                >
+                  <Icon className="w-3.5 h-3.5 shrink-0" />
+                  <span className="truncate">{isAr ? tab.nameAr : tab.nameEn}</span>
+                </button>
+              );
+            })}
           </div>
 
         </div>
@@ -195,8 +249,35 @@ export default function EcommerceHero() {
         />
       )}
 
-      {/* 3. Global Slide Controls Strip (Visible when in Option 1, 3, or 4) */}
-      {heroVariant !== 'option-2' && heroVariant !== 'option-3' && (
+      {heroVariant === 'option-5' && (
+        <HeroOption5Portals
+          slide={slide}
+          currentSlide={currentSlide}
+          setCurrentSlide={setCurrentSlide}
+          isAr={isAr}
+        />
+      )}
+
+      {heroVariant === 'option-6' && (
+        <HeroOption6Blueprint
+          slide={slide}
+          currentSlide={currentSlide}
+          setCurrentSlide={setCurrentSlide}
+          isAr={isAr}
+        />
+      )}
+
+      {heroVariant === 'option-7' && (
+        <HeroOption7Cinematic
+          slide={slide}
+          currentSlide={currentSlide}
+          setCurrentSlide={setCurrentSlide}
+          isAr={isAr}
+        />
+      )}
+
+      {/* 3. Slide Controls Strip (Visible when in Option 1 or 4) */}
+      {(heroVariant === 'option-1' || heroVariant === 'option-4') && (
         <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-3">
           <div className="flex items-center justify-between gap-4 pb-4 border-b border-white/10">
             {/* Slide Dots */}
