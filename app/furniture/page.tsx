@@ -11,11 +11,14 @@ import { FurnitureItem, FURNITURE_CATALOG } from '@/lib/furnitureData';
 import EcommerceNavbar from '@/components/furniture/EcommerceNavbar';
 import EcommerceHero from '@/components/furniture/EcommerceHero';
 import CategoryTiles from '@/components/furniture/CategoryTiles';
+import ArchitecturalExpandingPortals from '@/components/furniture/ArchitecturalExpandingPortals';
 import ProductSpotlight from '@/components/furniture/ProductSpotlight';
+import BespokeCadBlueprint from '@/components/furniture/BespokeCadBlueprint';
 import TrustGuarantees from '@/components/furniture/TrustGuarantees';
 import FurnitureCatalog from '@/components/furniture/FurnitureCatalog';
 import ShopTheLook from '@/components/furniture/ShopTheLook';
 import BespokeConsultationBanner from '@/components/furniture/BespokeConsultationBanner';
+import CinematicVipConcierge from '@/components/furniture/CinematicVipConcierge';
 import EcommerceNewsletter from '@/components/furniture/EcommerceNewsletter';
 import EcommerceFooter from '@/components/furniture/EcommerceFooter';
 
@@ -141,7 +144,12 @@ function FurniturePageContent() {
 
           <BrandedSeparator />
 
-          {/* 4. Signature Product Spotlight */}
+          {/* 4. Triple Architectural Expanding Portals (Curated Trio) */}
+          <ArchitecturalExpandingPortals />
+
+          <BrandedSeparator />
+
+          {/* 5. Signature Product Spotlight */}
           <ProductSpotlight
             onQuickView={(prod) => setQuickViewProduct(prod)}
             onAddToCart={handleAddToCart}
@@ -149,12 +157,17 @@ function FurniturePageContent() {
 
           <BrandedSeparator />
 
-          {/* 5. The Value Pillars & Factory Advantage */}
+          {/* 6. Bespoke Atelier CAD Blueprint & Engineering Matrix */}
+          <BespokeCadBlueprint />
+
+          <BrandedSeparator />
+
+          {/* 7. The Value Pillars & Factory Advantage */}
           <TrustGuarantees />
 
           <BrandedSeparator />
 
-          {/* 6. Interactive Filterable Product Catalog */}
+          {/* 8. Interactive Filterable Product Catalog */}
           <section id="catalog" className="scroll-mt-28">
             <FurnitureCatalog
               controlledCategory={selectedCategory}
@@ -167,7 +180,7 @@ function FurniturePageContent() {
 
           <BrandedSeparator />
 
-          {/* 7. Interactive Shop The Look (Room Lookbook) */}
+          {/* 9. Interactive Shop The Look (Room Lookbook) */}
           <ShopTheLook
             onQuickView={(prod) => setQuickViewProduct(prod)}
             onAddToCart={handleAddToCart}
@@ -175,8 +188,13 @@ function FurniturePageContent() {
 
           <BrandedSeparator />
 
-          {/* 8. Bespoke B2B & Hospitality FF&E Consultation */}
+          {/* 10. Bespoke B2B & Hospitality FF&E Consultation */}
           <BespokeConsultationBanner />
+
+          <BrandedSeparator />
+
+          {/* 11. Cinematic VIP Atelier Reel & Concierge Card */}
+          <CinematicVipConcierge />
 
           <BrandedSeparator />
 
