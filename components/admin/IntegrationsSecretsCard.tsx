@@ -121,18 +121,59 @@ export default function IntegrationsSecretsCard({ content, setContent }: Integra
     showToast(isAr ? 'تم حذف المتغير' : 'Variable removed', 'success');
   };
 
-  // Simulated Test Ping
-  const handleTestPing = (service: string) => {
+  // Live Real Connection Test Ping
+  const handleTestPing = async (service: string) => {
     setTestingKey(service);
-    setTimeout(() => {
-      setTestingKey(null);
+    try {
+      let keyToTest = '';
+      let modelToTest = '';
+      if (service === 'OpenAI') {
+        keyToTest = integrations.openai_api_key || '';
+        modelToTest = integrations.openai_model || 'gpt-4o';
+      } else if (service === 'GoogleCloud' || service === 'Google Cloud' || service === 'NanoBanana') {
+        keyToTest = integrations.google_cloud_api_key || integrations.nanobanana_api_key || '';
+      } else if (service === 'Brevo') {
+        keyToTest = integrations.brevo_api_key || '';
+      } else if (service === 'Resend') {
+        keyToTest = integrations.resend_api_key || '';
+      } else if (service === 'WhatsApp') {
+        keyToTest = integrations.whatsapp_api_key || '';
+      }
+
+      const res = await fetch('/api/admin/integrations/test-connection', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          service: service === 'Google Cloud' ? 'GoogleCloud' : service,
+          key: keyToTest,
+          model: modelToTest,
+        }),
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        showToast(
+          isAr 
+            ? `اتصال ${service} متصل ويعمل بنجاح (${data.latencyMs}ms)` 
+            : `${service} connected successfully (${data.latencyMs}ms)`, 
+          'success'
+        );
+      } else {
+        showToast(
+          isAr
+            ? `فشل اتصال ${service}: ${data.error || 'خطأ في التحقق'}`
+            : `${service} test failed: ${data.error || 'Verification error'}`,
+          'error'
+        );
+      }
+    } catch (err: any) {
       showToast(
-        isAr 
-          ? `اتصال ${service} يعمل بنجاح (200 OK)` 
-          : `${service} connection test succeeded (200 OK)`, 
-        'success'
+        isAr ? `تعذر فحص اتصال ${service}` : `Failed to test ${service} connection`,
+        'error'
       );
-    }, 1000);
+    } finally {
+      setTestingKey(null);
+    }
   };
 
   return (
@@ -505,6 +546,16 @@ export default function IntegrationsSecretsCard({ content, setContent }: Integra
                   Google Cloud / NanoBanana Pro Photo Enhancer
                 </h4>
               </div>
+
+              <button
+                type="button"
+                onClick={() => handleTestPing('GoogleCloud')}
+                disabled={testingKey === 'GoogleCloud'}
+                className="px-3 py-1 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 text-[11px] font-mono font-bold flex items-center gap-1 cursor-pointer transition-colors"
+              >
+                {testingKey === 'GoogleCloud' ? <RefreshCw className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3" />}
+                <span>{isAr ? 'فحص المفتاح' : 'Test Key'}</span>
+              </button>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">

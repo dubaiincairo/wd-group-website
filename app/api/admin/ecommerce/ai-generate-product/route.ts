@@ -4,6 +4,7 @@ import { getIntegrationsConfig } from '@/lib/admin/secrets';
 export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
+  const startTime = Date.now();
   try {
     const body = await req.json();
     const { imageUrl, hints = '' } = body;
@@ -16,15 +17,14 @@ export async function POST(req: NextRequest) {
     }
 
     const integrations = await getIntegrationsConfig();
-    const apiKey = integrations.openai_api_key || process.env.OPENAI_API_KEY;
-    const model = integrations.openai_model || 'gpt-4o';
+    const openAiKey = (integrations.openai_api_key || process.env.OPENAI_API_KEY || '').trim();
+    const openAiModel = integrations.openai_model || 'gpt-4o';
+    const googleCloudKey = (integrations.google_cloud_api_key || integrations.nanobanana_api_key || process.env.GOOGLE_CLOUD_API_KEY || process.env.GEMINI_API_KEY || '').trim();
 
-    if (apiKey) {
-      try {
-        const prompt = `You are a world-class luxury furniture architect and catalog copywriter for "WD Group — GreenWood Manufacturing" in Saudi Arabia.
+    const prompt = `You are a world-class luxury furniture architect and catalog copywriter for "WD Group — GreenWood Manufacturing" in Saudi Arabia.
 Analyze this furniture piece image and generate complete, production-ready e-commerce catalog specifications in strict JSON format.
 
-HINTS: ${hints || 'High-end Saudi hospitality and residential custom furniture'}
+HINTS: ${hints || 'High-end Saudi hospitality and residential custom furniture manufactured in Riyadh'}
 
 Return ONLY valid JSON matching this schema:
 {
@@ -56,14 +56,17 @@ Return ONLY valid JSON matching this schema:
   "seoFocusKeyword": "string"
 }`;
 
+    // 1. Attempt OpenAI Vision if API key is present
+    if (openAiKey) {
+      try {
         const openAiRes = await fetch('https://api.openai.com/v1/chat/completions', {
           method: 'POST',
           headers: {
-            'Authorization': `Bearer ${apiKey}`,
+            'Authorization': `Bearer ${openAiKey}`,
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            model: model,
+            model: openAiModel,
             messages: [
               {
                 role: 'user',
@@ -74,7 +77,7 @@ Return ONLY valid JSON matching this schema:
               }
             ],
             response_format: { type: 'json_object' },
-            temperature: 0.7,
+            temperature: 0.4,
           }),
         });
 
@@ -87,19 +90,93 @@ Return ONLY valid JSON matching this schema:
               success: true,
               data: parsed,
               source: 'openai_live',
-              modelUsed: model,
+              modelUsed: openAiModel,
+              latencyMs: Date.now() - startTime,
             });
           }
         } else {
           const err = await openAiRes.json().catch(() => ({}));
-          console.warn('[OpenAI API Warning]', err);
+          console.warn('[OpenAI Vision API Response Warning]', err);
         }
-      } catch (openAiErr) {
-        console.warn('[OpenAI Vision Execution Notice]', openAiErr);
+      } catch (openAiErr: any) {
+        console.warn('[OpenAI Vision Execution Notice]', openAiErr?.message || openAiErr);
       }
     }
 
-    // High-precision Architectural Simulated Vision Engine (Graceful fallback)
+    // 2. Dual-Engine Fallback: Attempt Google Cloud Gemini Vision if Google Cloud key is present
+    if (googleCloudKey) {
+      try {
+        let mimeType = 'image/jpeg';
+        let base64Data = '';
+
+        if (imageUrl.startsWith('data:')) {
+          const match = imageUrl.match(/^data:([^;]+);base64,(.+)$/);
+          if (match) {
+            mimeType = match[1];
+            base64Data = match[2];
+          }
+        } else if (imageUrl.startsWith('http')) {
+          const imgRes = await fetch(imageUrl);
+          if (imgRes.ok) {
+            const ct = imgRes.headers.get('content-type');
+            if (ct) mimeType = ct.split(';')[0];
+            const buffer = await imgRes.arrayBuffer();
+            base64Data = Buffer.from(buffer).toString('base64');
+          }
+        }
+
+        if (base64Data) {
+          const geminiRes = await fetch(
+            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${googleCloudKey}`,
+            {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                contents: [
+                  {
+                    parts: [
+                      { text: prompt },
+                      {
+                        inline_data: {
+                          mime_type: mimeType,
+                          data: base64Data,
+                        }
+                      }
+                    ]
+                  }
+                ],
+                generationConfig: {
+                  response_mime_type: 'application/json',
+                  temperature: 0.4,
+                }
+              }),
+            }
+          );
+
+          if (geminiRes.ok) {
+            const geminiJson = await geminiRes.json();
+            const textPart = geminiJson.candidates?.[0]?.content?.parts?.[0]?.text;
+            if (textPart) {
+              const parsed = JSON.parse(textPart);
+              return NextResponse.json({
+                success: true,
+                data: parsed,
+                source: 'google_gemini_live',
+                modelUsed: 'gemini-2.5-flash',
+                latencyMs: Date.now() - startTime,
+              });
+            }
+          } else {
+            const gErr = await geminiRes.json().catch(() => ({}));
+            console.warn('[Google Gemini Vision API Warning]', gErr);
+          }
+        }
+      } catch (geminiErr: any) {
+        console.warn('[Google Gemini Vision Notice]', geminiErr?.message || geminiErr);
+      }
+    }
+
+    // 3. Graceful High-Precision Architectural Simulation Engine
     const randomSkuNum = Math.floor(100 + Math.random() * 900);
     const simulatedData = {
       sku: `GW-LV-${randomSkuNum}`,
@@ -112,7 +189,7 @@ Return ONLY valid JSON matching this schema:
       shortDescEn: 'Bespoke sculptural craftsmanship engineered with solid American walnut and hand-selected Italian bouclé.',
       shortDescAr: 'حرفية معمارية مخصصة مشغولة بأخشاب الجوز الأمريكي الصلب وأقمشة البوكليه الإيطالية المختارة بعناية.',
       fullDescEn: 'Crafted at GreenWood Factory 1 in Riyadh utilizing 5-axis CNC precision joinery, reinforced with internal mortise-and-tenon joints, and coated with non-yellowing polyurethane luxury matte lacquer.',
-      fullDescAr: 'صنعت في مصنع جرين وود 1 بالرياض بتقنية ماكينات الـ CNC خماسية المحاور مع تعشيق خ الشق واللسان ومحمية بدهان بولي يوريثان إيطالي مطفي مقاوم للاصفرار.',
+      fullDescAr: 'صنعت في مصنع جرين وود 1 بالرياض بتقنية ماكينات الـ CNC خماسية المحاور مع تعشيق الشق واللسان ومحمية بدهان بولي يوريثان إيطالي مطفي مقاوم للاصفرار.',
       materialsEn: 'Solid American Walnut, High-Resilience Cold-Cured Foam, Premium Bouclé',
       materialsAr: 'خشب جوز أمريكي طبيعي، إسفنج بارد عالي الكثافة، قماش بوكليه إيطالي',
       leadTimeEn: '10–14 Business Days',
@@ -142,7 +219,10 @@ Return ONLY valid JSON matching this schema:
       success: true,
       data: simulatedData,
       source: 'simulated_vision_engine',
-      notice: !apiKey ? 'Add your OPENAI_API_KEY in the Admin Secrets Hub to enable live OpenAI vision analysis' : undefined,
+      latencyMs: Date.now() - startTime,
+      notice: (!openAiKey && !googleCloudKey) 
+        ? 'Configure OPENAI_API_KEY or GOOGLE_CLOUD_API_KEY in the Admin Secrets Hub to enable live AI analysis' 
+        : 'AI service request completed with architectural vision fallback.',
     });
 
   } catch (error: any) {
