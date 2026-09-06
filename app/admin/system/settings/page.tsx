@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { 
   Settings, 
   Save, 
@@ -35,6 +36,7 @@ export default function GlobalSettingsAdminPage() {
   const { showToast } = useToast();
   const { lang } = useLanguage();
   const isAr = lang === 'ar';
+  const searchParams = useSearchParams();
 
   const [content, setContent] = useState<SiteContentPayload | null>(null);
   const [loading, setLoading] = useState(true);
@@ -97,19 +99,19 @@ export default function GlobalSettingsAdminPage() {
     load();
   }, [showToast, isAr]);
 
-  // Handle auto-expansion and smooth scroll on hash change or mount (e.g. from AdminSidebar)
+  // Handle auto-expansion and smooth scroll on query param, hash change, or custom navigation event
   useEffect(() => {
     if (loading) return;
-    const handleHash = () => {
-      const hash = window.location.hash;
-      if (hash) {
-        const id = hash.replace('#', '');
+
+    const navigateToSection = (sectionId: string) => {
+      if (!sectionId) return;
+      const cleanId = sectionId.replace('#', '');
+      if (['general', 'contact', 'branding', 'maintenance', 'banking', 'secrets', 'odoo'].includes(cleanId)) {
         // Auto-expand the targeted section
-        if (['general', 'contact', 'branding', 'maintenance', 'banking', 'secrets', 'odoo'].includes(id)) {
-          setOpenSections((prev) => ({ ...prev, [id]: true }));
-        }
+        setOpenSections((prev) => ({ ...prev, [cleanId]: true }));
+        // Smooth scroll to the target section with an offset for header
         setTimeout(() => {
-          const target = document.getElementById(id);
+          const target = document.getElementById(cleanId);
           if (target) {
             target.scrollIntoView({ behavior: 'smooth', block: 'start' });
           }
@@ -117,13 +119,35 @@ export default function GlobalSettingsAdminPage() {
       }
     };
 
-    const timer = setTimeout(handleHash, 150);
-    window.addEventListener('hashchange', handleHash);
-    return () => {
-      clearTimeout(timer);
-      window.removeEventListener('hashchange', handleHash);
+    // 1. Check search params first (e.g. ?section=banking)
+    const paramSection = searchParams?.get('section');
+    if (paramSection) {
+      navigateToSection(paramSection);
+    } else if (typeof window !== 'undefined' && window.location.hash) {
+      navigateToSection(window.location.hash);
+    }
+
+    // 2. Listen to hashchange and custom section navigate events
+    const handleHash = () => {
+      if (typeof window !== 'undefined' && window.location.hash) {
+        navigateToSection(window.location.hash);
+      }
     };
-  }, [loading]);
+
+    const handleCustomNav = (e: any) => {
+      if (e.detail?.id) {
+        navigateToSection(e.detail.id);
+      }
+    };
+
+    window.addEventListener('hashchange', handleHash);
+    window.addEventListener('admin-section-navigate', handleCustomNav);
+
+    return () => {
+      window.removeEventListener('hashchange', handleHash);
+      window.removeEventListener('admin-section-navigate', handleCustomNav);
+    };
+  }, [loading, searchParams]);
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();

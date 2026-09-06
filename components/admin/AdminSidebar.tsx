@@ -455,32 +455,32 @@ const NAV_GROUPS: NavGroup[] = [
           {
             label: 'Company Profile & Info',
             labelAr: 'بيانات الشركة والملف التعريفي',
-            href: '/admin/system/settings#general',
+            href: '/admin/system/settings?section=general#general',
           },
           {
             label: 'Official Communications',
             labelAr: 'قنوات التواصل والمقر الإداري',
-            href: '/admin/system/settings#contact',
+            href: '/admin/system/settings?section=contact#contact',
           },
           {
             label: 'Favicon & Brand Assets',
             labelAr: 'أيقونة وهوية العلامة التجارية',
-            href: '/admin/system/settings#branding',
+            href: '/admin/system/settings?section=branding#branding',
           },
           {
             label: 'Public Maintenance Mode',
             labelAr: 'وضع الصيانة والتحكم العام',
-            href: '/admin/system/settings#maintenance',
+            href: '/admin/system/settings?section=maintenance#maintenance',
           },
           {
             label: 'Bank Accounts & Wire OTP',
             labelAr: 'حسابات التحويل البنكي ورمز OTP',
-            href: '/admin/system/settings#banking',
+            href: '/admin/system/settings?section=banking#banking',
           },
           {
             label: 'Integrations Secrets Hub',
             labelAr: 'مفاتيح الربط والـ APIs',
-            href: '/admin/system/settings#secrets',
+            href: '/admin/system/settings?section=secrets#secrets',
             badge: 'SECRETS',
             badgeAr: 'مفاتيح سرية',
             badgeColor: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
@@ -488,7 +488,7 @@ const NAV_GROUPS: NavGroup[] = [
           {
             label: 'Odoo ERP Integration',
             labelAr: 'الربط السحابي مع Odoo ERP',
-            href: '/admin/system/settings#odoo',
+            href: '/admin/system/settings?section=odoo#odoo',
           },
         ],
       },
@@ -500,28 +500,6 @@ const NAV_GROUPS: NavGroup[] = [
         icon: Mail,
         iconBg: 'bg-[#C9A86A]/15 text-[#C9A86A] border-[#C9A86A]/25 group-hover:bg-[#C9A86A]/25',
         allowedRoles: ['owner', 'admin', 'editor'],
-        children: [
-          {
-            label: 'Client Inquiry & RFP Receipts',
-            labelAr: 'إشعارات الاستفسارات وتأكيد الاستلام',
-            href: '/admin/system/emails?category=inquiry',
-          },
-          {
-            label: 'Talent Acquisition & HR',
-            labelAr: 'إشعارات التوظيف وبنك المواهب',
-            href: '/admin/system/emails?category=career',
-          },
-          {
-            label: 'Security & Access Control',
-            labelAr: 'رسائل الأمان وإعادة تعيين كلمة المرور',
-            href: '/admin/system/emails?category=security',
-          },
-          {
-            label: 'Order Stage Notifications',
-            labelAr: 'إشعارات مراحل الطلب والشحن',
-            href: '/admin/system/emails?category=order',
-          },
-        ],
       },
       {
         id: 'health',
@@ -716,10 +694,15 @@ export default function AdminSidebar({
                                 const hasHash = !!currentHash;
 
                                 if (subItem.href.includes('#')) {
-                                  const [subPath, subHash] = subItem.href.split('#');
+                                  const [subPathWithQuery, subHash] = subItem.href.split('#');
+                                  const [subPath] = subPathWithQuery.split('?');
                                   if (pathname !== subPath) return false;
+
+                                  const sectionParam = searchParams?.get('section');
+                                  if (sectionParam) return sectionParam === subHash;
                                   if (hasHash) return currentHash === `#${subHash}`;
-                                  // Default section when visiting settings without hash
+
+                                  // Default section when visiting settings without hash or query
                                   if (subPath === '/admin/system/settings' && subHash === 'general') return true;
                                   return false;
                                 }
@@ -733,7 +716,6 @@ export default function AdminSidebar({
                                   if (subItem.href === '/admin/seo?tab=google') return true;
                                   if (subItem.href === '/admin/ecommerce?tab=overview') return true;
                                   if (subItem.href === '/admin/content/pages?tab=home') return true;
-                                  if (subItem.href === '/admin/system/emails?category=inquiry') return true;
                                   return false;
                                 }
 
@@ -748,6 +730,13 @@ export default function AdminSidebar({
                                     if (subItem.href.includes('#')) {
                                       const [, hash] = subItem.href.split('#');
                                       setCurrentHash(`#${hash}`);
+                                      if (typeof window !== 'undefined') {
+                                        window.dispatchEvent(new CustomEvent('admin-section-navigate', { detail: { id: hash } }));
+                                        const el = document.getElementById(hash);
+                                        if (el) {
+                                          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                        }
+                                      }
                                     }
                                     onCloseMobile();
                                   }}
