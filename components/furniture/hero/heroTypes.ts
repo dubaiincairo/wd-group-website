@@ -18,6 +18,15 @@ export interface MaterialSwatch {
   image: string;
 }
 
+export interface BlueprintDimensions {
+  lengthCm: number;
+  depthCm: number;
+  heightCm: number;
+  seatHeightCm: number;
+  plinthRevealCm: number;
+  weightKg: number;
+}
+
 export interface HeroSlide {
   id: string;
   image: string;
@@ -46,6 +55,7 @@ export interface HeroSlide {
     leadTimeAr: string;
     leadTimeEn: string;
   };
+  blueprint: BlueprintDimensions;
   hotspots: HotspotPoint[];
 }
 
@@ -77,6 +87,14 @@ export const HERO_SLIDES: HeroSlide[] = [
       factoryEn: 'WD Industrial Manufacturing Plants (KSA)',
       leadTimeAr: '7 - 12 يوم عمل (شامل التوصيل والتركيب)',
       leadTimeEn: '7 - 12 Working Days (Turnkey Delivery)',
+    },
+    blueprint: {
+      lengthCm: 340,
+      depthCm: 115,
+      heightCm: 76,
+      seatHeightCm: 44,
+      plinthRevealCm: 8,
+      weightKg: 145,
     },
     hotspots: [
       {
@@ -136,6 +154,14 @@ export const HERO_SLIDES: HeroSlide[] = [
       leadTimeAr: '10 - 16 يوم عمل للمجموعات الفندقية والفلل',
       leadTimeEn: '10 - 16 Working Days (Contract Volumes Available)',
     },
+    blueprint: {
+      lengthCm: 220,
+      depthCm: 215,
+      heightCm: 140,
+      seatHeightCm: 55,
+      plinthRevealCm: 12,
+      weightKg: 180,
+    },
     hotspots: [
       {
         id: 'hs-acoustic-cladding',
@@ -184,6 +210,14 @@ export const HERO_SLIDES: HeroSlide[] = [
       factoryEn: 'Executive Bespoke Joinery Unit (Riyadh)',
       leadTimeAr: '12 - 18 يوم عمل مع تفصيل الممرات الكهربائية الألمانية',
       leadTimeEn: '12 - 18 Working Days with German Motorized Cable Hubs',
+    },
+    blueprint: {
+      lengthCm: 480,
+      depthCm: 140,
+      heightCm: 76,
+      seatHeightCm: 0,
+      plinthRevealCm: 25,
+      weightKg: 420,
     },
     hotspots: [
       {
