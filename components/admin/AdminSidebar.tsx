@@ -387,24 +387,34 @@ const NAV_GROUPS: NavGroup[] = [
         allowedRoles: ['owner', 'admin', 'editor'],
         children: [
           {
-            label: 'Meta Tags & Keywords',
-            labelAr: 'عناوين ووصف محركات البحث',
-            href: '/admin/seo?tab=meta',
-          },
-          {
-            label: 'Social Media OpenGraph',
-            labelAr: 'بطاقات المشاركة الاجتماعية',
-            href: '/admin/seo?tab=social',
-          },
-          {
             label: 'Google Search & Verification',
             labelAr: 'التحقق ومحركات البحث Google',
             href: '/admin/seo?tab=google',
           },
           {
-            label: 'Analytics (GA4 & GTM)',
+            label: 'GA4 & Tag Manager',
             labelAr: 'إحصائيات جوجل GA4 و GTM',
             href: '/admin/seo?tab=analytics',
+          },
+          {
+            label: 'Meta Titles & Keywords',
+            labelAr: 'عناوين الميتا والكلمات الدلالية',
+            href: '/admin/seo?tab=meta',
+          },
+          {
+            label: 'Social & Open Graph',
+            labelAr: 'المشاركة والسوشيال ميديا',
+            href: '/admin/seo?tab=social',
+          },
+          {
+            label: 'Schema.org JSON-LD',
+            labelAr: 'البيانات المنظمة Schema.org',
+            href: '/admin/seo?tab=schema',
+          },
+          {
+            label: 'Robots & Indexing',
+            labelAr: 'الأرشفة وملف Robots.txt',
+            href: '/admin/seo?tab=robots',
           },
         ],
       },
@@ -444,8 +454,23 @@ const NAV_GROUPS: NavGroup[] = [
         children: [
           {
             label: 'Company Profile & Info',
-            labelAr: 'بيانات الشركة والاتصال',
+            labelAr: 'بيانات الشركة والملف التعريفي',
             href: '/admin/system/settings#general',
+          },
+          {
+            label: 'Official Communications',
+            labelAr: 'قنوات التواصل والمقر الإداري',
+            href: '/admin/system/settings#contact',
+          },
+          {
+            label: 'Favicon & Brand Assets',
+            labelAr: 'أيقونة وهوية العلامة التجارية',
+            href: '/admin/system/settings#branding',
+          },
+          {
+            label: 'Public Maintenance Mode',
+            labelAr: 'وضع الصيانة والتحكم العام',
+            href: '/admin/system/settings#maintenance',
           },
           {
             label: 'Bank Accounts & Wire OTP',
@@ -482,11 +507,6 @@ const NAV_GROUPS: NavGroup[] = [
             href: '/admin/system/emails?category=inquiry',
           },
           {
-            label: 'Order Stage Notifications',
-            labelAr: 'إشعارات مراحل الطلب والشحن',
-            href: '/admin/system/emails?category=order',
-          },
-          {
             label: 'Talent Acquisition & HR',
             labelAr: 'إشعارات التوظيف وبنك المواهب',
             href: '/admin/system/emails?category=career',
@@ -495,6 +515,11 @@ const NAV_GROUPS: NavGroup[] = [
             label: 'Security & Access Control',
             labelAr: 'رسائل الأمان وإعادة تعيين كلمة المرور',
             href: '/admin/system/emails?category=security',
+          },
+          {
+            label: 'Order Stage Notifications',
+            labelAr: 'إشعارات مراحل الطلب والشحن',
+            href: '/admin/system/emails?category=order',
           },
         ],
       },
@@ -687,22 +712,45 @@ export default function AdminSidebar({
                             {item.children!.map((subItem) => {
                               // Check active state for subcategory
                               const isSubActive = (() => {
+                                const hasSearch = !!searchParams?.toString();
+                                const hasHash = !!currentHash;
+
                                 if (subItem.href.includes('#')) {
                                   const [subPath, subHash] = subItem.href.split('#');
-                                  return pathname === subPath && currentHash === `#${subHash}`;
+                                  if (pathname !== subPath) return false;
+                                  if (hasHash) return currentHash === `#${subHash}`;
+                                  // Default section when visiting settings without hash
+                                  if (subPath === '/admin/system/settings' && subHash === 'general') return true;
+                                  return false;
                                 }
+
                                 if (subItem.href.includes('?')) {
                                   const [subPath, subQuery] = subItem.href.split('?');
-                                  return pathname === subPath && searchParams?.toString().includes(subQuery);
+                                  if (pathname !== subPath) return false;
+                                  if (hasSearch) return searchParams!.toString().includes(subQuery);
+
+                                  // Default active tabs when visiting without query parameters
+                                  if (subItem.href === '/admin/seo?tab=google') return true;
+                                  if (subItem.href === '/admin/ecommerce?tab=overview') return true;
+                                  if (subItem.href === '/admin/content/pages?tab=home') return true;
+                                  if (subItem.href === '/admin/system/emails?category=inquiry') return true;
+                                  return false;
                                 }
-                                return pathname === subItem.href && !searchParams?.toString() && !currentHash;
+
+                                return pathname === subItem.href && !hasSearch && !hasHash;
                               })();
 
                               return (
                                 <Link
                                   key={subItem.href}
                                   href={subItem.href}
-                                  onClick={onCloseMobile}
+                                  onClick={() => {
+                                    if (subItem.href.includes('#')) {
+                                      const [, hash] = subItem.href.split('#');
+                                      setCurrentHash(`#${hash}`);
+                                    }
+                                    onCloseMobile();
+                                  }}
                                   className={`flex items-center justify-between px-2.5 py-1.5 rounded-lg text-[11px] transition-all group/sub ${
                                     isSubActive
                                       ? 'text-[#C9A86A] bg-[#C9A86A]/10 font-bold border border-[#C9A86A]/25'
