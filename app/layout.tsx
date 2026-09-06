@@ -16,6 +16,11 @@ const LiveEditorDock = dynamic(
   { ssr: false }
 );
 
+const ChatKitLauncher = dynamic(
+  () => import('@/components/chat/ChatKitLauncher'),
+  { ssr: false }
+);
+
 const inter = Inter({
   subsets: ['latin'],
   display: 'swap',
@@ -88,6 +93,11 @@ export default function RootLayout({
             gtag('config', 'G-FVBW70B8H5');
           `}
         </Script>
+        {/* OpenAI ChatKit Official CDN Script */}
+        <Script
+          src="https://cdn.platform.openai.com/deployments/chatkit/chatkit.js"
+          strategy="lazyOnload"
+        />
       </head>
       <body className="bg-[#08090C] text-[#F8FAFC] min-h-screen flex flex-col font-sans selection:bg-blue-600 selection:text-white antialiased">
         <LanguageProvider>
@@ -101,6 +111,7 @@ export default function RootLayout({
               </main>
               <Footer />
               <LiveEditorDock />
+              <ChatKitLauncher />
             </MaintenanceGate>
           </ToastProvider>
         </LanguageProvider>

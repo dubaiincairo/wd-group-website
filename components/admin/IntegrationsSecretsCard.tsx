@@ -535,6 +535,52 @@ export default function IntegrationsSecretsCard({ content, setContent }: Integra
                 <option value="gpt-4-turbo">gpt-4-turbo</option>
               </select>
             </div>
+
+            {/* OpenAI ChatKit Section */}
+            <div className="pt-3 border-t border-white/10 space-y-3">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h5 className="text-xs font-bold text-[#C9A86A] font-mono uppercase flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5" />
+                    <span>OpenAI ChatKit Concierge</span>
+                  </h5>
+                  <p className="text-[11px] text-zinc-400">
+                    {isAr
+                      ? 'المساعد الذكي العائم بالموقع لخدمة زوار قطاعات الضيافة والأثاث والمقاولات'
+                      : 'AI Concierge widget for website visitors covering Hospitality, Furniture & Contracting'}
+                  </p>
+                </div>
+
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={integrations.chatkit_enabled !== false}
+                    onChange={(e) => updateIntegrations({ chatkit_enabled: e.target.checked })}
+                    className="sr-only peer"
+                  />
+                  <div className="w-9 h-5 bg-zinc-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#C9A86A]"></div>
+                </label>
+              </div>
+
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <label className="text-[11px] font-mono text-zinc-400">
+                    OPENAI_CHATKIT_WORKFLOW_ID (Optional)
+                  </label>
+                  <span className="text-[10px] text-zinc-500 font-mono">
+                    {integrations.openai_chatkit_workflow_id ? 'Hosted Agent Workflow' : 'Self-Hosted /api/chatkit'}
+                  </span>
+                </div>
+                <input
+                  type="text"
+                  value={integrations.openai_chatkit_workflow_id || ''}
+                  onChange={(e) => updateIntegrations({ openai_chatkit_workflow_id: e.target.value })}
+                  placeholder="wf_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx (leave blank to use auto-grounded server)"
+                  className="w-full bg-[#141721] border border-white/15 rounded-xl px-3.5 py-2 text-xs font-mono text-white focus:border-[#C9A86A]"
+                  dir="ltr"
+                />
+              </div>
+            </div>
           </div>
 
           {/* Google Cloud / NanoBanana Pro Image Enhancer */}
