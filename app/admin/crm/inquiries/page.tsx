@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { 
   MessageSquare, 
   Search, 
@@ -26,6 +27,7 @@ export default function CRMInquiriesPage() {
   const { showToast } = useToast();
   const { lang } = useLanguage();
   const isAr = lang === 'ar';
+  const searchParams = useSearchParams();
 
   const [inquiries, setInquiries] = useState<CRMInquiry[]>([]);
   const [loading, setLoading] = useState(true);
@@ -37,6 +39,23 @@ export default function CRMInquiriesPage() {
   const [statusFilter, setStatusFilter] = useState('all');
   const [page, setPage] = useState(0);
   const pageSize = 20;
+
+  // Reactively sync filters from URL query parameters (e.g. from AdminSidebar)
+  useEffect(() => {
+    const sector = searchParams?.get('sector');
+    const status = searchParams?.get('status');
+    if (sector && ['all', 'hospitality', 'manufacturing', 'contracting'].includes(sector)) {
+      setSectorFilter(sector);
+    } else if (!sector) {
+      setSectorFilter('all');
+    }
+    if (status && ['all', 'new', 'contacted', 'won', 'closed'].includes(status)) {
+      setStatusFilter(status);
+    } else if (!status) {
+      setStatusFilter('all');
+    }
+    setPage(0);
+  }, [searchParams]);
 
   const [selectedInquiry, setSelectedInquiry] = useState<CRMInquiry | null>(null);
 

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { 
   Image as ImageIcon, 
   Video, 
@@ -31,6 +32,7 @@ export default function MediaLibraryAdminPage() {
   const { showToast } = useToast();
   const { lang } = useLanguage();
   const isAr = lang === 'ar';
+  const searchParams = useSearchParams();
 
   const [media, setMedia] = useState<MediaMetaRecord[]>([]);
   const [loading, setLoading] = useState(true);
@@ -40,6 +42,20 @@ export default function MediaLibraryAdminPage() {
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [previewMedia, setPreviewMedia] = useState<MediaMetaRecord | null>(null);
+
+  // Sync bucket filter from URL query params (e.g. from AdminSidebar)
+  useEffect(() => {
+    const bucket = searchParams?.get('bucket') || searchParams?.get('type');
+    if (bucket && ['all', 'photos', 'videos', 'assets'].includes(bucket)) {
+      setBucketFilter(bucket);
+    } else if (bucket === 'images') {
+      setBucketFilter('photos');
+    } else if (bucket === 'docs') {
+      setBucketFilter('assets');
+    } else if (!bucket) {
+      setBucketFilter('all');
+    }
+  }, [searchParams]);
 
   const fetchMedia = async () => {
     try {

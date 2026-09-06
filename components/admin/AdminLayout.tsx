@@ -99,11 +99,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </div>
 
         {/* Sidebar */}
-        <AdminSidebar
-          userRole={user?.role}
-          isMobileOpen={mobileSidebarOpen}
-          onCloseMobile={() => setMobileSidebarOpen(false)}
-        />
+        <React.Suspense fallback={null}>
+          <AdminSidebar
+            userRole={user?.role}
+            isMobileOpen={mobileSidebarOpen}
+            onCloseMobile={() => setMobileSidebarOpen(false)}
+          />
+        </React.Suspense>
 
         {/* Main Content Area */}
         <div className="flex-1 flex flex-col min-w-0 relative z-10">
@@ -113,7 +115,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           />
 
           <main className="flex-1 p-4 sm:p-8 max-w-7xl w-full mx-auto space-y-8">
-            {children}
+            <React.Suspense fallback={<AdminLoadingState />}>
+              {children}
+            </React.Suspense>
           </main>
         </div>
 

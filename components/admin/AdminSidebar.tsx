@@ -91,23 +91,6 @@ const NAV_GROUPS: NavGroup[] = [
         href: '/admin',
         icon: LayoutDashboard,
         iconBg: 'bg-blue-500/15 text-blue-400 border-blue-500/25 group-hover:bg-blue-500/25',
-        children: [
-          {
-            label: 'Live Metrics & Status',
-            labelAr: 'مؤشرات الأداء المباشرة',
-            href: '/admin',
-          },
-          {
-            label: 'Quick Action Hub',
-            labelAr: 'مركز الإجراءات السريعة',
-            href: '/admin#actions',
-          },
-          {
-            label: 'System Telemetry',
-            labelAr: 'حالة الخوادم والمنصة',
-            href: '/admin#telemetry',
-          },
-        ],
       },
     ],
   },
@@ -160,39 +143,15 @@ const NAV_GROUPS: NavGroup[] = [
         icon: Activity,
         iconBg: 'bg-cyan-500/15 text-cyan-400 border-cyan-500/25 group-hover:bg-cyan-500/25',
         allowedRoles: ['owner', 'admin', 'editor'],
-        children: [
-          {
-            label: 'Core KPIs & Figures',
-            labelAr: 'الأرقام والإحصائيات العامة',
-            href: '/admin/content/metrics#kpis',
-          },
-          {
-            label: 'Capacity & Workforce',
-            labelAr: 'الطاقة الإنتاجية وفريق العمل',
-            href: '/admin/content/metrics#capacity',
-          },
-        ],
       },
       {
         id: 'leadership',
-        label: 'Leadership & Quotes',
-        labelAr: 'القيادة والكلمة التنفيذية',
+        label: 'Leadership & Vision',
+        labelAr: 'القيادة والرؤية التنفيذية',
         href: '/admin/content/leadership',
         icon: Sparkles,
         iconBg: 'bg-purple-500/15 text-purple-400 border-purple-500/25 group-hover:bg-purple-500/25',
         allowedRoles: ['owner', 'admin', 'editor'],
-        children: [
-          {
-            label: 'CEO Message & Vision',
-            labelAr: 'كلمة الرئيس التنفيذي',
-            href: '/admin/content/leadership#ceo',
-          },
-          {
-            label: 'Executive Board Profiles',
-            labelAr: 'أعضاء مجلس الإدارة',
-            href: '/admin/content/leadership#board',
-          },
-        ],
       },
     ],
   },
@@ -209,18 +168,6 @@ const NAV_GROUPS: NavGroup[] = [
         icon: Building2,
         iconBg: 'bg-sky-500/15 text-sky-400 border-sky-500/25 group-hover:bg-sky-500/25',
         allowedRoles: ['owner', 'admin', 'editor'],
-        children: [
-          {
-            label: 'Sector Overview',
-            labelAr: 'نظرة عامة ومحفظة الفنادق',
-            href: '/admin/sectors/hospitality',
-          },
-          {
-            label: 'Suites & FF&E Standards',
-            labelAr: 'مواصفات وتجهيزات الأجنحة',
-            href: '/admin/sectors/hospitality#suites',
-          },
-        ],
       },
       {
         id: 'manufacturing',
@@ -230,18 +177,6 @@ const NAV_GROUPS: NavGroup[] = [
         icon: Factory,
         iconBg: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/25 group-hover:bg-emerald-500/25',
         allowedRoles: ['owner', 'admin', 'editor'],
-        children: [
-          {
-            label: 'Industrial Plants (KSA)',
-            labelAr: 'مصانع الرياض ونجران',
-            href: '/admin/sectors/manufacturing',
-          },
-          {
-            label: 'Joinery Machinery & CNC',
-            labelAr: 'خطوط الإنتاج والنجارة المعمارية',
-            href: '/admin/sectors/manufacturing#machinery',
-          },
-        ],
       },
       {
         id: 'contracting',
@@ -251,18 +186,6 @@ const NAV_GROUPS: NavGroup[] = [
         icon: HardHat,
         iconBg: 'bg-amber-500/15 text-amber-400 border-amber-500/25 group-hover:bg-amber-500/25',
         allowedRoles: ['owner', 'admin', 'editor'],
-        children: [
-          {
-            label: 'Turnkey Projects',
-            labelAr: 'المشاريع التجارية والقصور',
-            href: '/admin/sectors/contracting',
-          },
-          {
-            label: 'Licenses & RFP Bids',
-            labelAr: 'التراخيص الهندسية والمناقصات',
-            href: '/admin/sectors/contracting#credentials',
-          },
-        ],
       },
     ],
   },
@@ -324,61 +247,9 @@ const NAV_GROUPS: NavGroup[] = [
             href: '/admin/ecommerce?tab=marketing',
           },
           {
-            label: 'Bank OTP & Payment Gateways',
-            labelAr: 'إعدادات الدفع والتحويل البنكي OTP',
+            label: 'Store & Payment Gateways',
+            labelAr: 'إعدادات المتجر وبوابة الدفع',
             href: '/admin/ecommerce?tab=settings',
-          },
-        ],
-      },
-      {
-        id: 'ecommerce-orders',
-        label: 'Orders & Fulfillment',
-        labelAr: 'الطلبات والشحن المباشر',
-        href: '/admin/ecommerce?tab=orders',
-        icon: Package,
-        iconBg: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/25 group-hover:bg-emerald-500/25',
-        allowedRoles: ['owner', 'admin', 'crm', 'editor'],
-        children: [
-          {
-            label: 'All Orders',
-            labelAr: 'جميع الطلبات',
-            href: '/admin/ecommerce?tab=orders',
-          },
-          {
-            label: 'Pending Bank OTP Verification',
-            labelAr: 'بانتظار تأكيد التحويل البنكي',
-            href: '/admin/ecommerce?tab=orders#pending',
-          },
-          {
-            label: 'In Production at Factory',
-            labelAr: 'قيد التصنيع بالمصنع',
-            href: '/admin/ecommerce?tab=orders#manufacturing',
-          },
-          {
-            label: 'Out for White-Glove Delivery',
-            labelAr: 'جاهز للشحن والتركيب',
-            href: '/admin/ecommerce?tab=orders#shipping',
-          },
-        ],
-      },
-      {
-        id: 'ecommerce-logistics',
-        label: 'Factory Queue & Logistics',
-        labelAr: 'خطوط الإنتاج والتسليم',
-        href: '/admin/ecommerce?tab=inventory',
-        icon: Truck,
-        iconBg: 'bg-blue-500/15 text-blue-400 border-blue-500/25 group-hover:bg-blue-500/25',
-        allowedRoles: ['owner', 'admin', 'crm'],
-        children: [
-          {
-            label: 'Raw Materials (Walnut, Oak, Bouclé)',
-            labelAr: 'المواد الخام والأخشاب الطبيعية',
-            href: '/admin/ecommerce?tab=inventory#materials',
-          },
-          {
-            label: 'Factory Production Batches',
-            labelAr: 'جدولة دفعات التصنيع',
-            href: '/admin/ecommerce?tab=inventory#batches',
           },
         ],
       },
@@ -404,14 +275,24 @@ const NAV_GROUPS: NavGroup[] = [
             href: '/admin/crm/inquiries',
           },
           {
-            label: 'Corporate & Hotel RFPs',
-            labelAr: 'كراسات توريدات الفنادق والشركات',
-            href: '/admin/crm/inquiries?type=b2b',
+            label: 'New Uncontacted Leads',
+            labelAr: 'طلبات جديدة غير متواصل معها',
+            href: '/admin/crm/inquiries?status=new',
           },
           {
-            label: 'Residential Villa Quotes',
-            labelAr: 'استفسارات الفلل والقصور السكنية',
-            href: '/admin/crm/inquiries?type=residential',
+            label: 'SwissBlue Hospitality RFPs',
+            labelAr: 'استفسارات قطاع الضيافة',
+            href: '/admin/crm/inquiries?sector=hospitality',
+          },
+          {
+            label: 'GreenWood Manufacturing RFPs',
+            labelAr: 'استفسارات ومناقصات التصنيع',
+            href: '/admin/crm/inquiries?sector=manufacturing',
+          },
+          {
+            label: 'Turnkey Contracting Quotes',
+            labelAr: 'استفسارات المقاولات والتشطيب',
+            href: '/admin/crm/inquiries?sector=contracting',
           },
         ],
       },
@@ -432,7 +313,10 @@ const NAV_GROUPS: NavGroup[] = [
           {
             label: 'Post New Vacancy',
             labelAr: 'إضافة شاغر وظيفي جديد',
-            href: '/admin/hr/jobs#new',
+            href: '/admin/hr/jobs?action=new',
+            badge: 'NEW',
+            badgeAr: 'جديد',
+            badgeColor: 'bg-teal-500/20 text-teal-300 border-teal-500/40',
           },
         ],
       },
@@ -447,13 +331,18 @@ const NAV_GROUPS: NavGroup[] = [
         children: [
           {
             label: 'Received Applications',
-            labelAr: 'طلبات التوظيف الواردة',
+            labelAr: 'جميع طلبات التوظيف الواردة',
             href: '/admin/hr/applications',
           },
           {
+            label: 'Awaiting HR Review',
+            labelAr: 'طلبات جديدة بانتظار المراجعة',
+            href: '/admin/hr/applications?status=new',
+          },
+          {
             label: 'Shortlisted Candidates',
-            labelAr: 'المرشحون للمقابلة',
-            href: '/admin/hr/applications#shortlisted',
+            labelAr: 'المرشحون المؤهلون للمقابلة',
+            href: '/admin/hr/applications?status=shortlisted',
           },
         ],
       },
@@ -467,19 +356,24 @@ const NAV_GROUPS: NavGroup[] = [
         allowedRoles: ['owner', 'admin', 'editor'],
         children: [
           {
-            label: 'High-Res Renders & Images',
+            label: 'All Cloud Storage Assets',
+            labelAr: 'جميع الوسائط والملفات',
+            href: '/admin/media',
+          },
+          {
+            label: 'Photos & High-Res Renders',
             labelAr: 'الصور والرندرات المعمارية',
-            href: '/admin/media?type=images',
+            href: '/admin/media?bucket=photos',
           },
           {
             label: 'Factory Video Reels',
             labelAr: 'فيديوهات المصانع والتوثيق',
-            href: '/admin/media?type=videos',
+            href: '/admin/media?bucket=videos',
           },
           {
-            label: 'CAD & PDF Catalogs',
+            label: 'CAD & PDF Documents',
             labelAr: 'ملفات PDF والمخططات الهندسية',
-            href: '/admin/media?type=docs',
+            href: '/admin/media?bucket=assets',
           },
         ],
       },
@@ -495,12 +389,22 @@ const NAV_GROUPS: NavGroup[] = [
           {
             label: 'Meta Tags & Keywords',
             labelAr: 'عناوين ووصف محركات البحث',
-            href: '/admin/seo#meta',
+            href: '/admin/seo?tab=meta',
           },
           {
             label: 'Social Media OpenGraph',
             labelAr: 'بطاقات المشاركة الاجتماعية',
-            href: '/admin/seo#opengraph',
+            href: '/admin/seo?tab=social',
+          },
+          {
+            label: 'Google Search & Verification',
+            labelAr: 'التحقق ومحركات البحث Google',
+            href: '/admin/seo?tab=google',
+          },
+          {
+            label: 'Analytics (GA4 & GTM)',
+            labelAr: 'إحصائيات جوجل GA4 و GTM',
+            href: '/admin/seo?tab=analytics',
           },
         ],
       },
@@ -519,18 +423,6 @@ const NAV_GROUPS: NavGroup[] = [
         icon: ShieldCheck,
         iconBg: 'bg-orange-500/15 text-orange-400 border-orange-500/25 group-hover:bg-orange-500/25',
         allowedRoles: ['owner', 'admin'],
-        children: [
-          {
-            label: 'Team Accounts',
-            labelAr: 'حسابات فريق الإدارة',
-            href: '/admin/system/users',
-          },
-          {
-            label: 'Roles & Permissions Matrix',
-            labelAr: 'مصفوفة الصلاحيات والأدوار',
-            href: '/admin/system/users#roles',
-          },
-        ],
       },
       {
         id: 'audit-logs',
@@ -540,18 +432,6 @@ const NAV_GROUPS: NavGroup[] = [
         icon: Lock,
         iconBg: 'bg-rose-500/15 text-rose-400 border-rose-500/25 group-hover:bg-rose-500/25',
         allowedRoles: ['owner', 'admin', 'viewer'],
-        children: [
-          {
-            label: 'All Activity Events',
-            labelAr: 'جميع الأحداث المسجلة',
-            href: '/admin/system/audit-logs',
-          },
-          {
-            label: 'Login & Security Logs',
-            labelAr: 'سجل تسجيل الدخول والأمان',
-            href: '/admin/system/audit-logs?type=auth',
-          },
-        ],
       },
       {
         id: 'settings',
@@ -573,17 +453,17 @@ const NAV_GROUPS: NavGroup[] = [
             href: '/admin/system/settings#banking',
           },
           {
-            label: 'Odoo ERP Integration',
-            labelAr: 'الربط السحابي مع Odoo ERP',
-            href: '/admin/system/settings#odoo',
-          },
-          {
             label: 'Integrations Secrets Hub',
             labelAr: 'مفاتيح الربط والـ APIs',
             href: '/admin/system/settings#secrets',
             badge: 'SECRETS',
             badgeAr: 'مفاتيح سرية',
             badgeColor: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
+          },
+          {
+            label: 'Odoo ERP Integration',
+            labelAr: 'الربط السحابي مع Odoo ERP',
+            href: '/admin/system/settings#odoo',
           },
         ],
       },
@@ -597,14 +477,24 @@ const NAV_GROUPS: NavGroup[] = [
         allowedRoles: ['owner', 'admin', 'editor'],
         children: [
           {
-            label: 'Order Stage Notifications',
-            labelAr: 'إشعارات مراحل الطلب',
-            href: '/admin/system/emails#orders',
+            label: 'Client Inquiry & RFP Receipts',
+            labelAr: 'إشعارات الاستفسارات وتأكيد الاستلام',
+            href: '/admin/system/emails?category=inquiry',
           },
           {
-            label: 'Inquiry & RFP Receipts',
-            labelAr: 'إشعارات استلام الاستفسارات',
-            href: '/admin/system/emails#inquiries',
+            label: 'Order Stage Notifications',
+            labelAr: 'إشعارات مراحل الطلب والشحن',
+            href: '/admin/system/emails?category=order',
+          },
+          {
+            label: 'Talent Acquisition & HR',
+            labelAr: 'إشعارات التوظيف وبنك المواهب',
+            href: '/admin/system/emails?category=career',
+          },
+          {
+            label: 'Security & Access Control',
+            labelAr: 'رسائل الأمان وإعادة تعيين كلمة المرور',
+            href: '/admin/system/emails?category=security',
           },
         ],
       },
@@ -615,18 +505,6 @@ const NAV_GROUPS: NavGroup[] = [
         href: '/admin/system/health',
         icon: Activity,
         iconBg: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/25 group-hover:bg-emerald-500/25',
-        children: [
-          {
-            label: 'Supabase DB & Edge Services',
-            labelAr: 'قاعدة البيانات وسيرفرات Edge',
-            href: '/admin/system/health#database',
-          },
-          {
-            label: 'API Latency & Uptime',
-            labelAr: 'زمن استجابة الشبكة والـ APIs',
-            href: '/admin/system/health#latency',
-          },
-        ],
       },
     ],
   },
@@ -645,6 +523,18 @@ export default function AdminSidebar({
   // Full active URL string to check exact subcategory matches
   const currentFullPath = `${pathname}${searchParams?.toString() ? `?${searchParams.toString()}` : ''}`;
 
+  // Track client window.location.hash for smooth anchor highlighting
+  const [currentHash, setCurrentHash] = useState('');
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setCurrentHash(window.location.hash);
+      const handleHashChange = () => setCurrentHash(window.location.hash);
+      window.addEventListener('hashchange', handleHashChange);
+      return () => window.removeEventListener('hashchange', handleHashChange);
+    }
+  }, []);
+
   // Track accordion open state per item id
   const [openItems, setOpenItems] = useState<Record<string, boolean>>({});
 
@@ -660,7 +550,7 @@ export default function AdminSidebar({
       });
     });
     setOpenItems(nextOpen);
-  }, [pathname]);
+  }, [pathname, searchParams]);
 
   const toggleItem = (itemId: string, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -796,9 +686,17 @@ export default function AdminSidebar({
                           <div className="mr-3.5 rtl:mr-0 rtl:ml-3.5 pr-2 rtl:pr-0 rtl:pl-2 border-r rtl:border-r-0 rtl:border-l border-white/10 space-y-0.5 pt-1 pb-1.5">
                             {item.children!.map((subItem) => {
                               // Check active state for subcategory
-                              const isSubActive = currentFullPath === subItem.href || 
-                                (subItem.href.includes('?') && currentFullPath.includes(subItem.href.split('?')[1])) ||
-                                (subItem.href.includes('#') && currentFullPath.includes(subItem.href.split('#')[1]));
+                              const isSubActive = (() => {
+                                if (subItem.href.includes('#')) {
+                                  const [subPath, subHash] = subItem.href.split('#');
+                                  return pathname === subPath && currentHash === `#${subHash}`;
+                                }
+                                if (subItem.href.includes('?')) {
+                                  const [subPath, subQuery] = subItem.href.split('?');
+                                  return pathname === subPath && searchParams?.toString().includes(subQuery);
+                                }
+                                return pathname === subItem.href && !searchParams?.toString() && !currentHash;
+                              })();
 
                               return (
                                 <Link

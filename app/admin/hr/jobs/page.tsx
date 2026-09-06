@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { 
   Briefcase, 
   Plus, 
@@ -26,6 +27,7 @@ export default function JobOpeningsAdminPage() {
   const { showToast } = useToast();
   const { lang } = useLanguage();
   const isAr = lang === 'ar';
+  const searchParams = useSearchParams();
 
   const [jobs, setJobs] = useState<JobListing[]>([]);
   const [loading, setLoading] = useState(true);
@@ -73,6 +75,13 @@ export default function JobOpeningsAdminPage() {
     });
     setModalOpen(true);
   };
+
+  // Listen to ?action=new to open vacancy creation modal directly from sidebar
+  useEffect(() => {
+    if (searchParams?.get('action') === 'new') {
+      handleOpenCreate();
+    }
+  }, [searchParams]);
 
   const handleOpenEdit = (job: JobListing) => {
     setEditingJob({ ...job });

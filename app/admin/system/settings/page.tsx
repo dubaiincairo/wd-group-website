@@ -38,6 +38,28 @@ export default function GlobalSettingsAdminPage() {
     load();
   }, [showToast, isAr]);
 
+  // Handle smooth scroll to section on hash change or mount (e.g. from AdminSidebar)
+  useEffect(() => {
+    if (loading) return;
+    const scrollToHash = () => {
+      const hash = window.location.hash;
+      if (hash) {
+        const id = hash.replace('#', '');
+        const target = document.getElementById(id);
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
+    };
+
+    const timer = setTimeout(scrollToHash, 150);
+    window.addEventListener('hashchange', scrollToHash);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('hashchange', scrollToHash);
+    };
+  }, [loading]);
+
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!content) return;
@@ -96,7 +118,7 @@ export default function GlobalSettingsAdminPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         
         {/* 1. Legal Entity & Credentials */}
-        <div className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 space-y-4 shadow-xl">
+        <div id="general" className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 space-y-4 shadow-xl scroll-mt-24">
           <h3 className="text-xs font-mono font-bold text-blue-400 uppercase tracking-wider border-b border-white/10 pb-3 flex items-center gap-2">
             <Building className="w-4 h-4" />
             <span>{isAr ? 'الهوية القانونية وبيانات التراخيص' : 'LEGAL IDENTITY & CREDENTIALS'}</span>
@@ -335,7 +357,7 @@ export default function GlobalSettingsAdminPage() {
         </div>
 
         {/* 5. Official Corporate Bank Accounts (الحسابات البنكية المعتمدة) */}
-        <div className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 space-y-6 shadow-xl col-span-1 md:col-span-2">
+        <div id="banking" className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 space-y-6 shadow-xl col-span-1 md:col-span-2 scroll-mt-24">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4">
             <div>
               <h3 className="text-xs font-mono font-bold text-blue-400 uppercase tracking-wider flex items-center gap-2">
@@ -575,12 +597,12 @@ export default function GlobalSettingsAdminPage() {
       </div>
 
       {/* Integrations & Secrets Management Hub */}
-      <div className="pt-2">
+      <div id="secrets" className="pt-2 scroll-mt-24">
         <IntegrationsSecretsCard content={content} setContent={setContent} />
       </div>
 
       {/* Odoo Enterprise ERP Integration Card */}
-      <div className="pt-2">
+      <div id="odoo" className="pt-2 scroll-mt-24">
         <OdooIntegrationCard />
       </div>
 
