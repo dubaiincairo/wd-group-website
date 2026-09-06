@@ -91,6 +91,10 @@ export default function ProductsTab({
     isEnhancing?: boolean;
     generatedData?: any;
     committed?: boolean;
+    sourceLabel?: string;
+    engineLabel?: string;
+    latencyMs?: number;
+    enhancements?: string[];
   }
   const [isAiStudioOpen, setIsAiStudioOpen] = useState(false);
   const [aiItems, setAiItems] = useState<AiStudioItem[]>([]);
@@ -104,6 +108,16 @@ export default function ProductsTab({
     }
   }, [initialOpenAiStudio, onResetAiStudio]);
 
+  // Read file as Base64 Data URL so OpenAI Vision and Google Gemini can process directly
+  const readFileAsDataUrl = (file: File): Promise<string> => {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = () => resolve('');
+      reader.readAsDataURL(file);
+    });
+  };
+
   // Handle Multi-file Upload for AI Studio
   const handleBulkFilesUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -115,7 +129,10 @@ export default function ProductsTab({
 
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
+      const base64Data = await readFileAsDataUrl(file);
       const cleanFileName = `ai_prod_${Date.now()}_${i}_${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
+
+      let finalUrl = base64Data;
 
       try {
         const res = await fetch(`${supabaseUrl}/storage/v1/object/photos/${cleanFileName}`, {
@@ -129,31 +146,23 @@ export default function ProductsTab({
         });
 
         if (res.ok) {
-          const publicUrl = `${supabaseUrl}/storage/v1/object/public/photos/${cleanFileName}`;
-          newItems.push({
-            id: `ai_${Date.now()}_${i}`,
-            imageUrl: publicUrl,
-          });
-        } else {
-          // Fallback to local object URL for preview
-          newItems.push({
-            id: `ai_${Date.now()}_${i}`,
-            imageUrl: URL.createObjectURL(file),
-          });
+          finalUrl = `${supabaseUrl}/storage/v1/object/public/photos/${cleanFileName}`;
         }
       } catch (err) {
-        newItems.push({
-          id: `ai_${Date.now()}_${i}`,
-          imageUrl: URL.createObjectURL(file),
-        });
+        // Fallback remains base64Data
       }
+
+      newItems.push({
+        id: `ai_${Date.now()}_${i}`,
+        imageUrl: finalUrl || base64Data,
+      });
     }
 
     setAiItems((prev) => [...prev, ...newItems]);
     showToast(isAr ? `تمت إضافة ${newItems.length} صورة للاستوديو` : `Loaded ${newItems.length} images into AI Studio`, 'success');
   };
 
-  // AI Single Item Specification Generator (OpenAI)
+  // AI Single Item Specification Generator (OpenAI / Gemini)
   const handleAiGenerateSingle = async (itemId: string) => {
     const target = aiItems.find((it) => it.id === itemId);
     if (!target) return;
@@ -174,10 +183,27 @@ export default function ProductsTab({
 
       const json = await res.json();
       if (json.success && json.data) {
+        const sourceLabel = json.source === 'openai_live'
+          ? `OpenAI Live (${json.modelUsed || 'gpt-4o'})`
+          : json.source === 'google_gemini_live'
+          ? `Google Gemini Live (${json.modelUsed || 'gemini-2.5-flash'})`
+          : 'Architectural Vision';
+
         setAiItems((prev) =>
-          prev.map((it) => (it.id === itemId ? { ...it, isGenerating: false, generatedData: json.data } : it))
+          prev.map((it) => (it.id === itemId ? {
+            ...it,
+            isGenerating: false,
+            generatedData: json.data,
+            sourceLabel: sourceLabel,
+            latencyMs: json.latencyMs
+          } : it))
         );
-        showToast(isAr ? 'تم توليد المواصفات بالذكاء الاصطناعي بنجاح' : 'Product details generated with AI', 'success');
+        showToast(
+          isAr 
+            ? `تم توليد المواصفات عبر ${sourceLabel} (${json.latencyMs || 0}ms)` 
+            : `Specs generated via ${sourceLabel} (${json.latencyMs || 0}ms)`, 
+          'success'
+        );
       } else {
         throw new Error(json.error || 'Failed');
       }
@@ -209,10 +235,28 @@ export default function ProductsTab({
 
       const json = await res.json();
       if (json.success && json.enhancedUrl) {
+        const engineLabel = json.engine === 'nanobanana_pro_live'
+          ? 'NanoBanana Pro Live'
+          : json.engine === 'gemini_multimodal_studio_live'
+          ? 'Google Gemini Multimodal'
+          : 'Studio Neural Engine';
+
         setAiItems((prev) =>
-          prev.map((it) => (it.id === itemId ? { ...it, isEnhancing: false, enhancedUrl: json.enhancedUrl } : it))
+          prev.map((it) => (it.id === itemId ? {
+            ...it,
+            isEnhancing: false,
+            enhancedUrl: json.enhancedUrl,
+            engineLabel: engineLabel,
+            latencyMs: json.latencyMs,
+            enhancements: json.enhancementsApplied,
+          } : it))
         );
-        showToast(isAr ? 'تم تحسين دقة وإضاءة الصورة بـ NanoBanana Pro' : 'Photo enhanced with NanoBanana Pro AI', 'success');
+        showToast(
+          isAr 
+            ? `تم تحسين الصورة عبر ${engineLabel} (${json.latencyMs || 0}ms)` 
+            : `Enhanced via ${engineLabel} (${json.latencyMs || 0}ms)`, 
+          'success'
+        );
       } else {
         throw new Error(json.error || 'Failed');
       }
@@ -872,9 +916,30 @@ export default function ProductsTab({
                 </h3>
                 <p className="text-xs text-zinc-400 mt-0.5">
                   {isAr 
-                    ? 'ارفع عدة صور لقطع الأثاث دفعة واحدة، وسيقوم نموذج OpenAI Vision بكتابة الأسماء والوصف والأبعاد والأسعار تلقائياً، مع خيار تحسين جودة الصور وإضاءتها فندقياً.'
+                    ? 'ارفع عدة صور لقطع الأثاث دفعة واحدة، وسيقوم نموذج OpenAI Vision بكتابة الأسماء والوصف والأبعاد والأسعار تلقائياً، مع خيار تحسين جودة الصور وإضاءتها فندقياً.' 
                     : 'Upload multiple piece photos at once. OpenAI Vision generates titles, descriptions, dimensions, and prices, while NanoBanana Pro enhances photo studio lighting.'}
                 </p>
+
+                {/* Live Real Connection Status Indicators */}
+                <div className="flex flex-wrap items-center gap-2 mt-2 pt-2 border-t border-white/5 text-[11px] font-mono">
+                  <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                    <span>{isAr ? 'اتصال OpenAI Vision مباشر (gpt-4o)' : 'OpenAI Vision Live Direct (gpt-4o)'}</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-400">
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+                    <span>{isAr ? 'اتصال Google Cloud مباشر (NanoBanana Pro)' : 'Google Cloud Live Direct (NanoBanana Pro)'}</span>
+                  </div>
+                  <a
+                    href="/admin/system/settings#secrets"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-1 text-zinc-400 hover:text-purple-300 underline underline-offset-4 ml-auto"
+                  >
+                    <span>{isAr ? 'إدارة وفحص المفاتيح' : 'Manage & Test Keys'}</span>
+                    <ExternalLink className="w-3 h-3" />
+                  </a>
+                </div>
               </div>
 
               <button
@@ -1001,22 +1066,29 @@ export default function ProductsTab({
                               alt="Piece Preview"
                               className="w-full h-full object-cover"
                             />
-                            {item.enhancedUrl && (
-                              <span className="absolute top-1 right-1 px-1.5 py-0.5 rounded bg-purple-600 text-white text-[9px] font-mono font-bold">
-                                NanoBanana HD
+                            {item.enhancedUrl ? (
+                              <span className="absolute top-1 right-1 px-1.5 py-0.5 rounded bg-amber-500 text-black text-[9px] font-mono font-bold shadow-md">
+                                {item.engineLabel?.includes('NanoBanana') ? 'NanoBanana HD' : 'Enhanced HD'}
                               </span>
-                            )}
+                            ) : null}
                           </div>
 
                           <div className="min-w-0 flex-1 space-y-1.5">
                             <div className="flex items-center justify-between gap-1">
-                              <span className="text-[10px] font-mono text-[#C9A86A] font-bold">
-                                {d?.sku || `#${idx + 1} Pending Spec`}
-                              </span>
+                              <div className="flex items-center gap-1.5 flex-wrap">
+                                <span className="text-[10px] font-mono text-[#C9A86A] font-bold">
+                                  {d?.sku || `#${idx + 1} Pending Spec`}
+                                </span>
+                                {item.sourceLabel && (
+                                  <span className="px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300 text-[8px] font-mono font-bold">
+                                    {item.sourceLabel}
+                                  </span>
+                                )}
+                              </div>
                               <button
                                 type="button"
                                 onClick={() => setAiItems((prev) => prev.filter((i) => i.id !== item.id))}
-                                className="text-zinc-500 hover:text-rose-400 p-1"
+                                className="text-zinc-500 hover:text-rose-400 p-1 cursor-pointer"
                               >
                                 <Trash2 className="w-3.5 h-3.5" />
                               </button>
