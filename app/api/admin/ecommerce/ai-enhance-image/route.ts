@@ -114,7 +114,7 @@ export async function POST(req: NextRequest) {
 }`;
 
           const geminiRes = await fetch(
-            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${googleCloudKey}`,
+            `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent?key=${googleCloudKey}`,
             {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },

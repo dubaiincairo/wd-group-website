@@ -127,7 +127,7 @@ Return ONLY valid JSON matching this schema:
 
         if (base64Data) {
           const geminiRes = await fetch(
-            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${googleCloudKey}`,
+            `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent?key=${googleCloudKey}`,
             {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
@@ -162,7 +162,7 @@ Return ONLY valid JSON matching this schema:
                 success: true,
                 data: parsed,
                 source: 'google_gemini_live',
-                modelUsed: 'gemini-2.5-flash',
+                modelUsed: 'gemini-3.1-flash-lite',
                 latencyMs: Date.now() - startTime,
               });
             }
