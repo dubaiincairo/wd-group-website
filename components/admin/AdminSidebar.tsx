@@ -79,6 +79,7 @@ export interface NavGroup {
 }
 
 const NAV_GROUPS: NavGroup[] = [
+  // ─── 0. OVERVIEW ───
   {
     groupName: 'Overview',
     groupNameAr: 'نظرة عامة',
@@ -86,184 +87,34 @@ const NAV_GROUPS: NavGroup[] = [
     items: [
       {
         id: 'dashboard',
-        label: 'Dashboard',
-        labelAr: 'لوحة القيادة',
+        label: 'Executive Dashboard',
+        labelAr: 'لوحة القيادة التنفيذية',
         href: '/admin',
         icon: LayoutDashboard,
         iconBg: 'bg-blue-500/15 text-blue-400 border-blue-500/25 group-hover:bg-blue-500/25',
       },
     ],
   },
+
+  // ─── 1. COMMERCIAL & SALES (Revenue, Store, Inquiries) ───
   {
-    groupName: 'Content & Pages',
-    groupNameAr: 'المحتوى والصفحات',
-    accentDot: 'bg-indigo-400',
-    items: [
-      {
-        id: 'pages',
-        label: 'Pages & Sections',
-        labelAr: 'أقسام ومحتوى الصفحات',
-        href: '/admin/content/pages',
-        icon: FileText,
-        iconBg: 'bg-indigo-500/15 text-indigo-400 border-indigo-500/25 group-hover:bg-indigo-500/25',
-        allowedRoles: ['owner', 'admin', 'editor'],
-        children: [
-          {
-            label: 'Homepage Modules',
-            labelAr: 'الصفحة الرئيسية',
-            href: '/admin/content/pages?tab=home',
-          },
-          {
-            label: 'About & Legacy',
-            labelAr: 'عن المجموعة والرؤية',
-            href: '/admin/content/pages?tab=about',
-          },
-          {
-            label: 'Hospitality Sector',
-            labelAr: 'محتوى قطاع الضيافة',
-            href: '/admin/content/pages?tab=hospitality',
-          },
-          {
-            label: 'Manufacturing Sector',
-            labelAr: 'محتوى قطاع التصنيع',
-            href: '/admin/content/pages?tab=manufacturing',
-          },
-          {
-            label: 'Contracting Sector',
-            labelAr: 'محتوى قطاع المقاولات',
-            href: '/admin/content/pages?tab=contracting',
-          },
-        ],
-      },
-      {
-        id: 'metrics',
-        label: 'Corporate Metrics',
-        labelAr: 'الإحصائيات الرئيسية',
-        href: '/admin/content/metrics',
-        icon: Activity,
-        iconBg: 'bg-cyan-500/15 text-cyan-400 border-cyan-500/25 group-hover:bg-cyan-500/25',
-        allowedRoles: ['owner', 'admin', 'editor'],
-      },
-      {
-        id: 'leadership',
-        label: 'Leadership & Vision',
-        labelAr: 'القيادة والرؤية التنفيذية',
-        href: '/admin/content/leadership',
-        icon: Sparkles,
-        iconBg: 'bg-purple-500/15 text-purple-400 border-purple-500/25 group-hover:bg-purple-500/25',
-        allowedRoles: ['owner', 'admin', 'editor'],
-      },
-    ],
-  },
-  {
-    groupName: 'Strategic Sectors',
-    groupNameAr: 'قطاعات الأعمال',
-    accentDot: 'bg-amber-400',
-    items: [
-      {
-        id: 'hospitality',
-        label: 'SwissBlue Hospitality',
-        labelAr: 'قطاع الضيافة والفنادق',
-        href: '/admin/sectors/hospitality',
-        icon: Building2,
-        iconBg: 'bg-sky-500/15 text-sky-400 border-sky-500/25 group-hover:bg-sky-500/25',
-        allowedRoles: ['owner', 'admin', 'editor'],
-      },
-      {
-        id: 'manufacturing',
-        label: 'GreenWood Manufacturing',
-        labelAr: 'التصنيع والأثاث المعماري',
-        href: '/admin/sectors/manufacturing',
-        icon: Factory,
-        iconBg: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/25 group-hover:bg-emerald-500/25',
-        allowedRoles: ['owner', 'admin', 'editor'],
-      },
-      {
-        id: 'contracting',
-        label: 'Contracting & Fit-Out',
-        labelAr: 'المقاولات والتشطيب الفاخر',
-        href: '/admin/sectors/contracting',
-        icon: HardHat,
-        iconBg: 'bg-amber-500/15 text-amber-400 border-amber-500/25 group-hover:bg-amber-500/25',
-        allowedRoles: ['owner', 'admin', 'editor'],
-      },
-    ],
-  },
-  {
-    groupName: 'E-Commerce & Sales',
-    groupNameAr: 'المتجر والمبيعات',
+    groupName: 'Commercial & Sales',
+    groupNameAr: 'المبيعات والعمليات التجارية',
     accentDot: 'bg-[#C9A86A]',
     items: [
       {
         id: 'ecommerce-hub',
-        label: 'Sales & Operations Hub',
-        labelAr: 'مركز المبيعات والعمليات',
+        label: 'Sales & E-Commerce Hub',
+        labelAr: 'مركز المبيعات والمتجر',
         href: '/admin/ecommerce',
         icon: ShoppingCart,
         iconBg: 'bg-[#C9A86A]/15 text-[#C9A86A] border-[#C9A86A]/25 group-hover:bg-[#C9A86A]/25',
         allowedRoles: ['owner', 'admin', 'crm', 'editor'],
-        children: [
-          {
-            label: 'Live Sales Overview',
-            labelAr: 'نظرة عامة على المبيعات',
-            href: '/admin/ecommerce?tab=overview',
-          },
-          {
-            label: 'Order Processing & Tracking',
-            labelAr: 'إدارة الطلبات والشحن',
-            href: '/admin/ecommerce?tab=orders',
-          },
-          {
-            label: 'Furniture Products & Catalog',
-            labelAr: 'كتالوج المنتجات والأثاث',
-            href: '/admin/ecommerce?tab=products',
-          },
-          {
-            label: 'AI Product Studio',
-            labelAr: 'استوديو الذكاء الاصطناعي',
-            href: '/admin/ecommerce?tab=studio',
-            badge: 'AI PRO',
-            badgeAr: 'ذكاء اصطناعي',
-            badgeColor: 'bg-[#C9A86A]/20 text-[#C9A86A] border-[#C9A86A]/40',
-          },
-          {
-            label: 'Factory Queue & Inventory',
-            labelAr: 'المخزون وطابور التصنيع',
-            href: '/admin/ecommerce?tab=inventory',
-          },
-          {
-            label: 'VIP Clients & Accounts',
-            labelAr: 'العملاء وحسابات B2B',
-            href: '/admin/ecommerce?tab=customers',
-          },
-          {
-            label: 'Revenue Analytics',
-            labelAr: 'التحليلات المالية والإيرادات',
-            href: '/admin/ecommerce?tab=analytics',
-          },
-          {
-            label: 'Coupons & GCC Promos',
-            labelAr: 'كوبونات الخصم والعروض',
-            href: '/admin/ecommerce?tab=marketing',
-          },
-          {
-            label: 'Store & Payment Gateways',
-            labelAr: 'إعدادات المتجر وبوابة الدفع',
-            href: '/admin/ecommerce?tab=settings',
-          },
-        ],
       },
-    ],
-  },
-  {
-    groupName: 'Operations & CRM',
-    groupNameAr: 'العمليات والعملاء',
-    accentDot: 'bg-emerald-400',
-    items: [
       {
         id: 'inquiries',
-        label: 'Inquiries & RFPs',
-        labelAr: 'الاستفسارات والمناقصات',
+        label: 'Client Inquiries & RFPs',
+        labelAr: 'الاستفسارات والمناقصات التجارية',
         href: '/admin/crm/inquiries',
         icon: MessageSquare,
         iconBg: 'bg-blue-500/15 text-blue-400 border-blue-500/25 group-hover:bg-blue-500/25',
@@ -296,30 +147,99 @@ const NAV_GROUPS: NavGroup[] = [
           },
         ],
       },
+    ],
+  },
+
+  // ─── 2. BRAND & WEB PRESENCE (Public Content, Sectors, Media, SEO) ───
+  {
+    groupName: 'Brand & Web Presence',
+    groupNameAr: 'المحتوى والهوية الرقمية',
+    accentDot: 'bg-indigo-400',
+    items: [
       {
-        id: 'jobs',
-        label: 'Job Openings',
-        labelAr: 'الشواغر الوظيفية',
-        href: '/admin/hr/jobs',
-        icon: Briefcase,
-        iconBg: 'bg-teal-500/15 text-teal-400 border-teal-500/25 group-hover:bg-teal-500/25',
-        allowedRoles: ['owner', 'admin', 'hr'],
+        id: 'sectors',
+        label: 'Strategic Sectors',
+        labelAr: 'قطاعات الأعمال الاستراتيجية',
+        href: '/admin/sectors/hospitality',
+        icon: Building2,
+        iconBg: 'bg-sky-500/15 text-sky-400 border-sky-500/25 group-hover:bg-sky-500/25',
+        allowedRoles: ['owner', 'admin', 'editor'],
         children: [
           {
-            label: 'Active Listings',
-            labelAr: 'الوظائف المتاحة حالياً',
-            href: '/admin/hr/jobs',
+            label: 'SwissBlue Hospitality',
+            labelAr: 'قطاع الضيافة والفنادق',
+            href: '/admin/sectors/hospitality',
           },
           {
-            label: 'Post New Vacancy',
-            labelAr: 'إضافة شاغر وظيفي جديد',
-            href: '/admin/hr/jobs?action=new',
-            badge: 'NEW',
-            badgeAr: 'جديد',
-            badgeColor: 'bg-teal-500/20 text-teal-300 border-teal-500/40',
+            label: 'GreenWood Manufacturing',
+            labelAr: 'التصنيع والأثاث المعماري',
+            href: '/admin/sectors/manufacturing',
+          },
+          {
+            label: 'Turnkey Contracting & Fit-Out',
+            labelAr: 'المقاولات والتشطيب الفاخر',
+            href: '/admin/sectors/contracting',
           },
         ],
       },
+      {
+        id: 'pages',
+        label: 'Page Content & Modules',
+        labelAr: 'محتوى وأقسام الموقع',
+        href: '/admin/content/pages',
+        icon: FileText,
+        iconBg: 'bg-indigo-500/15 text-indigo-400 border-indigo-500/25 group-hover:bg-indigo-500/25',
+        allowedRoles: ['owner', 'admin', 'editor'],
+        children: [
+          {
+            label: 'Homepage Modules',
+            labelAr: 'الصفحة الرئيسية',
+            href: '/admin/content/pages?tab=home',
+          },
+          {
+            label: 'About & Vision',
+            labelAr: 'عن المجموعة والرؤية',
+            href: '/admin/content/pages?tab=about',
+          },
+          {
+            label: 'Corporate Metrics',
+            labelAr: 'الإحصائيات والأرقام',
+            href: '/admin/content/metrics',
+          },
+          {
+            label: 'Leadership & Vision',
+            labelAr: 'القيادة والرؤية التنفيذية',
+            href: '/admin/content/leadership',
+          },
+        ],
+      },
+      {
+        id: 'media',
+        label: 'Media Library',
+        labelAr: 'مكتبة الوسائط الرقمية',
+        href: '/admin/media',
+        icon: ImageIcon,
+        iconBg: 'bg-pink-500/15 text-pink-400 border-pink-500/25 group-hover:bg-pink-500/25',
+        allowedRoles: ['owner', 'admin', 'editor'],
+      },
+      {
+        id: 'seo',
+        label: 'SEO & Search Console',
+        labelAr: 'محركات البحث وميتاداتا',
+        href: '/admin/seo',
+        icon: Search,
+        iconBg: 'bg-cyan-500/15 text-cyan-400 border-cyan-500/25 group-hover:bg-cyan-500/25',
+        allowedRoles: ['owner', 'admin', 'editor'],
+      },
+    ],
+  },
+
+  // ─── 3. HUMAN CAPITAL (Recruitment, Talent, Jobs) ───
+  {
+    groupName: 'Human Capital',
+    groupNameAr: 'الموارد البشرية والكفاءات',
+    accentDot: 'bg-rose-400',
+    items: [
       {
         id: 'applications',
         label: 'Talent Pool & ATS',
@@ -347,84 +267,41 @@ const NAV_GROUPS: NavGroup[] = [
         ],
       },
       {
-        id: 'media',
-        label: 'Media Library',
-        labelAr: 'مكتبة الوسائط الرقمية',
-        href: '/admin/media',
-        icon: ImageIcon,
-        iconBg: 'bg-pink-500/15 text-pink-400 border-pink-500/25 group-hover:bg-pink-500/25',
-        allowedRoles: ['owner', 'admin', 'editor'],
-        children: [
-          {
-            label: 'All Cloud Storage Assets',
-            labelAr: 'جميع الوسائط والملفات',
-            href: '/admin/media',
-          },
-          {
-            label: 'Photos & High-Res Renders',
-            labelAr: 'الصور والرندرات المعمارية',
-            href: '/admin/media?bucket=photos',
-          },
-          {
-            label: 'Factory Video Reels',
-            labelAr: 'فيديوهات المصانع والتوثيق',
-            href: '/admin/media?bucket=videos',
-          },
-          {
-            label: 'CAD & PDF Documents',
-            labelAr: 'ملفات PDF والمخططات الهندسية',
-            href: '/admin/media?bucket=assets',
-          },
-        ],
-      },
-      {
-        id: 'seo',
-        label: 'SEO & Social Graph',
-        labelAr: 'محركات البحث وميتاداتا',
-        href: '/admin/seo',
-        icon: Search,
-        iconBg: 'bg-cyan-500/15 text-cyan-400 border-cyan-500/25 group-hover:bg-cyan-500/25',
-        allowedRoles: ['owner', 'admin', 'editor'],
-        children: [
-          {
-            label: 'Google Search & Verification',
-            labelAr: 'التحقق ومحركات البحث Google',
-            href: '/admin/seo?tab=google',
-          },
-          {
-            label: 'GA4 & Tag Manager',
-            labelAr: 'إحصائيات جوجل GA4 و GTM',
-            href: '/admin/seo?tab=analytics',
-          },
-          {
-            label: 'Meta Titles & Keywords',
-            labelAr: 'عناوين الميتا والكلمات الدلالية',
-            href: '/admin/seo?tab=meta',
-          },
-          {
-            label: 'Social & Open Graph',
-            labelAr: 'المشاركة والسوشيال ميديا',
-            href: '/admin/seo?tab=social',
-          },
-          {
-            label: 'Schema.org JSON-LD',
-            labelAr: 'البيانات المنظمة Schema.org',
-            href: '/admin/seo?tab=schema',
-          },
-          {
-            label: 'Robots & Indexing',
-            labelAr: 'الأرشفة وملف Robots.txt',
-            href: '/admin/seo?tab=robots',
-          },
-        ],
+        id: 'jobs',
+        label: 'Job Openings',
+        labelAr: 'الشواغر الوظيفية',
+        href: '/admin/hr/jobs',
+        icon: Briefcase,
+        iconBg: 'bg-teal-500/15 text-teal-400 border-teal-500/25 group-hover:bg-teal-500/25',
+        allowedRoles: ['owner', 'admin', 'hr'],
       },
     ],
   },
+
+  // ─── 4. SYSTEM & GOVERNANCE ───
   {
-    groupName: 'System & Security',
-    groupNameAr: 'النظام والأمان',
-    accentDot: 'bg-rose-400',
+    groupName: 'System & Governance',
+    groupNameAr: 'النظام والحوكمة والأمان',
+    accentDot: 'bg-slate-400',
     items: [
+      {
+        id: 'settings',
+        label: 'Global Settings & Secrets',
+        labelAr: 'إعدادات المنصة والمفاتيح',
+        href: '/admin/system/settings',
+        icon: Settings,
+        iconBg: 'bg-slate-500/15 text-slate-300 border-slate-500/25 group-hover:bg-slate-500/25',
+        allowedRoles: ['owner', 'admin'],
+      },
+      {
+        id: 'emails',
+        label: 'Email Templates',
+        labelAr: 'قوالب البريد الإلكتروني',
+        href: '/admin/system/emails',
+        icon: Mail,
+        iconBg: 'bg-[#C9A86A]/15 text-[#C9A86A] border-[#C9A86A]/25 group-hover:bg-[#C9A86A]/25',
+        allowedRoles: ['owner', 'admin', 'editor'],
+      },
       {
         id: 'users',
         label: 'Staff & Roles',
@@ -442,64 +319,6 @@ const NAV_GROUPS: NavGroup[] = [
         icon: Lock,
         iconBg: 'bg-rose-500/15 text-rose-400 border-rose-500/25 group-hover:bg-rose-500/25',
         allowedRoles: ['owner', 'admin', 'viewer'],
-      },
-      {
-        id: 'settings',
-        label: 'Global Settings',
-        labelAr: 'إعدادات المنصة والمفاتيح',
-        href: '/admin/system/settings',
-        icon: Settings,
-        iconBg: 'bg-slate-500/15 text-slate-300 border-slate-500/25 group-hover:bg-slate-500/25',
-        allowedRoles: ['owner', 'admin'],
-        children: [
-          {
-            label: 'Company Profile & Info',
-            labelAr: 'بيانات الشركة والملف التعريفي',
-            href: '/admin/system/settings?section=general#general',
-          },
-          {
-            label: 'Official Communications',
-            labelAr: 'قنوات التواصل والمقر الإداري',
-            href: '/admin/system/settings?section=contact#contact',
-          },
-          {
-            label: 'Favicon & Brand Assets',
-            labelAr: 'أيقونة وهوية العلامة التجارية',
-            href: '/admin/system/settings?section=branding#branding',
-          },
-          {
-            label: 'Public Maintenance Mode',
-            labelAr: 'وضع الصيانة والتحكم العام',
-            href: '/admin/system/settings?section=maintenance#maintenance',
-          },
-          {
-            label: 'Bank Accounts & Wire OTP',
-            labelAr: 'حسابات التحويل البنكي ورمز OTP',
-            href: '/admin/system/settings?section=banking#banking',
-          },
-          {
-            label: 'Integrations Secrets Hub',
-            labelAr: 'مفاتيح الربط والـ APIs',
-            href: '/admin/system/settings?section=secrets#secrets',
-            badge: 'SECRETS',
-            badgeAr: 'مفاتيح سرية',
-            badgeColor: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
-          },
-          {
-            label: 'Odoo ERP Integration',
-            labelAr: 'الربط السحابي مع Odoo ERP',
-            href: '/admin/system/settings?section=odoo#odoo',
-          },
-        ],
-      },
-      {
-        id: 'emails',
-        label: 'Email Templates',
-        labelAr: 'قوالب البريد الإلكتروني',
-        href: '/admin/system/emails',
-        icon: Mail,
-        iconBg: 'bg-[#C9A86A]/15 text-[#C9A86A] border-[#C9A86A]/25 group-hover:bg-[#C9A86A]/25',
-        allowedRoles: ['owner', 'admin', 'editor'],
       },
       {
         id: 'health',
@@ -546,7 +365,10 @@ export default function AdminSidebar({
     const nextOpen: Record<string, boolean> = { ...openItems };
     NAV_GROUPS.forEach((group) => {
       group.items.forEach((item) => {
-        const itemMatches = pathname === item.href || (item.href !== '/admin' && pathname.startsWith(item.href));
+        const itemMatches = 
+          pathname === item.href || 
+          (item.href !== '/admin' && pathname.startsWith(item.href)) ||
+          item.children?.some((c) => pathname === c.href.split('?')[0].split('#')[0]);
         if (itemMatches) {
           nextOpen[item.id] = true;
         }
@@ -617,7 +439,10 @@ export default function AdminSidebar({
               {/* Items List */}
               {visibleItems.map((item) => {
                 const Icon = item.icon;
-                const isParentActive = pathname === item.href || (item.href !== '/admin' && pathname.startsWith(item.href));
+                const isParentActive = 
+                  pathname === item.href || 
+                  (item.href !== '/admin' && pathname.startsWith(item.href)) ||
+                  Boolean(item.children?.some((c) => pathname === c.href.split('?')[0].split('#')[0]));
                 const hasChildren = item.children && item.children.length > 0;
                 const isOpen = !!openItems[item.id];
 
