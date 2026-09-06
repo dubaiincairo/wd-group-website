@@ -131,6 +131,9 @@ export interface IntegrationsConfig {
   whatsapp_dispatch_phone?: string;
   openai_api_key?: string;
   openai_model?: string;
+  openai_chatkit_workflow_id?: string;
+  chatkit_enabled?: boolean;
+  chatkit_system_prompt?: string;
   google_cloud_api_key?: string;
   nanobanana_api_key?: string;
   site_password?: string;
@@ -306,6 +309,7 @@ export interface SiteContentPayload {
       review_url?: string;
       website_url?: string;
       image_url?: string;
+      stars?: number | string;
     }>;
   };
   manufacturing: {

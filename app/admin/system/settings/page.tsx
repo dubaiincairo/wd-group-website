@@ -1,7 +1,27 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Settings, Save, RefreshCw, Building, Phone, Mail, AlertTriangle, Wrench, Sparkles, CreditCard, Plus, Trash2, Building2, Lock } from 'lucide-react';
+import { 
+  Settings, 
+  Save, 
+  RefreshCw, 
+  Building, 
+  Phone, 
+  Mail, 
+  AlertTriangle, 
+  Wrench, 
+  Sparkles, 
+  CreditCard, 
+  Plus, 
+  Trash2, 
+  Building2, 
+  Lock,
+  ChevronDown,
+  ChevronUp,
+  Maximize2,
+  Minimize2,
+  CheckCircle2
+} from 'lucide-react';
 import BilingualInput from '@/components/admin/BilingualInput';
 import MediaFieldUploader from '@/components/admin/MediaFieldUploader';
 import { useToast } from '@/components/admin/ToastProvider';
@@ -19,6 +39,45 @@ export default function GlobalSettingsAdminPage() {
   const [content, setContent] = useState<SiteContentPayload | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+
+  // Accordion state for all 7 sections
+  const [openSections, setOpenSections] = useState<Record<string, boolean>>({
+    general: true,
+    contact: false,
+    branding: false,
+    maintenance: false,
+    banking: false,
+    secrets: false,
+    odoo: false,
+  });
+
+  const toggleSection = (key: string) => {
+    setOpenSections((prev) => ({ ...prev, [key]: !prev[key] }));
+  };
+
+  const expandAll = () => {
+    setOpenSections({
+      general: true,
+      contact: true,
+      branding: true,
+      maintenance: true,
+      banking: true,
+      secrets: true,
+      odoo: true,
+    });
+  };
+
+  const collapseAll = () => {
+    setOpenSections({
+      general: false,
+      contact: false,
+      branding: false,
+      maintenance: false,
+      banking: false,
+      secrets: false,
+      odoo: false,
+    });
+  };
 
   useEffect(() => {
     async function load() {
@@ -38,25 +97,31 @@ export default function GlobalSettingsAdminPage() {
     load();
   }, [showToast, isAr]);
 
-  // Handle smooth scroll to section on hash change or mount (e.g. from AdminSidebar)
+  // Handle auto-expansion and smooth scroll on hash change or mount (e.g. from AdminSidebar)
   useEffect(() => {
     if (loading) return;
-    const scrollToHash = () => {
+    const handleHash = () => {
       const hash = window.location.hash;
       if (hash) {
         const id = hash.replace('#', '');
-        const target = document.getElementById(id);
-        if (target) {
-          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // Auto-expand the targeted section
+        if (['general', 'contact', 'branding', 'maintenance', 'banking', 'secrets', 'odoo'].includes(id)) {
+          setOpenSections((prev) => ({ ...prev, [id]: true }));
         }
+        setTimeout(() => {
+          const target = document.getElementById(id);
+          if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }, 100);
       }
     };
 
-    const timer = setTimeout(scrollToHash, 150);
-    window.addEventListener('hashchange', scrollToHash);
+    const timer = setTimeout(handleHash, 150);
+    window.addEventListener('hashchange', handleHash);
     return () => {
       clearTimeout(timer);
-      window.removeEventListener('hashchange', scrollToHash);
+      window.removeEventListener('hashchange', handleHash);
     };
   }, [loading]);
 
@@ -88,7 +153,7 @@ export default function GlobalSettingsAdminPage() {
   const s = content.settings;
 
   return (
-    <form onSubmit={handleSave} className="space-y-8 animate-in fade-in duration-300">
+    <form onSubmit={handleSave} className="space-y-6 animate-in fade-in duration-300">
       
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-6">
@@ -115,495 +180,758 @@ export default function GlobalSettingsAdminPage() {
         </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {/* Accordion Quick Expand / Collapse Controls */}
+      <div className="flex items-center justify-between px-1 py-1">
+        <span className="text-xs font-mono text-zinc-400 font-bold">
+          {isAr ? 'أقسام إعدادات المنظومة (7 أقسام قابلة للطي)' : 'SYSTEM CONFIGURATION SECTIONS (7 FOLDABLE MODULES)'}
+        </span>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={expandAll}
+            className="inline-flex items-center gap-1.5 text-[11px] font-mono text-blue-400 hover:text-blue-300 px-3 py-1.5 rounded-xl bg-blue-500/10 border border-blue-500/20 transition-all cursor-pointer"
+          >
+            <Maximize2 className="w-3 h-3" />
+            <span>{isAr ? 'فتح الكل' : 'Expand All'}</span>
+          </button>
+          <button
+            type="button"
+            onClick={collapseAll}
+            className="inline-flex items-center gap-1.5 text-[11px] font-mono text-zinc-400 hover:text-white px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 transition-all cursor-pointer"
+          >
+            <Minimize2 className="w-3 h-3" />
+            <span>{isAr ? 'طي الكل' : 'Collapse All'}</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Stacked Foldable Sections */}
+      <div className="space-y-4">
         
         {/* 1. Legal Entity & Credentials */}
-        <div id="general" className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 space-y-4 shadow-xl scroll-mt-24">
-          <h3 className="text-xs font-mono font-bold text-blue-400 uppercase tracking-wider border-b border-white/10 pb-3 flex items-center gap-2">
-            <Building className="w-4 h-4" />
-            <span>{isAr ? 'الهوية القانونية وبيانات التراخيص' : 'LEGAL IDENTITY & CREDENTIALS'}</span>
-          </h3>
-
-          <div className="space-y-1.5">
-            <label className="text-xs font-bold text-zinc-300">
-              {isAr ? 'رقم السجل التجاري (CR)' : 'Commercial Registration (CR)'}
-            </label>
-            <input
-              type="text"
-              value={s.cr_number || ''}
-              onChange={(e) => setContent({ ...content, settings: { ...s, cr_number: e.target.value } })}
-              placeholder="5950011057"
-              className="w-full bg-[#08090C] border border-white/15 rounded-xl px-4 py-2.5 text-xs font-mono font-bold text-white focus:outline-none focus:border-blue-500"
-            />
+        <div id="general" className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 transition-all shadow-xl scroll-mt-24">
+          <div 
+            onClick={() => toggleSection('general')}
+            className="flex items-center justify-between cursor-pointer select-none group"
+          >
+            <div className="flex items-center gap-3.5">
+              <div className="w-9 h-9 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 font-mono text-xs font-bold shrink-0">
+                <Building className="w-4 h-4" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-mono font-bold text-blue-400 uppercase tracking-wider block">
+                    {isAr ? 'الهوية القانونية وبيانات التراخيص' : 'LEGAL IDENTITY & CREDENTIALS'}
+                  </span>
+                  {s.cr_number && (
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-500/10 border border-blue-500/20 text-blue-300 hidden sm:inline">
+                      CR: {s.cr_number}
+                    </span>
+                  )}
+                </div>
+                <span className="text-[11px] text-zinc-400 block mt-0.5">
+                  {isAr ? 'السجل التجاري، الرقم الضريبي، وعنوان المقر الرئيسي' : 'Commercial Registration (CR), VAT Tax ID, and Corporate Headquarters'}
+                </span>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <span className="text-[10px] font-mono text-zinc-500 group-hover:text-zinc-300 hidden sm:inline">
+                {openSections.general ? (isAr ? 'طي القسم' : 'Collapse') : (isAr ? 'تعديل القسم' : 'Expand')}
+              </span>
+              {openSections.general ? <ChevronUp className="w-4 h-4 text-zinc-400" /> : <ChevronDown className="w-4 h-4 text-zinc-400" />}
+            </div>
           </div>
 
-          <div className="space-y-1.5">
-            <label className="text-xs font-bold text-zinc-300">
-              {isAr ? 'الرقم الضريبي للقيمة المضافة (VAT)' : 'VAT / Tax Identification Number'}
-            </label>
-            <input
-              type="text"
-              value={s.vat_number || ''}
-              onChange={(e) => setContent({ ...content, settings: { ...s, vat_number: e.target.value } })}
-              placeholder="300865965100003"
-              className="w-full bg-[#08090C] border border-white/15 rounded-xl px-4 py-2.5 text-xs font-mono font-bold text-white focus:outline-none focus:border-blue-500"
-            />
-          </div>
+          {openSections.general && (
+            <div className="space-y-4 pt-5 border-t border-white/10 mt-5 animate-in fade-in duration-150">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-zinc-300">
+                    {isAr ? 'رقم السجل التجاري (CR)' : 'Commercial Registration (CR)'}
+                  </label>
+                  <input
+                    type="text"
+                    value={s.cr_number || ''}
+                    onChange={(e) => setContent({ ...content, settings: { ...s, cr_number: e.target.value } })}
+                    placeholder="5950011057"
+                    className="w-full bg-[#08090C] border border-white/15 rounded-xl px-4 py-2.5 text-xs font-mono font-bold text-white focus:outline-none focus:border-blue-500"
+                  />
+                </div>
 
-          <BilingualInput
-            label={isAr ? 'عنوان المقر الرئيسي' : 'Headquarters Address'}
-            valueEn={s.headquarters_en}
-            valueAr={s.headquarters_ar}
-            onChangeEn={(v) => setContent({ ...content, settings: { ...s, headquarters_en: v } })}
-            onChangeAr={(v) => setContent({ ...content, settings: { ...s, headquarters_ar: v } })}
-          />
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-zinc-300">
+                    {isAr ? 'الرقم الضريبي للقيمة المضافة (VAT)' : 'VAT / Tax Identification Number'}
+                  </label>
+                  <input
+                    type="text"
+                    value={s.vat_number || ''}
+                    onChange={(e) => setContent({ ...content, settings: { ...s, vat_number: e.target.value } })}
+                    placeholder="300865965100003"
+                    className="w-full bg-[#08090C] border border-white/15 rounded-xl px-4 py-2.5 text-xs font-mono font-bold text-white focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+              </div>
+
+              <BilingualInput
+                label={isAr ? 'عنوان المقر الرئيسي' : 'Headquarters Address'}
+                valueEn={s.headquarters_en}
+                valueAr={s.headquarters_ar}
+                onChangeEn={(v) => setContent({ ...content, settings: { ...s, headquarters_en: v } })}
+                onChangeAr={(v) => setContent({ ...content, settings: { ...s, headquarters_ar: v } })}
+              />
+            </div>
+          )}
         </div>
 
         {/* 2. Official Communications */}
-        <div className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 space-y-4 shadow-xl">
-          <h3 className="text-xs font-mono font-bold text-emerald-400 uppercase tracking-wider border-b border-white/10 pb-3 flex items-center gap-2">
-            <Phone className="w-4 h-4" />
-            <span>{isAr ? 'قنوات الاتصال الرسمية' : 'OFFICIAL COMMUNICATION CHANNELS'}</span>
-          </h3>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div className="space-y-1.5">
-              <label className="text-xs font-bold text-zinc-300">
-                {isAr ? 'رقم الهاتف الرئيسي' : 'Primary Phone'}
-              </label>
-              <input
-                type="text"
-                value={s.primary_phone || ''}
-                onChange={(e) => setContent({ ...content, settings: { ...s, primary_phone: e.target.value } })}
-                placeholder="+966 50 572 5070"
-                className="w-full bg-[#08090C] border border-white/15 rounded-xl px-4 py-2.5 text-xs font-mono text-white focus:outline-none focus:border-blue-500"
-              />
-            </div>
-
-            <div className="space-y-1.5">
-              <label className="text-xs font-bold text-zinc-300">
-                {isAr ? 'رقم الهاتف الثانوي' : 'Secondary Phone'}
-              </label>
-              <input
-                type="text"
-                value={s.secondary_phone || ''}
-                onChange={(e) => setContent({ ...content, settings: { ...s, secondary_phone: e.target.value } })}
-                placeholder="+966 53 397 9797"
-                className="w-full bg-[#08090C] border border-white/15 rounded-xl px-4 py-2.5 text-xs font-mono text-white focus:outline-none focus:border-blue-500"
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div className="space-y-1.5">
-              <label className="text-xs font-bold text-zinc-300">
-                {isAr ? 'البريد الإلكتروني العام للاستفسارات' : 'General Inquiries Email'}
-              </label>
-              <input
-                type="email"
-                value={s.general_email || ''}
-                onChange={(e) => setContent({ ...content, settings: { ...s, general_email: e.target.value } })}
-                placeholder="ceo@wdgroup.online"
-                className="w-full bg-[#08090C] border border-white/15 rounded-xl px-4 py-2.5 text-xs font-mono text-white focus:outline-none focus:border-blue-500"
-              />
-            </div>
-
-            <div className="space-y-1.5">
-              <label className="text-xs font-bold text-zinc-300">
-                {isAr ? 'بريد وطن للتصميم والمقاولات' : 'Secondary / Watan Designs Email'}
-              </label>
-              <input
-                type="email"
-                value={s.secondary_email || ''}
-                onChange={(e) => setContent({ ...content, settings: { ...s, secondary_email: e.target.value } })}
-                placeholder="info@watandesigns.sa"
-                className="w-full bg-[#08090C] border border-white/15 rounded-xl px-4 py-2.5 text-xs font-mono text-white focus:outline-none focus:border-blue-500"
-              />
-            </div>
-          </div>
-
-          <div className="space-y-1.5">
-            <label className="text-xs font-bold text-zinc-300">
-              {isAr ? 'رقم الواتساب الرسمي المعتمد' : 'Official WhatsApp Dispatch Number'}
-            </label>
-            <input
-              type="text"
-              value={s.whatsapp_phone || ''}
-              onChange={(e) => setContent({ ...content, settings: { ...s, whatsapp_phone: e.target.value } })}
-              placeholder="+966505725070"
-              className="w-full bg-[#08090C] border border-white/15 rounded-xl px-4 py-2.5 text-xs font-mono text-white focus:outline-none focus:border-blue-500"
-            />
-          </div>
-        </div>
-
-        {/* 3. Brand Identity & Favicon */}
-        <div className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 space-y-4 shadow-xl col-span-1 md:col-span-2">
-          <h3 className="text-xs font-mono font-bold text-[#C9A86A] uppercase tracking-wider border-b border-white/10 pb-3 flex items-center gap-2">
-            <Sparkles className="w-4 h-4" />
-            <span>{isAr ? 'أيقونة وهوية الموقع (Favicon & Brand Icon)' : 'FAVICON & BRAND ASSETS'}</span>
-          </h3>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-            <div>
-              <MediaFieldUploader
-                label={isAr ? 'أيقونة الموقع (Favicon & Touch Icon)' : 'Website Favicon & Touch Icon'}
-                description={isAr ? 'ارفع أيقونة مخصصة (SVG, PNG, ICO) لتظهر في لسان المتصفح والإشارات المرجعية.' : 'Upload custom icon (SVG, PNG, ICO) to display in browser tabs and home bookmarks.'}
-                value={s.favicon_url || content.branding?.favicon || ''}
-                onChange={(url) => setContent({
-                  ...content,
-                  settings: { ...s, favicon_url: url },
-                  branding: { ...content.branding, favicon: url }
-                })}
-                accept="image"
-                bucket="photos"
-                aspectRatio="1:1"
-              />
-            </div>
-
-            <div className="space-y-3 bg-[#08090C] border border-white/10 rounded-2xl p-4 text-xs">
-              <div className="font-bold text-white flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-[#C9A86A]" />
-                <span>{isAr ? 'المواصفات القياسية للأيقونة' : 'Favicon Guidelines & Specs'}</span>
-              </div>
-              <ul className="space-y-1.5 text-zinc-400 font-mono text-[11px] list-disc list-inside">
-                <li>{isAr ? 'المقاس الموصى به: 64x64 أو 192x192 بكسل (مربع 1:1)' : 'Recommended dimension: 64x64 or 192x192 px (Square 1:1)'}</li>
-                <li>{isAr ? 'الصيغ المعتمدة: SVG (موصى بها لأعلى دقة), PNG, ICO' : 'Supported formats: SVG (Crisp vector recommended), PNG, ICO'}</li>
-                <li>{isAr ? 'الخلفية: داكنة متوافقة مع الهوية (#08090C) أو شفافة' : 'Background: Obsidian (#08090C) or Transparent'}</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        {/* 4. Platform Maintenance Mode Control */}
-        <div className={`col-span-1 md:col-span-2 rounded-3xl p-6 space-y-5 border transition-all shadow-xl ${
-          s.maintenance_mode_enabled 
-            ? 'bg-amber-950/20 border-amber-500/40 shadow-amber-950/30' 
-            : 'bg-[#0F1117]/90 border-white/10'
-        }`}>
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-4">
-            <div className="flex items-center gap-3">
-              <div className={`w-10 h-10 rounded-2xl flex items-center justify-center ${
-                s.maintenance_mode_enabled ? 'bg-amber-500/20 text-amber-400' : 'bg-white/5 text-zinc-400'
-              }`}>
-                <Wrench className="w-5 h-5" />
+        <div id="contact" className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 transition-all shadow-xl scroll-mt-24">
+          <div 
+            onClick={() => toggleSection('contact')}
+            className="flex items-center justify-between cursor-pointer select-none group"
+          >
+            <div className="flex items-center gap-3.5">
+              <div className="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 font-mono text-xs font-bold shrink-0">
+                <Phone className="w-4 h-4" />
               </div>
               <div>
-                <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                  <span>{isAr ? 'وضع الصيانة وإشعار التدشين القريب' : 'Public Maintenance & Launching Soon Mode'}</span>
-                  {s.maintenance_mode_enabled ? (
-                    <span className="text-[10px] bg-amber-500/20 border border-amber-500/30 text-amber-300 font-mono px-2 py-0.5 rounded-full font-bold">
-                      {isAr ? 'مفعل · الموقع العام محجوب' : 'ACTIVE · PUBLIC SITE HIDDEN'}
-                    </span>
-                  ) : (
-                    <span className="text-[10px] bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 font-mono px-2 py-0.5 rounded-full font-bold">
-                      {isAr ? 'معطل · الموقع العام منشور' : 'DISABLED · PUBLIC SITE LIVE'}
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-mono font-bold text-emerald-400 uppercase tracking-wider block">
+                    {isAr ? 'قنوات الاتصال الرسمية' : 'OFFICIAL COMMUNICATION CHANNELS'}
+                  </span>
+                  {s.primary_phone && (
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 hidden sm:inline" dir="ltr">
+                      {s.primary_phone}
                     </span>
                   )}
-                </h3>
-                <p className="text-xs text-zinc-400 mt-0.5">
-                  {isAr ? 'عند التفعيل، سيرى زوار الموقع العام شاشة الصيانة الفاخرة. ويبقى بإمكان المشرفين الدخول إلى /admin دائماً.' : 'When active, public visitors to wdgroup.online see the luxury Maintenance screen. Staff can always access /admin.'}
-                </p>
+                </div>
+                <span className="text-[11px] text-zinc-400 block mt-0.5">
+                  {isAr ? 'أرقام الهواتف، البريد الإلكتروني للشركات، وخط الواتساب المعتمد' : 'Primary & secondary phones, company inquiries email, and verified WhatsApp'}
+                </span>
               </div>
             </div>
-
-            {/* Main Switch */}
-            <label className="relative inline-flex items-center cursor-pointer shrink-0">
-              <input
-                type="checkbox"
-                checked={s.maintenance_mode_enabled || false}
-                onChange={(e) => setContent({ ...content, settings: { ...s, maintenance_mode_enabled: e.target.checked } })}
-                className="sr-only peer"
-              />
-              <div className="w-14 h-7 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-amber-600"></div>
-            </label>
+            <div className="flex items-center gap-2 shrink-0">
+              <span className="text-[10px] font-mono text-zinc-500 group-hover:text-zinc-300 hidden sm:inline">
+                {openSections.contact ? (isAr ? 'طي القسم' : 'Collapse') : (isAr ? 'تعديل القسم' : 'Expand')}
+              </span>
+              {openSections.contact ? <ChevronUp className="w-4 h-4 text-zinc-400" /> : <ChevronDown className="w-4 h-4 text-zinc-400" />}
+            </div>
           </div>
 
-          {s.maintenance_mode_enabled && (
-            <div className="space-y-4 pt-2 animate-in fade-in duration-200">
-              <BilingualInput
-                label={isAr ? 'عنوان الصيانة الرئيسي' : 'Maintenance Headline'}
-                description={isAr ? 'يظهر بخط بارز أعلى الرسالة' : 'Displayed prominently above the message'}
-                valueEn={s.maintenance_headline_en || 'Platform Under Scheduled Maintenance'}
-                valueAr={s.maintenance_headline_ar || 'المنصة تحت الصيانة والتطوير'}
-                onChangeEn={(v) => setContent({ ...content, settings: { ...s, maintenance_headline_en: v } })}
-                onChangeAr={(v) => setContent({ ...content, settings: { ...s, maintenance_headline_ar: v } })}
-              />
+          {openSections.contact && (
+            <div className="space-y-4 pt-5 border-t border-white/10 mt-5 animate-in fade-in duration-150">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-zinc-300">
+                    {isAr ? 'رقم الهاتف الرئيسي' : 'Primary Phone'}
+                  </label>
+                  <input
+                    type="text"
+                    value={s.primary_phone || ''}
+                    onChange={(e) => setContent({ ...content, settings: { ...s, primary_phone: e.target.value } })}
+                    placeholder="+966 50 572 5070"
+                    className="w-full bg-[#08090C] border border-white/15 rounded-xl px-4 py-2.5 text-xs font-mono text-white focus:outline-none focus:border-blue-500"
+                    dir="ltr"
+                  />
+                </div>
 
-              <BilingualInput
-                label={isAr ? 'نص رسالة الصيانة' : 'Maintenance Message / Notice'}
-                description={isAr ? 'فقرة توضيحية تشرح أعمال الترقية والتدشين' : 'Paragraph explaining the upgrade'}
-                isTextarea
-                rows={2}
-                valueEn={s.maintenance_message_en || 'We are currently preparing and upgrading the official digital platform for WD Group. We look forward to welcoming you soon.'}
-                valueAr={s.maintenance_message_ar || 'نعمل حالياً على تطوير وتجهيز المنصة الرقمية الرسمية لمجموعة دبليو دي للأعمال. سنكون معكم قريباً بحلتنا الجديدة.'}
-                onChangeEn={(v) => setContent({ ...content, settings: { ...s, maintenance_message_en: v } })}
-                onChangeAr={(v) => setContent({ ...content, settings: { ...s, maintenance_headline_ar: v } })}
-              />
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-zinc-300">
+                    {isAr ? 'رقم الهاتف الثانوي' : 'Secondary Phone'}
+                  </label>
+                  <input
+                    type="text"
+                    value={s.secondary_phone || ''}
+                    onChange={(e) => setContent({ ...content, settings: { ...s, secondary_phone: e.target.value } })}
+                    placeholder="+966 53 397 9797"
+                    className="w-full bg-[#08090C] border border-white/15 rounded-xl px-4 py-2.5 text-xs font-mono text-white focus:outline-none focus:border-blue-500"
+                    dir="ltr"
+                  />
+                </div>
+              </div>
 
-              <div className="space-y-1.5 max-w-xs">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-zinc-300">
+                    {isAr ? 'البريد الإلكتروني العام للاستفسارات' : 'General Inquiries Email'}
+                  </label>
+                  <input
+                    type="email"
+                    value={s.general_email || ''}
+                    onChange={(e) => setContent({ ...content, settings: { ...s, general_email: e.target.value } })}
+                    placeholder="ceo@wdgroup.online"
+                    className="w-full bg-[#08090C] border border-white/15 rounded-xl px-4 py-2.5 text-xs font-mono text-white focus:outline-none focus:border-blue-500"
+                    dir="ltr"
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-zinc-300">
+                    {isAr ? 'بريد وطن للتصميم والمقاولات' : 'Secondary / Watan Designs Email'}
+                  </label>
+                  <input
+                    type="email"
+                    value={s.secondary_email || ''}
+                    onChange={(e) => setContent({ ...content, settings: { ...s, secondary_email: e.target.value } })}
+                    placeholder="info@watandesigns.sa"
+                    className="w-full bg-[#08090C] border border-white/15 rounded-xl px-4 py-2.5 text-xs font-mono text-white focus:outline-none focus:border-blue-500"
+                    dir="ltr"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1.5">
                 <label className="text-xs font-bold text-zinc-300">
-                  {isAr ? 'الموعد المتوقع للتدشين / العودة' : 'Estimated Launch / Return Date'}
+                  {isAr ? 'رقم الواتساب الرسمي المعتمد' : 'Official WhatsApp Dispatch Number'}
                 </label>
                 <input
                   type="text"
-                  value={s.maintenance_estimated_date || 'Q3 2026'}
-                  onChange={(e) => setContent({ ...content, settings: { ...s, maintenance_estimated_date: e.target.value } })}
-                  placeholder={isAr ? 'مثال: الربع الثالث 2026 أو سبتمبر 2026' : 'e.g. Q3 2026 or September 2026'}
-                  className="w-full bg-[#08090C] border border-white/15 rounded-xl px-4 py-2 text-xs font-mono text-white focus:outline-none focus:border-amber-500"
+                  value={s.whatsapp_phone || ''}
+                  onChange={(e) => setContent({ ...content, settings: { ...s, whatsapp_phone: e.target.value } })}
+                  placeholder="+966505725070"
+                  className="w-full bg-[#08090C] border border-white/15 rounded-xl px-4 py-2.5 text-xs font-mono text-white focus:outline-none focus:border-blue-500"
+                  dir="ltr"
                 />
               </div>
             </div>
           )}
         </div>
 
-        {/* 5. Official Corporate Bank Accounts (الحسابات البنكية المعتمدة) */}
-        <div id="banking" className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 space-y-6 shadow-xl col-span-1 md:col-span-2 scroll-mt-24">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4">
-            <div>
-              <h3 className="text-xs font-mono font-bold text-blue-400 uppercase tracking-wider flex items-center gap-2">
-                <CreditCard className="w-4 h-4" />
-                <span>{isAr ? '// الحسابات البنكية الرسمية المعتمدة' : '// OFFICIAL CORPORATE BANK ACCOUNTS'}</span>
-              </h3>
-              <p className="text-xs text-zinc-400 mt-1">
-                {isAr ? 'إدارة الحسابات البنكية المعتمدة المحمية برمز تحقق للعملاء والشركاء.' : 'Manage approved corporate bank accounts protected by access code for authorized clients.'}
-              </p>
-            </div>
-
-            <button
-              type="button"
-              onClick={() => {
-                const currentAccounts = s.bank_accounts || [];
-                const newAcc: BankAccountRecord = {
-                  id: `bank_${Date.now()}`,
-                  bank_name_ar: 'مصرف الراجحي',
-                  bank_name_en: 'Al Rajhi Bank',
-                  account_name_ar: 'شركة تصاميم الوطن المحدودة',
-                  account_name_en: 'Watan Designs Ltd.',
-                  iban: 'SA0000000000000000000000',
-                  account_number: '000000000000',
-                  swift_code: 'RJHISARI',
-                  currency: 'SAR',
-                  is_active: true,
-                };
-                setContent({
-                  ...content,
-                  settings: {
-                    ...s,
-                    bank_accounts: [...currentAccounts, newAcc],
-                  },
-                });
-              }}
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600/20 border border-blue-500/30 hover:bg-blue-600/30 text-blue-400 text-xs font-bold transition-colors self-start sm:self-auto cursor-pointer"
-            >
-              <Plus className="w-4 h-4" />
-              <span>{isAr ? 'إضافة حساب بنكي' : 'Add Bank Account'}</span>
-            </button>
-          </div>
-
-          {/* Access Code Protection Configuration */}
-          <div className="bg-[#08090C] border border-[#C9A86A]/30 rounded-2xl p-4 sm:p-5 space-y-2.5">
-            <div className="flex items-center justify-between gap-3">
-              <div className="flex items-center gap-2 text-xs font-bold text-[#C9A86A]">
-                <Lock className="w-4 h-4" />
-                <span>{isAr ? 'رمز التحقق المالي المعتمد لفتح الحسابات للعملاء' : 'Active Financial Authorization Code'}</span>
+        {/* 3. Brand Identity & Favicon */}
+        <div id="branding" className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 transition-all shadow-xl scroll-mt-24">
+          <div 
+            onClick={() => toggleSection('branding')}
+            className="flex items-center justify-between cursor-pointer select-none group"
+          >
+            <div className="flex items-center gap-3.5">
+              <div className="w-9 h-9 rounded-xl bg-[#C9A86A]/15 border border-[#C9A86A]/30 flex items-center justify-center text-[#C9A86A] font-mono text-xs font-bold shrink-0">
+                <Sparkles className="w-4 h-4" />
               </div>
-              <span className="text-[10px] font-mono text-zinc-400 bg-white/5 border border-white/10 px-2 py-0.5 rounded">
-                {isAr ? 'نافذة التذييل المنبثقة' : 'Footer Popup Modal'}
-              </span>
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-mono font-bold text-[#C9A86A] uppercase tracking-wider block">
+                    {isAr ? 'أيقونة وهوية الموقع (Favicon & Brand Assets)' : 'FAVICON & BRAND ASSETS'}
+                  </span>
+                  {(s.favicon_url || content.branding?.favicon) && (
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#C9A86A]/15 border border-[#C9A86A]/30 text-[#E3C58A] hidden sm:inline">
+                      {isAr ? 'أيقونة مخصصة مُفعّلة' : 'CUSTOM ICON ACTIVE'}
+                    </span>
+                  )}
+                </div>
+                <span className="text-[11px] text-zinc-400 block mt-0.5">
+                  {isAr ? 'إدارة أيقونة المتصفح الفاخرة وشاشات اللمس والكتيبات الرسمية' : 'Manage browser tab favicon, mobile touch bookmark icon, and brand asset specs'}
+                </span>
+              </div>
             </div>
-            <p className="text-[11px] text-zinc-400 leading-relaxed">
-              {isAr 
-                ? 'الرمز الذي يجب على العميل إدخاله في النافذة المنبثقة عند النقر على رابط الحسابات البنكية بالتذييل. (الافتراضي: WD-2026)' 
-                : 'The authorization code clients must enter in the pop-up modal triggered from the footer. (Default: WD-2026)'}
-            </p>
-            <div className="max-w-xs pt-1">
-              <input
-                type="text"
-                value={s.bank_access_code || 'WD-2026'}
-                onChange={(e) => setContent({ ...content, settings: { ...s, bank_access_code: e.target.value.toUpperCase() } })}
-                placeholder="WD-2026"
-                className="w-full bg-[#0F1117] border border-white/20 focus:border-[#C9A86A] rounded-xl px-3.5 py-2 text-xs font-mono font-bold tracking-widest text-[#E3C58A] focus:outline-none uppercase"
-                dir="ltr"
-              />
+            <div className="flex items-center gap-2 shrink-0">
+              <span className="text-[10px] font-mono text-zinc-500 group-hover:text-zinc-300 hidden sm:inline">
+                {openSections.branding ? (isAr ? 'طي القسم' : 'Collapse') : (isAr ? 'تعديل القسم' : 'Expand')}
+              </span>
+              {openSections.branding ? <ChevronUp className="w-4 h-4 text-zinc-400" /> : <ChevronDown className="w-4 h-4 text-zinc-400" />}
             </div>
           </div>
 
-          {(!s.bank_accounts || s.bank_accounts.length === 0) ? (
-            <div className="p-8 text-center border border-dashed border-white/10 rounded-2xl space-y-2">
-              <CreditCard className="w-8 h-8 text-zinc-500 mx-auto" />
-              <p className="text-xs text-zinc-400">{isAr ? 'لم يتم تخصيص حسابات بنكية بعد. سيتم عرض الحسابات الافتراضية.' : 'No custom bank accounts configured yet. Default corporate accounts will be displayed.'}</p>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {s.bank_accounts.map((acc, index) => (
-                <div 
-                  key={acc.id || index}
-                  className="bg-[#08090C] border border-white/10 rounded-2xl p-5 space-y-4 relative"
-                >
-                  <div className="flex items-center justify-between gap-2 border-b border-white/5 pb-3">
-                    <div className="flex items-center gap-2">
-                      <span className="w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 text-xs font-mono font-bold flex items-center justify-center">
-                        {index + 1}
-                      </span>
-                      <span className="text-xs font-bold text-white">
-                        {isAr ? (acc.bank_name_ar || acc.bank_name_en) : (acc.bank_name_en || acc.bank_name_ar)}
-                      </span>
-                    </div>
-
-                    <div className="flex items-center gap-3">
-                      <label className="flex items-center gap-2 text-xs text-zinc-400 cursor-pointer">
-                        <input
-                          type="checkbox"
-                          checked={acc.is_active !== false}
-                          onChange={(e) => {
-                            const updated = [...(s.bank_accounts || [])];
-                            updated[index] = { ...updated[index], is_active: e.target.checked };
-                            setContent({ ...content, settings: { ...s, bank_accounts: updated } });
-                          }}
-                          className="w-3.5 h-3.5 rounded bg-white/10 border-white/20 text-blue-600 focus:ring-0"
-                        />
-                        <span>{isAr ? 'مفعّل' : 'Active'}</span>
-                      </label>
-
-                      <button
-                        type="button"
-                        onClick={() => {
-                          const updated = (s.bank_accounts || []).filter((_, i) => i !== index);
-                          setContent({ ...content, settings: { ...s, bank_accounts: updated } });
-                        }}
-                        className="text-zinc-500 hover:text-rose-400 transition-colors p-1"
-                        title={isAr ? 'حذف الحساب' : 'Remove Account'}
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <BilingualInput
-                      label={isAr ? 'اسم البنك' : 'Bank Name'}
-                      valueEn={acc.bank_name_en}
-                      valueAr={acc.bank_name_ar}
-                      onChangeEn={(v) => {
-                        const updated = [...(s.bank_accounts || [])];
-                        updated[index] = { ...updated[index], bank_name_en: v };
-                        setContent({ ...content, settings: { ...s, bank_accounts: updated } });
-                      }}
-                      onChangeAr={(v) => {
-                        const updated = [...(s.bank_accounts || [])];
-                        updated[index] = { ...updated[index], bank_name_ar: v };
-                        setContent({ ...content, settings: { ...s, bank_accounts: updated } });
-                      }}
-                    />
-
-                    <BilingualInput
-                      label={isAr ? 'اسم المستفيد / الحساب' : 'Beneficiary / Account Name'}
-                      valueEn={acc.account_name_en}
-                      valueAr={acc.account_name_ar}
-                      onChangeEn={(v) => {
-                        const updated = [...(s.bank_accounts || [])];
-                        updated[index] = { ...updated[index], account_name_en: v };
-                        setContent({ ...content, settings: { ...s, bank_accounts: updated } });
-                      }}
-                      onChangeAr={(v) => {
-                        const updated = [...(s.bank_accounts || [])];
-                        updated[index] = { ...updated[index], account_name_ar: v };
-                        setContent({ ...content, settings: { ...s, bank_accounts: updated } });
-                      }}
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
-                    <div className="space-y-1 sm:col-span-2">
-                      <label className="text-[11px] font-mono text-zinc-400">
-                        {isAr ? 'رقم الآيبان (IBAN)' : 'IBAN (International Bank Account Number)'}
-                      </label>
-                      <input
-                        type="text"
-                        value={acc.iban || ''}
-                        onChange={(e) => {
-                          const updated = [...(s.bank_accounts || [])];
-                          updated[index] = { ...updated[index], iban: e.target.value };
-                          setContent({ ...content, settings: { ...s, bank_accounts: updated } });
-                        }}
-                        placeholder="SA0000000000000000000000"
-                        className="w-full bg-[#0F1117] border border-white/15 rounded-xl px-3 py-2 text-xs font-mono font-bold text-blue-400 focus:outline-none focus:border-blue-500"
-                        dir="ltr"
-                      />
-                    </div>
-
-                    <div className="space-y-1">
-                      <label className="text-[11px] font-mono text-zinc-400">
-                        {isAr ? 'رقم الحساب' : 'Account Number'}
-                      </label>
-                      <input
-                        type="text"
-                        value={acc.account_number || ''}
-                        onChange={(e) => {
-                          const updated = [...(s.bank_accounts || [])];
-                          updated[index] = { ...updated[index], account_number: e.target.value };
-                          setContent({ ...content, settings: { ...s, bank_accounts: updated } });
-                        }}
-                        placeholder="000000000000"
-                        className="w-full bg-[#0F1117] border border-white/15 rounded-xl px-3 py-2 text-xs font-mono text-white focus:outline-none focus:border-blue-500"
-                        dir="ltr"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div className="space-y-1">
-                      <label className="text-[11px] font-mono text-zinc-400">
-                        {isAr ? 'رمز السويفت (SWIFT)' : 'SWIFT / BIC Code'}
-                      </label>
-                      <input
-                        type="text"
-                        value={acc.swift_code || ''}
-                        onChange={(e) => {
-                          const updated = [...(s.bank_accounts || [])];
-                          updated[index] = { ...updated[index], swift_code: e.target.value };
-                          setContent({ ...content, settings: { ...s, bank_accounts: updated } });
-                        }}
-                        placeholder="RJHISARI"
-                        className="w-full bg-[#0F1117] border border-white/15 rounded-xl px-3 py-2 text-xs font-mono text-white focus:outline-none focus:border-blue-500"
-                        dir="ltr"
-                      />
-                    </div>
-
-                    <div className="space-y-1">
-                      <label className="text-[11px] font-mono text-zinc-400">
-                        {isAr ? 'العملة' : 'Currency'}
-                      </label>
-                      <input
-                        type="text"
-                        value={acc.currency || ''}
-                        onChange={(e) => {
-                          const updated = [...(s.bank_accounts || [])];
-                          updated[index] = { ...updated[index], currency: e.target.value };
-                          setContent({ ...content, settings: { ...s, bank_accounts: updated } });
-                        }}
-                        placeholder="SAR"
-                        className="w-full bg-[#0F1117] border border-white/15 rounded-xl px-3 py-2 text-xs font-mono text-white focus:outline-none focus:border-blue-500"
-                      />
-                    </div>
-                  </div>
-
+          {openSections.branding && (
+            <div className="pt-5 border-t border-white/10 mt-5 animate-in fade-in duration-150">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+                <div>
+                  <MediaFieldUploader
+                    label={isAr ? 'أيقونة الموقع (Favicon & Touch Icon)' : 'Website Favicon & Touch Icon'}
+                    description={isAr ? 'ارفع أيقونة مخصصة (SVG, PNG, ICO) لتظهر في لسان المتصفح والإشارات المرجعية.' : 'Upload custom icon (SVG, PNG, ICO) to display in browser tabs and home bookmarks.'}
+                    value={s.favicon_url || content.branding?.favicon || ''}
+                    onChange={(url) => setContent({
+                      ...content,
+                      settings: { ...s, favicon_url: url },
+                      branding: { ...content.branding, favicon: url }
+                    })}
+                    accept="image"
+                    bucket="photos"
+                    aspectRatio="1:1"
+                  />
                 </div>
-              ))}
+
+                <div className="space-y-3 bg-[#08090C] border border-white/10 rounded-2xl p-4 text-xs">
+                  <div className="font-bold text-white flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-[#C9A86A]" />
+                    <span>{isAr ? 'المواصفات القياسية للأيقونة' : 'Favicon Guidelines & Specs'}</span>
+                  </div>
+                  <ul className="space-y-1.5 text-zinc-400 font-mono text-[11px] list-disc list-inside">
+                    <li>{isAr ? 'المقاس الموصى به: 64x64 أو 192x192 بكسل (مربع 1:1)' : 'Recommended dimension: 64x64 or 192x192 px (Square 1:1)'}</li>
+                    <li>{isAr ? 'الصيغ المعتمدة: SVG (موصى بها لأعلى دقة), PNG, ICO' : 'Supported formats: SVG (Crisp vector recommended), PNG, ICO'}</li>
+                    <li>{isAr ? 'الخلفية: داكنة متوافقة مع الهوية (#08090C) أو شفافة' : 'Background: Obsidian (#08090C) or Transparent'}</li>
+                  </ul>
+                </div>
+              </div>
             </div>
           )}
         </div>
 
-      </div>
+        {/* 4. Platform Maintenance Mode Control */}
+        <div id="maintenance" className={`rounded-3xl p-6 transition-all shadow-xl scroll-mt-24 border ${
+          s.maintenance_mode_enabled 
+            ? 'bg-amber-950/20 border-amber-500/40 shadow-amber-950/30' 
+            : 'bg-[#0F1117]/90 border-white/10'
+        }`}>
+          <div 
+            onClick={() => toggleSection('maintenance')}
+            className="flex items-center justify-between cursor-pointer select-none group"
+          >
+            <div className="flex items-center gap-3.5">
+              <div className={`w-9 h-9 rounded-xl flex items-center justify-center font-mono text-xs font-bold shrink-0 ${
+                s.maintenance_mode_enabled ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' : 'bg-white/5 text-zinc-400 border border-white/10'
+              }`}>
+                <Wrench className="w-4 h-4" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-mono font-bold text-white uppercase tracking-wider block">
+                    {isAr ? 'وضع الصيانة وإشعار التدشين القريب' : 'PUBLIC MAINTENANCE & LAUNCHING SOON MODE'}
+                  </span>
+                  {s.maintenance_mode_enabled ? (
+                    <span className="text-[10px] bg-amber-500/20 border border-amber-500/30 text-amber-300 font-mono px-2 py-0.5 rounded-full font-bold">
+                      {isAr ? 'مفعل · الموقع محجوب' : 'ACTIVE · SITE HIDDEN'}
+                    </span>
+                  ) : (
+                    <span className="text-[10px] bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 font-mono px-2 py-0.5 rounded-full font-bold">
+                      {isAr ? 'معطل · الموقع متاح' : 'DISABLED · SITE LIVE'}
+                    </span>
+                  )}
+                </div>
+                <span className="text-[11px] text-zinc-400 block mt-0.5">
+                  {isAr ? 'حجب الموقع للزوار وعرض شاشة الصيانة الفاخرة مع إبقاء لوحة التحكم نشطة' : 'Display luxury countdown maintenance page to public visitors while keeping /admin accessible'}
+                </span>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <span className="text-[10px] font-mono text-zinc-500 group-hover:text-zinc-300 hidden sm:inline">
+                {openSections.maintenance ? (isAr ? 'طي القسم' : 'Collapse') : (isAr ? 'تعديل القسم' : 'Expand')}
+              </span>
+              {openSections.maintenance ? <ChevronUp className="w-4 h-4 text-zinc-400" /> : <ChevronDown className="w-4 h-4 text-zinc-400" />}
+            </div>
+          </div>
 
-      {/* Integrations & Secrets Management Hub */}
-      <div id="secrets" className="pt-2 scroll-mt-24">
-        <IntegrationsSecretsCard content={content} setContent={setContent} />
-      </div>
+          {openSections.maintenance && (
+            <div className="space-y-4 pt-5 border-t border-white/10 mt-5 animate-in fade-in duration-150">
+              <div className="flex items-center justify-between p-4 rounded-2xl bg-[#08090C] border border-white/10">
+                <div>
+                  <span className="text-xs font-bold text-white block">
+                    {isAr ? 'تفعيل وضع الصيانة الفوري للمنصة' : 'Enable Public Maintenance Splash Screen'}
+                  </span>
+                  <span className="text-[11px] text-zinc-400 block">
+                    {isAr ? 'عند التفعيل، لن يتمكن الزوار العاديون من رؤية الموقع وسيتم توجيههم لشاشة الصيانة.' : 'When turned on, public traffic is redirected to the luxury maintenance holding page.'}
+                  </span>
+                </div>
+                <label className="relative inline-flex items-center cursor-pointer shrink-0">
+                  <input
+                    type="checkbox"
+                    checked={s.maintenance_mode_enabled || false}
+                    onChange={(e) => setContent({ ...content, settings: { ...s, maintenance_mode_enabled: e.target.checked } })}
+                    className="sr-only peer"
+                  />
+                  <div className="w-14 h-7 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-amber-600"></div>
+                </label>
+              </div>
 
-      {/* Odoo Enterprise ERP Integration Card */}
-      <div id="odoo" className="pt-2 scroll-mt-24">
-        <OdooIntegrationCard />
+              {s.maintenance_mode_enabled && (
+                <div className="space-y-4 pt-2 animate-in fade-in duration-200">
+                  <BilingualInput
+                    label={isAr ? 'عنوان الصيانة الرئيسي' : 'Maintenance Headline'}
+                    description={isAr ? 'يظهر بخط بارز أعلى الرسالة' : 'Displayed prominently above the message'}
+                    valueEn={s.maintenance_headline_en || 'Platform Under Scheduled Maintenance'}
+                    valueAr={s.maintenance_headline_ar || 'المنصة تحت الصيانة والتطوير'}
+                    onChangeEn={(v) => setContent({ ...content, settings: { ...s, maintenance_headline_en: v } })}
+                    onChangeAr={(v) => setContent({ ...content, settings: { ...s, maintenance_headline_ar: v } })}
+                  />
+
+                  <BilingualInput
+                    label={isAr ? 'نص رسالة الصيانة' : 'Maintenance Message / Notice'}
+                    description={isAr ? 'فقرة توضيحية تشرح أعمال الترقية والتدشين' : 'Paragraph explaining the upgrade'}
+                    isTextarea
+                    rows={2}
+                    valueEn={s.maintenance_message_en || 'We are currently preparing and upgrading the official digital platform for WD Group. We look forward to welcoming you soon.'}
+                    valueAr={s.maintenance_message_ar || 'نعمل حالياً على تطوير وتجهيز المنصة الرقمية الرسمية لمجموعة دبليو دي للأعمال. سنكون معكم قريباً بحلتنا الجديدة.'}
+                    onChangeEn={(v) => setContent({ ...content, settings: { ...s, maintenance_message_en: v } })}
+                    onChangeAr={(v) => setContent({ ...content, settings: { ...s, maintenance_headline_ar: v } })}
+                  />
+
+                  <div className="space-y-1.5 max-w-xs">
+                    <label className="text-xs font-bold text-zinc-300">
+                      {isAr ? 'الموعد المتوقع للتدشين / العودة' : 'Estimated Launch / Return Date'}
+                    </label>
+                    <input
+                      type="text"
+                      value={s.maintenance_estimated_date || 'Q3 2026'}
+                      onChange={(e) => setContent({ ...content, settings: { ...s, maintenance_estimated_date: e.target.value } })}
+                      placeholder={isAr ? 'مثال: الربع الثالث 2026 أو سبتمبر 2026' : 'e.g. Q3 2026 or September 2026'}
+                      className="w-full bg-[#08090C] border border-white/15 rounded-xl px-4 py-2 text-xs font-mono text-white focus:outline-none focus:border-amber-500"
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* 5. Official Corporate Bank Accounts */}
+        <div id="banking" className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 transition-all shadow-xl scroll-mt-24">
+          <div 
+            onClick={() => toggleSection('banking')}
+            className="flex items-center justify-between cursor-pointer select-none group"
+          >
+            <div className="flex items-center gap-3.5">
+              <div className="w-9 h-9 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 font-mono text-xs font-bold shrink-0">
+                <CreditCard className="w-4 h-4" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-mono font-bold text-blue-400 uppercase tracking-wider block">
+                    {isAr ? 'الحسابات البنكية الرسمية المعتمدة ورمز التحقق' : 'OFFICIAL CORPORATE BANK ACCOUNTS & WIRE OTP'}
+                  </span>
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-500/10 border border-blue-500/20 text-blue-300 hidden sm:inline">
+                    {s.bank_accounts?.length || 0} {isAr ? 'حساب نشط' : 'Accounts'}
+                  </span>
+                </div>
+                <span className="text-[11px] text-zinc-400 block mt-0.5">
+                  {isAr ? 'إدارة حسابات الراجحي والأهلي ورمز الحماية للتحويل البنكي بالتذييل' : 'Manage corporate IBANs, SWIFT, and authorized client access code for footer modal'}
+                </span>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <span className="text-[10px] font-mono text-zinc-500 group-hover:text-zinc-300 hidden sm:inline">
+                {openSections.banking ? (isAr ? 'طي القسم' : 'Collapse') : (isAr ? 'تعديل القسم' : 'Expand')}
+              </span>
+              {openSections.banking ? <ChevronUp className="w-4 h-4 text-zinc-400" /> : <ChevronDown className="w-4 h-4 text-zinc-400" />}
+            </div>
+          </div>
+
+          {openSections.banking && (
+            <div className="space-y-6 pt-5 border-t border-white/10 mt-5 animate-in fade-in duration-150">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#08090C] border border-[#C9A86A]/30 rounded-2xl p-4 sm:p-5">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2 text-xs font-bold text-[#C9A86A]">
+                    <Lock className="w-4 h-4" />
+                    <span>{isAr ? 'رمز التحقق المالي المعتمد لفتح الحسابات للعملاء' : 'Active Financial Authorization Code'}</span>
+                  </div>
+                  <p className="text-[11px] text-zinc-400 leading-relaxed">
+                    {isAr 
+                      ? 'الرمز الذي يجب على العميل إدخاله في النافذة المنبثقة عند النقر على رابط الحسابات البنكية بالتذييل. (الافتراضي: WD-2026)' 
+                      : 'The authorization code clients must enter in the pop-up modal triggered from the footer. (Default: WD-2026)'}
+                  </p>
+                </div>
+                <div className="w-36 shrink-0">
+                  <input
+                    type="text"
+                    value={s.bank_access_code || 'WD-2026'}
+                    onChange={(e) => setContent({ ...content, settings: { ...s, bank_access_code: e.target.value.toUpperCase() } })}
+                    placeholder="WD-2026"
+                    className="w-full bg-[#0F1117] border border-white/20 focus:border-[#C9A86A] rounded-xl px-3.5 py-2 text-xs font-mono font-bold tracking-widest text-[#E3C58A] focus:outline-none uppercase text-center"
+                    dir="ltr"
+                  />
+                </div>
+              </div>
+
+              {/* Add Account Button */}
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-mono text-zinc-400 font-bold">
+                  {isAr ? 'قائمة الحسابات البنكية المعتمدة' : 'APPROVED CORPORATE ACCOUNTS LIST'}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const currentAccounts = s.bank_accounts || [];
+                    const newAcc: BankAccountRecord = {
+                      id: `bank_${Date.now()}`,
+                      bank_name_ar: 'مصرف الراجحي',
+                      bank_name_en: 'Al Rajhi Bank',
+                      account_name_ar: 'شركة تصاميم الوطن المحدودة',
+                      account_name_en: 'Watan Designs Ltd.',
+                      iban: 'SA0000000000000000000000',
+                      account_number: '000000000000',
+                      swift_code: 'RJHISARI',
+                      currency: 'SAR',
+                      is_active: true,
+                    };
+                    setContent({
+                      ...content,
+                      settings: {
+                        ...s,
+                        bank_accounts: [...currentAccounts, newAcc],
+                      },
+                    });
+                  }}
+                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-blue-600/20 border border-blue-500/30 hover:bg-blue-600/30 text-blue-400 text-xs font-bold transition-colors cursor-pointer"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                  <span>{isAr ? 'إضافة حساب بنكي' : 'Add Bank Account'}</span>
+                </button>
+              </div>
+
+              {(!s.bank_accounts || s.bank_accounts.length === 0) ? (
+                <div className="p-8 text-center border border-dashed border-white/10 rounded-2xl space-y-2">
+                  <CreditCard className="w-8 h-8 text-zinc-500 mx-auto" />
+                  <p className="text-xs text-zinc-400">{isAr ? 'لم يتم تخصيص حسابات بنكية بعد. سيتم عرض الحسابات الافتراضية.' : 'No custom bank accounts configured yet. Default corporate accounts will be displayed.'}</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {s.bank_accounts.map((acc, index) => (
+                    <div 
+                      key={acc.id || index}
+                      className="bg-[#08090C] border border-white/10 rounded-2xl p-5 space-y-4 relative"
+                    >
+                      <div className="flex items-center justify-between gap-2 border-b border-white/5 pb-3">
+                        <div className="flex items-center gap-2">
+                          <span className="w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 text-xs font-mono font-bold flex items-center justify-center">
+                            {index + 1}
+                          </span>
+                          <span className="text-xs font-bold text-white">
+                            {isAr ? (acc.bank_name_ar || acc.bank_name_en) : (acc.bank_name_en || acc.bank_name_ar)}
+                          </span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const updated = (s.bank_accounts || []).filter((_, i) => i !== index);
+                            setContent({ ...content, settings: { ...s, bank_accounts: updated } });
+                          }}
+                          className="text-zinc-500 hover:text-rose-400 p-1 rounded-lg transition-colors cursor-pointer"
+                          title={isAr ? 'حذف الحساب' : 'Remove account'}
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div className="space-y-1">
+                          <label className="text-[11px] font-mono text-zinc-400">
+                            {isAr ? 'اسم البنك (بالعربية)' : 'Bank Name (Arabic)'}
+                          </label>
+                          <input
+                            type="text"
+                            value={acc.bank_name_ar || ''}
+                            onChange={(e) => {
+                              const updated = [...(s.bank_accounts || [])];
+                              updated[index] = { ...updated[index], bank_name_ar: e.target.value };
+                              setContent({ ...content, settings: { ...s, bank_accounts: updated } });
+                            }}
+                            placeholder="مصرف الراجحي"
+                            className="w-full bg-[#0F1117] border border-white/15 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500"
+                          />
+                        </div>
+
+                        <div className="space-y-1">
+                          <label className="text-[11px] font-mono text-zinc-400">
+                            {isAr ? 'اسم البنك (بالإنجليزية)' : 'Bank Name (English)'}
+                          </label>
+                          <input
+                            type="text"
+                            value={acc.bank_name_en || ''}
+                            onChange={(e) => {
+                              const updated = [...(s.bank_accounts || [])];
+                              updated[index] = { ...updated[index], bank_name_en: e.target.value };
+                              setContent({ ...content, settings: { ...s, bank_accounts: updated } });
+                            }}
+                            placeholder="Al Rajhi Bank"
+                            className="w-full bg-[#0F1117] border border-white/15 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div className="space-y-1">
+                          <label className="text-[11px] font-mono text-zinc-400">
+                            {isAr ? 'اسم الحساب الرسمي' : 'Beneficiary Account Name'}
+                          </label>
+                          <input
+                            type="text"
+                            value={acc.account_name_ar || ''}
+                            onChange={(e) => {
+                              const updated = [...(s.bank_accounts || [])];
+                              updated[index] = { ...updated[index], account_name_ar: e.target.value };
+                              setContent({ ...content, settings: { ...s, bank_accounts: updated } });
+                            }}
+                            placeholder="شركة تصاميم الوطن المحدودة"
+                            className="w-full bg-[#0F1117] border border-white/15 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500"
+                          />
+                        </div>
+
+                        <div className="space-y-1">
+                          <label className="text-[11px] font-mono text-zinc-400">
+                            {isAr ? 'اسم الحساب الرسمي (EN)' : 'Beneficiary Account Name (EN)'}
+                          </label>
+                          <input
+                            type="text"
+                            value={acc.account_name_en || ''}
+                            onChange={(e) => {
+                              const updated = [...(s.bank_accounts || [])];
+                              updated[index] = { ...updated[index], account_name_en: e.target.value };
+                              setContent({ ...content, settings: { ...s, bank_accounts: updated } });
+                            }}
+                            placeholder="Watan Designs Ltd."
+                            className="w-full bg-[#0F1117] border border-white/15 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div className="space-y-1">
+                          <label className="text-[11px] font-mono text-zinc-400">
+                            {isAr ? 'رقم الآيبان الدولي (IBAN)' : 'IBAN'}
+                          </label>
+                          <input
+                            type="text"
+                            value={acc.iban || ''}
+                            onChange={(e) => {
+                              const updated = [...(s.bank_accounts || [])];
+                              updated[index] = { ...updated[index], iban: e.target.value };
+                              setContent({ ...content, settings: { ...s, bank_accounts: updated } });
+                            }}
+                            placeholder="SA0000000000000000000000"
+                            className="w-full bg-[#0F1117] border border-white/15 rounded-xl px-3 py-2 text-xs font-mono font-bold text-blue-400 focus:outline-none focus:border-blue-500"
+                            dir="ltr"
+                          />
+                        </div>
+
+                        <div className="space-y-1">
+                          <label className="text-[11px] font-mono text-zinc-400">
+                            {isAr ? 'رقم الحساب' : 'Account Number'}
+                          </label>
+                          <input
+                            type="text"
+                            value={acc.account_number || ''}
+                            onChange={(e) => {
+                              const updated = [...(s.bank_accounts || [])];
+                              updated[index] = { ...updated[index], account_number: e.target.value };
+                              setContent({ ...content, settings: { ...s, bank_accounts: updated } });
+                            }}
+                            placeholder="000000000000"
+                            className="w-full bg-[#0F1117] border border-white/15 rounded-xl px-3 py-2 text-xs font-mono text-white focus:outline-none focus:border-blue-500"
+                            dir="ltr"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div className="space-y-1">
+                          <label className="text-[11px] font-mono text-zinc-400">
+                            {isAr ? 'رمز السويفت (SWIFT)' : 'SWIFT / BIC Code'}
+                          </label>
+                          <input
+                            type="text"
+                            value={acc.swift_code || ''}
+                            onChange={(e) => {
+                              const updated = [...(s.bank_accounts || [])];
+                              updated[index] = { ...updated[index], swift_code: e.target.value };
+                              setContent({ ...content, settings: { ...s, bank_accounts: updated } });
+                            }}
+                            placeholder="RJHISARI"
+                            className="w-full bg-[#0F1117] border border-white/15 rounded-xl px-3 py-2 text-xs font-mono text-white focus:outline-none focus:border-blue-500"
+                            dir="ltr"
+                          />
+                        </div>
+
+                        <div className="space-y-1">
+                          <label className="text-[11px] font-mono text-zinc-400">
+                            {isAr ? 'العملة' : 'Currency'}
+                          </label>
+                          <input
+                            type="text"
+                            value={acc.currency || ''}
+                            onChange={(e) => {
+                              const updated = [...(s.bank_accounts || [])];
+                              updated[index] = { ...updated[index], currency: e.target.value };
+                              setContent({ ...content, settings: { ...s, bank_accounts: updated } });
+                            }}
+                            placeholder="SAR"
+                            className="w-full bg-[#0F1117] border border-white/15 rounded-xl px-3 py-2 text-xs font-mono text-white focus:outline-none focus:border-blue-500"
+                          />
+                        </div>
+                      </div>
+
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* 6. Integrations & Secrets Management Hub */}
+        <div id="secrets" className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 transition-all shadow-xl scroll-mt-24">
+          <div 
+            onClick={() => toggleSection('secrets')}
+            className="flex items-center justify-between cursor-pointer select-none group"
+          >
+            <div className="flex items-center gap-3.5">
+              <div className="w-9 h-9 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400 font-mono text-xs font-bold shrink-0">
+                <Lock className="w-4 h-4" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-mono font-bold text-purple-400 uppercase tracking-wider block">
+                    {isAr ? 'مفاتيح الربط والـ APIs والتكاملات السحابية' : 'INTEGRATIONS & SECRETS MANAGEMENT HUB'}
+                  </span>
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-500/10 border border-purple-500/20 text-purple-300 hidden sm:inline">
+                    OPENAI &bull; GOOGLE &bull; WHATSAPP
+                  </span>
+                </div>
+                <span className="text-[11px] text-zinc-400 block mt-0.5">
+                  {isAr ? 'إدارة مفاتيح OpenAI Vision, Google Cloud, Brevo, WhatsApp, والمتغيرات السرية المخصصة' : 'Manage OpenAI Vision, Google Cloud Gemini, Brevo, Resend, WhatsApp & Custom Secret Keys'}
+                </span>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <span className="text-[10px] font-mono text-zinc-500 group-hover:text-zinc-300 hidden sm:inline">
+                {openSections.secrets ? (isAr ? 'طي القسم' : 'Collapse') : (isAr ? 'تعديل المفاتيح' : 'Expand')}
+              </span>
+              {openSections.secrets ? <ChevronUp className="w-4 h-4 text-zinc-400" /> : <ChevronDown className="w-4 h-4 text-zinc-400" />}
+            </div>
+          </div>
+
+          {openSections.secrets && (
+            <div className="pt-5 border-t border-white/10 mt-5 animate-in fade-in duration-150">
+              <IntegrationsSecretsCard content={content} setContent={setContent} />
+            </div>
+          )}
+        </div>
+
+        {/* 7. Odoo Enterprise ERP Integration Card */}
+        <div id="odoo" className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 transition-all shadow-xl scroll-mt-24">
+          <div 
+            onClick={() => toggleSection('odoo')}
+            className="flex items-center justify-between cursor-pointer select-none group"
+          >
+            <div className="flex items-center gap-3.5">
+              <div className="w-9 h-9 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 font-mono text-xs font-bold shrink-0">
+                <Building2 className="w-4 h-4" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-mono font-bold text-indigo-400 uppercase tracking-wider block">
+                    {isAr ? 'الربط السحابي مع منظومة أودو (Odoo ERP)' : 'ODOO ENTERPRISE ERP INTEGRATION'}
+                  </span>
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 hidden sm:inline">
+                    JSON-RPC &bull; CRM &bull; HR
+                  </span>
+                </div>
+                <span className="text-[11px] text-zinc-400 block mt-0.5">
+                  {isAr ? 'مزامنة طلبات التسعير، التوظيف والمخزون لحظياً مع نظام Odoo 17/18' : 'Bidirectional sync for RFPs, talent applicants, and stock levels with Odoo 17/18 Enterprise'}
+                </span>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <span className="text-[10px] font-mono text-zinc-500 group-hover:text-zinc-300 hidden sm:inline">
+                {openSections.odoo ? (isAr ? 'طي القسم' : 'Collapse') : (isAr ? 'تعديل الربط' : 'Expand')}
+              </span>
+              {openSections.odoo ? <ChevronUp className="w-4 h-4 text-zinc-400" /> : <ChevronDown className="w-4 h-4 text-zinc-400" />}
+            </div>
+          </div>
+
+          {openSections.odoo && (
+            <div className="pt-5 border-t border-white/10 mt-5 animate-in fade-in duration-150">
+              <OdooIntegrationCard />
+            </div>
+          )}
+        </div>
+
       </div>
 
     </form>
