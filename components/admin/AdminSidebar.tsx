@@ -1,43 +1,29 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { usePathname, useSearchParams } from 'next/navigation';
-import { motion, AnimatePresence } from 'framer-motion';
+import { usePathname } from 'next/navigation';
 import { useLanguage } from '@/context/LanguageContext';
 import { 
   LayoutDashboard, 
+  ShoppingCart,
+  MessageSquare,
+  Building2,
   FileText, 
-  Building2, 
-  Factory, 
-  HardHat, 
-  Users, 
-  Briefcase, 
+  TrendingUp,
+  Sparkles,
   Image as ImageIcon, 
   Search, 
-  ShieldCheck, 
+  Users, 
+  Briefcase, 
   Settings, 
-  Activity, 
-  ChevronRight, 
-  ChevronDown,
-  Globe, 
-  Layers, 
-  MessageSquare,
-  Sparkles,
-  ExternalLink,
-  Lock,
-  ShoppingCart,
-  Package,
-  Truck,
-  TrendingUp,
   Mail,
-  KeyRound,
-  Cpu,
-  Eye,
-  Sliders,
-  CreditCard,
-  Building
+  ShieldCheck, 
+  Lock,
+  Activity, 
+  Globe, 
+  ExternalLink
 } from 'lucide-react';
 import type { AdminRole } from '@/lib/admin/types';
 
@@ -45,16 +31,6 @@ interface AdminSidebarProps {
   userRole?: AdminRole;
   isMobileOpen: boolean;
   onCloseMobile: () => void;
-}
-
-export interface SubNavItem {
-  label: string;
-  labelAr: string;
-  href: string;
-  badge?: string;
-  badgeAr?: string;
-  badgeColor?: string;
-  allowedRoles?: AdminRole[];
 }
 
 export interface NavItem {
@@ -68,7 +44,6 @@ export interface NavItem {
   badge?: string;
   badgeAr?: string;
   badgeColor?: string;
-  children?: SubNavItem[];
 }
 
 export interface NavGroup {
@@ -119,33 +94,6 @@ const NAV_GROUPS: NavGroup[] = [
         icon: MessageSquare,
         iconBg: 'bg-blue-500/15 text-blue-400 border-blue-500/25 group-hover:bg-blue-500/25',
         allowedRoles: ['owner', 'admin', 'crm'],
-        children: [
-          {
-            label: 'All Received Inquiries',
-            labelAr: 'جميع الاستفسارات الواردة',
-            href: '/admin/crm/inquiries',
-          },
-          {
-            label: 'New Uncontacted Leads',
-            labelAr: 'طلبات جديدة غير متواصل معها',
-            href: '/admin/crm/inquiries?status=new',
-          },
-          {
-            label: 'SwissBlue Hospitality RFPs',
-            labelAr: 'استفسارات قطاع الضيافة',
-            href: '/admin/crm/inquiries?sector=hospitality',
-          },
-          {
-            label: 'GreenWood Manufacturing RFPs',
-            labelAr: 'استفسارات ومناقصات التصنيع',
-            href: '/admin/crm/inquiries?sector=manufacturing',
-          },
-          {
-            label: 'Turnkey Contracting Quotes',
-            labelAr: 'استفسارات المقاولات والتشطيب',
-            href: '/admin/crm/inquiries?sector=contracting',
-          },
-        ],
       },
     ],
   },
@@ -164,23 +112,6 @@ const NAV_GROUPS: NavGroup[] = [
         icon: Building2,
         iconBg: 'bg-sky-500/15 text-sky-400 border-sky-500/25 group-hover:bg-sky-500/25',
         allowedRoles: ['owner', 'admin', 'editor'],
-        children: [
-          {
-            label: 'SwissBlue Hospitality',
-            labelAr: 'قطاع الضيافة والفنادق',
-            href: '/admin/sectors/hospitality',
-          },
-          {
-            label: 'GreenWood Manufacturing',
-            labelAr: 'التصنيع والأثاث المعماري',
-            href: '/admin/sectors/manufacturing',
-          },
-          {
-            label: 'Turnkey Contracting & Fit-Out',
-            labelAr: 'المقاولات والتشطيب الفاخر',
-            href: '/admin/sectors/contracting',
-          },
-        ],
       },
       {
         id: 'pages',
@@ -190,28 +121,24 @@ const NAV_GROUPS: NavGroup[] = [
         icon: FileText,
         iconBg: 'bg-indigo-500/15 text-indigo-400 border-indigo-500/25 group-hover:bg-indigo-500/25',
         allowedRoles: ['owner', 'admin', 'editor'],
-        children: [
-          {
-            label: 'Homepage Modules',
-            labelAr: 'الصفحة الرئيسية',
-            href: '/admin/content/pages?tab=home',
-          },
-          {
-            label: 'About & Vision',
-            labelAr: 'عن المجموعة والرؤية',
-            href: '/admin/content/pages?tab=about',
-          },
-          {
-            label: 'Corporate Metrics',
-            labelAr: 'الإحصائيات والأرقام',
-            href: '/admin/content/metrics',
-          },
-          {
-            label: 'Leadership & Vision',
-            labelAr: 'القيادة والرؤية التنفيذية',
-            href: '/admin/content/leadership',
-          },
-        ],
+      },
+      {
+        id: 'metrics',
+        label: 'Corporate Metrics',
+        labelAr: 'الإحصائيات والأرقام',
+        href: '/admin/content/metrics',
+        icon: TrendingUp,
+        iconBg: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/25 group-hover:bg-emerald-500/25',
+        allowedRoles: ['owner', 'admin', 'editor'],
+      },
+      {
+        id: 'leadership',
+        label: 'Leadership & Vision',
+        labelAr: 'القيادة والرؤية التنفيذية',
+        href: '/admin/content/leadership',
+        icon: Sparkles,
+        iconBg: 'bg-amber-500/15 text-amber-400 border-amber-500/25 group-hover:bg-amber-500/25',
+        allowedRoles: ['owner', 'admin', 'editor'],
       },
       {
         id: 'media',
@@ -248,23 +175,6 @@ const NAV_GROUPS: NavGroup[] = [
         icon: Users,
         iconBg: 'bg-rose-500/15 text-rose-400 border-rose-500/25 group-hover:bg-rose-500/25',
         allowedRoles: ['owner', 'admin', 'hr'],
-        children: [
-          {
-            label: 'Received Applications',
-            labelAr: 'جميع طلبات التوظيف الواردة',
-            href: '/admin/hr/applications',
-          },
-          {
-            label: 'Awaiting HR Review',
-            labelAr: 'طلبات جديدة بانتظار المراجعة',
-            href: '/admin/hr/applications?status=new',
-          },
-          {
-            label: 'Shortlisted Candidates',
-            labelAr: 'المرشحون المؤهلون للمقابلة',
-            href: '/admin/hr/applications?status=shortlisted',
-          },
-        ],
       },
       {
         id: 'jobs',
@@ -338,52 +248,8 @@ export default function AdminSidebar({
   onCloseMobile,
 }: AdminSidebarProps) {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
   const { lang } = useLanguage();
   const isAr = lang === 'ar';
-
-  // Full active URL string to check exact subcategory matches
-  const currentFullPath = `${pathname}${searchParams?.toString() ? `?${searchParams.toString()}` : ''}`;
-
-  // Track client window.location.hash for smooth anchor highlighting
-  const [currentHash, setCurrentHash] = useState('');
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      setCurrentHash(window.location.hash);
-      const handleHashChange = () => setCurrentHash(window.location.hash);
-      window.addEventListener('hashchange', handleHashChange);
-      return () => window.removeEventListener('hashchange', handleHashChange);
-    }
-  }, []);
-
-  // Track accordion open state per item id
-  const [openItems, setOpenItems] = useState<Record<string, boolean>>({});
-
-  // Auto-expand menus based on current URL
-  useEffect(() => {
-    const nextOpen: Record<string, boolean> = { ...openItems };
-    NAV_GROUPS.forEach((group) => {
-      group.items.forEach((item) => {
-        const itemMatches = 
-          pathname === item.href || 
-          (item.href !== '/admin' && pathname.startsWith(item.href)) ||
-          item.children?.some((c) => pathname === c.href.split('?')[0].split('#')[0]);
-        if (itemMatches) {
-          nextOpen[item.id] = true;
-        }
-      });
-    });
-    setOpenItems(nextOpen);
-  }, [pathname, searchParams]);
-
-  const toggleItem = (itemId: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    setOpenItems((prev) => ({
-      ...prev,
-      [itemId]: !prev[itemId],
-    }));
-  };
 
   const sidebarContent = (
     <div className="flex flex-col h-full bg-[#08090C]/95 border-r rtl:border-r-0 rtl:border-l border-white/10 backdrop-blur-2xl">
@@ -437,167 +303,63 @@ export default function AdminSidebar({
               </div>
 
               {/* Items List */}
-              {visibleItems.map((item) => {
-                const Icon = item.icon;
-                const isParentActive = 
-                  pathname === item.href || 
-                  (item.href !== '/admin' && pathname.startsWith(item.href)) ||
-                  Boolean(item.children?.some((c) => pathname === c.href.split('?')[0].split('#')[0]));
-                const hasChildren = item.children && item.children.length > 0;
-                const isOpen = !!openItems[item.id];
+              <div className="space-y-1">
+                {visibleItems.map((item) => {
+                  const Icon = item.icon;
+                  const isActive = (() => {
+                    if (item.id === 'sectors') return pathname.startsWith('/admin/sectors');
+                    if (item.id === 'pages') return pathname === '/admin/content/pages';
+                    if (item.href === '/admin') return pathname === '/admin';
+                    return pathname === item.href || (item.href !== '/admin' && pathname.startsWith(item.href));
+                  })();
 
-                return (
-                  <div key={item.id} className="space-y-1">
-                    
-                    {/* Parent Tab Link & Toggle */}
-                    <div
+                  return (
+                    <Link
+                      key={item.id}
+                      href={item.href}
+                      onClick={onCloseMobile}
                       className={`flex items-center justify-between px-2.5 py-2 rounded-xl text-xs font-semibold transition-all group relative border ${
-                        isParentActive
+                        isActive
                           ? 'bg-gradient-to-r from-blue-600/20 via-blue-500/10 to-transparent border-blue-500/40 text-white shadow-sm'
                           : 'text-zinc-400 hover:text-white hover:bg-white/5 border-transparent'
                       }`}
                     >
-                      {/* Direct Navigation to Parent */}
-                      <Link
-                        href={item.href}
-                        onClick={onCloseMobile}
-                        className="flex items-center gap-2.5 min-w-0 flex-1 pr-1 rtl:pr-0 rtl:pl-1 cursor-pointer"
-                      >
-                        <div className={`w-7 h-7 rounded-lg flex items-center justify-center border transition-all shrink-0 ${
-                          isParentActive 
-                            ? 'bg-blue-500 text-white border-blue-400 shadow-[0_0_12px_rgba(59,130,246,0.5)]' 
-                            : item.iconBg
-                        }`}>
+                      {/* Left: Icon & Label */}
+                      <div className="flex items-center gap-2.5 min-w-0 flex-1 pr-1 rtl:pr-0 rtl:pl-1">
+                        <div
+                          className={`w-7 h-7 rounded-lg flex items-center justify-center border transition-all shrink-0 ${
+                            isActive
+                              ? 'bg-blue-500 text-white border-blue-400 shadow-[0_0_12px_rgba(59,130,246,0.5)]'
+                              : item.iconBg
+                          }`}
+                        >
                           <Icon className="w-3.5 h-3.5 shrink-0" />
                         </div>
-                        <span className="truncate text-xs font-medium">{isAr ? item.labelAr : item.label}</span>
-                      </Link>
+                        <span className="truncate text-xs font-medium">
+                          {isAr ? item.labelAr : item.label}
+                        </span>
+                      </div>
 
-                      {/* Right-Side Badges & Subcategory Expand/Collapse Arrow */}
+                      {/* Right: Badge & Active Indicator */}
                       <div className="flex items-center gap-1.5 shrink-0">
                         {item.badge && (
-                          <span className={`px-1.5 py-0.5 rounded-md text-[9px] font-mono font-bold border ${item.badgeColor || 'bg-blue-500/20 text-blue-300 border-blue-500/30'}`}>
+                          <span
+                            className={`px-1.5 py-0.5 rounded-md text-[9px] font-mono font-bold border ${
+                              item.badgeColor || 'bg-blue-500/20 text-blue-300 border-blue-500/30'
+                            }`}
+                          >
                             {isAr ? (item.badgeAr || item.badge) : item.badge}
                           </span>
                         )}
 
-                        {hasChildren && (
-                          <button
-                            onClick={(e) => toggleItem(item.id, e)}
-                            className="p-1 rounded-lg hover:bg-white/10 text-zinc-400 hover:text-white transition-colors cursor-pointer"
-                            aria-label="Toggle Subcategories"
-                          >
-                            <ChevronDown
-                              className={`w-3.5 h-3.5 transition-transform duration-200 ${
-                                isOpen ? 'rotate-180 text-blue-400' : 'text-zinc-500'
-                              }`}
-                            />
-                          </button>
-                        )}
-
-                        {isParentActive && !hasChildren && (
-                          <div className="w-1.5 h-3.5 rounded-full bg-blue-400 shadow-[0_0_8px_rgba(56,189,248,0.8)]" />
+                        {isActive && (
+                          <div className="w-1.5 h-3.5 rounded-full bg-blue-400 shadow-[0_0_8px_rgba(56,189,248,0.8)] shrink-0" />
                         )}
                       </div>
-                    </div>
-
-                    {/* Subcategories Accordion List */}
-                    <AnimatePresence initial={false}>
-                      {hasChildren && isOpen && (
-                        <motion.div
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: 'auto' }}
-                          exit={{ opacity: 0, height: 0 }}
-                          transition={{ duration: 0.25, ease: 'easeInOut' }}
-                          className="overflow-hidden"
-                        >
-                          <div className="mr-3.5 rtl:mr-0 rtl:ml-3.5 pr-2 rtl:pr-0 rtl:pl-2 border-r rtl:border-r-0 rtl:border-l border-white/10 space-y-0.5 pt-1 pb-1.5">
-                            {item.children!.map((subItem) => {
-                              // Check active state for subcategory
-                              const isSubActive = (() => {
-                                const hasSearch = !!searchParams?.toString();
-                                const hasHash = !!currentHash;
-
-                                if (subItem.href.includes('#')) {
-                                  const [subPathWithQuery, subHash] = subItem.href.split('#');
-                                  const [subPath] = subPathWithQuery.split('?');
-                                  if (pathname !== subPath) return false;
-
-                                  const sectionParam = searchParams?.get('section');
-                                  if (sectionParam) return sectionParam === subHash;
-                                  if (hasHash) return currentHash === `#${subHash}`;
-
-                                  // Default section when visiting settings without hash or query
-                                  if (subPath === '/admin/system/settings' && subHash === 'general') return true;
-                                  return false;
-                                }
-
-                                if (subItem.href.includes('?')) {
-                                  const [subPath, subQuery] = subItem.href.split('?');
-                                  if (pathname !== subPath) return false;
-                                  if (hasSearch) return searchParams!.toString().includes(subQuery);
-
-                                  // Default active tabs when visiting without query parameters
-                                  if (subItem.href === '/admin/seo?tab=google') return true;
-                                  if (subItem.href === '/admin/ecommerce?tab=overview') return true;
-                                  if (subItem.href === '/admin/content/pages?tab=home') return true;
-                                  return false;
-                                }
-
-                                return pathname === subItem.href && !hasSearch && !hasHash;
-                              })();
-
-                              return (
-                                <Link
-                                  key={subItem.href}
-                                  href={subItem.href}
-                                  onClick={() => {
-                                    if (subItem.href.includes('#')) {
-                                      const [, hash] = subItem.href.split('#');
-                                      setCurrentHash(`#${hash}`);
-                                      if (typeof window !== 'undefined') {
-                                        window.dispatchEvent(new CustomEvent('admin-section-navigate', { detail: { id: hash } }));
-                                        const el = document.getElementById(hash);
-                                        if (el) {
-                                          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                                        }
-                                      }
-                                    }
-                                    onCloseMobile();
-                                  }}
-                                  className={`flex items-center justify-between px-2.5 py-1.5 rounded-lg text-[11px] transition-all group/sub ${
-                                    isSubActive
-                                      ? 'text-[#C9A86A] bg-[#C9A86A]/10 font-bold border border-[#C9A86A]/25'
-                                      : 'text-zinc-400 hover:text-white hover:bg-white/5 font-normal'
-                                  }`}
-                                >
-                                  <div className="flex items-center gap-2 min-w-0 truncate">
-                                    <span className={`w-1 h-1 rounded-full shrink-0 transition-all ${
-                                      isSubActive 
-                                        ? 'bg-[#C9A86A] shadow-[0_0_6px_rgba(201,168,106,0.8)] scale-125' 
-                                        : 'bg-zinc-600 group-hover/sub:bg-zinc-400'
-                                    }`} />
-                                    <span className="truncate">{isAr ? subItem.labelAr : subItem.label}</span>
-                                  </div>
-
-                                  {subItem.badge && (
-                                    <span className={`px-1.5 py-0.2 rounded text-[8px] font-mono font-bold border shrink-0 ${
-                                      subItem.badgeColor || 'bg-[#C9A86A]/20 text-[#C9A86A] border-[#C9A86A]/30'
-                                    }`}>
-                                      {isAr ? (subItem.badgeAr || subItem.badge) : subItem.badge}
-                                    </span>
-                                  )}
-                                </Link>
-                              );
-                            })}
-                          </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-
-                  </div>
-                );
-              })}
+                    </Link>
+                  );
+                })}
+              </div>
             </div>
           );
         })}
