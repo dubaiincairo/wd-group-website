@@ -300,6 +300,19 @@ export default function PagesContentEditor() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
+  // Sync tab from URL query params when clicked from sidebar
+  useEffect(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const tab = params.get('tab');
+      if (tab && ['home', 'about', 'hospitality', 'manufacturing', 'contracting'].includes(tab)) {
+        setActiveTab(tab as any);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }, []);
+
   // Collapsible Accordion State for Modules
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({
     hero: true,
