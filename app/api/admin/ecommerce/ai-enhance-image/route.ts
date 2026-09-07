@@ -246,12 +246,16 @@ export async function POST(req: NextRequest) {
 
     // --- STRICT VERIFICATION: If NO generative image was produced, NEVER fake success! ---
     if (!generatedImageData) {
+      let friendlyError = lastError || 'The AI model could not generate an edited image for this instruction.';
+      if (lastError && (lastError.includes('limit: 0') || lastError.includes('Quota exceeded') || lastError.includes('RESOURCE_EXHAUSTED'))) {
+        friendlyError = 'Google AI Quota Notice: Free-tier Gemini keys have limit: 0 for image generation. To enable live NanoBanana diffusion, please attach a billing method to your Google AI Studio project, or configure an OpenAI API key in Settings.';
+      }
+
       return NextResponse.json(
         {
           success: false,
-          error: lastError 
-            ? `AI Generation Error: ${lastError}` 
-            : 'The AI model could not generate an edited image for this instruction. Please verify your Gemini API key permissions.',
+          error: friendlyError,
+          rawError: lastError,
         },
         { status: 502 }
       );

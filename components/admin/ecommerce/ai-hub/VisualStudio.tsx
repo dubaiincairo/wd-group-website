@@ -76,6 +76,7 @@ export default function VisualStudio({
   const [isComparing, setIsComparing] = useState<boolean>(true);
   const [inspectingItem, setInspectingItem] = useState<VisualStudioItem | null>(null);
   const [showFineTune, setShowFineTune] = useState<boolean>(false);
+  const [isDragging, setIsDragging] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Gemini API Key & Connection State
@@ -152,17 +153,21 @@ export default function VisualStudio({
     });
   };
 
-  // SINGLE UNIFIED UPLOAD HANDLER
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files || files.length === 0) return;
+  // Process incoming files (from upload button or drag-and-drop)
+  const processFiles = async (fileList: File[]) => {
+    if (!fileList || fileList.length === 0) return;
+    const imageFiles = fileList.filter((f) => f.type.startsWith('image/'));
+    if (imageFiles.length === 0) {
+      showToast(isAr ? 'يرجى اختيار ملفات صور صالحة (PNG/JPEG)' : 'Please select valid image files', 'error');
+      return;
+    }
 
     const newItems: VisualStudioItem[] = [];
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://fqkbgfdasfwnryekkgqz.supabase.co';
     const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZxa2JnZmRhc2Z3bnJ5ZWtrZ3F6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc1OTAyMDYsImV4cCI6MjEwMzE2NjIwNn0.IRPdvlCIbeTtFNf8TMc353fT-tlLxYq0Mx3P2HHmM3Q';
 
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
+    for (let i = 0; i < imageFiles.length; i++) {
+      const file = imageFiles[i];
       const base64 = await readFileAsDataUrl(file);
       const cleanFileName = `visual_studio_${Date.now()}_${i}_${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
 
@@ -198,6 +203,21 @@ export default function VisualStudio({
       isAr ? `تم رفع ${newItems.length} صورة بنجاح في الاستوديو` : `Loaded ${newItems.length} photo(s) into Visual Studio`,
       'success'
     );
+  };
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+    await processFiles(Array.from(files));
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
+  const handleDrop = async (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragging(false);
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      await processFiles(Array.from(e.dataTransfer.files));
+    }
   };
 
   // Test Key ping
@@ -371,7 +391,7 @@ export default function VisualStudio({
   };
 
   return (
-    <div className="space-y-6 pb-28 relative">
+    <div className="space-y-6 relative flex flex-col min-h-[560px]">
       
       {/* 1. Header Toolbar (Single Unified Upload CTA + Live API Key Status) */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-3xl bg-[#12141F] border border-white/10 shadow-lg">
@@ -404,7 +424,7 @@ export default function VisualStudio({
               title={isAr ? 'مفتاح Gemini متصل ونشط' : 'Gemini API Key Connected'}
             >
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span>{isAr ? 'NanoBanana نشط' : 'NanoBanana Live'}</span>
+              <span>{isAr ? 'NanoBanana متصل' : 'NanoBanana Live'}</span>
               <Sliders className="w-3.5 h-3.5 opacity-60 ml-0.5" />
             </button>
           ) : (
@@ -441,264 +461,141 @@ export default function VisualStudio({
         />
       </div>
 
-      {/* 2. Main Gallery Space (Google Flow Style Responsive Asset Grid) */}
+      {/* 2. Gallery Area (Clean Grid when items exist, Spatially Isolated Dropzone when empty) */}
       {items.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {items.map((item) => {
-            const isSelected = activeItemId === item.id;
-            const isEnhanced = Boolean(item.enhancedUrl);
+        <div className="space-y-6 flex-1">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pb-4">
+            {items.map((item) => {
+              const isSelected = activeItemId === item.id;
+              const isEnhanced = Boolean(item.enhancedUrl);
 
-            return (
-              <div
-                key={item.id}
-                onClick={() => handleSelectItem(item.id)}
-                className={`group relative rounded-3xl overflow-hidden border-2 cursor-pointer transition-all duration-200 aspect-[4/3] bg-[#0A0B10] select-none ${
-                  isSelected
-                    ? 'border-amber-400 ring-4 ring-amber-400/20 shadow-2xl scale-[1.02]'
-                    : 'border-white/10 hover:border-white/30 hover:scale-[1.01]'
-                }`}
-              >
-                {/* Photo Display */}
-                <img
-                  src={item.enhancedUrl || item.originalUrl}
-                  alt={item.fileName || 'Asset'}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                />
+              return (
+                <div
+                  key={item.id}
+                  onClick={() => handleSelectItem(item.id)}
+                  className={`group relative rounded-3xl overflow-hidden border-2 cursor-pointer transition-all duration-200 aspect-[4/3] bg-[#0A0B10] select-none ${
+                    isSelected
+                      ? 'border-amber-400 ring-4 ring-amber-400/20 shadow-2xl scale-[1.02]'
+                      : 'border-white/10 hover:border-white/30 hover:scale-[1.01]'
+                  }`}
+                >
+                  {/* Photo Display */}
+                  <img
+                    src={item.enhancedUrl || item.originalUrl}
+                    alt={item.fileName || 'Asset'}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
 
-                {/* Subtle dark gradient overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent pointer-events-none" />
+                  {/* Subtle dark gradient overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent pointer-events-none" />
 
-                {/* Top Status Indicators */}
-                <div className="absolute top-3 inset-x-3 flex items-center justify-between pointer-events-none">
-                  {/* Selection Checkmark */}
-                  {isSelected ? (
-                    <div className="w-6 h-6 rounded-full bg-amber-400 text-black flex items-center justify-center shadow-lg">
-                      <Check className="w-3.5 h-3.5 stroke-[3]" />
+                  {/* Top Status Indicators */}
+                  <div className="absolute top-3 inset-x-3 flex items-center justify-between pointer-events-none">
+                    {/* Selection Checkmark */}
+                    {isSelected ? (
+                      <div className="w-6 h-6 rounded-full bg-amber-400 text-black flex items-center justify-center shadow-lg">
+                        <Check className="w-3.5 h-3.5 stroke-[3]" />
+                      </div>
+                    ) : (
+                      <div className="w-6 h-6 rounded-full bg-black/50 border border-white/20 backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity" />
+                    )}
+
+                    {/* Enhanced Model Badge */}
+                    {isEnhanced && (
+                      <span className="px-2 py-0.5 rounded-md bg-amber-500 text-black text-[9px] font-mono font-bold shadow-md">
+                        {item.engineLabel || 'Enhanced'}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Bottom Overlay: Camera Icon + File Name (Google Flow Structure) */}
+                  <div className="absolute bottom-3 inset-x-3 flex items-center justify-between gap-2 pointer-events-none">
+                    <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-black/70 backdrop-blur-md border border-white/15 text-[10px] font-mono text-zinc-200 truncate max-w-[80%]">
+                      <ImageIcon className="w-3 h-3 text-zinc-400 shrink-0" />
+                      <span className="truncate">{item.fileName || 'photo_asset.jpg'}</span>
                     </div>
-                  ) : (
-                    <div className="w-6 h-6 rounded-full bg-black/50 border border-white/20 backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity" />
-                  )}
 
-                  {/* Enhanced Model Badge */}
-                  {isEnhanced && (
-                    <span className="px-2 py-0.5 rounded-md bg-amber-500 text-black text-[9px] font-mono font-bold shadow-md">
-                      {item.engineLabel || 'Enhanced'}
-                    </span>
-                  )}
-                </div>
-
-                {/* Bottom Overlay: Camera Icon + File Name (Google Flow Structure) */}
-                <div className="absolute bottom-3 inset-x-3 flex items-center justify-between gap-2 pointer-events-none">
-                  <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-black/70 backdrop-blur-md border border-white/15 text-[10px] font-mono text-zinc-200 truncate max-w-[80%]">
-                    <ImageIcon className="w-3 h-3 text-zinc-400 shrink-0" />
-                    <span className="truncate">{item.fileName || 'photo_asset.jpg'}</span>
+                    {/* Quick Compare / Inspect Button if enhanced */}
+                    {isEnhanced && (
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setInspectingItem(item);
+                        }}
+                        className="w-7 h-7 rounded-xl bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-black border border-amber-500/40 flex items-center justify-center transition-all pointer-events-auto shadow-md"
+                        title={isAr ? 'معاينة النتيجة' : 'Inspect Result'}
+                      >
+                        <Eye className="w-3.5 h-3.5" />
+                      </button>
+                    )}
                   </div>
 
-                  {/* Quick Compare / Inspect Button if enhanced */}
-                  {isEnhanced && (
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setInspectingItem(item);
-                      }}
-                      className="w-7 h-7 rounded-xl bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-black border border-amber-500/40 flex items-center justify-center transition-all pointer-events-auto shadow-md"
-                      title={isAr ? 'معاينة النتيجة' : 'Inspect Result'}
-                    >
-                      <Eye className="w-3.5 h-3.5" />
-                    </button>
+                  {/* Processing Overlay */}
+                  {item.isEnhancing && (
+                    <div className="absolute inset-0 bg-black/80 backdrop-blur-sm flex flex-col items-center justify-center gap-2 z-20">
+                      <div className="w-8 h-8 rounded-full border-2 border-amber-400 border-t-transparent animate-spin" />
+                      <span className="text-[10px] font-mono font-bold text-amber-300">
+                        {isAr ? 'جارٍ التوليد والمعالجة…' : 'Generating Edit…'}
+                      </span>
+                    </div>
                   )}
                 </div>
+              );
+            })}
+          </div>
 
-                {/* Processing Overlay */}
-                {item.isEnhancing && (
-                  <div className="absolute inset-0 bg-black/80 backdrop-blur-sm flex flex-col items-center justify-center gap-2 z-20">
-                    <div className="w-8 h-8 rounded-full border-2 border-amber-400 border-t-transparent animate-spin" />
-                    <span className="text-[10px] font-mono font-bold text-amber-300">
-                      {isAr ? 'جارٍ التوليد والمعالجة…' : 'Generating Edit…'}
-                    </span>
-                  </div>
-                )}
-              </div>
-            );
-          })}
+          {/* Sticky Dock when items exist (Cleanly pinned with gradient background) */}
+          <div className="sticky bottom-0 z-30 pt-4 pb-2 bg-gradient-to-t from-[#0B0D14] via-[#0B0D14]/95 to-transparent">
+            {renderPromptBar(true)}
+          </div>
         </div>
       ) : (
-        /* Empty State */
-        <div className="rounded-3xl border border-dashed border-white/15 p-12 text-center space-y-3 bg-[#0D0F18]/50">
-          <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 text-zinc-500 flex items-center justify-center mx-auto">
-            <ImageIcon className="w-7 h-7" />
+        /* Empty State (ZERO OVERLAP: Dropzone and Standby Dock cleanly stacked in natural flow) */
+        <div className="flex-1 flex flex-col justify-between space-y-6">
+          
+          {/* Interactive Drag & Drop Area */}
+          <div
+            onClick={() => fileInputRef.current?.click()}
+            onDragOver={(e) => {
+              e.preventDefault();
+              setIsDragging(true);
+            }}
+            onDragLeave={() => setIsDragging(false)}
+            onDrop={handleDrop}
+            className={`rounded-3xl border-2 border-dashed transition-all p-10 sm:p-14 text-center space-y-4 cursor-pointer group select-none ${
+              isDragging
+                ? 'border-amber-400 bg-amber-500/10 scale-[1.01]'
+                : 'border-white/15 hover:border-amber-400/40 bg-[#0D0F18]/50 hover:bg-[#121422]/50'
+            }`}
+          >
+            <div className="w-16 h-16 rounded-2xl bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center justify-center mx-auto group-hover:scale-110 transition-transform shadow-inner">
+              <UploadCloud className="w-8 h-8" />
+            </div>
+            <div className="space-y-1">
+              <h5 className="text-base font-bold text-white">
+                {isAr ? 'اسحب صور الأثاث وأفلتها هنا، أو اضغط للاختيار' : 'Drag & drop photos here, or click to browse'}
+              </h5>
+              <p className="text-xs text-zinc-400 max-w-md mx-auto leading-relaxed">
+                {isAr
+                  ? 'ارفع صور الكتالوج لبدء التعديل الذكي وإضافة الخلفيات والعناصر بنموذج NanoBanana.'
+                  : 'Upload product photography to apply generative scene editing, background replacement, and architectural lighting.'}
+              </p>
+            </div>
+            <div className="pt-2">
+              <span className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/5 group-hover:bg-amber-500 group-hover:text-black border border-white/10 text-zinc-200 text-xs font-mono font-bold transition-all shadow-md">
+                <UploadCloud className="w-4 h-4" />
+                <span>{isAr ? 'اختيار صور من الجهاز' : 'Browse Local Files'}</span>
+              </span>
+            </div>
           </div>
-          <div>
-            <h5 className="text-sm font-bold text-white">
-              {isAr ? 'لا توجد صور محملة حالياً' : 'No photos in the gallery yet'}
-            </h5>
-            <p className="text-xs text-zinc-400 max-w-sm mx-auto mt-1">
-              {isAr
-                ? 'انقر على زر "رفع صور جديدة" في الأعلى لبدء معالجة وتحسين قطع الأثاث.'
-                : 'Click the "Upload Photos" button above to populate your studio gallery.'}
-            </p>
+
+          {/* Standby Prompt Dock (IN NORMAL FLOW - NO OVERLAP!) */}
+          <div className="relative z-10 pt-2">
+            {renderPromptBar(false)}
           </div>
         </div>
       )}
-
-      {/* 3. Floating Docked Prompt Bar (Google Flow Interface) */}
-      <div className="sticky bottom-2 z-30 pt-4">
-        <div className="max-w-3xl mx-auto rounded-3xl bg-[#12141F]/95 backdrop-blur-xl border border-white/15 p-3.5 shadow-2xl space-y-2.5">
-          
-          {/* Active Attached Image Chip */}
-          {activeItem ? (
-            <div className="flex items-center justify-between gap-2 p-1.5 pr-2.5 rounded-2xl bg-black/40 border border-white/10">
-              <div className="flex items-center gap-2.5 overflow-hidden">
-                <div className="w-9 h-9 rounded-xl overflow-hidden border border-white/20 shrink-0 relative">
-                  <img
-                    src={activeItem.enhancedUrl || activeItem.originalUrl}
-                    alt="Active"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="truncate">
-                  <span className="text-[11px] font-mono font-bold text-white block truncate">
-                    {activeItem.fileName || 'Selected Piece'}
-                  </span>
-                  <span className="text-[9px] font-mono text-zinc-400">
-                    {activeItem.enhancedUrl ? (isAr ? 'تم التعديل والتوليد' : 'Generated Edit Ready') : (isAr ? 'جاهزة للتحسين' : 'Ready to enhance')}
-                  </span>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-1.5">
-                {activeItem.enhancedUrl && (
-                  <button
-                    type="button"
-                    onClick={() => setInspectingItem(activeItem)}
-                    className="px-2.5 py-1 rounded-xl bg-white/10 hover:bg-white/15 text-zinc-300 text-[10px] font-mono flex items-center gap-1 transition-colors cursor-pointer"
-                  >
-                    <Sliders className="w-3 h-3 text-amber-400" />
-                    <span>{isAr ? 'مقارنة' : 'Compare'}</span>
-                  </button>
-                )}
-                <button
-                  type="button"
-                  onClick={() => setActiveItemId(null)}
-                  className="w-6 h-6 rounded-lg hover:bg-white/10 text-zinc-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
-                  title={isAr ? 'إلغاء التحديد' : 'Deselect'}
-                >
-                  <X className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            </div>
-          ) : (
-            <div className="p-2 text-center text-xs font-mono text-zinc-500">
-              {isAr ? '👆 اضغط على أي صورة في المعرض أعلاه لمعالجتها' : '👆 Click any photo card in the gallery above to select it'}
-            </div>
-          )}
-
-          {/* Prompt Input Box */}
-          <div className="relative">
-            <textarea
-              rows={2}
-              value={customPrompt}
-              onChange={(e) => handlePromptChange(e.target.value)}
-              placeholder={
-                isAr
-                  ? 'اكتب توجيه التعديل المطلوب (مثال: أضف خلفية سوداء وشجرة خضراء بجانب الكرسي، إضاءة أجنحة القصور 4500K)…'
-                  : 'What do you want to create or enhance? (e.g. add a black backdrop and add a green tree beside the chair)...'
-              }
-              className="w-full px-3.5 py-2 rounded-2xl bg-[#08090C] border border-white/10 text-white text-xs focus:border-amber-400 focus:ring-1 focus:ring-amber-400 leading-relaxed outline-none transition-all resize-none"
-            />
-          </div>
-
-          {/* Bottom Controls Row: Model Selector Switch + Presets + Submit Action */}
-          <div className="flex flex-wrap items-center justify-between gap-3 pt-0.5">
-            
-            {/* Left: Dual Model Selector (NanoBanana 2 vs NanoBanana Pro) */}
-            <div className="flex items-center gap-2">
-              <div className="inline-flex p-1 rounded-2xl bg-[#08090C] border border-white/10 text-[11px] font-mono">
-                <button
-                  type="button"
-                  onClick={() => setSelectedModel('nanobanana_2')}
-                  className={`px-3 py-1 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer ${
-                    selectedModel === 'nanobanana_2'
-                      ? 'bg-amber-500/20 text-amber-300 font-bold border border-amber-500/30'
-                      : 'text-zinc-400 hover:text-white'
-                  }`}
-                >
-                  <Zap className="w-3 h-3" />
-                  <span>NanoBanana 2</span>
-                  <span className="text-[9px] text-zinc-500">({isAr ? 'سريع' : 'Fast'})</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setSelectedModel('nanobanana_pro')}
-                  className={`px-3 py-1 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer ${
-                    selectedModel === 'nanobanana_pro'
-                      ? 'bg-gradient-to-r from-amber-500 to-[#DFBA73] text-black font-extrabold shadow-sm'
-                      : 'text-zinc-400 hover:text-white'
-                  }`}
-                >
-                  <span>🍌 NanoBanana Pro</span>
-                  <span className={selectedModel === 'nanobanana_pro' ? 'text-black/70 text-[9px]' : 'text-zinc-500 text-[9px]'}>
-                    (Ultra HD)
-                  </span>
-                </button>
-              </div>
-
-              {/* Presets Quick Picker */}
-              <div className="relative">
-                <button
-                  type="button"
-                  onClick={() => setShowPresetsMenu(!showPresetsMenu)}
-                  className="px-2.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-300 text-xs font-mono flex items-center gap-1 transition-colors cursor-pointer border border-white/5"
-                >
-                  <Wand2 className="w-3 h-3 text-amber-300" />
-                  <span>{isAr ? 'نماذج جاهزة' : 'Presets'}</span>
-                </button>
-
-                {showPresetsMenu && (
-                  <div className="absolute bottom-full mb-2 left-0 w-64 rounded-2xl bg-[#141724] border border-amber-500/30 p-2 shadow-2xl space-y-1 z-40">
-                    <span className="text-[9px] font-mono text-zinc-500 uppercase px-2 py-1 block">
-                      {isAr ? 'اختر توجيه جاهز:' : 'Select Preset:'}
-                    </span>
-                    {PRESET_PROMPTS.map((preset) => (
-                      <button
-                        key={preset.id}
-                        type="button"
-                        onClick={() => handleSelectPreset(preset)}
-                        className="w-full text-left rtl:text-right p-2 rounded-xl hover:bg-amber-500/10 hover:text-amber-300 text-[11px] text-zinc-300 transition-colors cursor-pointer block truncate"
-                      >
-                        {isAr ? preset.labelAr : preset.labelEn}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Right: Submit Button */}
-            <button
-              type="button"
-              onClick={() => handleEnhance()}
-              disabled={!activeItem || activeItem.isEnhancing}
-              className="px-5 py-2.5 rounded-2xl bg-gradient-to-r from-amber-500 via-[#DFBA73] to-amber-500 hover:from-amber-400 hover:to-amber-400 text-black font-extrabold text-xs font-mono flex items-center gap-2 shadow-lg disabled:opacity-40 transition-all cursor-pointer"
-            >
-              {activeItem?.isEnhancing ? (
-                <RefreshCw className="w-4 h-4 animate-spin text-black" />
-              ) : (
-                <Sparkles className="w-4 h-4 text-black" />
-              )}
-              <span>
-                {activeItem?.isEnhancing
-                  ? (isAr ? 'جارٍ التوليد…' : 'Generating…')
-                  : (isAr ? 'تنفيذ التوجيه' : 'Enhance Photo')}
-              </span>
-            </button>
-
-          </div>
-
-        </div>
-      </div>
 
       {/* 4. Interactive Before / After Inspector Modal */}
       {inspectingItem && (
@@ -983,4 +880,167 @@ export default function VisualStudio({
 
     </div>
   );
+
+  // Helper renderer for prompt bar (used in docked or standby mode)
+  function renderPromptBar(hasItems: boolean) {
+    return (
+      <div className="max-w-3xl mx-auto rounded-3xl bg-[#12141F]/95 backdrop-blur-xl border border-white/15 p-3.5 shadow-2xl space-y-2.5">
+        
+        {/* Active Attached Image Chip / Standby Notice */}
+        {activeItem ? (
+          <div className="flex items-center justify-between gap-2 p-1.5 pr-2.5 rounded-2xl bg-black/40 border border-white/10">
+            <div className="flex items-center gap-2.5 overflow-hidden">
+              <div className="w-9 h-9 rounded-xl overflow-hidden border border-white/20 shrink-0 relative">
+                <img
+                  src={activeItem.enhancedUrl || activeItem.originalUrl}
+                  alt="Active"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="truncate">
+                <span className="text-[11px] font-mono font-bold text-white block truncate">
+                  {activeItem.fileName || 'Selected Piece'}
+                </span>
+                <span className="text-[9px] font-mono text-zinc-400">
+                  {activeItem.enhancedUrl ? (isAr ? 'تم التعديل والتوليد' : 'Generated Edit Ready') : (isAr ? 'جاهزة للتحسين' : 'Ready to enhance')}
+                </span>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-1.5">
+              {activeItem.enhancedUrl && (
+                <button
+                  type="button"
+                  onClick={() => setInspectingItem(activeItem)}
+                  className="px-2.5 py-1 rounded-xl bg-white/10 hover:bg-white/15 text-zinc-300 text-[10px] font-mono flex items-center gap-1 transition-colors cursor-pointer"
+                >
+                  <Sliders className="w-3 h-3 text-amber-400" />
+                  <span>{isAr ? 'مقارنة' : 'Compare'}</span>
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={() => setActiveItemId(null)}
+                className="w-6 h-6 rounded-lg hover:bg-white/10 text-zinc-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
+                title={isAr ? 'إلغاء التحديد' : 'Deselect'}
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="p-2 text-center text-xs font-mono text-zinc-500">
+            {hasItems 
+              ? (isAr ? '👆 اضغط على أي صورة في المعرض أعلاه لمعالجتها' : '👆 Click any photo card in the gallery above to select it')
+              : (isAr ? '✨ قم برفع الصور في الأعلى لتفعيل أوامر التعديل والتوليد' : '✨ Upload photos above to activate generative prompt directives')}
+          </div>
+        )}
+
+        {/* Prompt Input Box */}
+        <div className="relative">
+          <textarea
+            rows={2}
+            value={customPrompt}
+            onChange={(e) => handlePromptChange(e.target.value)}
+            disabled={!hasItems && !activeItem}
+            placeholder={
+              isAr
+                ? 'اكتب توجيه التعديل المطلوب (مثال: أضف خلفية سوداء وشجرة خضراء بجانب الكرسي، إضاءة أجنحة القصور 4500K)…'
+                : 'What do you want to create or enhance? (e.g. add a black backdrop and add a green tree beside the chair)...'
+            }
+            className="w-full px-3.5 py-2 rounded-2xl bg-[#08090C] border border-white/10 text-white text-xs focus:border-amber-400 focus:ring-1 focus:ring-amber-400 leading-relaxed outline-none transition-all resize-none disabled:opacity-50"
+          />
+        </div>
+
+        {/* Bottom Controls Row: Model Selector Switch + Presets + Submit Action */}
+        <div className="flex flex-wrap items-center justify-between gap-3 pt-0.5">
+          
+          {/* Left: Dual Model Selector (NanoBanana 2 vs NanoBanana Pro) */}
+          <div className="flex items-center gap-2">
+            <div className="inline-flex p-1 rounded-2xl bg-[#08090C] border border-white/10 text-[11px] font-mono">
+              <button
+                type="button"
+                onClick={() => setSelectedModel('nanobanana_2')}
+                className={`px-3 py-1 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer ${
+                  selectedModel === 'nanobanana_2'
+                    ? 'bg-amber-500/20 text-amber-300 font-bold border border-amber-500/30'
+                    : 'text-zinc-400 hover:text-white'
+                }`}
+              >
+                <Zap className="w-3 h-3" />
+                <span>NanoBanana 2</span>
+                <span className="text-[9px] text-zinc-500">({isAr ? 'سريع' : 'Fast'})</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setSelectedModel('nanobanana_pro')}
+                className={`px-3 py-1 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer ${
+                  selectedModel === 'nanobanana_pro'
+                    ? 'bg-gradient-to-r from-amber-500 to-[#DFBA73] text-black font-extrabold shadow-sm'
+                    : 'text-zinc-400 hover:text-white'
+                }`}
+              >
+                <span>🍌 NanoBanana Pro</span>
+                <span className={selectedModel === 'nanobanana_pro' ? 'text-black/70 text-[9px]' : 'text-zinc-500 text-[9px]'}>
+                  (Ultra HD)
+                </span>
+              </button>
+            </div>
+
+            {/* Presets Quick Picker */}
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setShowPresetsMenu(!showPresetsMenu)}
+                className="px-2.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-300 text-xs font-mono flex items-center gap-1 transition-colors cursor-pointer border border-white/5"
+              >
+                <Wand2 className="w-3 h-3 text-amber-300" />
+                <span>{isAr ? 'نماذج جاهزة' : 'Presets'}</span>
+              </button>
+
+              {showPresetsMenu && (
+                <div className="absolute bottom-full mb-2 left-0 w-64 rounded-2xl bg-[#141724] border border-amber-500/30 p-2 shadow-2xl space-y-1 z-40">
+                  <span className="text-[9px] font-mono text-zinc-500 uppercase px-2 py-1 block">
+                    {isAr ? 'اختر توجيه جاهز:' : 'Select Preset:'}
+                  </span>
+                  {PRESET_PROMPTS.map((preset) => (
+                    <button
+                      key={preset.id}
+                      type="button"
+                      onClick={() => handleSelectPreset(preset)}
+                      className="w-full text-left rtl:text-right p-2 rounded-xl hover:bg-amber-500/10 hover:text-amber-300 text-[11px] text-zinc-300 transition-colors cursor-pointer block truncate"
+                    >
+                      {isAr ? preset.labelAr : preset.labelEn}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Right: Submit Button */}
+          <button
+            type="button"
+            onClick={() => handleEnhance()}
+            disabled={!activeItem || activeItem.isEnhancing}
+            className="px-5 py-2.5 rounded-2xl bg-gradient-to-r from-amber-500 via-[#DFBA73] to-amber-500 hover:from-amber-400 hover:to-amber-400 text-black font-extrabold text-xs font-mono flex items-center gap-2 shadow-lg disabled:opacity-40 transition-all cursor-pointer"
+          >
+            {activeItem?.isEnhancing ? (
+              <RefreshCw className="w-4 h-4 animate-spin text-black" />
+            ) : (
+              <Sparkles className="w-4 h-4 text-black" />
+            )}
+            <span>
+              {activeItem?.isEnhancing
+                ? (isAr ? 'جارٍ التوليد…' : 'Generating…')
+                : (isAr ? 'تنفيذ التوجيه' : 'Enhance Photo')}
+            </span>
+          </button>
+
+        </div>
+
+      </div>
+    );
+  }
 }
