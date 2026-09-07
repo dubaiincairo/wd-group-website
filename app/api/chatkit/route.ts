@@ -1,53 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getIntegrationsConfig } from '@/lib/admin/secrets';
+import { getChatbotConfig, buildChatbotSystemPrompt } from '@/lib/admin/chatbot';
 
 export const dynamic = 'force-dynamic';
-
-const SYSTEM_PROMPT = `You are Sultan (سلطان), a real, professional, courteous Saudi customer support agent and VIP concierge at "WD Group Holding" (مجموعة دبليو دي القابضة) headquartered in Riyadh, Saudi Arabia.
-
-PERSONAL IDENTITY & HUMAN TONE:
-- Your name is Sultan (سلطان).
-- You are a proud, courteous, and highly knowledgeable bilingual Saudi professional representing WD Group.
-- You talk like a real human customer care representative—warm, polite, respectful, and attentive.
-- You introduce yourself naturally as Sultan when greeting: "أهلاً بك! معك سلطان من خدمة عملاء مجموعة WD..." in Arabic, or "Hello! I am Sultan from WD Group Customer Support..." in English.
-- You take pride in Saudi Vision 2030, Saudi industrial excellence (صناعة سعودية), and world-class hospitality.
-
-STRICT LANGUAGE DETERMINATION RULE:
-- If the client's message is in Arabic (or contains Arabic characters): You MUST respond ONLY and 100% in Arabic.
-- If the client's message is in English: You MUST respond ONLY and 100% in English.
-- Never mix languages in an inappropriate way. Always match the language the client used to ask the question.
-
-ABOUT WD GROUP & SUBSIDIARIES:
-1. Hospitality Sector (SwissBlue Hotels):
-   - Upscale, boutique, and luxury hotel asset portfolio across prime locations in Saudi Arabia (Riyadh, Jeddah, Eastern Province).
-   - Specialized in premium guest experiences, asset management, and hospitality partnerships.
-   - Website page: /sectors/hospitality
-
-2. Industrial Manufacturing Sector (GreenWood Manufacturing):
-   - State-of-the-art Riyadh manufacturing facility specializing in bespoke luxury furniture, architectural joinery, 5-star hospitality fit-out furniture, acoustic wood panels, and fire-rated doors.
-   - Certified "Saudi Made" (صناعة سعودية) combining European craftsmanship with Saudi industrial excellence.
-   - Website page: /sectors/manufacturing
-
-3. General Contracting Sector:
-   - Turnkey construction, hospitality interior fit-outs, MEP engineering, and commercial infrastructure.
-   - Proven track record delivering complex commercial and luxury residential projects on schedule.
-   - Website page: /sectors/contracting
-
-4. E-Commerce & Bespoke Furniture Catalog:
-   - Bespoke furniture collection with CAD blueprint customization, luxury fabrics, solid walnut, travertine marble, and brushed brass.
-   - Website page: /catalog
-
-5. Corporate Information & Careers:
-   - Careers page: /careers
-   - Contact & RFP submissions: /contact
-   - Direct VIP WhatsApp: +966 50 572 5070
-   - Official Email: ceo@wdgroup.online
-
-COMMUNICATION GUIDELINES:
-- When the user asks in Arabic, respond in refined, warm Saudi business Arabic (أسلوب راقٍ واحترافي).
-- When the user asks in English, respond in polished, executive English.
-- Always provide clear, helpful answers with relevant page links when appropriate (e.g., [Explore SwissBlue Hotels](/sectors/hospitality), [GreenWood Manufacturing](/sectors/manufacturing), [Submit an RFP](/contact)).
-- Be welcoming, helpful, and proactive in offering next steps (like submitting an RFP or contacting the VIP WhatsApp).`;
 
 /**
  * Intelligent Fallback Generator for offline/demo environments
@@ -87,10 +41,21 @@ function generateFallbackResponse(userMessage: string, lang: 'ar' | 'en'): strin
  */
 export async function POST(req: NextRequest) {
   try {
-    const integrations = await getIntegrationsConfig();
-    const apiKey = integrations.openai_api_key?.trim();
-    const model = integrations.openai_model || 'gpt-4o';
-    const customPrompt = integrations.chatkit_system_prompt?.trim();
+    const config = await getChatbotConfig();
+
+    if (!config.enabled) {
+      return NextResponse.json({
+        thread_id: 'disabled',
+        text: 'The AI Concierge is currently unavailable. Please contact us via WhatsApp or submit an inquiry through our Contact page.',
+        source: 'system_disabled',
+      });
+    }
+
+    const apiKey = config.openai_api_key_override?.trim();
+    const model = config.openai_model || 'gpt-4o';
+    const temperature = typeof config.temperature === 'number' ? config.temperature : 0.7;
+    const maxTokens = typeof config.max_tokens === 'number' ? config.max_tokens : 800;
+    const systemContent = buildChatbotSystemPrompt(config);
 
     let body: any = {};
     try {
@@ -109,16 +74,18 @@ export async function POST(req: NextRequest) {
 
     // 1. If OpenAI API Key is available, invoke OpenAI API
     if (apiKey) {
-      const languageInstruction = isArabic
-        ? "CRITICAL LANGUAGE DIRECTIVE: The client's message is in Arabic. You MUST respond 100% in Arabic as Sultan. Do not reply in English."
-        : "CRITICAL LANGUAGE DIRECTIVE: The client's message is in English. You MUST respond 100% in English as Sultan. Do not reply in Arabic.";
+      const languageInstruction = config.strict_language_matching
+        ? (isArabic
+            ? "CRITICAL LANGUAGE DIRECTIVE: The client's message is in Arabic. You MUST respond 100% in Arabic as Sultan. Do not reply in English."
+            : "CRITICAL LANGUAGE DIRECTIVE: The client's message is in English. You MUST respond 100% in English as Sultan. Do not reply in Arabic.")
+        : "";
 
-      const systemContent = customPrompt
-        ? `${SYSTEM_PROMPT}\n\nADMIN OVERRIDE INSTRUCTIONS:\n${customPrompt}\n\n${languageInstruction}`
-        : `${SYSTEM_PROMPT}\n\n${languageInstruction}`;
+      const effectiveSystemContent = languageInstruction
+        ? `${systemContent}\n\n${languageInstruction}`
+        : systemContent;
 
       const openAiMessages = [
-        { role: 'system', content: systemContent },
+        { role: 'system', content: effectiveSystemContent },
         ...(messages.length > 0
           ? messages.map((m: any) => ({ role: m.role || 'user', content: m.content || '' }))
           : [{ role: 'user', content: inputMessage || (isArabic ? 'مرحباً، ما هي مجموعة WD؟' : 'Hello, what is WD Group?') }]),
@@ -135,7 +102,8 @@ export async function POST(req: NextRequest) {
           body: JSON.stringify({
             model: model,
             messages: openAiMessages,
-            temperature: 0.7,
+            temperature: temperature,
+            max_tokens: maxTokens,
             stream: true,
           }),
         });
@@ -222,7 +190,8 @@ export async function POST(req: NextRequest) {
           body: JSON.stringify({
             model: model,
             messages: openAiMessages,
-            temperature: 0.7,
+            temperature: temperature,
+            max_tokens: maxTokens,
             stream: false,
           }),
         });
@@ -296,13 +265,19 @@ export async function POST(req: NextRequest) {
  * GET Handler for ChatKit metadata inspection & health check
  */
 export async function GET() {
-  const integrations = await getIntegrationsConfig();
+  const config = await getChatbotConfig();
   return NextResponse.json({
     status: 'online',
     protocol: 'chatkit_v1',
-    has_openai_key: Boolean(integrations.openai_api_key),
-    model: integrations.openai_model || 'gpt-4o',
-    has_workflow_id: Boolean(integrations.openai_chatkit_workflow_id),
-    enabled: integrations.chatkit_enabled !== false,
+    enabled: config.enabled,
+    agent_name_en: config.agent_name_en,
+    agent_name_ar: config.agent_name_ar,
+    has_openai_key: Boolean(config.openai_api_key_override),
+    model: config.openai_model || 'gpt-4o',
+    temperature: config.temperature,
+    max_tokens: config.max_tokens,
+    chatkit_mode: config.chatkit_mode,
+    has_workflow_id: Boolean(config.workflow_id),
+    strict_language_matching: config.strict_language_matching,
   });
 }
