@@ -98,7 +98,7 @@ export default function ChatKitLauncher() {
             setIsOpen(!isOpen);
             setHasInteracted(true);
           }}
-          className={`group relative flex items-center justify-center w-14 h-14 rounded-full shadow-2xl backdrop-blur-xl transition-all duration-300 transform hover:scale-105 active:scale-95 cursor-pointer border overflow-hidden ${
+          className={`group relative flex items-center justify-center w-14 h-14 rounded-full shadow-2xl backdrop-blur-xl transition-all duration-300 transform hover:scale-105 active:scale-95 cursor-pointer border ${
             isOpen
               ? 'bg-[#0B0D14] border-2 border-[#C9A86A]/60 text-white'
               : 'border-2 border-[#C9A86A] shadow-[0_0_25px_rgba(201,168,106,0.4)] ring-2 ring-black/50'
@@ -109,28 +109,31 @@ export default function ChatKitLauncher() {
               : (isAr ? `تحدث مع ${agentName} - خدمة العملاء` : `Chat with ${agentName} - Client Support`)
           }
         >
-          {/* Animated Glow Ring */}
+          {/* Animated Glow Halo */}
           {!isOpen && (
-            <>
-              <span className="absolute -inset-1 rounded-full bg-gradient-to-r from-[#C9A86A]/40 via-amber-400/20 to-[#C9A86A]/40 blur-sm opacity-80 group-hover:opacity-100 transition-opacity" />
-              <span className="absolute bottom-0.5 right-0.5 rtl:right-auto rtl:left-0.5 flex h-3.5 w-3.5 z-20">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-80" />
-                <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-emerald-500 border-2 border-[#0B0D14] shadow-[0_0_8px_#10B981]" />
-              </span>
-            </>
+            <span className="absolute -inset-1 rounded-full bg-gradient-to-r from-[#C9A86A]/40 via-amber-400/20 to-[#C9A86A]/40 blur-sm opacity-80 group-hover:opacity-100 transition-opacity pointer-events-none" />
           )}
 
-          <div className="relative z-10 w-full h-full flex items-center justify-center">
+          {/* Inner Image Mask Container */}
+          <div className="relative z-10 w-full h-full flex items-center justify-center rounded-full overflow-hidden">
             {isOpen ? (
               <X className="w-6 h-6 text-zinc-300 group-hover:text-white transition-colors" />
             ) : (
               <img
                 src={avatarUrl}
                 alt={agentName}
-                className="w-full h-full object-cover object-top rounded-full group-hover:scale-105 transition-transform duration-300"
+                className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300"
               />
             )}
           </div>
+
+          {/* Animated Live Status Dot — Floating Over & Outside the Outer Rim */}
+          {!isOpen && (
+            <span className="absolute -bottom-0.5 -right-0.5 flex h-4 w-4 z-30 pointer-events-none">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-4 w-4 bg-emerald-500 border-[2.5px] border-[#08090C] shadow-[0_0_12px_#10B981]" />
+            </span>
+          )}
         </button>
       </div>
     </>

@@ -406,17 +406,18 @@ export default function ChatKitWidget({ onClose, initialConfig }: ChatKitWidgetP
     >
       {/* 1. Header Bar */}
       <div className="flex items-center justify-between px-5 py-4 border-b border-white/10 bg-gradient-to-r from-[#121624] via-[#0E111C] to-[#121624] select-none shrink-0">
-        <div className="flex items-center gap-3">
-          <div className="relative flex items-center justify-center w-11 h-11 rounded-full overflow-hidden border-2 border-[#C9A86A] shadow-[0_0_15px_rgba(201,168,106,0.3)] shrink-0 bg-[#0B0D14] ring-2 ring-[#C9A86A]/20">
-            <img
-              src={avatarUrl}
-              alt={agentName}
-              className="w-full h-full object-cover object-top"
-            />
-            {/* Animated Live Status Dot */}
-            <span className="absolute bottom-0.5 right-0.5 rtl:right-auto rtl:left-0.5 flex h-3 w-3 z-10">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-80" />
-              <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500 border-2 border-[#0B0D14] shadow-[0_0_8px_#10B981]" />
+          <div className="relative flex items-center justify-center w-11 h-11 rounded-full border-2 border-[#C9A86A] shadow-[0_0_15px_rgba(201,168,106,0.3)] shrink-0 bg-[#0B0D14] ring-2 ring-[#C9A86A]/20">
+            <div className="w-full h-full rounded-full overflow-hidden">
+              <img
+                src={avatarUrl}
+                alt={agentName}
+                className="w-full h-full object-cover object-top"
+              />
+            </div>
+            {/* Animated Live Status Dot — Floating Over & Outside the Outer Rim */}
+            <span className="absolute -bottom-0.5 -right-0.5 flex h-3.5 w-3.5 z-20 pointer-events-none">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-emerald-500 border-2 border-[#0B0D14] shadow-[0_0_8px_#10B981]" />
             </span>
           </div>
 
