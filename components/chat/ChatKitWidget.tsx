@@ -406,6 +406,7 @@ export default function ChatKitWidget({ onClose, initialConfig }: ChatKitWidgetP
     >
       {/* 1. Header Bar */}
       <div className="flex items-center justify-between px-5 py-4 border-b border-white/10 bg-gradient-to-r from-[#121624] via-[#0E111C] to-[#121624] select-none shrink-0">
+        <div className="flex items-center gap-3">
           <div className="relative flex items-center justify-center w-11 h-11 rounded-full border-2 border-[#C9A86A] shadow-[0_0_15px_rgba(201,168,106,0.3)] shrink-0 bg-[#0B0D14] ring-2 ring-[#C9A86A]/20">
             <div className="w-full h-full rounded-full overflow-hidden">
               <img
