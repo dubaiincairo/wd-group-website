@@ -27,11 +27,11 @@ export default function BrandedSeparator({ variant = 'gold', className = '' }: B
       {/* Gradient Hairline */}
       <div className={`h-[1px] w-full bg-gradient-to-r from-transparent ${lineGlow} to-transparent`} />
       
-      {/* Center Luxury Emblem Constellation */}
-      <div className="absolute flex items-center gap-1.5 bg-[#08090C] px-3.5 py-0.5">
-        <div className="w-1 h-1 rotate-45 bg-[#C9A86A]/40" />
-        <div className={`w-2 h-2 rotate-45 ${centerDot} border`} />
-        <div className="w-1 h-1 rotate-45 bg-[#C9A86A]/40" />
+      {/* Center Luxury Emblem Constellation (Pure Floating Vector without Background Box) */}
+      <div className="absolute flex items-center gap-1.5 pointer-events-none">
+        <div className="w-1.5 h-1.5 rotate-45 bg-[#C9A86A]/60 drop-shadow-[0_0_6px_rgba(201,168,106,0.6)]" />
+        <div className={`w-2.5 h-2.5 rotate-45 ${centerDot} border drop-shadow-[0_0_12px_rgba(201,168,106,0.9)]`} />
+        <div className="w-1.5 h-1.5 rotate-45 bg-[#C9A86A]/60 drop-shadow-[0_0_6px_rgba(201,168,106,0.6)]" />
       </div>
     </div>
   );

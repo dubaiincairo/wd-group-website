@@ -35,6 +35,10 @@ export interface HeroSlide {
   tagAr: string;
   titleEn: string;
   titleAr: string;
+  titleLine1En?: string;
+  titleLine2En?: string;
+  titleLine1Ar?: string;
+  titleLine2Ar?: string;
   subtitleEn: string;
   subtitleAr: string;
   ctaCatalogEn: string;
@@ -68,6 +72,10 @@ export const HERO_SLIDES: HeroSlide[] = [
     tagAr: 'مجموعة الصالونات المعمارية 2025',
     titleEn: 'Timeless Craftsmanship. Architectural Distinction.',
     titleAr: 'حِرفية أصيلة. فخامة صُممت لتدوم.',
+    titleLine1En: 'Timeless Craftsmanship & Precision,',
+    titleLine2En: 'Architectural Distinction Designed to Endure.',
+    titleLine1Ar: 'حِرفية أصيلة وإتقان معماري',
+    titleLine2Ar: 'فخامة استثنائية صُممت لتدوم للأجيال',
     subtitleEn: 'Sculptural organic seating, solid American walnut joinery, and Italian textured bouclés handcrafted in our specialized Saudi industrial facilities.',
     subtitleAr: 'مقاعد نحتية انسيابية، نجارة من خشب الجوز الأمريكي الطبيعي، وأقمشة بوكليه إيطالية فاخرة تُصنع بأيدي وطنية في مصانعنا بالرياض ونجران.',
     ctaCatalogEn: 'Explore Collection',
@@ -134,6 +142,10 @@ export const HERO_SLIDES: HeroSlide[] = [
     tagAr: 'أجنحة الضيافة والفنادق الفاخرة',
     titleEn: 'Presidential Suites Engineered for 5-Star Serenity.',
     titleAr: 'أجنحة رئاسية صُممت لأرقى معايير الضيافة العالمية.',
+    titleLine1En: 'Turnkey Presidential Master Suites,',
+    titleLine2En: 'Engineered for 5-Star Hospitality Serenity.',
+    titleLine1Ar: 'أجنحة رئاسية فاخرة',
+    titleLine2Ar: 'صُممت لأرقى معايير الضيافة العالمية',
     subtitleEn: 'Turnkey hotel bedroom suites featuring floating upholstered headboards, acoustic fluted paneling, and invisible inductive charging.',
     subtitleAr: 'حلول تأثيث وتجهيز فندقي شاملة تشمل أسرّة فندقية عائمة، تجاليد جدارية عازلة للصوت، وشواحن لاسلكية ذكية مدمجة.',
     ctaCatalogEn: 'View Suite Collection',
@@ -191,6 +203,10 @@ export const HERO_SLIDES: HeroSlide[] = [
     tagAr: 'المكاتب وقاعات الاجتماعات التنفيذية',
     titleEn: 'Monumental Walnut & Travertine Boardroom Centers.',
     titleAr: 'طاولات اجتماعات ومكاتب تنفيذية من الجوز والترافرتين الطبيعي.',
+    titleLine1En: 'Monumental Executive Boardrooms,',
+    titleLine2En: 'Sculpted from Solid Walnut & Saudi Travertine.',
+    titleLine1Ar: 'طاولات اجتماعات ومكاتب تنفيذية',
+    titleLine2Ar: 'من خشب الجوز والترافرتين الطبيعي',
     subtitleEn: 'Commanding executive tables engineered with solid American walnut live edges, Saudi travertine pedestals, and motorized German wire architecture.',
     subtitleAr: 'طاولات اجتماعات فخمة من خشب الجوز الأمريكي المصمت وقواعد الترافرتين الطبيعي مع ممرات كابلات آلية ألمانية الصنع.',
     ctaCatalogEn: 'Discover Boardrooms',
