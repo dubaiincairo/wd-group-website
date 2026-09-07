@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef, Suspense } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '@/context/LanguageContext';
 import { useToast } from '@/components/admin/ToastProvider';
@@ -272,6 +272,7 @@ function EcommerceAdminContent() {
   const isAr = lang === 'ar';
   const { showToast } = useToast();
   const searchParams = useSearchParams();
+  const router = useRouter();
 
   const [currency, setCurrency] = useState<'SAR' | 'USD'>('SAR');
 
@@ -279,11 +280,29 @@ function EcommerceAdminContent() {
     'overview' | 'orders' | 'products' | 'inventory' | 'customers' | 'analytics' | 'marketing' | 'settings'
   >('overview');
 
-  const [openAiStudioDirectly, setOpenAiStudioDirectly] = useState(false);
-  const [studioInitialMode, setStudioInitialMode] = useState<'visual' | 'content'>('visual');
-
   const [orders, setOrders] = useState<EcommerceOrderRecord[]>(INITIAL_ORDERS);
   const [products, setProducts] = useState<FurnitureItem[]>(FURNITURE_CATALOG);
+
+  // Sync custom products published from Content Studio via localStorage
+  useEffect(() => {
+    try {
+      if (typeof window !== 'undefined') {
+        const stored = localStorage.getItem('wd_custom_products');
+        if (stored) {
+          const parsed: FurnitureItem[] = JSON.parse(stored);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            setProducts((prev) => {
+              const existingIds = new Set(prev.map((p) => p.id));
+              const newItems = parsed.filter((p) => !existingIds.has(p.id));
+              return [...newItems, ...prev];
+            });
+          }
+        }
+      }
+    } catch (e) {
+      console.error('Failed to load custom products from cache:', e);
+    }
+  }, []);
 
   // Selected Order for Slide-Over Drawer
   const [selectedOrder, setSelectedOrder] = useState<EcommerceOrderRecord | null>(null);
@@ -301,17 +320,13 @@ function EcommerceAdminContent() {
       const hash = typeof window !== 'undefined' ? window.location.hash.replace('#', '') : '';
       const target = (tabParam || hash || '').toLowerCase();
 
+      // Smooth redirect to dedicated AI Studio page
       if (
         target === 'studio' || target === 'aistudio' || target === 'ai' ||
         studioParam === 'true' || studioParam === '1' || studioParam === 'visual' || studioParam === 'content'
       ) {
-        setActiveTab('products');
-        if (studioParam === 'content') {
-          setStudioInitialMode('content');
-        } else {
-          setStudioInitialMode('visual');
-        }
-        setOpenAiStudioDirectly(true);
+        const mode = studioParam === 'content' ? 'content' : 'visual';
+        router.replace(`/admin/ai-studio?mode=${mode}`);
         return;
       }
 
@@ -599,17 +614,13 @@ function EcommerceAdminContent() {
           </div>
 
           {/* Direct AI Product Studio Launcher */}
-          <button
-            type="button"
-            onClick={() => {
-              setActiveTab('products');
-              setOpenAiStudioDirectly(true);
-            }}
+          <Link
+            href="/admin/ai-studio"
             className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-500/20 via-purple-600/30 to-indigo-600/30 hover:border-[#C9A86A] border border-[#C9A86A]/40 text-white text-xs font-mono font-bold shadow-lg transition-all cursor-pointer shrink-0 whitespace-nowrap"
           >
             <Sparkles className="w-3.5 h-3.5 text-[#C9A86A] animate-pulse" />
-            <span>{isAr ? 'مركز الذكاء الاصطناعي (AI Hub) ✨' : 'AI Hub (Visual & Content) ✨'}</span>
-          </button>
+            <span>{isAr ? 'استوديو الذكاء الاصطناعي (AI Studio) ✨' : 'AI Studio (Visual & Content) ✨'}</span>
+          </Link>
 
           <Link
             href="/furniture"
@@ -635,7 +646,7 @@ function EcommerceAdminContent() {
           {[
             { id: 'overview', icon: LayoutDashboard, labelEn: '1. Overview', labelAr: '1. الرئيسية والمؤشرات' },
             { id: 'orders', icon: ShoppingCart, labelEn: '2. Orders', labelAr: '2. إدارة الطلبات', badge: orders.length, badgeColor: 'bg-emerald-500/20 text-emerald-300' },
-            { id: 'products', icon: Layers, labelEn: '3. Products & AI Studio', labelAr: '3. المنتجات واستوديو الذكاء', badge: '✨ AI Studio', badgeColor: 'bg-purple-500/25 text-purple-300 border border-purple-500/40 shadow-[0_0_10px_rgba(168,85,247,0.3)]' },
+            { id: 'products', icon: Layers, labelEn: '3. Products & Catalog', labelAr: '3. المنتجات والكتالوج', badge: products.length, badgeColor: 'bg-blue-500/20 text-blue-300' },
             { id: 'inventory', icon: Warehouse, labelEn: '4. Inventory & Plants', labelAr: '4. المستودعات والمصانع' },
             { id: 'customers', icon: Users, labelEn: '5. Customers & CRM', labelAr: '5. العملاء وCRM' },
             { id: 'analytics', icon: TrendingUp, labelEn: '6. Reports & Intelligence', labelAr: '6. التقارير والذكاء المالي' },
@@ -688,9 +699,7 @@ function EcommerceAdminContent() {
             onSelectOrder={setSelectedOrder}
             onNavigateTab={(t) => setActiveTab(t as any)}
             onOpenAiStudio={(mode?: 'visual' | 'content') => {
-              setActiveTab('products');
-              if (mode) setStudioInitialMode(mode);
-              setOpenAiStudioDirectly(true);
+              router.push(`/admin/ai-studio?mode=${mode || 'visual'}`);
             }}
           />
         )}
@@ -712,9 +721,6 @@ function EcommerceAdminContent() {
             onAddProduct={handleAddProduct}
             onUpdateProduct={handleUpdateProduct}
             onDeleteProduct={handleDeleteProduct}
-            initialOpenAiStudio={openAiStudioDirectly}
-            initialStudioMode={studioInitialMode}
-            onResetAiStudio={() => setOpenAiStudioDirectly(false)}
           />
         )}
 

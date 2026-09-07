@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo, useEffect } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useLanguage } from '@/context/LanguageContext';
 import { useToast } from '@/components/admin/ToastProvider';
 import { FurnitureItem } from '@/lib/furnitureData';
@@ -29,8 +30,6 @@ import {
   Cpu, 
   ArrowRight
 } from 'lucide-react';
-import AiHubModal from './ai-hub/AiHubModal';
-import { AiStudioMode } from './ai-hub/types';
 
 interface ProductsTabProps {
   products: FurnitureItem[];
@@ -38,9 +37,6 @@ interface ProductsTabProps {
   onAddProduct: (product: FurnitureItem) => void;
   onUpdateProduct: (product: FurnitureItem) => void;
   onDeleteProduct: (productId: string) => void;
-  initialOpenAiStudio?: boolean;
-  initialStudioMode?: AiStudioMode;
-  onResetAiStudio?: () => void;
 }
 
 export default function ProductsTab({
@@ -49,9 +45,6 @@ export default function ProductsTab({
   onAddProduct,
   onUpdateProduct,
   onDeleteProduct,
-  initialOpenAiStudio,
-  initialStudioMode,
-  onResetAiStudio,
 }: ProductsTabProps) {
   const { lang } = useLanguage();
   const isAr = lang === 'ar';
@@ -85,20 +78,6 @@ export default function ProductsTab({
   const [formSeoTitle, setFormSeoTitle] = useState('');
   const [formSeoDescription, setFormSeoDescription] = useState('');
   const [formFocusKeyword, setFormFocusKeyword] = useState('');
-
-  // AI Hub State (Visual Studio & Content Studio)
-  const [isAiStudioOpen, setIsAiStudioOpen] = useState(false);
-  const [aiHubMode, setAiHubMode] = useState<AiStudioMode>('visual');
-
-  useEffect(() => {
-    if (initialOpenAiStudio) {
-      if (initialStudioMode) {
-        setAiHubMode(initialStudioMode);
-      }
-      setIsAiStudioOpen(true);
-      if (onResetAiStudio) onResetAiStudio();
-    }
-  }, [initialOpenAiStudio, initialStudioMode, onResetAiStudio]);
 
   const formatPrice = (valSAR: number) => {
     if (currency === 'USD') {
@@ -272,29 +251,23 @@ export default function ProductsTab({
 
           {/* AI Hub Segmented Launchers */}
           <div className="inline-flex rounded-xl bg-gradient-to-r from-amber-500/20 via-purple-500/20 to-indigo-500/20 p-0.5 border border-[#C9A86A]/40 shadow-sm">
-            <button
-              onClick={() => {
-                setAiHubMode('visual');
-                setIsAiStudioOpen(true);
-              }}
+            <Link
+              href="/admin/ai-studio?mode=visual"
               className="px-3 py-1.5 rounded-lg text-white hover:bg-amber-500/20 text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer"
               title={isAr ? 'الاستوديو البصري: تحسين الصور بـ NanoBanana Pro' : 'Visual Studio: Photo Remaster with NanoBanana Pro'}
             >
               <span>🎨</span>
               <span>{isAr ? 'الاستوديو البصري' : 'Visual Studio'}</span>
-            </button>
+            </Link>
             <div className="w-px bg-white/20 my-1" />
-            <button
-              onClick={() => {
-                setAiHubMode('content');
-                setIsAiStudioOpen(true);
-              }}
+            <Link
+              href="/admin/ai-studio?mode=content"
               className="px-3 py-1.5 rounded-lg text-white hover:bg-purple-600/30 text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer"
               title={isAr ? 'استوديو المحتوى: توليد المواصفات والإدراج المباشر' : 'Content Studio: Spec Extraction & Auto-Cataloging'}
             >
               <span>✍️</span>
               <span>{isAr ? 'استوديو المحتوى' : 'Content Studio'}</span>
-            </button>
+            </Link>
           </div>
 
           <button
@@ -680,16 +653,6 @@ export default function ProductsTab({
           </div>
         </div>
       )}
-
-      {/* 5. AI Hub Modal (Visual Studio & Content Studio) */}
-      <AiHubModal
-        isOpen={isAiStudioOpen}
-        onClose={() => setIsAiStudioOpen(false)}
-        initialMode={aiHubMode}
-        isAr={isAr}
-        onAddProduct={onAddProduct}
-        showToast={showToast}
-      />
 
     </div>
   );

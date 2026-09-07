@@ -88,6 +88,18 @@ const NAV_GROUPS: NavGroup[] = [
         allowedRoles: ['owner', 'admin', 'crm', 'editor'],
       },
       {
+        id: 'ai-studio',
+        label: 'AI Creative Studio',
+        labelAr: 'استوديو الذكاء الاصطناعي',
+        href: '/admin/ai-studio',
+        icon: Sparkles,
+        iconBg: 'bg-amber-500/15 text-amber-400 border-amber-500/25 group-hover:bg-amber-500/25',
+        badge: 'NanoBanana Pro',
+        badgeAr: 'برو',
+        badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30 shadow-[0_0_10px_rgba(245,158,11,0.2)]',
+        allowedRoles: ['owner', 'admin', 'editor', 'crm'],
+      },
+      {
         id: 'inquiries',
         label: 'Client Inquiries & RFPs',
         labelAr: 'الاستفسارات والمناقصات التجارية',

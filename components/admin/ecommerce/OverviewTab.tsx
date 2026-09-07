@@ -266,27 +266,21 @@ export default function OverviewTab({
         </div>
 
         <div className="flex flex-wrap items-center gap-2.5 relative z-10 shrink-0">
-          <button
-            onClick={() => {
-              if (onOpenAiStudio) onOpenAiStudio('visual');
-              else onNavigateTab('products');
-            }}
+          <Link
+            href="/admin/ai-studio?mode=visual"
             className="px-4 py-3 rounded-2xl bg-amber-500 hover:bg-amber-400 text-black font-mono font-bold text-xs shadow-md transition-all flex items-center gap-2 cursor-pointer"
           >
             <span>🎨</span>
             <span>{isAr ? 'الاستوديو البصري (NanoBanana)' : 'Visual Studio'}</span>
-          </button>
+          </Link>
 
-          <button
-            onClick={() => {
-              if (onOpenAiStudio) onOpenAiStudio('content');
-              else onNavigateTab('products');
-            }}
+          <Link
+            href="/admin/ai-studio?mode=content"
             className="px-4 py-3 rounded-2xl bg-purple-600 hover:bg-purple-500 text-white font-mono font-bold text-xs shadow-md transition-all flex items-center gap-2 cursor-pointer"
           >
             <span>✍️</span>
             <span>{isAr ? 'استوديو المحتوى والكتالوج' : 'Content Studio'}</span>
-          </button>
+          </Link>
         </div>
       </div>
 
