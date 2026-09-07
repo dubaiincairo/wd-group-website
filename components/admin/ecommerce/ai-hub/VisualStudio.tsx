@@ -638,61 +638,64 @@ export default function VisualStudio({
             {/* Split Comparison Viewport */}
             <div className="relative aspect-[16/10] max-h-[55vh] rounded-2xl overflow-hidden bg-black select-none border border-white/10 shadow-inner">
               
-              {/* After (Enhanced) Image */}
+              {/* Layer 1: Enhanced (AI Generated Result) */}
               <img
                 src={inspectingItem.enhancedUrl || inspectingItem.originalUrl}
-                alt="Enhanced Result"
-                className="absolute inset-0 w-full h-full object-contain"
+                alt="AI Result"
+                className="absolute inset-0 w-full h-full object-contain pointer-events-none select-none"
               />
 
-              {/* Before (Original) Image Clipped by Slider */}
+              {/* Layer 2: Original Source Image clipped seamlessly by slider position */}
               {isComparing && (
                 <div
-                  className="absolute inset-0 overflow-hidden border-r-2 border-amber-400"
-                  style={{ width: `${sliderPosition}%` }}
+                  className="absolute inset-0 pointer-events-none select-none"
+                  style={{
+                    clipPath: `inset(0 ${100 - sliderPosition}% 0 0)`,
+                  }}
                 >
                   <img
                     src={inspectingItem.originalUrl}
                     alt="Original Source"
-                    className="absolute inset-0 w-full h-full object-contain max-w-none"
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                    }}
+                    className="absolute inset-0 w-full h-full object-contain pointer-events-none select-none"
                   />
-                  <div className="absolute top-3 left-3 px-2.5 py-1 rounded-lg bg-black/70 backdrop-blur-md border border-white/10 text-[10px] font-mono text-zinc-300">
-                    {isAr ? 'الأصلية' : 'Original'}
-                  </div>
                 </div>
               )}
 
-              {/* Enhanced Label */}
-              <div className="absolute top-3 right-3 px-2.5 py-1 rounded-lg bg-amber-500 text-black text-[10px] font-mono font-bold shadow-md">
-                {isAr ? 'المعدلة بنموذج الذكاء الاصطناعي' : 'AI Generated Result'}
-              </div>
+              {/* Badges: Original (Left) and AI Result (Right) */}
+              {isComparing && sliderPosition > 12 && (
+                <div className="absolute top-3 left-3 px-2.5 py-1 rounded-lg bg-black/75 backdrop-blur-md border border-white/10 text-[10px] font-mono text-zinc-300 z-20 pointer-events-none shadow-md">
+                  {isAr ? 'الأصلية' : 'Original'}
+                </div>
+              )}
+
+              {sliderPosition < 88 && (
+                <div className="absolute top-3 right-3 px-2.5 py-1 rounded-lg bg-amber-500 text-black text-[10px] font-mono font-bold shadow-md z-20 pointer-events-none">
+                  {isAr ? 'المعدلة بالذكاء الاصطناعي' : 'AI Generated Result'}
+                </div>
+              )}
 
               {/* Applied Prompt Pill */}
               {inspectingItem.prompt && (
-                <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between pointer-events-none">
+                <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between pointer-events-none z-20">
                   <div className="px-3 py-1.5 rounded-xl bg-black/80 backdrop-blur-md border border-amber-500/30 text-[11px] font-mono text-amber-300 truncate max-w-xl shadow-lg">
                     ✨ {inspectingItem.prompt}
                   </div>
                 </div>
               )}
 
-              {/* Draggable Slider Control Handle */}
+              {/* Draggable Divider Line & Thumb */}
               {isComparing && (
                 <div
-                  className="absolute top-0 bottom-0 w-1 bg-amber-400 cursor-ew-resize z-20 flex items-center justify-center -ml-0.5"
+                  className="absolute top-0 bottom-0 w-0.5 bg-amber-400 z-20 pointer-events-none shadow-[0_0_12px_rgba(245,158,11,0.6)]"
                   style={{ left: `${sliderPosition}%` }}
                 >
-                  <div className="w-7 h-7 rounded-full bg-amber-400 text-black shadow-xl flex items-center justify-center font-bold text-xs pointer-events-none">
+                  <div className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-amber-400 text-black shadow-2xl flex items-center justify-center font-bold text-xs pointer-events-none border-2 border-black/40 select-none">
                     ↔
                   </div>
                 </div>
               )}
 
-              {/* Full Range Input Overlay for intuitive dragging */}
+              {/* Full Range Invisible Drag Overlay */}
               {isComparing && (
                 <input
                   type="range"
@@ -701,6 +704,7 @@ export default function VisualStudio({
                   value={sliderPosition}
                   onChange={(e) => setSliderPosition(Number(e.target.value))}
                   className="absolute inset-0 w-full h-full opacity-0 cursor-ew-resize z-30"
+                  aria-label="Before and after comparison slider"
                 />
               )}
             </div>
