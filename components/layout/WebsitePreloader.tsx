@@ -2,10 +2,12 @@
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 import { useLanguage } from '@/context/LanguageContext';
 import { Sparkles } from 'lucide-react';
 
 export default function WebsitePreloader({ forced = false }: { forced?: boolean }) {
+  const pathname = usePathname();
   const { lang } = useLanguage();
   const [mounted, setMounted] = useState(false);
   const [activeLang, setActiveLang] = useState<'ar' | 'en'>('ar');
@@ -13,7 +15,27 @@ export default function WebsitePreloader({ forced = false }: { forced?: boolean 
   const [progress, setProgress] = useState(0);
   const [fadingOut, setFadingOut] = useState(false);
 
+  // 1. Instantly bypass preloader for any admin route
+  const isAdminRoute = pathname?.startsWith('/admin');
+
   useEffect(() => {
+    // If on admin or forced false, immediately exit
+    if (isAdminRoute && !forced) {
+      setLoading(false);
+      return;
+    }
+
+    // 2. Show only once per browser session for public visitors
+    if (!forced) {
+      try {
+        const hasSeen = sessionStorage.getItem('wd_preloader_seen');
+        if (hasSeen === 'true') {
+          setLoading(false);
+          return;
+        }
+      } catch (_) {}
+    }
+
     // Resolve language with absolute priority from localStorage or active context
     let resolved: 'ar' | 'en' = 'ar';
     try {
@@ -29,10 +51,10 @@ export default function WebsitePreloader({ forced = false }: { forced?: boolean 
     setActiveLang(resolved);
     setMounted(true);
 
-    // Smooth 60fps requestAnimationFrame luxury counter
+    // Smooth, lightning-fast 60fps luxury counter (750ms total)
     let startTime: number | null = null;
     let animationFrameId: number;
-    const duration = 1600; // 1.6s elegant duration
+    const duration = 750;
 
     const step = (timestamp: number) => {
       if (!startTime) startTime = timestamp;
@@ -50,13 +72,16 @@ export default function WebsitePreloader({ forced = false }: { forced?: boolean 
         setProgress(100);
         setTimeout(() => {
           setFadingOut(true);
+          try {
+            sessionStorage.setItem('wd_preloader_seen', 'true');
+          } catch (_) {}
           if (typeof window !== 'undefined') {
             window.dispatchEvent(new CustomEvent('website_preloader_done'));
           }
           setTimeout(() => {
             setLoading(false);
-          }, 450);
-        }, 250); // brief hold on 100%
+          }, 300);
+        }, 120);
       }
     };
 
@@ -65,8 +90,9 @@ export default function WebsitePreloader({ forced = false }: { forced?: boolean 
     return () => {
       if (animationFrameId) cancelAnimationFrame(animationFrameId);
     };
-  }, [forced, lang]);
+  }, [forced, lang, isAdminRoute]);
 
+  if (isAdminRoute && !forced) return null;
   if (!loading || !mounted) return null;
 
   const isAr = activeLang === 'ar';
