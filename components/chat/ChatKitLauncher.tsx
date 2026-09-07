@@ -51,9 +51,15 @@ export default function ChatKitLauncher() {
       >
         {/* Helper Hint Bubble (shown until first opened) */}
         {!isOpen && !hasInteracted && (
-          <div className="hidden sm:flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0B0D14]/95 border border-[#C9A86A]/40 text-[#C9A86A] text-xs font-semibold shadow-2xl backdrop-blur-xl animate-bounce">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>{isAr ? 'المساعد الذكي لمجموعة WD' : 'WD Group AI Concierge'}</span>
+          <div className="hidden sm:flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-[#0B0D14]/95 border border-[#C9A86A]/40 text-[#C9A86A] text-xs font-semibold shadow-2xl backdrop-blur-xl animate-bounce">
+            <div className="w-5 h-5 rounded-full overflow-hidden border border-[#C9A86A]/60 shrink-0">
+              <img
+                src="/brand/sultan-avatar.jpg"
+                alt="Sultan"
+                className="w-full h-full object-cover object-top"
+              />
+            </div>
+            <span>{isAr ? 'تحدث مع سلطان (خدمة العملاء)' : 'Chat with Sultan (Support)'}</span>
           </div>
         )}
 
@@ -63,35 +69,37 @@ export default function ChatKitLauncher() {
             setIsOpen(!isOpen);
             setHasInteracted(true);
           }}
-          className={`group relative flex items-center justify-center w-14 h-14 rounded-2xl shadow-2xl backdrop-blur-xl transition-all duration-300 transform hover:scale-105 active:scale-95 cursor-pointer border ${
+          className={`group relative flex items-center justify-center w-14 h-14 rounded-2xl shadow-2xl backdrop-blur-xl transition-all duration-300 transform hover:scale-105 active:scale-95 cursor-pointer border overflow-hidden ${
             isOpen
               ? 'bg-[#151926] border-white/20 text-white'
-              : 'bg-gradient-to-br from-[#121624] via-[#0B0D14] to-[#1a1f33] border-[#C9A86A]/50 text-[#C9A86A] hover:border-[#C9A86A] shadow-[0_0_35px_rgba(201,168,106,0.3)]'
+              : 'border-[#C9A86A]/60 hover:border-[#C9A86A] shadow-[0_0_35px_rgba(201,168,106,0.35)]'
           }`}
           title={
             isOpen
               ? (isAr ? 'إغلاق المحادثة' : 'Close Chat')
-              : (isAr ? 'المساعد الذكي لمجموعة WD' : 'Open WD Group AI Concierge')
+              : (isAr ? 'تحدث مع سلطان - خدمة العملاء' : 'Chat with Sultan - Customer Care')
           }
         >
           {/* Animated Glow Ring */}
           {!isOpen && (
             <>
               <span className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-[#C9A86A]/30 to-blue-600/30 blur-sm opacity-70 group-hover:opacity-100 transition-opacity" />
-              <span className="absolute -top-1 -right-1 rtl:-right-auto rtl:-left-1 flex h-3 w-3">
+              <span className="absolute -top-1 -right-1 rtl:-right-auto rtl:-left-1 flex h-3 w-3 z-20">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500 ring-2 ring-[#0B0D14]"></span>
               </span>
             </>
           )}
 
-          <div className="relative z-10 flex items-center justify-center">
+          <div className="relative z-10 w-full h-full flex items-center justify-center">
             {isOpen ? (
               <X className="w-6 h-6 text-zinc-300 group-hover:text-white transition-colors" />
             ) : (
-              <div className="flex items-center justify-center">
-                <Sparkles className="w-6 h-6 text-[#C9A86A] group-hover:rotate-12 transition-transform duration-300" />
-              </div>
+              <img
+                src="/brand/sultan-avatar.jpg"
+                alt="Sultan"
+                className="w-full h-full object-cover object-top rounded-2xl group-hover:scale-105 transition-transform duration-300"
+              />
             )}
           </div>
         </button>

@@ -75,8 +75,8 @@ export default function ChatKitWidget({ onClose }: ChatKitWidgetProps) {
           id: 'welcome',
           role: 'assistant',
           content: isAr
-            ? `مرحباً بك في **مجموعة WD القابضة**! أنا المساعد الذكي المدعوم بتقنية **OpenAI ChatKit**.\n\nيسعدني إرشادك حول مشاريعنا في **الضيافة (فنادق سويس بلو)**، **التصنيع الصناعي (جرين وود للأثاث الفاخر)**، و**المقاولات العامة**. كيف يمكنني مساعدتك اليوم؟`
-            : `Welcome to **WD Group Holding**! I am your AI Concierge powered by **OpenAI ChatKit**.\n\nI can assist you with details regarding our **Hospitality (SwissBlue Hotels)**, **Precision Manufacturing (GreenWood Furniture)**, and **General Contracting**. How can I help you today?`,
+            ? `أهلاً وسهلاً بك! معك **سلطان** من خدمة عملاء مجموعة WD القابضة بالرياض.\n\nيسعدني جداً خدمتك والإجابة عن أي استفسار يخص قطاعاتنا في **الضيافة (فنادق سويس بلو)**، **التصنيع الصناعي (مصنع جرين وود للأثاث الفاخر)**، و**المقاولات العامة والتجهيزات الفندقية**.\n\nكيف يمكنني مساعدتك اليوم؟`
+            : `Hello and welcome! I am **Sultan**, your customer support representative at WD Group Holding in Riyadh.\n\nI am here to assist you with our **Hospitality (SwissBlue Hotels)**, **Precision Manufacturing (GreenWood Furniture)**, and **General Contracting**.\n\nHow can I help you today?`,
           timestamp: Date.now(),
         },
       ]);
@@ -135,8 +135,8 @@ export default function ChatKitWidget({ onClose }: ChatKitWidgetProps) {
         id: 'welcome_' + Date.now(),
         role: 'assistant',
         content: isAr
-          ? `بدأنا محادثة جديدة! تفضل بطرح سؤالك حول مجموعة WD وفنادق سويس بلو ومصنع جرين وود للأثاث.`
-          : `Started a new thread! Feel free to ask anything about WD Group, SwissBlue Hotels, or GreenWood Manufacturing.`,
+          ? `بدأنا محادثة جديدة! معك **سلطان** من خدمة العملاء، تفضل بطرح استفسارك وسأجيبك بكل سرور.`
+          : `Started a new conversation! **Sultan** here from WD Group Client Support, feel free to ask anything and I will be glad to help.`,
         timestamp: Date.now(),
       },
     ]);
@@ -367,22 +367,27 @@ export default function ChatKitWidget({ onClose }: ChatKitWidgetProps) {
       {/* 1. Header Bar */}
       <div className="flex items-center justify-between px-5 py-4 border-b border-white/10 bg-gradient-to-r from-[#121624] via-[#0E111C] to-[#121624] select-none shrink-0">
         <div className="flex items-center gap-3">
-          <div className="relative flex items-center justify-center w-10 h-10 rounded-2xl bg-gradient-to-br from-[#C9A86A]/20 via-[#2563EB]/20 to-transparent border border-[#C9A86A]/30 text-[#C9A86A] shadow-inner">
-            <Sparkles className="w-5 h-5 text-[#C9A86A]" />
-            <span className="absolute -bottom-0.5 -right-0.5 rtl:-right-auto rtl:-left-0.5 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-[#0B0D14]" />
+          <div className="relative flex items-center justify-center w-11 h-11 rounded-2xl overflow-hidden border-2 border-[#C9A86A]/50 shadow-md shrink-0 bg-black">
+            <img
+              src="/brand/sultan-avatar.jpg"
+              alt="Sultan - WD Group Support Agent"
+              className="w-full h-full object-cover object-top"
+            />
+            <span className="absolute bottom-0.5 right-0.5 rtl:right-auto rtl:left-0.5 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-[#0B0D14]" />
           </div>
 
           <div>
             <div className="flex items-center gap-2">
               <h3 className="text-sm font-bold text-white tracking-wide">
-                {isAr ? 'المساعد الذكي لمجموعة WD' : 'WD Group AI Concierge'}
+                {isAr ? 'سلطان | خدمة العملاء' : 'Sultan | Client Support'}
               </h3>
-              <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30 font-mono font-medium">
-                OpenAI ChatKit
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 font-mono font-medium flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span>{isAr ? 'متصل الآن' : 'Online'}</span>
               </span>
             </div>
             <p className="text-[11px] text-zinc-400">
-              {isAr ? 'الضيافة • التصنيع الصناعي • المقاولات' : 'Hospitality • Manufacturing • Contracting'}
+              {isAr ? 'مستشارك الشخصي في مجموعة WD • الرياض' : 'WD Group Client Care • Riyadh'}
             </p>
           </div>
         </div>
@@ -428,8 +433,12 @@ export default function ChatKitWidget({ onClose }: ChatKitWidgetProps) {
                   className={`flex gap-3 ${isAssistant ? 'justify-start' : 'justify-end'} animate-in fade-in duration-200`}
                 >
                   {isAssistant && (
-                    <div className="w-7 h-7 rounded-xl bg-gradient-to-br from-[#C9A86A]/20 to-blue-500/20 border border-[#C9A86A]/30 flex items-center justify-center shrink-0 text-[#C9A86A] mt-1">
-                      <Bot className="w-4 h-4" />
+                    <div className="w-8 h-8 rounded-full overflow-hidden border border-[#C9A86A]/50 flex items-center justify-center shrink-0 mt-1 shadow-sm bg-black">
+                      <img
+                        src="/brand/sultan-avatar.jpg"
+                        alt="Sultan"
+                        className="w-full h-full object-cover object-top"
+                      />
                     </div>
                   )}
 
@@ -440,6 +449,11 @@ export default function ChatKitWidget({ onClose }: ChatKitWidgetProps) {
                         : 'bg-gradient-to-r from-blue-600 to-blue-700 text-white font-normal'
                     }`}
                   >
+                    {isAssistant && (
+                      <div className="text-[11px] font-semibold text-[#C9A86A] mb-1 flex items-center gap-1.5">
+                        <span>{isAr ? 'سلطان (خدمة العملاء)' : 'Sultan (Client Support)'}</span>
+                      </div>
+                    )}
                     {renderMessageContent(msg.content)}
                   </div>
 
@@ -456,7 +470,7 @@ export default function ChatKitWidget({ onClose }: ChatKitWidgetProps) {
             {isStreaming && (
               <div className="flex items-center gap-2 text-xs text-zinc-400 font-mono px-3 py-1 animate-pulse">
                 <span className="w-2 h-2 rounded-full bg-[#C9A86A]" />
-                <span>{isAr ? 'جاري الصياغة الذكية عبر OpenAI...' : 'Generating AI response via OpenAI...'}</span>
+                <span>{isAr ? 'سلطان يكتب الرد الآن...' : 'Sultan is typing a reply...'}</span>
               </div>
             )}
 
@@ -467,7 +481,7 @@ export default function ChatKitWidget({ onClose }: ChatKitWidgetProps) {
           {messages.filter((m) => m.role === 'user').length === 0 && (
             <div className="px-5 pb-3">
               <p className="text-[11px] font-mono text-zinc-400 uppercase mb-2">
-                {isAr ? 'استفسارات شائعة:' : 'Suggested topics:'}
+                {isAr ? 'استفسارات شائعة يمكنك سؤالها لسلطان:' : 'Suggested topics to ask Sultan:'}
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
                 {STARTER_PROMPTS.map((item, idx) => (
@@ -528,8 +542,8 @@ export default function ChatKitWidget({ onClose }: ChatKitWidgetProps) {
                 rows={1}
                 placeholder={
                   isAr
-                    ? 'اسأل عن فنادق سويس بلو، مصنع جرين وود، أو المقاولات...'
-                    : 'Ask about SwissBlue Hotels, GreenWood factory, contracting...'
+                    ? 'تفضل بكتابة استفسارك لسلطان...'
+                    : 'Type your message to Sultan...'
                 }
                 disabled={isStreaming}
                 className="w-full bg-transparent text-sm text-white placeholder-zinc-500 px-3 py-2 outline-none resize-none max-h-28"
@@ -547,7 +561,7 @@ export default function ChatKitWidget({ onClose }: ChatKitWidgetProps) {
             </div>
             
             <div className="flex items-center justify-between text-[10px] font-mono text-zinc-500 mt-2 px-1">
-              <span>{isAr ? 'مدعوم بنموذج OpenAI الذكي' : 'Powered by OpenAI ChatKit'}</span>
+              <span>{isAr ? 'سلطان • مستشار خدمة العملاء لمجموعة WD' : 'Sultan • WD Group Client Support Agent'}</span>
               <span>{isAr ? 'اضغط Enter للإرسال' : 'Press Enter to send'}</span>
             </div>
           </div>
