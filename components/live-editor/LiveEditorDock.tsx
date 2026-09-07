@@ -18,8 +18,8 @@ import {
 } from 'lucide-react';
 import './liveEditor.css';
 
-const en = translations.en;
-const ar = translations.ar;
+const en = translations.en || {} as any;
+const ar = translations.ar || {} as any;
 
 function containsArabic(str: string): boolean {
   if (!str) return false;
@@ -33,192 +33,194 @@ function getArabicField(serverVal: any, fallbackVal: string): string {
   return fallbackVal;
 }
 
-// Build baseline default content matching SiteContentPayload
+// Build baseline default content matching SiteContentPayload with 100% safe fallback guards
 function createDefaultState() {
   return {
     home: {
       hero: {
-        eyebrow_en: en.home.hero.eyebrow,
-        eyebrow_ar: ar.home.hero.eyebrow,
-        kicker_en: en.home.hero.kicker,
-        kicker_ar: ar.home.hero.kicker,
-        title_line1_en: en.home.hero.title_line1,
-        title_line1_ar: ar.home.hero.title_line1,
-        title_line2_en: en.home.hero.title_line2,
-        title_line2_ar: ar.home.hero.title_line2,
-        title_line3_en: en.home.hero.title_line3,
-        title_line3_ar: ar.home.hero.title_line3,
-        body_en: en.home.hero.body,
-        body_ar: ar.home.hero.body,
-        primary_cta_en: en.home.hero.primaryCta,
-        primary_cta_ar: ar.home.hero.primaryCta,
-        secondary_cta_en: en.home.hero.secondaryCta,
-        secondary_cta_ar: ar.home.hero.secondaryCta,
-        dock_hospitality_label_en: en.home.hero.dock?.hospitality_label || 'Hospitality (SwissBlue)',
-        dock_hospitality_label_ar: ar.home.hero.dock?.hospitality_label || 'الضيافة (سويس بلو)',
-        dock_hospitality_badge_en: en.home.hero.dock?.hospitality_badge || '6 Properties',
-        dock_hospitality_badge_ar: ar.home.hero.dock?.hospitality_badge || '6 منشآت',
-        dock_manufacturing_label_en: en.home.hero.dock?.manufacturing_label || 'Manufacturing (GreenWood)',
-        dock_manufacturing_label_ar: ar.home.hero.dock?.manufacturing_label || 'التصنيع والأثاث (جرين وود)',
-        dock_manufacturing_badge_en: en.home.hero.dock?.manufacturing_badge || '3 Factories',
-        dock_manufacturing_badge_ar: ar.home.hero.dock?.manufacturing_badge || '3 مصانع',
-        dock_contracting_label_en: en.home.hero.dock?.contracting_label || 'Contracting (Projects)',
-        dock_contracting_label_ar: ar.home.hero.dock?.contracting_label || 'المقاولات والتميز الهندسي',
-        dock_contracting_badge_en: en.home.hero.dock?.contracting_badge || 'Turnkey',
-        dock_contracting_badge_ar: ar.home.hero.dock?.contracting_badge || 'تنفيذ شامل',
+        eyebrow_en: en.home?.hero?.eyebrow || 'WD Group for Business',
+        eyebrow_ar: ar.home?.hero?.eyebrow || 'مجموعة دبليو دي للأعمال',
+        kicker_en: en.home?.hero?.kicker || 'Integrated Hospitality, Manufacturing & Contracting',
+        kicker_ar: ar.home?.hero?.kicker || 'منظومة متكاملة في الضيافة والصناعة والمقاولات',
+        title_line1_en: en.home?.hero?.title_line1 || 'Solid Vision.',
+        title_line1_ar: ar.home?.hero?.title_line1 || 'رؤية راسخة.',
+        title_line2_en: en.home?.hero?.title_line2 || 'Diverse Sectors.',
+        title_line2_ar: ar.home?.hero?.title_line2 || 'قطاعات متنوعة.',
+        title_line3_en: en.home?.hero?.title_line3 || 'Promising Future.',
+        title_line3_ar: ar.home?.hero?.title_line3 || 'مستقبل واعد.',
+        body_en: en.home?.hero?.body || 'A Saudi business group creating sustainable value through hospitality, manufacturing, and contracting.',
+        body_ar: ar.home?.hero?.body || 'مجموعة أعمال سعودية تصنع قيمة مستدامة عبر قطاعات الضيافة والصناعة والمقاولات.',
+        primary_cta_en: en.home?.hero?.primaryCta || 'Discover Our Group',
+        primary_cta_ar: ar.home?.hero?.primaryCta || 'اكتشف مجموعتنا',
+        secondary_cta_en: en.home?.hero?.secondaryCta || 'Explore Our Sectors',
+        secondary_cta_ar: ar.home?.hero?.secondaryCta || 'استكشف قطاعاتنا',
+        dock_hospitality_label_en: en.home?.hero?.dock?.hospitality_label || 'Hospitality (SwissBlue)',
+        dock_hospitality_label_ar: ar.home?.hero?.dock?.hospitality_label || 'الضيافة (سويس بلو)',
+        dock_hospitality_badge_en: en.home?.hero?.dock?.hospitality_badge || '6 Properties',
+        dock_hospitality_badge_ar: ar.home?.hero?.dock?.hospitality_badge || '6 منشآت',
+        dock_manufacturing_label_en: en.home?.hero?.dock?.manufacturing_label || 'Manufacturing (GreenWood)',
+        dock_manufacturing_label_ar: ar.home?.hero?.dock?.manufacturing_label || 'التصنيع والأثاث (جرين وود)',
+        dock_manufacturing_badge_en: en.home?.hero?.dock?.manufacturing_badge || '3 Factories',
+        dock_manufacturing_badge_ar: ar.home?.hero?.dock?.manufacturing_badge || '3 مصانع',
+        dock_contracting_label_en: en.home?.hero?.dock?.contracting_label || 'Contracting (Projects)',
+        dock_contracting_label_ar: ar.home?.hero?.dock?.contracting_label || 'المقاولات والتميز الهندسي',
+        dock_contracting_badge_en: en.home?.hero?.dock?.contracting_badge || 'Turnkey',
+        dock_contracting_badge_ar: ar.home?.hero?.dock?.contracting_badge || 'تنفيذ شامل',
       },
       metrics: {
-        stat1_num: en.home.metrics.stat1_num,
-        stat1_text_en: en.home.metrics.stat1_text,
-        stat1_text_ar: ar.home.metrics.stat1_text,
-        stat2_num: en.home.metrics.stat2_num,
-        stat2_text_en: en.home.metrics.stat2_text,
-        stat2_text_ar: ar.home.metrics.stat2_text,
-        stat3_num: en.home.metrics.stat3_num,
-        stat3_text_en: en.home.metrics.stat3_text,
-        stat3_text_ar: ar.home.metrics.stat3_text,
-        stat4_num: en.home.metrics.stat4_num,
-        stat4_text_en: en.home.metrics.stat4_text,
-        stat4_text_ar: ar.home.metrics.stat4_text,
+        stat1_num: en.home?.metrics?.stat1_num || '6',
+        stat1_text_en: en.home?.metrics?.stat1_text || 'Hotels & Residences',
+        stat1_text_ar: ar.home?.metrics?.stat1_text || 'فنادق وشقق مخدومة',
+        stat2_num: en.home?.metrics?.stat2_num || '3',
+        stat2_text_en: en.home?.metrics?.stat2_text || 'Industrial Factories',
+        stat2_text_ar: ar.home?.metrics?.stat2_text || 'مصانع إنتاج متخصصة',
+        stat3_num: en.home?.metrics?.stat3_num || '80+',
+        stat3_text_en: en.home?.metrics?.stat3_text || 'Active Professionals',
+        stat3_text_ar: ar.home?.metrics?.stat3_text || 'كادر مهني وإداري',
+        stat4_num: en.home?.metrics?.stat4_num || '3',
+        stat4_text_en: en.home?.metrics?.stat4_text || 'Core Sectors',
+        stat4_text_ar: ar.home?.metrics?.stat4_text || 'قطاعات استراتيجية متكاملة',
       },
       sectors: {
-        label_en: en.home.sectors.label,
-        label_ar: ar.home.sectors.label,
-        heading_en: en.home.sectors.heading,
-        heading_ar: ar.home.sectors.heading,
-        intro_en: en.home.sectors.intro,
-        intro_ar: ar.home.sectors.intro,
-        hospitality_eyebrow_en: en.home.sectors.hospitality.eyebrow,
-        hospitality_eyebrow_ar: ar.home.sectors.hospitality.eyebrow,
-        hospitality_title_en: en.home.sectors.hospitality.title,
-        hospitality_title_ar: ar.home.sectors.hospitality.title,
-        hospitality_desc_en: en.home.sectors.hospitality.desc,
-        hospitality_desc_ar: ar.home.sectors.hospitality.desc,
-        hospitality_proof_en: en.home.sectors.hospitality.proof,
-        hospitality_proof_ar: ar.home.sectors.hospitality.proof,
-        hospitality_cta_en: en.home.sectors.hospitality.cta,
-        hospitality_cta_ar: ar.home.sectors.hospitality.cta,
+        label_en: en.home?.sectors?.label || 'Strategic Sectors',
+        label_ar: ar.home?.sectors?.label || 'قطاعاتنا الاستراتيجية',
+        heading_en: en.home?.sectors?.heading || 'Integrated Pillars Driving Growth',
+        heading_ar: ar.home?.sectors?.heading || 'ركائز متكاملة تقود النمو',
+        intro_en: en.home?.sectors?.intro || 'Operating across hospitality, manufacturing, and general contracting.',
+        intro_ar: ar.home?.sectors?.intro || 'نعمل عبر قطاعات الضيافة، التصنيع، والمقاولات العامة.',
+        hospitality_eyebrow_en: en.home?.sectors?.hospitality?.eyebrow || 'SwissBlue Hotels',
+        hospitality_eyebrow_ar: ar.home?.sectors?.hospitality?.eyebrow || 'فنادق سويس بلو',
+        hospitality_title_en: en.home?.sectors?.hospitality?.title || 'Hospitality & Extended Stays',
+        hospitality_title_ar: ar.home?.sectors?.hospitality?.title || 'الضيافة والإقامة الفندقية',
+        hospitality_desc_en: en.home?.sectors?.hospitality?.desc || 'Six active properties across Saudi Arabia.',
+        hospitality_desc_ar: ar.home?.sectors?.hospitality?.desc || 'ست منشآت فندقية وسكنية في المملكة.',
+        hospitality_proof_en: en.home?.sectors?.hospitality?.proof || '6 Properties',
+        hospitality_proof_ar: ar.home?.sectors?.hospitality?.proof || '6 منشآت',
+        hospitality_cta_en: en.home?.sectors?.hospitality?.cta || 'Explore Hospitality',
+        hospitality_cta_ar: ar.home?.sectors?.hospitality?.cta || 'استكشف قطاع الضيافة',
 
-        manufacturing_eyebrow_en: en.home.sectors.manufacturing.eyebrow,
-        manufacturing_eyebrow_ar: ar.home.sectors.manufacturing.eyebrow,
-        manufacturing_title_en: en.home.sectors.manufacturing.title,
-        manufacturing_title_ar: ar.home.sectors.manufacturing.title,
-        manufacturing_desc_en: en.home.sectors.manufacturing.desc,
-        manufacturing_desc_ar: ar.home.sectors.manufacturing.desc,
-        manufacturing_proof_en: en.home.sectors.manufacturing.proof,
-        manufacturing_proof_ar: ar.home.sectors.manufacturing.proof,
-        manufacturing_cta_en: en.home.sectors.manufacturing.cta,
-        manufacturing_cta_ar: ar.home.sectors.manufacturing.cta,
+        manufacturing_eyebrow_en: en.home?.sectors?.manufacturing?.eyebrow || 'GreenWood & Al-Watan',
+        manufacturing_eyebrow_ar: ar.home?.sectors?.manufacturing?.eyebrow || 'جرين وود ومصنع الوطن',
+        manufacturing_title_en: en.home?.sectors?.manufacturing?.title || 'Manufacturing & Furniture',
+        manufacturing_title_ar: ar.home?.sectors?.manufacturing?.title || 'التصنيع والأثاث',
+        manufacturing_desc_en: en.home?.sectors?.manufacturing?.desc || 'Three specialized factories producing wooden and metal furniture.',
+        manufacturing_desc_ar: ar.home?.sectors?.manufacturing?.desc || 'ثلاثة مصانع متخصصة في تصنيع الأثاث الخشبي والمعدني.',
+        manufacturing_proof_en: en.home?.sectors?.manufacturing?.proof || '3 Factories',
+        manufacturing_proof_ar: ar.home?.sectors?.manufacturing?.proof || '3 مصانع',
+        manufacturing_cta_en: en.home?.sectors?.manufacturing?.cta || 'Explore Manufacturing',
+        manufacturing_cta_ar: ar.home?.sectors?.manufacturing?.cta || 'استكشف قطاع التصنيع',
 
-        contracting_eyebrow_en: en.home.sectors.contracting.eyebrow,
-        contracting_eyebrow_ar: ar.home.sectors.contracting.eyebrow,
-        contracting_title_en: en.home.sectors.contracting.title,
-        contracting_title_ar: ar.home.sectors.contracting.title,
-        contracting_desc_en: en.home.sectors.contracting.desc,
-        contracting_desc_ar: ar.home.sectors.contracting.desc,
-        contracting_proof_en: en.home.sectors.contracting.proof,
-        contracting_proof_ar: ar.home.sectors.contracting.proof,
-        contracting_cta_en: en.home.sectors.contracting.cta,
-        contracting_cta_ar: ar.home.sectors.contracting.cta,
+        contracting_eyebrow_en: en.home?.sectors?.contracting?.eyebrow || 'Watan Design Contracting',
+        contracting_eyebrow_ar: ar.home?.sectors?.contracting?.eyebrow || 'تصاميم الوطن للمقاولات',
+        contracting_title_en: en.home?.sectors?.contracting?.title || 'Contracting & Fit-Out',
+        contracting_title_ar: ar.home?.sectors?.contracting?.title || 'المقاولات والتنفيذ المتكامل',
+        contracting_desc_en: en.home?.sectors?.contracting?.desc || 'General contracting, architectural fit-out, and turnkey execution.',
+        contracting_desc_ar: ar.home?.sectors?.contracting?.desc || 'المقاولات العامة والتشطيبات المعمارية والتنفيذ المتكامل.',
+        contracting_proof_en: en.home?.sectors?.contracting?.proof || 'Turnkey Execution',
+        contracting_proof_ar: ar.home?.sectors?.contracting?.proof || 'تنفيذ شامل',
+        contracting_cta_en: en.home?.sectors?.contracting?.cta || 'Explore Contracting',
+        contracting_cta_ar: ar.home?.sectors?.contracting?.cta || 'استكشف قطاع المقاولات',
       },
       synergy: {
-        label_en: en.home.synergy.label,
-        label_ar: ar.home.synergy.label,
-        heading_en: en.home.synergy.heading,
-        heading_ar: ar.home.synergy.heading,
-        intro_en: en.home.synergy.intro,
-        intro_ar: ar.home.synergy.intro,
-        step1_title_en: en.home.synergy.step1_title,
-        step1_title_ar: ar.home.synergy.step1_title,
-        step1_text_en: en.home.synergy.step1_text,
-        step1_text_ar: ar.home.synergy.step1_text,
-        step2_title_en: en.home.synergy.step2_title,
-        step2_title_ar: ar.home.synergy.step2_title,
-        step2_text_en: en.home.synergy.step2_text,
-        step2_text_ar: ar.home.synergy.step2_text,
-        step3_title_en: en.home.synergy.step3_title,
-        step3_title_ar: ar.home.synergy.step3_title,
-        step3_text_en: en.home.synergy.step3_text,
-        step3_text_ar: ar.home.synergy.step3_text,
+        label_en: en.home?.synergy?.label || 'Synergy Model',
+        label_ar: ar.home?.synergy?.label || 'نموذج التكامل',
+        heading_en: en.home?.synergy?.heading || 'Integrated Lifecycle Advantage',
+        heading_ar: ar.home?.synergy?.heading || 'تكامل دورة الحياة الكاملة',
+        intro_en: en.home?.synergy?.intro || 'By uniting manufacturing, contracting, and hospitality under one holding, WD Group delivers end-to-end efficiency.',
+        intro_ar: ar.home?.synergy?.intro || 'عبر جمع التصنيع والمقاولات والضيافة تحت مظلة قابضة واحدة، تحقق مجموعة دبليو دي كفاءة شاملة.',
+        step1_title_en: en.home?.synergy?.step1_title || 'Manufacturing Power',
+        step1_title_ar: ar.home?.synergy?.step1_title || 'قوة التصنيع المحلي',
+        step1_text_en: en.home?.synergy?.step1_text || 'Direct factory supply for wooden and metal fit-out.',
+        step1_text_ar: ar.home?.synergy?.step1_text || 'توريد مباشر من المصانع للتأثيث الخشبي والمعدني.',
+        step2_title_en: en.home?.synergy?.step2_title || 'Contracting Execution',
+        step2_title_ar: ar.home?.synergy?.step2_title || 'التنفيذ الهندسي والمقاولات',
+        step2_text_en: en.home?.synergy?.step2_text || 'Precision fit-out delivered with strict quality controls.',
+        step2_text_ar: ar.home?.synergy?.step2_text || 'تنفيذ تشطيبات معمارية بدقة متناهية ومعايير جودة صارمة.',
+        step3_title_en: en.home?.synergy?.step3_title || 'Hospitality Operations',
+        step3_title_ar: ar.home?.synergy?.step3_title || 'التشغيل الفندقي المستدام',
+        step3_text_en: en.home?.synergy?.step3_text || 'Managing properties with ongoing quality and maintenance oversight.',
+        step3_text_ar: ar.home?.synergy?.step3_text || 'تشغيل وإدارة المنشآت مع إشراف دائم على الجودة والصيانة.',
       },
       identity: {
-        vision_desc_en: en.home.identity.vision_desc,
-        vision_desc_ar: ar.home.identity.vision_desc,
-        mission_desc_en: en.home.identity.mission_desc,
-        mission_desc_ar: ar.home.identity.mission_desc,
+        vision_desc_en: en.home?.identity?.vision_desc || 'To be a leading integrated Saudi business group setting benchmarks in hospitality, industrial manufacturing, and general contracting.',
+        vision_desc_ar: ar.home?.identity?.vision_desc || 'أن نكون مجموعة أعمال سعودية رائدة ومتكاملة تضع معايير جديدة في الضيافة والتصنيع والمقاولات.',
+        mission_desc_en: en.home?.identity?.mission_desc || 'Delivering high-value products and services through operational synergy, dependable execution, and dedicated Saudi talent.',
+        mission_desc_ar: ar.home?.identity?.mission_desc || 'تقديم منتجات وخدمات عالية القيمة من خلال التكامل التشغيلي والتنفيذ الموثوق والكوادر السعودية المتميزة.',
       },
       ceo: {
-        quote_en: en.home.ceo.quote,
-        quote_ar: ar.home.ceo.quote,
-        name_en: en.home.ceo.name,
-        name_ar: ar.home.ceo.name,
-        title_en: en.home.ceo.title,
-        title_ar: ar.home.ceo.title,
+        label_en: en.home?.ceo?.label || 'Leadership Message',
+        label_ar: ar.home?.ceo?.label || 'رسالة القيادة',
+        quote_en: en.home?.ceo?.quote || 'Our strength lies in integration: we build what we design, furnish what we build, and operate what we develop.',
+        quote_ar: ar.home?.ceo?.quote || 'قوتنا تكمن في التكامل: نبني ما نصممه، ونؤثث ما نبنيه، وندير ما نطوره بأعلى معايير الكفاءة الوطنية.',
+        name_en: en.home?.ceo?.name || 'Watan Designs Leadership',
+        name_ar: ar.home?.ceo?.name || 'قيادة تصاميم الوطن',
+        title_en: en.home?.ceo?.title || 'Executive Board',
+        title_ar: ar.home?.ceo?.title || 'مجلس الإدارة التنفيذي',
       },
       partnership: {
-        heading_en: en.home.partnership?.heading || 'Build the Future With WD Group',
-        heading_ar: ar.home.partnership?.heading || 'اصنع المستقبل مع مجموعة دبليو دي',
-        subheading_en: en.home.partnership?.subheading || 'Partner with an integrated leader in hospitality, manufacturing, and general contracting across Saudi Arabia.',
-        subheading_ar: ar.home.partnership?.subheading || 'شراكة استراتيجية مع رواد الضيافة والتصنيع والمقاولات في المملكة العربية السعودية.',
-        primary_cta_en: en.home.partnership?.primary_cta || 'Request RFP / Inquire',
-        primary_cta_ar: ar.home.partnership?.primary_cta || 'طلب عرض أسعار / استفسار',
+        heading_en: en.home?.partnership?.heading || 'Build the Future With WD Group',
+        heading_ar: ar.home?.partnership?.heading || 'اصنع المستقبل مع مجموعة دبليو دي',
+        subheading_en: en.home?.partnership?.subheading || 'Partner with an integrated leader in hospitality, manufacturing, and general contracting across Saudi Arabia.',
+        subheading_ar: ar.home?.partnership?.subheading || 'شراكة استراتيجية مع رواد الضيافة والتصنيع والمقاولات في المملكة العربية السعودية.',
+        primary_cta_en: en.home?.partnership?.primary_cta || 'Request RFP / Inquire',
+        primary_cta_ar: ar.home?.partnership?.primary_cta || 'طلب عرض أسعار / استفسار',
       },
     },
     about: {
       hero: {
-        eyebrow_en: en.about.hero.eyebrow,
-        eyebrow_ar: ar.about.hero.eyebrow,
-        title_en: en.about.hero.title,
-        title_ar: ar.about.hero.title,
-        body_en: en.about.hero.body,
-        body_ar: ar.about.hero.body,
+        eyebrow_en: en.about?.hero?.eyebrow || 'About WD Group',
+        eyebrow_ar: ar.about?.hero?.eyebrow || 'عن مجموعة دبليو دي',
+        title_en: en.about?.hero?.title || 'A Heritage of Integrated Enterprise',
+        title_ar: ar.about?.hero?.title || 'مسيرة ريادية متكاملة',
+        body_en: en.about?.hero?.body || 'Founded in Saudi Arabia with a commitment to sustainable excellence across key commercial and industrial sectors.',
+        body_ar: ar.about?.hero?.body || 'تأسست في المملكة العربية السعودية بالتزام راسخ بالتميز المستدام عبر القطاعات التجارية والصناعية.',
       },
       story: {
-        heading_en: en.about.story.heading,
-        heading_ar: ar.about.story.heading,
-        p1_en: en.about.story.p1,
-        p1_ar: ar.about.story.p1,
-        p2_en: en.about.story.p2,
-        p2_ar: ar.about.story.p2,
+        heading_en: en.about?.story?.heading || 'Our Journey & Growth',
+        heading_ar: ar.about?.story?.heading || 'مسيرتنا ونمونا',
+        p1_en: en.about?.story?.p1 || 'From specialized beginnings to an integrated holding operating hospitality assets, industrial manufacturing complexes, and contracting projects.',
+        p1_ar: ar.about?.story?.p1 || 'من بدايات متخصصة إلى مجموعة قابضة متكاملة تدير منشآت ضيافة ومجمعات صناعية ومشاريع مقاولات.',
+        p2_en: en.about?.story?.p2 || 'With over 80 professionals and multi-city operations, WD Group continues to expand with disciplined strategic investments.',
+        p2_ar: ar.about?.story?.p2 || 'مع أكثر من 80 كادراً متخصصاً وتواجد في مدن متعددة، تواصل المجموعة توسعها باستثمارات استراتيجية مدروسة.',
       },
     },
     hospitality: {
-      hero_title_en: en.sectors.hospitality.title,
-      hero_title_ar: ar.sectors.hospitality.title,
-      hero_desc_en: en.sectors.hospitality.desc,
-      hero_desc_ar: ar.sectors.hospitality.desc,
+      hero_title_en: en.hospitality?.hero?.title || 'Comfortable Stays. Thoughtful Service.',
+      hero_title_ar: ar.hospitality?.hero?.title || 'إقامة مريحة وخدمة مدروسة.',
+      hero_desc_en: en.hospitality?.hero?.body || 'Our hospitality portfolio brings together hotels and serviced residences designed for business and leisure.',
+      hero_desc_ar: ar.hospitality?.hero?.body || 'تضم محفظتنا الفندقية فنادق وشققاً مخدومة مصممة لرحلات الأعمال والعائلات.',
     },
     manufacturing: {
-      hero_title_en: en.sectors.manufacturing.title,
-      hero_title_ar: ar.sectors.manufacturing.title,
-      hero_desc_en: en.sectors.manufacturing.desc,
-      hero_desc_ar: ar.sectors.manufacturing.desc,
+      hero_title_en: en.manufacturing?.hero?.title || 'Precision Manufacturing & Quality Furniture',
+      hero_title_ar: ar.manufacturing?.hero?.title || 'تصنيع دقيق وأثاث عالي الجودة',
+      hero_desc_en: en.manufacturing?.hero?.body || 'Three dedicated factories engineered for architectural joinery, hotel furniture, and industrial fit-out.',
+      hero_desc_ar: ar.manufacturing?.hero?.body || 'ثلاثة مصانع متخصصة في الأعمال الخشبية المعمارية وأثاث الفنادق والتجهيزات الصناعية.',
     },
     contracting: {
-      hero_title_en: en.sectors.contracting.title,
-      hero_title_ar: ar.sectors.contracting.title,
-      hero_desc_en: en.sectors.contracting.desc,
-      hero_desc_ar: ar.sectors.contracting.desc,
+      hero_title_en: en.contracting?.hero?.title || 'Engineered Excellence & Turnkey Contracting',
+      hero_title_ar: ar.contracting?.hero?.title || 'تميز هندسي ومقاولات متكاملة',
+      hero_desc_en: en.contracting?.hero?.body || 'End-to-end project delivery, fit-out execution, and commercial contracting with zero compromise.',
+      hero_desc_ar: ar.contracting?.hero?.body || 'تنفيذ شامل للمشاريع والتشطيبات والمقاولات التجارية دون أي مساومة على الجودة.',
     },
     careers: {
-      hero_title_en: en.careers.hero.title,
-      hero_title_ar: ar.careers.hero.title,
-      hero_body_en: en.careers.hero.body,
-      hero_body_ar: ar.careers.hero.body,
+      hero_title_en: en.careers?.hero?.title || 'Build Your Career With WD Group',
+      hero_title_ar: ar.careers?.hero?.title || 'ابنِ مسيرتك المهنية مع مجموعة دبليو دي',
+      hero_body_en: en.careers?.hero?.body || 'Explore opportunities to contribute to dynamic projects in hospitality, manufacturing, and engineering.',
+      hero_body_ar: ar.careers?.hero?.body || 'استكشف الفرص الوظيفية للمساهمة في مشاريع متطورة في الضيافة والتصنيع والهندسة.',
     },
     contact: {
-      hero_title_en: en.contact.hero.title,
-      hero_title_ar: ar.contact.hero.title,
-      hero_body_en: en.contact.hero.body,
-      hero_body_ar: ar.contact.hero.body,
-      hq_address_en: en.contact.cards.hq_address,
-      hq_address_ar: ar.contact.cards.hq_address,
-      general_email: en.contact.cards.general_email,
-      primary_phone: en.contact.cards.primary_phone,
+      hero_title_en: en.contact?.hero?.title || 'Let’s Start the Right Conversation',
+      hero_title_ar: ar.contact?.hero?.title || 'دعنا نبدأ الحوار المناسب',
+      hero_body_en: en.contact?.hero?.body || 'Choose the sector that best matches your request. We will direct your inquiry to the appropriate team.',
+      hero_body_ar: ar.contact?.hero?.body || 'اختر القطاع الأنسب لطلبك، وسنقوم بتوجيه استفسارك للفريق المختص مباشرة.',
+      hq_address_en: en.contact?.cards?.hq_address || 'King Abdulaziz Road, Al Khalidiya, Najran, Kingdom of Saudi Arabia',
+      hq_address_ar: ar.contact?.cards?.hq_address || 'طريق الملك عبدالعزيز، الخالدية، نجران، المملكة العربية السعودية',
+      general_email: en.contact?.cards?.general_email || 'ceo@wdgroup.online',
+      primary_phone: en.contact?.cards?.primary_phone || '+966 50 572 5070',
     },
     settings: {
-      nav_cta_en: en.nav.contactCta,
-      nav_cta_ar: ar.nav.contactCta,
+      nav_cta_en: en.nav?.contactCta || 'Contact Us',
+      nav_cta_ar: ar.nav?.contactCta || 'تواصل معنا',
     }
   };
 }
@@ -237,18 +239,22 @@ function getNestedValue(obj: any, path: string): any {
 
 // Deep set helper (returns a cloned modified copy)
 function setNestedValue(obj: any, path: string, value: any): any {
-  const clone = JSON.parse(JSON.stringify(obj || {}));
-  const parts = path.split('.');
-  let curr = clone;
-  for (let i = 0; i < parts.length - 1; i++) {
-    const part = parts[i];
-    if (!curr[part] || typeof curr[part] !== 'object') {
-      curr[part] = {};
+  try {
+    const clone = JSON.parse(JSON.stringify(obj || {}));
+    const parts = path.split('.');
+    let curr = clone;
+    for (let i = 0; i < parts.length - 1; i++) {
+      const part = parts[i];
+      if (!curr[part] || typeof curr[part] !== 'object') {
+        curr[part] = {};
+      }
+      curr = curr[part];
     }
-    curr = curr[part];
+    curr[parts[parts.length - 1]] = value;
+    return clone;
+  } catch (e) {
+    return obj;
   }
-  curr[parts[parts.length - 1]] = value;
-  return clone;
 }
 
 // Flatten all string fields into a path-to-string dictionary
@@ -273,6 +279,7 @@ export default function LiveEditorDock() {
   const { lang, setLanguage, dynamicContent, setDynamicContent } = useLanguage();
   const isAr = lang === 'ar';
 
+  const [hasMounted, setHasMounted] = useState<boolean>(false);
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [isMinimized, setIsMinimized] = useState<boolean>(false);
   const [serverState, setServerState] = useState<any>(() => createDefaultState());
@@ -283,6 +290,11 @@ export default function LiveEditorDock() {
 
   const unsavedCount = Object.keys(pendingChanges).length;
   const hasUnsaved = unsavedCount > 0;
+
+  // Track client hydration
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
 
   // Ref to hold current state for event handlers without stale closures
   const stateRef = useRef({
@@ -303,29 +315,28 @@ export default function LiveEditorDock() {
     };
   });
 
-  // Suppress on admin or maintenance routes
-  if (pathname?.startsWith('/admin') || pathname === '/maintenance') {
-    return null;
-  }
-
   // Load server content initially
   useEffect(() => {
+    let isCancelled = false;
     async function loadContent() {
       try {
         const res = await fetch('/api/content');
         if (res.ok) {
           const json = await res.json();
-          if (json.data) {
+          if (json.data && !isCancelled) {
             const defaults = createDefaultState();
             const merged = { ...defaults, ...json.data };
             setServerState(merged);
           }
         }
       } catch (err) {
-        // Fallback to static defaults
+        // Fallback to static defaults silently
       }
     }
     loadContent();
+    return () => {
+      isCancelled = true;
+    };
   }, []);
 
   // Update dynamic content live when pending changes or serverState change
@@ -357,7 +368,7 @@ export default function LiveEditorDock() {
 
   // Bind and unbind DOM elements for in-place editing
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (typeof window === 'undefined' || !hasMounted) return;
 
     if (!isEditMode) {
       document.body.classList.remove('live-editor-active');
@@ -372,89 +383,91 @@ export default function LiveEditorDock() {
 
     document.body.classList.add('live-editor-active');
 
-    // Build reverse dictionary for the current language
-    const currentMerged = dynamicContent || serverState;
-    const flattened = flattenContent(currentMerged);
+    try {
+      // Build reverse dictionary for the current language
+      const currentMerged = dynamicContent || serverState;
+      const flattened = flattenContent(currentMerged);
 
-    // Invert: Text -> FieldPath
-    // Filter only fields matching the active language suffix or universal numbers
-    const textToPath = new Map<string, string>();
-    const langSuffix = isAr ? '_ar' : '_en';
+      // Invert: Text -> FieldPath
+      const textToPath = new Map<string, string>();
+      const langSuffix = isAr ? '_ar' : '_en';
 
-    for (const [path, textVal] of Object.entries(flattened)) {
-      if (path.endsWith(langSuffix) || path.endsWith('_num') || (!path.endsWith('_en') && !path.endsWith('_ar'))) {
-        if (textVal && textVal.length > 1) {
-          textToPath.set(textVal.toLowerCase(), path);
+      for (const [path, textVal] of Object.entries(flattened)) {
+        if (path.endsWith(langSuffix) || path.endsWith('_num') || (!path.endsWith('_en') && !path.endsWith('_ar'))) {
+          if (textVal && textVal.length > 1) {
+            textToPath.set(textVal.toLowerCase(), path);
+          }
         }
       }
-    }
 
-    function scanAndBindElements() {
-      const candidates = document.querySelectorAll(
-        'h1, h2, h3, h4, h5, h6, p, span, a, button, label, li, blockquote, [data-live-field]'
-      );
+      function scanAndBindElements() {
+        const candidates = document.querySelectorAll(
+          'h1, h2, h3, h4, h5, h6, p, span, a, button, label, li, blockquote, [data-live-field]'
+        );
 
-      candidates.forEach((node) => {
-        const el = node as HTMLElement;
+        candidates.forEach((node) => {
+          const el = node as HTMLElement;
 
-        // Skip our floating dock UI elements
-        if (el.closest('#live-editor-floating-dock')) return;
+          // Skip our floating dock UI elements
+          if (el.closest('#live-editor-floating-dock')) return;
 
-        // Check if element already has explicit data-live-field
-        let fieldPath = el.getAttribute('data-live-field');
+          // Check if element already has explicit data-live-field
+          let fieldPath = el.getAttribute('data-live-field');
 
-        // If not explicit, check text content if it's a leaf text container
-        if (!fieldPath) {
-          // Check if element is a leaf text container (no heavy block children)
-          const hasBlockChildren = el.querySelector('h1, h2, h3, h4, h5, h6, p, div, section, article');
-          if (!hasBlockChildren) {
-            const rawText = el.innerText?.trim();
-            if (rawText && rawText.length > 1) {
-              const matched = textToPath.get(rawText.toLowerCase());
-              if (matched) {
-                fieldPath = matched;
-                el.setAttribute('data-live-field', matched);
+          // If not explicit, check text content if it's a leaf text container
+          if (!fieldPath) {
+            const hasBlockChildren = el.querySelector('h1, h2, h3, h4, h5, h6, p, div, section, article');
+            if (!hasBlockChildren) {
+              const rawText = el.innerText?.trim();
+              if (rawText && rawText.length > 1) {
+                const matched = textToPath.get(rawText.toLowerCase());
+                if (matched) {
+                  fieldPath = matched;
+                  el.setAttribute('data-live-field', matched);
+                }
               }
             }
           }
-        }
 
-        if (fieldPath) {
-          el.setAttribute('contenteditable', 'true');
-          el.setAttribute('spellcheck', 'false');
-          el.classList.add('live-editor-target');
+          if (fieldPath) {
+            el.setAttribute('contenteditable', 'true');
+            el.setAttribute('spellcheck', 'false');
+            el.classList.add('live-editor-target');
 
-          // Highlight if dirty
-          const resolved = (fieldPath.endsWith('_ar') || fieldPath.endsWith('_en') || fieldPath.endsWith('_num'))
-            ? fieldPath
-            : `${fieldPath}_${stateRef.current.lang}`;
+            // Highlight if dirty
+            const resolved = (fieldPath.endsWith('_ar') || fieldPath.endsWith('_en') || fieldPath.endsWith('_num'))
+              ? fieldPath
+              : `${fieldPath}_${stateRef.current.lang}`;
 
-          if (stateRef.current.pendingChanges[resolved] !== undefined || stateRef.current.pendingChanges[fieldPath] !== undefined) {
-            el.setAttribute('data-live-dirty', 'true');
-          } else {
-            el.removeAttribute('data-live-dirty');
+            if (stateRef.current.pendingChanges[resolved] !== undefined || stateRef.current.pendingChanges[fieldPath] !== undefined) {
+              el.setAttribute('data-live-dirty', 'true');
+            } else {
+              el.removeAttribute('data-live-dirty');
+            }
           }
-        }
-      });
-    }
+        });
+      }
 
-    scanAndBindElements();
-
-    // Listen to route and DOM updates
-    const observer = new MutationObserver(() => {
       scanAndBindElements();
-    });
 
-    observer.observe(document.body, { childList: true, subtree: true });
+      // Listen to route and DOM updates
+      const observer = new MutationObserver(() => {
+        scanAndBindElements();
+      });
 
-    return () => {
-      observer.disconnect();
-    };
-  }, [isEditMode, lang, dynamicContent, serverState]);
+      observer.observe(document.body, { childList: true, subtree: true });
+
+      return () => {
+        observer.disconnect();
+      };
+    } catch (err) {
+      console.warn('Live In-Place Editor DOM binding non-fatal error:', err);
+    }
+  }, [isEditMode, lang, dynamicContent, serverState, hasMounted]);
 
   // Global event listeners for in-place editing interactions
   useEffect(() => {
-    if (!isEditMode) return;
+    if (!isEditMode || !hasMounted) return;
 
     // 1. Click Handler: Prevent links and buttons from navigating when clicked in Edit Mode
     const handleClick = (e: MouseEvent) => {
@@ -463,7 +476,6 @@ export default function LiveEditorDock() {
 
       const editable = target.closest('.live-editor-target') as HTMLElement;
       if (editable) {
-        // Prevent navigation if inside an <a> or <button>
         const clickableParent = target.closest('a, button');
         if (clickableParent) {
           e.preventDefault();
@@ -515,7 +527,6 @@ export default function LiveEditorDock() {
       // Enter key handling on single-line items
       if (e.key === 'Enter' && target.classList.contains('live-editor-target')) {
         const tag = target.tagName.toLowerCase();
-        // Disallow Enter on headings, buttons, spans to prevent layout breakage
         if (['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'span', 'button', 'a'].includes(tag)) {
           e.preventDefault();
           target.blur();
@@ -532,7 +543,7 @@ export default function LiveEditorDock() {
       document.removeEventListener('input', handleInput);
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [isEditMode, applyFieldEdit]);
+  }, [isEditMode, applyFieldEdit, hasMounted]);
 
   // Save all pending changes to the live database API
   const handleSave = async () => {
@@ -542,7 +553,6 @@ export default function LiveEditorDock() {
     setErrorMessage(null);
 
     try {
-      // Build updated payload by merging pendingChanges into serverState
       let merged = JSON.parse(JSON.stringify(dynamicContent || serverState));
       for (const [path, val] of Object.entries(pendingChanges)) {
         merged = setNestedValue(merged, path, val);
@@ -564,7 +574,6 @@ export default function LiveEditorDock() {
       setPendingChanges({});
       setSaveSuccess(true);
 
-      // Remove dirty attributes from DOM
       document.querySelectorAll('[data-live-dirty]').forEach((el) => {
         el.removeAttribute('data-live-dirty');
       });
@@ -590,6 +599,11 @@ export default function LiveEditorDock() {
       window.location.reload();
     }
   };
+
+  // Unconditionally placed AFTER all React hooks
+  if (!hasMounted || pathname?.startsWith('/admin') || pathname === '/maintenance') {
+    return null;
+  }
 
   return (
     <div 
