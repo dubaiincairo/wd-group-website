@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { 
   Sparkles, 
   UploadCloud, 
@@ -18,7 +18,10 @@ import {
   X,
   Eye,
   Check,
-  Zap
+  Zap,
+  Key,
+  AlertTriangle,
+  ExternalLink
 } from 'lucide-react';
 import { VisualStudioItem, StudioGradingMatrix } from './types';
 
@@ -59,133 +62,6 @@ const PRESET_PROMPTS = [
   }
 ];
 
-/**
- * High-fidelity client-side architectural canvas remaster engine.
- * Applies exact prompt-driven photographic transformations: exposure, color temp (warm/cool),
- * micro-contrast sharpening on wood grains, ambient softbox vignette, and specular bloom.
- */
-async function renderRemasteredCanvas(
-  imageSrc: string,
-  matrix: StudioGradingMatrix
-): Promise<string> {
-  return new Promise((resolve) => {
-    const img = new Image();
-    img.crossOrigin = 'anonymous';
-    img.onload = () => {
-      try {
-        const canvas = document.createElement('canvas');
-        let w = img.naturalWidth || img.width || 1200;
-        let h = img.naturalHeight || img.height || 900;
-        const maxDim = 2560;
-        if (w > maxDim || h > maxDim) {
-          const ratio = Math.min(maxDim / w, maxDim / h);
-          w = Math.round(w * ratio);
-          h = Math.round(h * ratio);
-        }
-        canvas.width = w;
-        canvas.height = h;
-
-        const ctx = canvas.getContext('2d');
-        if (!ctx) {
-          resolve(imageSrc);
-          return;
-        }
-
-        // 1. Exposure & Base Tone curve
-        const brightness = 1 + (matrix.exposure / 100);
-        const contrast = 1 + (matrix.contrast / 100);
-        const saturate = 1 + (matrix.saturation / 100);
-
-        ctx.filter = `brightness(${brightness}) contrast(${contrast}) saturate(${saturate})`;
-        ctx.drawImage(img, 0, 0, w, h);
-        ctx.filter = 'none';
-
-        // 2. Color Temperature Grading (Warmth vs Cool daylight)
-        if (Math.abs(matrix.warmth) > 3) {
-          ctx.save();
-          ctx.globalCompositeOperation = 'soft-light';
-          if (matrix.warmth > 0) {
-            const alpha = Math.min(0.55, (matrix.warmth / 100) * 0.9);
-            ctx.fillStyle = `rgba(255, 190, 100, ${alpha})`;
-          } else {
-            const alpha = Math.min(0.45, (Math.abs(matrix.warmth) / 100) * 0.8);
-            ctx.fillStyle = `rgba(165, 215, 255, ${alpha})`;
-          }
-          ctx.fillRect(0, 0, w, h);
-          ctx.restore();
-        }
-
-        // 3. Directional Studio Softbox Vignette / Ambient Shadow Depth
-        if (matrix.vignette > 5) {
-          ctx.save();
-          const cx = w * 0.5;
-          const cy = h * 0.48;
-          const maxRadius = Math.sqrt(cx * cx + cy * cy);
-          const vGrad = ctx.createRadialGradient(cx, cy, maxRadius * 0.35, cx, cy, maxRadius);
-          const vAlpha = Math.min(0.72, (matrix.vignette / 100) * 0.85);
-          vGrad.addColorStop(0, 'rgba(0, 0, 0, 0)');
-          vGrad.addColorStop(0.65, `rgba(0, 0, 0, ${vAlpha * 0.35})`);
-          vGrad.addColorStop(1, `rgba(0, 0, 0, ${vAlpha})`);
-          ctx.fillStyle = vGrad;
-          ctx.fillRect(0, 0, w, h);
-          ctx.restore();
-        }
-
-        // 4. Specular Highlight Bloom (Brass, polished surfaces & marble)
-        if (matrix.bloom > 5) {
-          ctx.save();
-          ctx.globalCompositeOperation = 'screen';
-          const cx = w * 0.5;
-          const cy = h * 0.5;
-          const bGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, w * 0.55);
-          const bAlpha = Math.min(0.35, (matrix.bloom / 100) * 0.5);
-          bGrad.addColorStop(0, `rgba(255, 240, 210, ${bAlpha})`);
-          bGrad.addColorStop(0.5, `rgba(255, 215, 160, ${bAlpha * 0.3})`);
-          bGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
-          ctx.fillStyle = bGrad;
-          ctx.fillRect(0, 0, w, h);
-          ctx.restore();
-        }
-
-        // 5. Wood Grain & Fiber Micro-Contrast Sharpening (3x3 Laplacian Convolution)
-        if (matrix.sharpness > 15) {
-          try {
-            const imgData = ctx.getImageData(0, 0, w, h);
-            const data = imgData.data;
-            const factor = (matrix.sharpness / 100) * 0.45;
-            const copy = new Uint8ClampedArray(data);
-
-            for (let y = 1; y < h - 1; y += 1) {
-              const rowIdx = y * w * 4;
-              for (let x = 1; x < w - 1; x += 1) {
-                const idx = rowIdx + x * 4;
-                for (let c = 0; c < 3; c++) {
-                  const center = copy[idx + c];
-                  const up = copy[idx - w * 4 + c];
-                  const down = copy[idx + w * 4 + c];
-                  const left = copy[idx - 4 + c];
-                  const right = copy[idx + 4 + c];
-
-                  const laplacian = 4 * center - up - down - left - right;
-                  const sharpVal = center + factor * laplacian;
-                  data[idx + c] = Math.min(255, Math.max(0, sharpVal));
-                }
-              }
-            }
-            ctx.putImageData(imgData, 0, 0);
-          } catch (_) {}
-        }
-
-        resolve(canvas.toDataURL('image/png', 0.95));
-      } catch (err) {
-        resolve(imageSrc);
-      }
-    };
-    img.onerror = () => resolve(imageSrc);
-    img.src = imageSrc;
-  });
-}
-
 export default function VisualStudio({
   isAr,
   onSendToContentStudio,
@@ -202,7 +78,42 @@ export default function VisualStudio({
   const [showFineTune, setShowFineTune] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // Gemini API Key & Connection State
+  const [apiKey, setApiKey] = useState<string>('');
+  const [hasApiKey, setHasApiKey] = useState<boolean>(false);
+  const [showKeyModal, setShowKeyModal] = useState<boolean>(false);
+  const [keyInput, setKeyInput] = useState<string>('');
+  const [isTestingKey, setIsTestingKey] = useState<boolean>(false);
+  const [isSavingKey, setIsSavingKey] = useState<boolean>(false);
+  const [testResult, setTestResult] = useState<{ success: boolean; message: string } | null>(null);
+
   const activeItem = items.find((it) => it.id === activeItemId) || items[0] || null;
+
+  // Check saved key on mount
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('wd_gemini_api_key');
+      if (stored) {
+        setApiKey(stored);
+        setKeyInput(stored);
+        setHasApiKey(true);
+      }
+    }
+
+    // Ping test connection to verify server-side key
+    fetch('/api/admin/integrations/test-connection', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ service: 'GoogleCloud' }),
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.success) {
+          setHasApiKey(true);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const handleSelectItem = (id: string) => {
     setActiveItemId(id);
@@ -289,6 +200,65 @@ export default function VisualStudio({
     );
   };
 
+  // Test Key ping
+  const handleTestKey = async () => {
+    if (!keyInput.trim()) return;
+    setIsTestingKey(true);
+    setTestResult(null);
+    try {
+      const res = await fetch('/api/admin/integrations/test-connection', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ service: 'GoogleCloud', key: keyInput.trim() }),
+      });
+      const json = await res.json();
+      setTestResult({
+        success: json.success,
+        message: json.message || json.error || 'Test completed',
+      });
+    } catch (err: any) {
+      setTestResult({
+        success: false,
+        message: err.message || 'Failed to connect to Google API',
+      });
+    } finally {
+      setIsTestingKey(false);
+    }
+  };
+
+  // Save Key to DB and client
+  const handleSaveKey = async () => {
+    if (!keyInput.trim()) return;
+    setIsSavingKey(true);
+    try {
+      const res = await fetch('/api/admin/integrations/set-key', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ service: 'Gemini', key: keyInput.trim() }),
+      });
+      const json = await res.json();
+      if (json.success) {
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('wd_gemini_api_key', keyInput.trim());
+        }
+        setApiKey(keyInput.trim());
+        setHasApiKey(true);
+        setShowKeyModal(false);
+        showToast(
+          isAr ? 'تم تفعيل مفتاح Google Gemini بنجاح للاستوديو' : 'Gemini API Key activated for live generative editing!',
+          'success'
+        );
+      } else {
+        throw new Error(json.error || 'Failed to save key');
+      }
+    } catch (err: any) {
+      showToast(err.message || 'Failed to save key', 'error');
+    } finally {
+      setIsSavingKey(false);
+    }
+  };
+
+  // REAL GENERATIVE ENHANCE HANDLER — ZERO FAKE FALLBACKS
   const handleEnhance = async (targetId?: string) => {
     const idToEnhance = targetId || activeItem?.id;
     if (!idToEnhance) {
@@ -305,6 +275,8 @@ export default function VisualStudio({
       prev.map((it) => (it.id === idToEnhance ? { ...it, isEnhancing: true, prompt: currentPromptText } : it))
     );
 
+    const activeLocalKey = apiKey || (typeof window !== 'undefined' ? localStorage.getItem('wd_gemini_api_key') || '' : '');
+
     try {
       const res = await fetch('/api/admin/ecommerce/ai-enhance-image', {
         method: 'POST',
@@ -313,84 +285,64 @@ export default function VisualStudio({
           imageUrl: target.originalUrl,
           prompt: currentPromptText,
           model: selectedModel,
+          apiKey: activeLocalKey || undefined,
         }),
       });
 
       const json = await res.json();
-      if (json.success) {
-        const modelLabel = selectedModel === 'nanobanana_2' ? 'NanoBanana 2' : 'NanoBanana Pro';
-        let finalEnhancedUrl = json.enhancedUrl;
 
-        // If backend returns original image without generative diff, apply neural canvas remaster
-        if (json.enhancedUrl === json.originalUrl || !json.engine.includes('live')) {
-          const matrixToUse: StudioGradingMatrix = json.gradingMatrix || {
-            exposure: 15,
-            warmth: 35,
-            contrast: 28,
-            saturation: 12,
-            sharpness: 55,
-            vignette: 22,
-            bloom: 20,
-          };
-          finalEnhancedUrl = await renderRemasteredCanvas(json.base64Data || target.originalUrl, matrixToUse);
+      if (!res.ok || !json.success) {
+        if (json.apiKeyMissing) {
+          setShowKeyModal(true);
+          showToast(
+            isAr
+              ? 'مطلوب إدخال مفتاح Google Gemini لتنفيذ التعديل وإضافة العناصر. يرجى ربط المفتاح.'
+              : 'Google Gemini API Key is required for generative editing. Please connect your key.',
+            'error'
+          );
+        } else {
+          showToast(json.error || (isAr ? 'فشل تنفيذ التوجيه' : 'Enhancement failed'), 'error');
         }
-
-        const updatedItem: VisualStudioItem = {
-          ...target,
-          isEnhancing: false,
-          enhancedUrl: finalEnhancedUrl,
-          prompt: currentPromptText,
-          modelType: selectedModel,
-          engineLabel: modelLabel,
-          latencyMs: json.latencyMs,
-          enhancements: json.enhancementsApplied,
-          gradingMatrix: json.gradingMatrix,
-          gradingAnalysis: json.gradingAnalysis,
-        };
-
         setItems((prev) =>
-          prev.map((it) => (it.id === idToEnhance ? updatedItem : it))
+          prev.map((it) => (it.id === idToEnhance ? { ...it, isEnhancing: false } : it))
         );
-
-        // Open inspection comparison immediately so user sees the result
-        setInspectingItem(updatedItem);
-
-        showToast(
-          isAr
-            ? `تم تنفيذ التوجيه بنجاح عبر ${modelLabel} (${json.latencyMs || 0}ms)`
-            : `Prompt executed via ${modelLabel} (${json.latencyMs || 0}ms)`,
-          'success'
-        );
-      } else {
-        throw new Error(json.error || 'Enhancement failed');
+        return;
       }
+
+      // GENUINE GENERATIVE SUCCESS: Use the real returned image
+      const modelLabel = selectedModel === 'nanobanana_2' ? 'NanoBanana 2' : 'NanoBanana Pro';
+      const finalEnhancedUrl = json.enhancedUrl;
+
+      const updatedItem: VisualStudioItem = {
+        ...target,
+        isEnhancing: false,
+        enhancedUrl: finalEnhancedUrl,
+        prompt: currentPromptText,
+        modelType: selectedModel,
+        engineLabel: json.engine || modelLabel,
+        latencyMs: json.latencyMs,
+        enhancements: json.enhancementsApplied,
+      };
+
+      setItems((prev) =>
+        prev.map((it) => (it.id === idToEnhance ? updatedItem : it))
+      );
+
+      // Open inspection comparison modal
+      setInspectingItem(updatedItem);
+
+      showToast(
+        isAr
+          ? `تم تنفيذ التوجيه وتعديل الصورة بنجاح عبر ${json.engine || modelLabel}`
+          : `Successfully generated photo edit via ${json.engine || modelLabel} (${json.latencyMs || 0}ms)`,
+        'success'
+      );
     } catch (err: any) {
       setItems((prev) =>
         prev.map((it) => (it.id === idToEnhance ? { ...it, isEnhancing: false } : it))
       );
       showToast(err.message || (isAr ? 'فشل تحسين الصورة' : 'Enhancement failed'), 'error');
     }
-  };
-
-  const handleFineTuneChange = async (key: keyof StudioGradingMatrix, value: number) => {
-    if (!inspectingItem || !inspectingItem.gradingMatrix) return;
-    const updatedMatrix: StudioGradingMatrix = {
-      ...inspectingItem.gradingMatrix,
-      [key]: value,
-    };
-
-    const reRenderedUrl = await renderRemasteredCanvas(inspectingItem.originalUrl, updatedMatrix);
-
-    const updated = {
-      ...inspectingItem,
-      enhancedUrl: reRenderedUrl,
-      gradingMatrix: updatedMatrix,
-    };
-
-    setInspectingItem(updated);
-    setItems((prev) =>
-      prev.map((it) => (it.id === inspectingItem.id ? updated : it))
-    );
   };
 
   const handleDownload = (itemToDownload?: VisualStudioItem) => {
@@ -421,7 +373,7 @@ export default function VisualStudio({
   return (
     <div className="space-y-6 pb-28 relative">
       
-      {/* 1. Header Toolbar (Single Unified Upload CTA - No duplicates!) */}
+      {/* 1. Header Toolbar (Single Unified Upload CTA + Live API Key Status) */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-3xl bg-[#12141F] border border-white/10 shadow-lg">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-2xl bg-amber-500/20 text-amber-300 border border-amber-500/30 flex items-center justify-center shrink-0">
@@ -436,21 +388,49 @@ export default function VisualStudio({
             </h4>
             <p className="text-xs text-zinc-400 mt-0.5">
               {isAr
-                ? 'اختر أي صورة من المعرض أدناه لكتابة توجيهات التحسين وتنفيذها بنموذج NanoBanana.'
+                ? 'اختر أي صورة من المعرض أدناه لكتابة توجيهات التحسين والتعديل بنموذج NanoBanana.'
                 : 'Select any photo card from the gallery below to apply NanoBanana prompt directives.'}
             </p>
           </div>
         </div>
 
-        {/* The ONLY Upload CTA Button */}
-        <button
-          type="button"
-          onClick={() => fileInputRef.current?.click()}
-          className="px-4 py-2.5 rounded-2xl bg-amber-500 hover:bg-amber-400 text-black font-extrabold text-xs font-mono flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer whitespace-nowrap"
-        >
-          <UploadCloud className="w-4 h-4" />
-          <span>{isAr ? 'رفع صور جديدة' : 'Upload Photos'}</span>
-        </button>
+        {/* Action Controls: API Status Pill & Single Upload CTA */}
+        <div className="flex items-center gap-2.5">
+          {hasApiKey ? (
+            <button
+              type="button"
+              onClick={() => setShowKeyModal(true)}
+              className="px-3 py-2.5 rounded-2xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border border-emerald-500/25 text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer"
+              title={isAr ? 'مفتاح Gemini متصل ونشط' : 'Gemini API Key Connected'}
+            >
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span>{isAr ? 'NanoBanana نشط' : 'NanoBanana Live'}</span>
+              <Sliders className="w-3.5 h-3.5 opacity-60 ml-0.5" />
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setShowKeyModal(true)}
+              className="px-3 py-2.5 rounded-2xl bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/30 text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer animate-pulse"
+              title={isAr ? 'مطلوب إدخال مفتاح Gemini API' : 'Google Gemini API Key Required'}
+            >
+              <span className="w-2 h-2 rounded-full bg-amber-400" />
+              <span>{isAr ? 'ربط مفتاح Gemini' : 'Connect Gemini Key'}</span>
+              <Key className="w-3.5 h-3.5 ml-0.5" />
+            </button>
+          )}
+
+          {/* The ONLY Upload CTA Button */}
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            className="px-4 py-2.5 rounded-2xl bg-amber-500 hover:bg-amber-400 text-black font-extrabold text-xs font-mono flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer whitespace-nowrap"
+          >
+            <UploadCloud className="w-4 h-4" />
+            <span>{isAr ? 'رفع صور جديدة' : 'Upload Photos'}</span>
+          </button>
+        </div>
+
         <input
           ref={fileInputRef}
           type="file"
@@ -507,7 +487,7 @@ export default function VisualStudio({
                   )}
                 </div>
 
-                {/* Bottom Overlay: Camera Icon + File Name (Exactly matching Google Flow screenshot) */}
+                {/* Bottom Overlay: Camera Icon + File Name (Google Flow Structure) */}
                 <div className="absolute bottom-3 inset-x-3 flex items-center justify-between gap-2 pointer-events-none">
                   <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-black/70 backdrop-blur-md border border-white/15 text-[10px] font-mono text-zinc-200 truncate max-w-[80%]">
                     <ImageIcon className="w-3 h-3 text-zinc-400 shrink-0" />
@@ -523,7 +503,7 @@ export default function VisualStudio({
                         setInspectingItem(item);
                       }}
                       className="w-7 h-7 rounded-xl bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-black border border-amber-500/40 flex items-center justify-center transition-all pointer-events-auto shadow-md"
-                      title={isAr ? 'مقارنة قبل وبعد' : 'Compare Before/After'}
+                      title={isAr ? 'معاينة النتيجة' : 'Inspect Result'}
                     >
                       <Eye className="w-3.5 h-3.5" />
                     </button>
@@ -535,7 +515,7 @@ export default function VisualStudio({
                   <div className="absolute inset-0 bg-black/80 backdrop-blur-sm flex flex-col items-center justify-center gap-2 z-20">
                     <div className="w-8 h-8 rounded-full border-2 border-amber-400 border-t-transparent animate-spin" />
                     <span className="text-[10px] font-mono font-bold text-amber-300">
-                      {isAr ? 'جارٍ المعالجة…' : 'Remastering…'}
+                      {isAr ? 'جارٍ التوليد والمعالجة…' : 'Generating Edit…'}
                     </span>
                   </div>
                 )}
@@ -544,7 +524,7 @@ export default function VisualStudio({
           })}
         </div>
       ) : (
-        /* Empty State (Inviting the user to click the ONLY Upload button) */
+        /* Empty State */
         <div className="rounded-3xl border border-dashed border-white/15 p-12 text-center space-y-3 bg-[#0D0F18]/50">
           <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 text-zinc-500 flex items-center justify-center mx-auto">
             <ImageIcon className="w-7 h-7" />
@@ -562,7 +542,7 @@ export default function VisualStudio({
         </div>
       )}
 
-      {/* 3. Floating Docked Prompt Bar (Identical to Google Flow in screenshot) */}
+      {/* 3. Floating Docked Prompt Bar (Google Flow Interface) */}
       <div className="sticky bottom-2 z-30 pt-4">
         <div className="max-w-3xl mx-auto rounded-3xl bg-[#12141F]/95 backdrop-blur-xl border border-white/15 p-3.5 shadow-2xl space-y-2.5">
           
@@ -582,7 +562,7 @@ export default function VisualStudio({
                     {activeItem.fileName || 'Selected Piece'}
                   </span>
                   <span className="text-[9px] font-mono text-zinc-400">
-                    {activeItem.enhancedUrl ? (isAr ? 'تم التحسين' : 'Remastered') : (isAr ? 'جاهزة للتحسين' : 'Ready to enhance')}
+                    {activeItem.enhancedUrl ? (isAr ? 'تم التعديل والتوليد' : 'Generated Edit Ready') : (isAr ? 'جاهزة للتحسين' : 'Ready to enhance')}
                   </span>
                 </div>
               </div>
@@ -622,8 +602,8 @@ export default function VisualStudio({
               onChange={(e) => handlePromptChange(e.target.value)}
               placeholder={
                 isAr
-                  ? 'ما التعديل الذي ترغب في تطبيقه؟ (مثال: إضاءة أجنحة القصور 4500K، إبراز تجزيع خشب الجوز، إضاءة سينمائية درامية)…'
-                  : 'What do you want to create or enhance? (e.g. 4500K palace warm lighting, solid walnut grain definition)...'
+                  ? 'اكتب توجيه التعديل المطلوب (مثال: أضف خلفية سوداء وشجرة خضراء بجانب الكرسي، إضاءة أجنحة القصور 4500K)…'
+                  : 'What do you want to create or enhance? (e.g. add a black backdrop and add a green tree beside the chair)...'
               }
               className="w-full px-3.5 py-2 rounded-2xl bg-[#08090C] border border-white/10 text-white text-xs focus:border-amber-400 focus:ring-1 focus:ring-amber-400 leading-relaxed outline-none transition-all resize-none"
             />
@@ -710,7 +690,7 @@ export default function VisualStudio({
               )}
               <span>
                 {activeItem?.isEnhancing
-                  ? (isAr ? 'جارٍ التنفيذ…' : 'Remastering…')
+                  ? (isAr ? 'جارٍ التوليد…' : 'Generating…')
                   : (isAr ? 'تنفيذ التوجيه' : 'Enhance Photo')}
               </span>
             </button>
@@ -738,9 +718,9 @@ export default function VisualStudio({
                 </span>
                 <div>
                   <h4 className="text-sm font-bold text-white flex items-center gap-2">
-                    <span>{isAr ? 'مقارنة قبل وبعد ومعايرة النتيجة' : 'Before & After Remaster Inspector'}</span>
+                    <span>{isAr ? 'مقارنة قبل وبعد ومعاينة التوليد' : 'Before & After Inspection'}</span>
                     <span className="px-2 py-0.5 rounded-full bg-amber-500 text-black text-[9px] font-mono font-bold">
-                      {inspectingItem.engineLabel || 'NanoBanana'}
+                      {inspectingItem.engineLabel || 'NanoBanana Live'}
                     </span>
                   </h4>
                   <p className="text-[11px] text-zinc-400 font-mono truncate max-w-md">
@@ -752,112 +732,91 @@ export default function VisualStudio({
               <button
                 type="button"
                 onClick={() => setInspectingItem(null)}
-                className="w-8 h-8 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
+                className="p-1.5 rounded-xl hover:bg-white/10 text-zinc-400 hover:text-white transition-colors cursor-pointer"
               >
-                <X className="w-4 h-4" />
+                <X className="w-5 h-5" />
               </button>
             </div>
 
-            {/* Main Stage Viewport with Split Comparison Slider */}
-            <div className="relative rounded-2xl overflow-hidden bg-[#08090C] border border-white/10 aspect-[16/10] flex items-center justify-center group select-none shadow-2xl">
-              {inspectingItem.enhancedUrl ? (
-                <div className="relative w-full h-full">
-                  {/* Enhanced Image (Background) */}
+            {/* Split Comparison Viewport */}
+            <div className="relative aspect-[16/10] max-h-[55vh] rounded-2xl overflow-hidden bg-black select-none border border-white/10 shadow-inner">
+              
+              {/* After (Enhanced) Image */}
+              <img
+                src={inspectingItem.enhancedUrl || inspectingItem.originalUrl}
+                alt="Enhanced Result"
+                className="absolute inset-0 w-full h-full object-contain"
+              />
+
+              {/* Before (Original) Image Clipped by Slider */}
+              {isComparing && (
+                <div
+                  className="absolute inset-0 overflow-hidden border-r-2 border-amber-400"
+                  style={{ width: `${sliderPosition}%` }}
+                >
                   <img
-                    src={inspectingItem.enhancedUrl}
-                    alt="Enhanced"
-                    className="w-full h-full object-contain"
+                    src={inspectingItem.originalUrl}
+                    alt="Original Source"
+                    className="absolute inset-0 w-full h-full object-contain max-w-none"
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                    }}
                   />
-
-                  {/* Original Image with Clip Path */}
-                  {isComparing && (
-                    <div
-                      className="absolute inset-0 overflow-hidden"
-                      style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}
-                    >
-                      <img
-                        src={inspectingItem.originalUrl}
-                        alt="Original"
-                        className="w-full h-full object-contain filter grayscale-[0.2]"
-                      />
-                      <span className="absolute top-4 left-4 px-2 py-1 rounded-md bg-black/70 text-zinc-300 text-[10px] font-mono backdrop-blur-md">
-                        {isAr ? 'الصورة الأصلية' : 'Original'}
-                      </span>
-                    </div>
-                  )}
-
-                  {/* Remaster Badges Overlay */}
-                  <div className="absolute top-4 right-4 flex flex-col items-end gap-1.5 z-10 pointer-events-none max-w-[70%]">
-                    <span className="px-2.5 py-1 rounded-md bg-amber-500 text-black text-[10px] font-mono font-bold shadow-lg">
-                      {inspectingItem.engineLabel || 'NanoBanana Pro'}
-                    </span>
-                    {inspectingItem.prompt && (
-                      <span className="truncate px-2 py-0.5 rounded-md bg-black/80 text-amber-300 text-[9px] font-mono backdrop-blur-md border border-amber-500/30 shadow-md">
-                        ✨ {inspectingItem.prompt}
-                      </span>
-                    )}
+                  <div className="absolute top-3 left-3 px-2.5 py-1 rounded-lg bg-black/70 backdrop-blur-md border border-white/10 text-[10px] font-mono text-zinc-300">
+                    {isAr ? 'الأصلية' : 'Original'}
                   </div>
-
-                  {/* Interactive Slider Line */}
-                  {isComparing && (
-                    <div
-                      className="absolute top-0 bottom-0 w-0.5 bg-amber-400 cursor-ew-resize flex items-center justify-center pointer-events-none"
-                      style={{ left: `${sliderPosition}%` }}
-                    >
-                      <div className="w-6 h-6 rounded-full bg-amber-400 text-black flex items-center justify-center text-[10px] shadow-[0_0_10px_rgba(245,158,11,0.6)] font-bold">
-                        ↔
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Hidden Range Input */}
-                  {isComparing && (
-                    <input
-                      type="range"
-                      min="0"
-                      max="100"
-                      value={sliderPosition}
-                      onChange={(e) => setSliderPosition(Number(e.target.value))}
-                      className="absolute inset-0 opacity-0 cursor-ew-resize w-full h-full z-20"
-                    />
-                  )}
                 </div>
-              ) : (
-                <img
-                  src={inspectingItem.originalUrl}
-                  alt="Original"
-                  className="w-full h-full object-contain"
+              )}
+
+              {/* Enhanced Label */}
+              <div className="absolute top-3 right-3 px-2.5 py-1 rounded-lg bg-amber-500 text-black text-[10px] font-mono font-bold shadow-md">
+                {isAr ? 'المعدلة بنموذج الذكاء الاصطناعي' : 'AI Generated Result'}
+              </div>
+
+              {/* Applied Prompt Pill */}
+              {inspectingItem.prompt && (
+                <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between pointer-events-none">
+                  <div className="px-3 py-1.5 rounded-xl bg-black/80 backdrop-blur-md border border-amber-500/30 text-[11px] font-mono text-amber-300 truncate max-w-xl shadow-lg">
+                    ✨ {inspectingItem.prompt}
+                  </div>
+                </div>
+              )}
+
+              {/* Draggable Slider Control Handle */}
+              {isComparing && (
+                <div
+                  className="absolute top-0 bottom-0 w-1 bg-amber-400 cursor-ew-resize z-20 flex items-center justify-center -ml-0.5"
+                  style={{ left: `${sliderPosition}%` }}
+                >
+                  <div className="w-7 h-7 rounded-full bg-amber-400 text-black shadow-xl flex items-center justify-center font-bold text-xs pointer-events-none">
+                    ↔
+                  </div>
+                </div>
+              )}
+
+              {/* Full Range Input Overlay for intuitive dragging */}
+              {isComparing && (
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  value={sliderPosition}
+                  onChange={(e) => setSliderPosition(Number(e.target.value))}
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-ew-resize z-30"
                 />
               )}
             </div>
 
-            {/* Inspector Controls & Action Bar */}
-            <div className="flex flex-wrap items-center justify-between gap-3 p-3 rounded-2xl bg-[#141724] border border-white/5">
+            {/* Modal Actions Footer */}
+            <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
               <div className="flex items-center gap-2">
                 <button
                   type="button"
                   onClick={() => setIsComparing(!isComparing)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-mono flex items-center gap-1.5 transition-colors cursor-pointer ${
-                    isComparing 
-                      ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' 
-                      : 'bg-white/5 text-zinc-400 hover:text-white'
-                  }`}
+                  className="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/15 text-zinc-300 text-xs font-mono transition-colors cursor-pointer"
                 >
-                  <Sliders className="w-3.5 h-3.5" />
-                  <span>{isAr ? 'مقارنة قبل وبعد' : 'Split Slider'}</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setShowFineTune(!showFineTune)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-mono flex items-center gap-1.5 transition-colors cursor-pointer ${
-                    showFineTune 
-                      ? 'bg-amber-500 text-black font-bold' 
-                      : 'bg-white/5 text-zinc-400 hover:text-white'
-                  }`}
-                >
-                  <SlidersHorizontal className="w-3.5 h-3.5" />
-                  <span>{isAr ? 'معايرة دقيقة' : 'Fine-Tune'}</span>
+                  {isComparing ? (isAr ? 'عرض النتيجة فقط' : 'Hide Split Slider') : (isAr ? 'عرض المقارنة' : 'Show Split Slider')}
                 </button>
 
                 {inspectingItem.latencyMs && (
@@ -891,90 +850,11 @@ export default function VisualStudio({
               </div>
             </div>
 
-            {/* Fine-Tune Sliders Drawer inside Inspector */}
-            {showFineTune && inspectingItem.gradingMatrix && (
-              <div className="p-4 rounded-2xl bg-[#090A10] border border-amber-500/20 space-y-3">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div className="space-y-1">
-                    <div className="flex justify-between text-[11px] font-mono text-zinc-400">
-                      <span className="flex items-center gap-1">
-                        <Thermometer className="w-3 h-3 text-amber-400" />
-                        <span>{isAr ? 'الحرارة اللونية' : 'Warmth (Kelvin)'}</span>
-                      </span>
-                      <span className="text-amber-300 font-bold">{inspectingItem.gradingMatrix.warmth}</span>
-                    </div>
-                    <input
-                      type="range"
-                      min="-50"
-                      max="50"
-                      value={inspectingItem.gradingMatrix.warmth}
-                      onChange={(e) => handleFineTuneChange('warmth', Number(e.target.value))}
-                      className="w-full accent-amber-400 cursor-pointer h-1.5 bg-white/10 rounded-lg"
-                    />
-                  </div>
-
-                  <div className="space-y-1">
-                    <div className="flex justify-between text-[11px] font-mono text-zinc-400">
-                      <span className="flex items-center gap-1">
-                        <Sun className="w-3 h-3 text-amber-400" />
-                        <span>{isAr ? 'التعريض الضوئي' : 'Exposure (EV)'}</span>
-                      </span>
-                      <span className="text-amber-300 font-bold">{inspectingItem.gradingMatrix.exposure}</span>
-                    </div>
-                    <input
-                      type="range"
-                      min="-40"
-                      max="45"
-                      value={inspectingItem.gradingMatrix.exposure}
-                      onChange={(e) => handleFineTuneChange('exposure', Number(e.target.value))}
-                      className="w-full accent-amber-400 cursor-pointer h-1.5 bg-white/10 rounded-lg"
-                    />
-                  </div>
-
-                  <div className="space-y-1">
-                    <div className="flex justify-between text-[11px] font-mono text-zinc-400">
-                      <span className="flex items-center gap-1">
-                        <Layers className="w-3 h-3 text-amber-400" />
-                        <span>{isAr ? 'حدة تجزيع الخشب' : 'Wood Grain Sharpness'}</span>
-                      </span>
-                      <span className="text-amber-300 font-bold">{inspectingItem.gradingMatrix.sharpness}%</span>
-                    </div>
-                    <input
-                      type="range"
-                      min="0"
-                      max="90"
-                      value={inspectingItem.gradingMatrix.sharpness}
-                      onChange={(e) => handleFineTuneChange('sharpness', Number(e.target.value))}
-                      className="w-full accent-amber-400 cursor-pointer h-1.5 bg-white/10 rounded-lg"
-                    />
-                  </div>
-
-                  <div className="space-y-1">
-                    <div className="flex justify-between text-[11px] font-mono text-zinc-400">
-                      <span className="flex items-center gap-1">
-                        <Sliders className="w-3 h-3 text-amber-400" />
-                        <span>{isAr ? 'الظلال المحيطية' : 'Softbox Vignette'}</span>
-                      </span>
-                      <span className="text-amber-300 font-bold">{inspectingItem.gradingMatrix.vignette}%</span>
-                    </div>
-                    <input
-                      type="range"
-                      min="0"
-                      max="60"
-                      value={inspectingItem.gradingMatrix.vignette}
-                      onChange={(e) => handleFineTuneChange('vignette', Number(e.target.value))}
-                      className="w-full accent-amber-400 cursor-pointer h-1.5 bg-white/10 rounded-lg"
-                    />
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Applied Remaster Notes */}
+            {/* Executed Enhancements Report */}
             {inspectingItem.enhancements && inspectingItem.enhancements.length > 0 && (
               <div className="p-3.5 rounded-2xl bg-[#090A10] border border-white/5 space-y-1.5">
                 <span className="text-[10px] font-mono text-amber-300 font-bold uppercase tracking-wider block">
-                  {isAr ? 'تقرير المعالجة المنفذة:' : 'Executed Enhancements:'}
+                  {isAr ? 'تقرير التوليد المنفذ:' : 'Executed Generation Report:'}
                 </span>
                 <ul className="space-y-1 text-xs text-zinc-300 font-sans">
                   {inspectingItem.enhancements.map((note, idx) => (
@@ -986,6 +866,116 @@ export default function VisualStudio({
                 </ul>
               </div>
             )}
+
+          </div>
+        </div>
+      )}
+
+      {/* 5. Connect Gemini API Key Modal (Zero Fake Notification Solution) */}
+      {showKeyModal && (
+        <div className="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4 animate-in fade-in duration-200">
+          <div
+            onClick={() => setShowKeyModal(false)}
+            className="fixed inset-0 bg-black/85 backdrop-blur-md"
+          />
+          <div className="relative w-full max-w-lg bg-[#0F1118] border border-amber-500/40 rounded-3xl p-6 text-white shadow-2xl space-y-4 z-10">
+            
+            {/* Header */}
+            <div className="flex items-center justify-between pb-3 border-b border-white/10">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-amber-500/20 text-amber-300 border border-amber-500/30 flex items-center justify-center shrink-0">
+                  <Key className="w-5 h-5" />
+                </div>
+                <div>
+                  <h4 className="text-sm font-bold text-white">
+                    {isAr ? 'ربط مفتاح Google Gemini API' : 'Connect Google Gemini API Key'}
+                  </h4>
+                  <span className="text-[10px] font-mono text-amber-400">
+                    {isAr ? 'محرك NanoBanana 2 & NanoBanana Pro' : 'NanoBanana 2 & NanoBanana Pro Engine'}
+                  </span>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowKeyModal(false)}
+                className="p-1 rounded-lg hover:bg-white/10 text-zinc-400 hover:text-white transition-colors cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Explanatory Context */}
+            <p className="text-xs text-zinc-300 leading-relaxed">
+              {isAr
+                ? 'لتنفيذ التعديلات التوليدية المباشرة (مثل: إضافة خلفية سوداء، إضافة شجرة بجانب الكرسي، وتغيير الإضاءة الحقيقية)، يتطلب محرك NanoBanana مفتاح Gemini API من Google.'
+                : 'To perform live generative image editing (such as adding black backdrops, trees, scene elements, and neural lighting), the NanoBanana engine requires a Google Gemini API Key.'}
+            </p>
+
+            {/* Input Field */}
+            <div className="space-y-1.5">
+              <label className="text-[11px] font-mono text-zinc-400">
+                GOOGLE_CLOUD_API_KEY / GEMINI_API_KEY
+              </label>
+              <input
+                type="password"
+                value={keyInput}
+                onChange={(e) => setKeyInput(e.target.value)}
+                placeholder="AIzaSy..."
+                className="w-full bg-[#141721] border border-white/15 rounded-xl px-3.5 py-2.5 text-xs font-mono text-white focus:border-amber-400 outline-none"
+                dir="ltr"
+              />
+            </div>
+
+            {/* Test Ping Result */}
+            {testResult && (
+              <div className={`p-3 rounded-xl text-xs font-mono flex items-center gap-2 border ${
+                testResult.success 
+                  ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300' 
+                  : 'bg-rose-500/10 border-rose-500/30 text-rose-300'
+              }`}>
+                {testResult.success ? (
+                  <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+                ) : (
+                  <AlertTriangle className="w-4 h-4 text-rose-400 shrink-0" />
+                )}
+                <span className="truncate">{testResult.message}</span>
+              </div>
+            )}
+
+            {/* Actions */}
+            <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3">
+              <a
+                href="https://aistudio.google.com/app/apikey"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[11px] text-amber-400/80 hover:text-amber-300 flex items-center gap-1 font-mono underline"
+              >
+                <span>{isAr ? 'الحصول على مفتاح مجاني (Google AI Studio)' : 'Get Free Key (Google AI Studio)'}</span>
+                <ExternalLink className="w-3 h-3" />
+              </a>
+
+              <div className="flex items-center gap-2 w-full sm:w-auto">
+                <button
+                  type="button"
+                  onClick={handleTestKey}
+                  disabled={isTestingKey || !keyInput.trim()}
+                  className="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/15 text-zinc-200 text-xs font-mono disabled:opacity-40 flex items-center gap-1.5 transition-colors cursor-pointer"
+                >
+                  {isTestingKey && <RefreshCw className="w-3 h-3 animate-spin" />}
+                  <span>{isAr ? 'فحص المفتاح' : 'Test Ping'}</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleSaveKey}
+                  disabled={isSavingKey || !keyInput.trim()}
+                  className="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-[#DFBA73] hover:from-amber-400 hover:to-amber-400 text-black font-bold text-xs font-mono disabled:opacity-40 flex items-center gap-1.5 transition-all shadow-md cursor-pointer"
+                >
+                  {isSavingKey && <RefreshCw className="w-3 h-3 animate-spin text-black" />}
+                  <span>{isAr ? 'حفظ وتفعيل' : 'Save & Activate'}</span>
+                </button>
+              </div>
+            </div>
 
           </div>
         </div>
