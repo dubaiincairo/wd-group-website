@@ -150,28 +150,28 @@ export default function HeroSection() {
         {/* Subtle pill badge */}
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold bg-[#0F1117]/90 border border-[#C9A86A]/30 text-zinc-300 mb-8 backdrop-blur-md shadow-glow-camel">
           <span className="w-2 h-2 rounded-full bg-[#C9A86A] animate-pulse"></span>
-          <span className="font-bold text-white tracking-wide">{dict.home.hero.eyebrow}</span>
+          <span className="font-bold text-white tracking-wide" data-live-field="home.hero.eyebrow">{dict.home.hero.eyebrow}</span>
           <span className="text-[#C9A86A]/60">•</span>
-          <span className="text-zinc-300 font-normal">
+          <span className="text-zinc-300 font-normal" data-live-field="home.hero.kicker">
             {dict.home.hero.kicker}
           </span>
         </div>
 
         {/* Monumental 3-Line Headline */}
         <h1 className={`text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-[1.12] mb-6 max-w-5xl mx-auto drop-shadow-2xl text-center flex flex-col items-center ${lang === 'en' ? 'font-serif' : ''}`}>
-          <span className="block text-white">
+          <span className="block text-white" data-live-field="home.hero.title_line1">
             {dict.home.hero.title_line1}
           </span>
-          <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[#E3C58A] via-[#C9A86A] to-[#A4884F] py-1 drop-shadow-[0_0_35px_rgba(201,168,106,0.35)]">
+          <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[#E3C58A] via-[#C9A86A] to-[#A4884F] py-1 drop-shadow-[0_0_35px_rgba(201,168,106,0.35)]" data-live-field="home.hero.title_line2">
             {dict.home.hero.title_line2}
           </span>
-          <span className="block text-white">
+          <span className="block text-white" data-live-field="home.hero.title_line3">
             {dict.home.hero.title_line3}
           </span>
         </h1>
 
         {/* Subtitle */}
-        <p className="text-sm sm:text-base md:text-lg text-zinc-300 max-w-2xl mx-auto mb-8 leading-relaxed font-normal drop-shadow-md text-center">
+        <p className="text-sm sm:text-base md:text-lg text-zinc-300 max-w-2xl mx-auto mb-8 leading-relaxed font-normal drop-shadow-md text-center" data-live-field="home.hero.body">
           {dict.home.hero.body}
         </p>
 
@@ -240,7 +240,7 @@ export default function HeroSection() {
                 <div className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-sky-400 mb-1 font-mono">
                   <AnimatedCounter target={6} delay={100} duration={1100} />
                 </div>
-                <div className="text-xs font-medium text-zinc-300 leading-snug">
+                <div className="text-xs font-medium text-zinc-300 leading-snug" data-live-field="home.metrics.stat1_text">
                   {dict.home.metrics.stat1_text}
                 </div>
               </div>
@@ -250,7 +250,7 @@ export default function HeroSection() {
                 <div className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-emerald-400 mb-1 font-mono">
                   <AnimatedCounter target={3} delay={250} duration={1100} />
                 </div>
-                <div className="text-xs font-medium text-zinc-300 leading-snug">
+                <div className="text-xs font-medium text-zinc-300 leading-snug" data-live-field="home.metrics.stat2_text">
                   {dict.home.metrics.stat2_text}
                 </div>
               </div>
@@ -260,7 +260,7 @@ export default function HeroSection() {
                 <div className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[#C9A86A] mb-1 font-mono">
                   <AnimatedCounter target={80} suffix="+" delay={400} duration={1400} />
                 </div>
-                <div className="text-xs font-medium text-zinc-300 leading-snug">
+                <div className="text-xs font-medium text-zinc-300 leading-snug" data-live-field="home.metrics.stat3_text">
                   {dict.home.metrics.stat3_text}
                 </div>
               </div>
@@ -270,7 +270,7 @@ export default function HeroSection() {
                 <div className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-zinc-100 mb-1 font-mono">
                   <AnimatedCounter target={3} delay={550} duration={1100} />
                 </div>
-                <div className="text-xs font-medium text-zinc-300 leading-snug">
+                <div className="text-xs font-medium text-zinc-300 leading-snug" data-live-field="home.metrics.stat4_text">
                   {dict.home.metrics.stat4_text}
                 </div>
               </div>

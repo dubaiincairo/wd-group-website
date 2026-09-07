@@ -69,16 +69,16 @@ export default function CEOQuote() {
                 <span>{dict.home.ceo.label}</span>
               </div>
 
-              <blockquote className={`text-base sm:text-lg md:text-xl text-zinc-100 font-medium leading-relaxed sm:leading-8 ${lang === 'en' ? 'font-serif' : ''}`}>
+              <blockquote className={`text-base sm:text-lg md:text-xl text-zinc-100 font-medium leading-relaxed sm:leading-8 ${lang === 'en' ? 'font-serif' : ''}`} data-live-field="home.ceo.quote">
                 &ldquo;{dict.home.ceo.quote}&rdquo;
               </blockquote>
 
               <div className="pt-4 border-t border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <div>
-                  <div className="text-base sm:text-lg font-bold text-white">
+                  <div className="text-base sm:text-lg font-bold text-white" data-live-field="home.ceo.name">
                     {dict.home.ceo.name}
                   </div>
-                  <div className="text-xs text-[#C9A86A] font-semibold mt-0.5">
+                  <div className="text-xs text-[#C9A86A] font-semibold mt-0.5" data-live-field="home.ceo.title">
                     {dict.home.ceo.title}
                   </div>
                 </div>

@@ -75,12 +75,12 @@ export default function ContactCTA() {
             </div>
 
             {/* Heading */}
-            <h2 className={`text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white leading-tight ${lang === 'en' ? 'font-serif' : ''}`}>
+            <h2 className={`text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white leading-tight ${lang === 'en' ? 'font-serif' : ''}`} data-live-field="home.partnership.heading">
               {dict.home.partnership.heading}
             </h2>
 
             {/* Subheading */}
-            <p className="text-sm sm:text-base text-zinc-300 leading-relaxed max-w-2xl mx-auto font-normal">
+            <p className="text-sm sm:text-base text-zinc-300 leading-relaxed max-w-2xl mx-auto font-normal" data-live-field="home.partnership.subheading">
               {dict.home.partnership.body}
             </p>
 
@@ -91,7 +91,7 @@ export default function ContactCTA() {
                 className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl text-sm font-bold text-[#0E1A24] bg-[#C9A86A] hover:bg-[#E3C58A] shadow-glow-camel hover:scale-[1.02] active:scale-[0.98] transition-all"
               >
                 <Send className="w-4 h-4" />
-                <span>{dict.home.partnership.primaryCta}</span>
+                <span data-live-field="home.partnership.primary_cta">{dict.home.partnership.primaryCta}</span>
               </button>
 
               <Link

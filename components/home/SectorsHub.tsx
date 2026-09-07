@@ -32,14 +32,14 @@ export default function SectorsHub() {
         >
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide uppercase bg-[#0F1117]/90 border border-[#C9A86A]/30 text-[#C9A86A] shadow-glow-camel">
             <Sparkles className="w-3.5 h-3.5" />
-            <span className="font-mono">{dict.home.sectors.label}</span>
+            <span className="font-mono" data-live-field="home.sectors.label">{dict.home.sectors.label}</span>
           </div>
 
-          <h2 className={`text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white leading-tight ${lang === 'en' ? 'font-serif' : ''}`}>
+          <h2 className={`text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white leading-tight ${lang === 'en' ? 'font-serif' : ''}`} data-live-field="home.sectors.heading">
             {dict.home.sectors.heading}
           </h2>
 
-          <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed max-w-2xl mx-auto font-normal">
+          <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed max-w-2xl mx-auto font-normal" data-live-field="home.sectors.intro">
             {dict.home.sectors.intro}
           </p>
         </motion.div>
