@@ -27,7 +27,7 @@ interface OverviewTabProps {
   currency: 'SAR' | 'USD';
   onSelectOrder: (order: EcommerceOrderRecord) => void;
   onNavigateTab: (tab: string) => void;
-  onOpenAiStudio?: () => void;
+  onOpenAiStudio?: (mode?: 'visual' | 'content') => void;
 }
 
 export default function OverviewTab({

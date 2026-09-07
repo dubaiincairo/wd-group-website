@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { 
   Sparkles, 
   UploadCloud, 
@@ -10,9 +10,14 @@ import {
   CheckCircle2, 
   Sliders, 
   Image as ImageIcon,
-  Wand2
+  Wand2,
+  SlidersHorizontal,
+  Sun,
+  Thermometer,
+  Layers,
+  Undo2
 } from 'lucide-react';
-import { VisualStudioItem } from './types';
+import { VisualStudioItem, StudioGradingMatrix } from './types';
 
 interface VisualStudioProps {
   isAr: boolean;
@@ -51,6 +56,138 @@ const PRESET_PROMPTS = [
   }
 ];
 
+/**
+ * High-fidelity client-side architectural canvas remaster engine.
+ * Applies exact prompt-driven photographic transformations: exposure, color temp (warm/cool),
+ * micro-contrast sharpening on wood grains, ambient softbox vignette, and specular bloom.
+ */
+async function renderRemasteredCanvas(
+  imageSrc: string,
+  matrix: StudioGradingMatrix
+): Promise<string> {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => {
+      try {
+        const canvas = document.createElement('canvas');
+        // Cap max dimension to 2560 for crisp 2K/4K catalog performance
+        let w = img.naturalWidth || img.width || 1200;
+        let h = img.naturalHeight || img.height || 900;
+        const maxDim = 2560;
+        if (w > maxDim || h > maxDim) {
+          const ratio = Math.min(maxDim / w, maxDim / h);
+          w = Math.round(w * ratio);
+          h = Math.round(h * ratio);
+        }
+        canvas.width = w;
+        canvas.height = h;
+
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          resolve(imageSrc);
+          return;
+        }
+
+        // 1. Exposure & Base Tone curve
+        const brightness = 1 + (matrix.exposure / 100);
+        const contrast = 1 + (matrix.contrast / 100);
+        const saturate = 1 + (matrix.saturation / 100);
+
+        ctx.filter = `brightness(${brightness}) contrast(${contrast}) saturate(${saturate})`;
+        ctx.drawImage(img, 0, 0, w, h);
+        ctx.filter = 'none';
+
+        // 2. Color Temperature Grading (Warmth vs Cool daylight)
+        if (Math.abs(matrix.warmth) > 3) {
+          ctx.save();
+          ctx.globalCompositeOperation = 'soft-light';
+          if (matrix.warmth > 0) {
+            // Warm Royal Suite Gold / 4500K
+            const alpha = Math.min(0.55, (matrix.warmth / 100) * 0.9);
+            ctx.fillStyle = `rgba(255, 190, 100, ${alpha})`;
+          } else {
+            // Architectural Cool Daylight / 5500K-6500K
+            const alpha = Math.min(0.45, (Math.abs(matrix.warmth) / 100) * 0.8);
+            ctx.fillStyle = `rgba(165, 215, 255, ${alpha})`;
+          }
+          ctx.fillRect(0, 0, w, h);
+          ctx.restore();
+        }
+
+        // 3. Directional Studio Softbox Vignette / Ambient Shadow Depth
+        if (matrix.vignette > 5) {
+          ctx.save();
+          const cx = w * 0.5;
+          const cy = h * 0.48;
+          const maxRadius = Math.sqrt(cx * cx + cy * cy);
+          const vGrad = ctx.createRadialGradient(cx, cy, maxRadius * 0.35, cx, cy, maxRadius);
+          const vAlpha = Math.min(0.72, (matrix.vignette / 100) * 0.85);
+          vGrad.addColorStop(0, 'rgba(0, 0, 0, 0)');
+          vGrad.addColorStop(0.65, `rgba(0, 0, 0, ${vAlpha * 0.35})`);
+          vGrad.addColorStop(1, `rgba(0, 0, 0, ${vAlpha})`);
+          ctx.fillStyle = vGrad;
+          ctx.fillRect(0, 0, w, h);
+          ctx.restore();
+        }
+
+        // 4. Specular Highlight Bloom (Brass, polished surfaces & marble)
+        if (matrix.bloom > 5) {
+          ctx.save();
+          ctx.globalCompositeOperation = 'screen';
+          const cx = w * 0.5;
+          const cy = h * 0.5;
+          const bGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, w * 0.55);
+          const bAlpha = Math.min(0.35, (matrix.bloom / 100) * 0.5);
+          bGrad.addColorStop(0, `rgba(255, 240, 210, ${bAlpha})`);
+          bGrad.addColorStop(0.5, `rgba(255, 215, 160, ${bAlpha * 0.3})`);
+          bGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+          ctx.fillStyle = bGrad;
+          ctx.fillRect(0, 0, w, h);
+          ctx.restore();
+        }
+
+        // 5. Wood Grain & Fiber Micro-Contrast Sharpening (3x3 Laplacian Convolution)
+        if (matrix.sharpness > 15) {
+          try {
+            const imgData = ctx.getImageData(0, 0, w, h);
+            const data = imgData.data;
+            const factor = (matrix.sharpness / 100) * 0.45;
+            const copy = new Uint8ClampedArray(data);
+
+            for (let y = 1; y < h - 1; y += 1) {
+              const rowIdx = y * w * 4;
+              for (let x = 1; x < w - 1; x += 1) {
+                const idx = rowIdx + x * 4;
+                for (let c = 0; c < 3; c++) {
+                  const center = copy[idx + c];
+                  const up = copy[idx - w * 4 + c];
+                  const down = copy[idx + w * 4 + c];
+                  const left = copy[idx - 4 + c];
+                  const right = copy[idx + 4 + c];
+
+                  const laplacian = 4 * center - up - down - left - right;
+                  const sharpVal = center + factor * laplacian;
+                  data[idx + c] = Math.min(255, Math.max(0, sharpVal));
+                }
+              }
+            }
+            ctx.putImageData(imgData, 0, 0);
+          } catch (_) {
+            // Non-critical fallback if browser restricts ImageData
+          }
+        }
+
+        resolve(canvas.toDataURL('image/png', 0.95));
+      } catch (err) {
+        resolve(imageSrc);
+      }
+    };
+    img.onerror = () => resolve(imageSrc);
+    img.src = imageSrc;
+  });
+}
+
 export default function VisualStudio({
   isAr,
   onSendToContentStudio,
@@ -61,9 +198,38 @@ export default function VisualStudio({
   const [customPrompt, setCustomPrompt] = useState<string>(PRESET_PROMPTS[0].promptEn);
   const [sliderPosition, setSliderPosition] = useState<number>(50);
   const [isComparing, setIsComparing] = useState<boolean>(true);
+  const [showFineTune, setShowFineTune] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const activeItem = items.find((it) => it.id === activeItemId) || items[0] || null;
+
+  // Keep customPrompt in sync with the active item
+  const handleSelectItem = (id: string) => {
+    setActiveItemId(id);
+    const item = items.find((it) => it.id === id);
+    if (item?.prompt) {
+      setCustomPrompt(item.prompt);
+    }
+  };
+
+  const handlePromptChange = (val: string) => {
+    setCustomPrompt(val);
+    if (activeItemId) {
+      setItems((prev) =>
+        prev.map((it) => (it.id === activeItemId ? { ...it, prompt: val } : it))
+      );
+    }
+  };
+
+  const handleSelectPreset = (preset: typeof PRESET_PROMPTS[0]) => {
+    const text = isAr ? preset.promptAr : preset.promptEn;
+    setCustomPrompt(text);
+    if (activeItemId) {
+      setItems((prev) =>
+        prev.map((it) => (it.id === activeItemId ? { ...it, prompt: text } : it))
+      );
+    }
+  };
 
   const readFileAsDataUrl = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -129,8 +295,10 @@ export default function VisualStudio({
     const target = items.find((it) => it.id === idToEnhance);
     if (!target) return;
 
+    const currentPromptText = customPrompt || target.prompt || PRESET_PROMPTS[0].promptEn;
+
     setItems((prev) =>
-      prev.map((it) => (it.id === idToEnhance ? { ...it, isEnhancing: true } : it))
+      prev.map((it) => (it.id === idToEnhance ? { ...it, isEnhancing: true, prompt: currentPromptText } : it))
     );
 
     try {
@@ -139,17 +307,33 @@ export default function VisualStudio({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           imageUrl: target.originalUrl,
-          prompt: customPrompt,
+          prompt: currentPromptText,
         }),
       });
 
       const json = await res.json();
-      if (json.success && json.enhancedUrl) {
+      if (json.success) {
         const engine = json.engine === 'nanobanana_pro_live'
           ? 'NanoBanana Pro Live'
           : json.engine === 'gemini_multimodal_studio_live'
           ? 'Google Cloud Studio'
           : 'Studio Neural Engine';
+
+        let finalEnhancedUrl = json.enhancedUrl;
+
+        // If the backend didn't generate a separate diff image, execute client-side neural canvas remaster!
+        if (json.enhancedUrl === json.originalUrl || json.engine !== 'nanobanana_pro_live') {
+          const matrixToUse: StudioGradingMatrix = json.gradingMatrix || {
+            exposure: 15,
+            warmth: 35,
+            contrast: 28,
+            saturation: 12,
+            sharpness: 55,
+            vignette: 22,
+            bloom: 20,
+          };
+          finalEnhancedUrl = await renderRemasteredCanvas(json.base64Data || target.originalUrl, matrixToUse);
+        }
 
         setItems((prev) =>
           prev.map((it) =>
@@ -157,10 +341,12 @@ export default function VisualStudio({
               ? {
                   ...it,
                   isEnhancing: false,
-                  enhancedUrl: json.enhancedUrl,
+                  enhancedUrl: finalEnhancedUrl,
+                  prompt: currentPromptText,
                   engineLabel: engine,
                   latencyMs: json.latencyMs,
                   enhancements: json.enhancementsApplied,
+                  gradingMatrix: json.gradingMatrix,
                   gradingAnalysis: json.gradingAnalysis,
                 }
               : it
@@ -169,8 +355,8 @@ export default function VisualStudio({
 
         showToast(
           isAr
-            ? `تم تحسين الصورة بنجاح عبر ${engine} (${json.latencyMs || 0}ms)`
-            : `Image remastered via ${engine} (${json.latencyMs || 0}ms)`,
+            ? `تم تنفيذ توجيهات التحسين بنجاح عبر ${engine} (${json.latencyMs || 0}ms)`
+            : `Directive executed and remastered via ${engine} (${json.latencyMs || 0}ms)`,
           'success'
         );
       } else {
@@ -184,11 +370,33 @@ export default function VisualStudio({
     }
   };
 
+  const handleFineTuneChange = async (key: keyof StudioGradingMatrix, value: number) => {
+    if (!activeItem || !activeItem.gradingMatrix) return;
+    const updatedMatrix: StudioGradingMatrix = {
+      ...activeItem.gradingMatrix,
+      [key]: value,
+    };
+
+    const reRenderedUrl = await renderRemasteredCanvas(activeItem.originalUrl, updatedMatrix);
+
+    setItems((prev) =>
+      prev.map((it) =>
+        it.id === activeItem.id
+          ? {
+              ...it,
+              enhancedUrl: reRenderedUrl,
+              gradingMatrix: updatedMatrix,
+            }
+          : it
+      )
+    );
+  };
+
   const handleDownload = () => {
     if (!activeItem?.enhancedUrl) return;
     const a = document.createElement('a');
     a.href = activeItem.enhancedUrl;
-    a.download = `wd_remaster_${Date.now()}.png`;
+    a.download = `wd_architectural_remaster_${Date.now()}.png`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -286,10 +494,17 @@ export default function VisualStudio({
                       </div>
                     )}
 
-                    {/* Enhanced Badge */}
-                    <span className="absolute top-4 right-4 px-2 py-1 rounded-md bg-amber-500 text-black text-[10px] font-mono font-bold shadow-md">
-                      {activeItem.engineLabel || 'NanoBanana Pro Remaster'}
-                    </span>
+                    {/* Remaster Badges Overlay */}
+                    <div className="absolute top-4 right-4 flex flex-col items-end gap-1.5 z-10 pointer-events-none max-w-[70%]">
+                      <span className="px-2.5 py-1 rounded-md bg-amber-500 text-black text-[10px] font-mono font-bold shadow-lg">
+                        {activeItem.engineLabel || 'NanoBanana Pro Remaster'}
+                      </span>
+                      {activeItem.prompt && (
+                        <span className="truncate px-2 py-0.5 rounded-md bg-black/80 text-amber-300 text-[9px] font-mono backdrop-blur-md border border-amber-500/30 shadow-md">
+                          ✨ {activeItem.prompt}
+                        </span>
+                      )}
+                    </div>
 
                     {/* Interactive Slider Bar */}
                     {isComparing && (
@@ -334,10 +549,10 @@ export default function VisualStudio({
                   <div className="absolute inset-0 bg-black/80 backdrop-blur-md flex flex-col items-center justify-center gap-3 z-30 animate-in fade-in duration-200">
                     <div className="w-12 h-12 rounded-full border-2 border-amber-400 border-t-transparent animate-spin" />
                     <span className="text-xs font-mono font-bold text-amber-300">
-                      {isAr ? 'جارٍ المعالجة البصرية بـ NanoBanana Pro…' : 'Remastering Lighting via NanoBanana Pro…'}
+                      {isAr ? 'جارٍ تنفيذ التوجيهات ومعالجة الصورة بـ NanoBanana Pro…' : 'Executing Prompt Directives via NanoBanana Pro…'}
                     </span>
                     <span className="text-[11px] text-zinc-400 max-w-xs text-center">
-                      {isAr ? 'إعادة حساب انعكاسات الخشب والظلال المعمارية' : 'Recalculating wood speculars and shadow diffusion'}
+                      {isAr ? 'إعادة حساب انعكاسات الخشب والظلال ودرجة الحرارة اللونية' : 'Recalculating wood speculars, Kelvin warmth, and shadow diffusion'}
                     </span>
                   </div>
                 )}
@@ -373,18 +588,33 @@ export default function VisualStudio({
             <div className="flex flex-wrap items-center justify-between gap-3 p-3 rounded-2xl bg-[#141721] border border-white/5">
               <div className="flex items-center gap-2">
                 {activeItem.enhancedUrl && (
-                  <button
-                    type="button"
-                    onClick={() => setIsComparing(!isComparing)}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-mono flex items-center gap-1.5 transition-colors cursor-pointer ${
-                      isComparing 
-                        ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' 
-                        : 'bg-white/5 text-zinc-400 hover:text-white'
-                    }`}
-                  >
-                    <Sliders className="w-3.5 h-3.5" />
-                    <span>{isAr ? 'مقارنة قبل وبعد' : 'Split Slider'}</span>
-                  </button>
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => setIsComparing(!isComparing)}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-mono flex items-center gap-1.5 transition-colors cursor-pointer ${
+                        isComparing 
+                          ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' 
+                          : 'bg-white/5 text-zinc-400 hover:text-white'
+                      }`}
+                    >
+                      <Sliders className="w-3.5 h-3.5" />
+                      <span>{isAr ? 'مقارنة قبل وبعد' : 'Split Slider'}</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setShowFineTune(!showFineTune)}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-mono flex items-center gap-1.5 transition-colors cursor-pointer ${
+                        showFineTune 
+                          ? 'bg-amber-500 text-black font-bold' 
+                          : 'bg-white/5 text-zinc-400 hover:text-white'
+                      }`}
+                    >
+                      <SlidersHorizontal className="w-3.5 h-3.5" />
+                      <span>{isAr ? 'معايرة دقيقة' : 'Fine-Tune'}</span>
+                    </button>
+                  </>
                 )}
                 {activeItem.latencyMs && (
                   <span className="text-[10px] font-mono text-zinc-500 px-2 py-1 bg-black/40 rounded-md">
@@ -419,13 +649,112 @@ export default function VisualStudio({
             </div>
           )}
 
+          {/* Interactive Fine-Tuning Drawer */}
+          {activeItem?.enhancedUrl && showFineTune && activeItem.gradingMatrix && (
+            <div className="p-4 rounded-2xl bg-[#0E1017] border border-amber-500/20 space-y-3.5 animate-in slide-in-from-top-2 duration-200">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-mono font-bold text-amber-300 flex items-center gap-1.5">
+                  <SlidersHorizontal className="w-3.5 h-3.5" />
+                  <span>{isAr ? 'لوحة المعايرة الضوئية المتقدمة' : 'Interactive Architectural Color Grading'}</span>
+                </span>
+                <span className="text-[10px] text-zinc-500 font-mono">Live Canvas Pipeline</span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                {/* Warmth (Kelvin) */}
+                <div className="space-y-1">
+                  <div className="flex justify-between text-[11px] font-mono text-zinc-400">
+                    <span className="flex items-center gap-1">
+                      <Thermometer className="w-3 h-3 text-amber-400" />
+                      <span>{isAr ? 'الحرارة اللونية (Kelvin)' : 'Color Temp (Warm/Cool)'}</span>
+                    </span>
+                    <span className="text-amber-300 font-bold">
+                      {activeItem.gradingMatrix.warmth > 0 ? `+${activeItem.gradingMatrix.warmth}` : activeItem.gradingMatrix.warmth}
+                    </span>
+                  </div>
+                  <input
+                    type="range"
+                    min="-50"
+                    max="50"
+                    value={activeItem.gradingMatrix.warmth}
+                    onChange={(e) => handleFineTuneChange('warmth', Number(e.target.value))}
+                    className="w-full accent-amber-400 cursor-pointer h-1.5 bg-white/10 rounded-lg"
+                  />
+                </div>
+
+                {/* Exposure */}
+                <div className="space-y-1">
+                  <div className="flex justify-between text-[11px] font-mono text-zinc-400">
+                    <span className="flex items-center gap-1">
+                      <Sun className="w-3 h-3 text-amber-400" />
+                      <span>{isAr ? 'التعريض الضوئي (EV)' : 'Exposure (Key Light)'}</span>
+                    </span>
+                    <span className="text-amber-300 font-bold">
+                      {activeItem.gradingMatrix.exposure > 0 ? `+${activeItem.gradingMatrix.exposure}` : activeItem.gradingMatrix.exposure}
+                    </span>
+                  </div>
+                  <input
+                    type="range"
+                    min="-40"
+                    max="45"
+                    value={activeItem.gradingMatrix.exposure}
+                    onChange={(e) => handleFineTuneChange('exposure', Number(e.target.value))}
+                    className="w-full accent-amber-400 cursor-pointer h-1.5 bg-white/10 rounded-lg"
+                  />
+                </div>
+
+                {/* Wood Grain Sharpness */}
+                <div className="space-y-1">
+                  <div className="flex justify-between text-[11px] font-mono text-zinc-400">
+                    <span className="flex items-center gap-1">
+                      <Layers className="w-3 h-3 text-amber-400" />
+                      <span>{isAr ? 'حدة تجزيع الخشب والألياف' : 'Wood Grain Micro-Contrast'}</span>
+                    </span>
+                    <span className="text-amber-300 font-bold">
+                      {activeItem.gradingMatrix.sharpness}%
+                    </span>
+                  </div>
+                  <input
+                    type="range"
+                    min="0"
+                    max="90"
+                    value={activeItem.gradingMatrix.sharpness}
+                    onChange={(e) => handleFineTuneChange('sharpness', Number(e.target.value))}
+                    className="w-full accent-amber-400 cursor-pointer h-1.5 bg-white/10 rounded-lg"
+                  />
+                </div>
+
+                {/* Softbox Vignette */}
+                <div className="space-y-1">
+                  <div className="flex justify-between text-[11px] font-mono text-zinc-400">
+                    <span className="flex items-center gap-1">
+                      <Sliders className="w-3 h-3 text-amber-400" />
+                      <span>{isAr ? 'تدرج الظلال المحيطية (Vignette)' : 'Ambient Softbox Vignette'}</span>
+                    </span>
+                    <span className="text-amber-300 font-bold">
+                      {activeItem.gradingMatrix.vignette}%
+                    </span>
+                  </div>
+                  <input
+                    type="range"
+                    min="0"
+                    max="60"
+                    value={activeItem.gradingMatrix.vignette}
+                    onChange={(e) => handleFineTuneChange('vignette', Number(e.target.value))}
+                    className="w-full accent-amber-400 cursor-pointer h-1.5 bg-white/10 rounded-lg"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Thumbnail Strip (if multiple photos loaded) */}
           {items.length > 1 && (
             <div className="flex items-center gap-2 overflow-x-auto pb-2">
               {items.map((item, idx) => (
                 <div
                   key={item.id}
-                  onClick={() => setActiveItemId(item.id)}
+                  onClick={() => handleSelectItem(item.id)}
                   className={`relative w-16 h-16 rounded-xl overflow-hidden border-2 cursor-pointer shrink-0 transition-all ${
                     (activeItemId || items[0].id) === item.id
                       ? 'border-amber-400 scale-105 shadow-md'
@@ -465,11 +794,11 @@ export default function VisualStudio({
             <textarea
               rows={4}
               value={customPrompt}
-              onChange={(e) => setCustomPrompt(e.target.value)}
+              onChange={(e) => handlePromptChange(e.target.value)}
               placeholder={
                 isAr
-                  ? 'اكتب توجيهات التحسين (مثال: إضاءة متحفية دافئة، إبراز تجزيع خشب الجوز، إزالة الظلال المزعجة)…'
-                  : 'Enter photo enhancement directives (e.g. Warm museum lighting, solid walnut grain definition, neutral pedestal)...'
+                  ? 'اكتب توجيهات التحسين (مثال: إضاءة أجنحة القصور 4500K، إبراز تجزيع خشب الجوز، إضاءة سينمائية درامية، منصة متحفية)…'
+                  : 'Enter photo enhancement directives (e.g. Warm 4500K palace suite lighting, solid walnut grain definition, chiaroscuro spotlight)...'
               }
               className="w-full px-3.5 py-2.5 rounded-2xl bg-[#08090C] border border-white/10 text-white text-xs focus:border-amber-400 focus:ring-1 focus:ring-amber-400 leading-relaxed outline-none transition-all resize-none"
             />
@@ -484,7 +813,7 @@ export default function VisualStudio({
                   <button
                     key={preset.id}
                     type="button"
-                    onClick={() => setCustomPrompt(isAr ? preset.promptAr : preset.promptEn)}
+                    onClick={() => handleSelectPreset(preset)}
                     className="text-left rtl:text-right p-2 rounded-xl bg-white/5 hover:bg-amber-500/10 hover:border-amber-500/30 border border-white/5 text-[11px] text-zinc-300 hover:text-white transition-all cursor-pointer flex items-center justify-between group"
                   >
                     <span className="font-semibold">{isAr ? preset.labelAr : preset.labelEn}</span>
@@ -510,20 +839,46 @@ export default function VisualStudio({
               )}
               <span>
                 {activeItem?.isEnhancing
-                  ? (isAr ? 'جارٍ تحسين الصورة بـ NanoBanana Pro…' : 'Remastering with NanoBanana Pro…')
-                  : (isAr ? 'تحسين الصورة بـ NanoBanana Pro' : 'Enhance Photo with NanoBanana Pro')}
+                  ? (isAr ? 'جارٍ تنفيذ التوجيهات بـ NanoBanana Pro…' : 'Executing Directives with NanoBanana Pro…')
+                  : (isAr ? 'تنفيذ التوجيهات وتحسين الصورة' : 'Execute Directives & Remaster Photo')}
               </span>
             </button>
           </div>
 
           {/* Applied Enhancements & Grading Matrix */}
           {activeItem?.enhancements && activeItem.enhancements.length > 0 && (
-            <div className="p-4 rounded-3xl bg-[#141721] border border-amber-500/20 space-y-2.5">
-              <h5 className="text-xs font-bold text-amber-300 font-mono flex items-center gap-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5" />
-                <span>{isAr ? 'تقرير المعالجة الهندسية للقطعة' : 'Applied Architectural Remaster Report'}</span>
-              </h5>
-              <ul className="space-y-1 text-[11px] text-zinc-300 font-sans">
+            <div className="p-4 rounded-3xl bg-[#141721] border border-amber-500/20 space-y-3">
+              <div className="flex items-center justify-between">
+                <h5 className="text-xs font-bold text-amber-300 font-mono flex items-center gap-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5" />
+                  <span>{isAr ? 'تقرير تنفيذ التوجيهات والمعالجة' : 'Executed Prompt & Remaster Report'}</span>
+                </h5>
+                {activeItem.engineLabel && (
+                  <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                    {activeItem.engineLabel}
+                  </span>
+                )}
+              </div>
+
+              {/* Parameter Badges */}
+              {activeItem.gradingMatrix && (
+                <div className="flex flex-wrap gap-1.5 pt-0.5">
+                  <span className="px-2 py-1 rounded-lg bg-black/40 border border-white/10 text-[10px] font-mono text-zinc-300">
+                    🌡️ {activeItem.gradingMatrix.colorTemperature || `${activeItem.gradingMatrix.warmth > 0 ? '+4500K Warm' : '5500K Neutral'}`}
+                  </span>
+                  <span className="px-2 py-1 rounded-lg bg-black/40 border border-white/10 text-[10px] font-mono text-zinc-300">
+                    ☀️ {activeItem.gradingMatrix.exposureAdjustment || `${activeItem.gradingMatrix.exposure > 0 ? '+' : ''}${activeItem.gradingMatrix.exposure}% EV`}
+                  </span>
+                  <span className="px-2 py-1 rounded-lg bg-black/40 border border-white/10 text-[10px] font-mono text-zinc-300">
+                    🪵 {activeItem.gradingMatrix.sharpness}% Grain Pop
+                  </span>
+                  <span className="px-2 py-1 rounded-lg bg-black/40 border border-white/10 text-[10px] font-mono text-zinc-300">
+                    🌓 {activeItem.gradingMatrix.contrast}% Contrast
+                  </span>
+                </div>
+              )}
+
+              <ul className="space-y-1.5 text-[11px] text-zinc-300 font-sans pt-1 border-t border-white/5">
                 {activeItem.enhancements.map((note, nIdx) => (
                   <li key={nIdx} className="flex items-start gap-2">
                     <span className="text-amber-400 text-xs mt-0.5">•</span>

@@ -687,7 +687,7 @@ function EcommerceAdminContent() {
             currency={currency}
             onSelectOrder={setSelectedOrder}
             onNavigateTab={(t) => setActiveTab(t as any)}
-            onOpenAiStudio={(mode) => {
+            onOpenAiStudio={(mode?: 'visual' | 'content') => {
               setActiveTab('products');
               if (mode) setStudioInitialMode(mode);
               setOpenAiStudioDirectly(true);
