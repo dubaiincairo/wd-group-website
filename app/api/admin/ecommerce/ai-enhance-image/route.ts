@@ -165,7 +165,7 @@ export async function POST(req: NextRequest) {
   const startTime = Date.now();
   try {
     const body = await req.json();
-    const { imageUrl, prompt = '', mode = 'studio_lighting' } = body;
+    const { imageUrl, prompt = '', mode = 'studio_lighting', model = 'nanobanana_pro' } = body;
 
     if (!imageUrl) {
       return NextResponse.json(
@@ -184,7 +184,8 @@ export async function POST(req: NextRequest) {
     ).trim();
 
     let enhancedUrl = imageUrl;
-    let engine = 'studio_neural_enhancer';
+    const modelDisplayName = model === 'nanobanana_2' ? 'NanoBanana 2' : 'NanoBanana Pro';
+    let engine = model === 'nanobanana_2' ? 'nanobanana_2_engine' : 'nanobanana_pro_engine';
     let enhancementsApplied: string[] = [];
     let gradingAnalysis: any = null;
 
@@ -217,16 +218,18 @@ export async function POST(req: NextRequest) {
     let gradingMatrix: GradingMatrix = parsedDirectives.matrix;
     enhancementsApplied = parsedDirectives.notes;
 
-    // 1. Live Google Interactions API (NanoBanana Pro / Gemini Image Generation & Editing)
+    // 1. Live Google Interactions API (Direct approach matching Google Flow)
     if (googleCloudKey && base64Data) {
       const nanoBananaPrompt = prompt
         ? `Architectural studio photograph remastering for luxury furniture catalog: ${prompt}. Authentic American wood grain preservation, museum softbox key lighting, 8K ultra-clean clarity.`
         : `Architectural studio photograph remastering for WD Group luxury furniture catalog: Apply 4500K warm museum key lighting, solid walnut grain micro-contrast, pristine neutral pedestal, 8K ultra-clean clarity.`;
 
-      // Try interactions image generation models in priority order
-      const modelsToTry = ['gemini-3.1-flash-image', 'gemini-3-pro-image', 'gemini-2.5-flash-image'];
+      // NanoBanana 2 uses gemini-3.1-flash-image (fast), NanoBanana Pro uses gemini-3-pro-image (ultra HD)
+      const modelsToTry = model === 'nanobanana_2'
+        ? ['gemini-3.1-flash-image', 'gemini-2.5-flash-image']
+        : ['gemini-3-pro-image', 'gemini-3.1-flash-image', 'gemini-2.5-flash-image'];
 
-      for (const model of modelsToTry) {
+      for (const targetModel of modelsToTry) {
         try {
           const interactionRes = await fetch('https://generativelanguage.googleapis.com/v1beta/interactions', {
             method: 'POST',
@@ -235,7 +238,7 @@ export async function POST(req: NextRequest) {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              model: model,
+              model: targetModel,
               input: [
                 { type: 'text', text: nanoBananaPrompt },
                 {
@@ -291,9 +294,9 @@ export async function POST(req: NextRequest) {
 
             if (generatedImageData) {
               enhancedUrl = `data:${generatedMimeType};base64,${generatedImageData}`;
-              engine = 'nanobanana_pro_live';
+              engine = model === 'nanobanana_2' ? 'nanobanana_2_live' : 'nanobanana_pro_live';
               enhancementsApplied = [
-                `NanoBanana Pro Live Neural Remaster (${model})`,
+                `${modelDisplayName} Live Remaster (${targetModel})`,
                 `Applied user directive: "${prompt || 'Studio Warmth'}"`,
                 'Sub-pixel micro-texture reconstruction on wood and joinery',
                 'Calibrated studio softbox illumination and specular reflections',

@@ -17,6 +17,8 @@ export interface VisualStudioItem {
   id: string;
   originalUrl: string;
   enhancedUrl?: string;
+  fileName?: string;
+  modelType?: 'nanobanana_2' | 'nanobanana_pro';
   prompt?: string;
   engineLabel?: string;
   isEnhancing?: boolean;
