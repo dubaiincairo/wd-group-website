@@ -748,8 +748,8 @@ export const translations = {
       ecom_nav: {
         announcement: "Free White-Glove Staging & Delivery Across KSA on Orders Over 10,000 SAR • Direct Factory Authority",
         back_to_holding: "WD Group Holding",
-        store_brand: "GreenWood Living",
-        store_sub: "Luxury Furniture Atelier & FF&E",
+        store_brand: "WD Group Living",
+        store_sub: "Luxury Furniture & Hotel FF&E",
         collections: "Collections",
         living: "Living",
         bedroom: "Bedrooms",
@@ -1587,8 +1587,8 @@ export const translations = {
       ecom_nav: {
         announcement: "توصيل وتركيب فندقي مجاني للطلبات فوق 10,000 ر.س في جميع أنحاء المملكة • تصنيع مباشر من المصنع",
         back_to_holding: "مجموعة دبليو دي القابضة",
-        store_brand: "جرين وود للأثاث الفاخر",
-        store_sub: "المتجر والمصنع الفاخر من دبليو دي",
+        store_brand: "مجموعة دبليو دي - الأثاث الفاخر",
+        store_sub: "أتيليه الأثاث والتجهيزات الفندقية",
         collections: "المجموعات",
         living: "الصالونات",
         bedroom: "النوم",

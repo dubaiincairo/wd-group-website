@@ -278,12 +278,16 @@ export default function ChatbotControlCenter({ content, setContent }: ChatbotCon
             </h4>
 
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5">
-              <div className="relative w-20 h-20 rounded-2xl overflow-hidden border-2 border-[#C9A86A] shadow-xl shrink-0 bg-black">
+              <div className="relative w-20 h-20 rounded-full overflow-hidden border-2 border-[#C9A86A] shadow-xl shrink-0 bg-black ring-2 ring-[#C9A86A]/20">
                 <img
                   src={chatbot.avatar_url || '/brand/sultan-avatar.jpg'}
                   alt="Avatar Preview"
                   className="w-full h-full object-cover object-top"
                 />
+                <span className="absolute bottom-1 right-1 rtl:right-auto rtl:left-1 flex h-4 w-4">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-80" />
+                  <span className="relative inline-flex rounded-full h-4 w-4 bg-emerald-500 border-2 border-[#0B0D14] shadow-[0_0_8px_#10B981]" />
+                </span>
               </div>
 
               <div className="flex-1 space-y-2 w-full">

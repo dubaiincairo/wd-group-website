@@ -279,54 +279,38 @@ function FurniturePageContent() {
       {/* 11. Dedicated Standalone eCommerce Footer */}
       <EcommerceFooter />
 
-      {/* Floating Action Controls (Wishlist & Cart Drawers) */}
-      <div className="fixed bottom-6 right-6 rtl:right-auto rtl:left-6 z-40 flex flex-col gap-3 items-end rtl:items-start">
-        {/* Wishlist Pill */}
-        <motion.button
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          whileHover={{ scale: 1.08 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={() => setIsWishlistDrawerOpen(true)}
-          className="p-3.5 rounded-2xl bg-[#141721]/95 text-white backdrop-blur-xl shadow-xl border border-white/15 hover:border-rose-500/50 flex items-center gap-2 cursor-pointer group"
-          aria-label={dict.furniture.wishlist.title}
-        >
-          <div className="relative">
-            <Heart className={`w-5 h-5 ${wishlistIds.length > 0 ? 'text-rose-400 fill-rose-400' : 'text-zinc-300'}`} />
-            {wishlistIds.length > 0 && (
-              <span className="absolute -top-2.5 -right-2.5 rtl:-right-auto rtl:-left-2.5 bg-rose-500 text-white text-[9px] font-mono font-extrabold w-4 h-4 rounded-full flex items-center justify-center shadow-md">
-                {wishlistIds.length}
+      {/* Floating Action Cart Pill (Cleanly Positioned on the Opposite Side of Chatbot with Zero Collision) */}
+      <AnimatePresence>
+        {totalCartCount > 0 && (
+          <motion.div
+            initial={{ scale: 0, opacity: 0, y: 20 }}
+            animate={{ scale: 1, opacity: 1, y: 0 }}
+            exit={{ scale: 0, opacity: 0, y: 20 }}
+            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+            className="fixed bottom-6 left-6 rtl:left-auto rtl:right-6 z-40"
+          >
+            <button
+              type="button"
+              onClick={() => setCartDrawerOpen(true)}
+              className="p-3.5 sm:px-4 sm:py-3.5 rounded-2xl bg-gradient-to-r from-[#C9A86A] via-[#DFBA73] to-[#C9A86A] text-[#08090C] shadow-[0_0_30px_rgba(201,168,106,0.6)] border border-[#E3C58A] flex items-center gap-3 cursor-pointer group hover:scale-105 active:scale-95 transition-all"
+              aria-label={dict.furniture.cart.title}
+            >
+              <div className="relative">
+                <ShoppingBag className="w-5 h-5 text-[#08090C]" />
+                <span className="absolute -top-2 -right-2 rtl:-right-auto rtl:-left-2 bg-black text-white text-[10px] font-mono font-black w-4 h-4 rounded-full flex items-center justify-center shadow-md">
+                  {totalCartCount}
+                </span>
+              </div>
+              <span className="text-xs font-black hidden sm:inline">
+                {dict.furniture.cart.title}
               </span>
-            )}
-          </div>
-          <span className="text-xs font-bold hidden sm:inline text-zinc-200">
-            {dict.furniture.wishlist.title}
-          </span>
-        </motion.button>
-
-        {/* Cart Pill */}
-        <motion.button
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          whileHover={{ scale: 1.08 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={() => setCartDrawerOpen(true)}
-          className="p-4 rounded-2xl bg-gradient-to-r from-[#C9A86A] via-[#DFBA73] to-[#C9A86A] text-[#08090C] shadow-[0_0_30px_rgba(201,168,106,0.6)] border border-[#E3C58A] flex items-center gap-3 cursor-pointer group"
-          aria-label={dict.furniture.cart.title}
-        >
-          <div className="relative">
-            <ShoppingBag className="w-6 h-6" />
-            {totalCartCount > 0 && (
-              <span className="absolute -top-2 -right-2 rtl:-right-auto rtl:-left-2 bg-emerald-600 text-white text-[10px] font-mono font-extrabold w-5 h-5 rounded-full flex items-center justify-center shadow-md border-2 border-[#08090C]">
-                {totalCartCount}
+              <span className="text-[11px] font-mono font-black bg-[#08090C]/15 px-2 py-0.5 rounded">
+                {totalCartCount} {isAr ? 'قطع' : 'items'}
               </span>
-            )}
-          </div>
-          <span className="text-xs font-extrabold hidden sm:inline">
-            {dict.furniture.cart.title}
-          </span>
-        </motion.button>
-      </div>
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Modals & Drawers */}
       <ProductQuickViewModal

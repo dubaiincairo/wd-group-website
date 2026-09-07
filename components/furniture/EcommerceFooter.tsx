@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useLanguage } from '@/context/LanguageContext';
 import { 
   ShoppingBag, 
@@ -22,12 +23,13 @@ import {
 export default function EcommerceFooter() {
   const { lang, dict } = useLanguage();
   const isAr = lang === 'ar';
+  const logoSrc = isAr ? '/brand/wd-group-logo-ar-white.png' : '/brand/wd-group-logo-white.png';
   const currentYear = new Date().getFullYear();
 
   const footerDict = (dict.furniture as any)?.ecom_footer || {
     brand_statement: isAr
-      ? 'جرين وود ليفينج هي العلامة التجارية المتخصصة في تصنيع الأثاث الفاخر والتجاليد المعمارية التابعة لمجموعة دبليو دي القابضة، وتتولى تصنيع وتوريد أثاث المشروعات السكنية الراقية والمنشآت الفندقية في المملكة العربية السعودية.'
-      : 'GreenWood Living is the specialized luxury furniture and architectural joinery brand of WD Group, manufacturing signature living collections, hotel FF&E, and bespoke millwork in the Kingdom of Saudi Arabia.',
+      ? 'مجموعة دبليو دي - الأثاث الفاخر والتجهيزات (WD Group Living & FF&E) تتولى تصنيع وتوريد أرقى تصاميم الأثاث المعماري والأجنحة الفندقية للمشروعات الراقية في المملكة العربية السعودية عبر مصانعنا الوطنية المتخصصة.'
+      : 'WD Group Living & FF&E is the luxury furniture and architectural joinery division of WD Group Holding, manufacturing signature living collections, hotel FF&E, and bespoke millwork in the Kingdom of Saudi Arabia.',
     quick_links_title: isAr ? 'أقسام المتجر' : 'Curated Departments',
     client_care_title: isAr ? 'خدمة العملاء والضمان' : 'Client Experience',
     track_order: isAr ? 'تتبع طلب نشط بالمصنع' : 'Track Live Factory Order',
@@ -37,7 +39,7 @@ export default function EcommerceFooter() {
     b2b_contract: isAr ? 'توريدات الفنادق والمشروعات (B2B)' : 'Hotel & Contract FF&E (B2B)',
     faq: isAr ? 'الأسئلة الأكثر شيوعاً' : 'Frequently Asked Questions',
     payments_title: isAr ? 'طرق الدفع الآمنة والمعتمدة' : 'Secure Payment Methods',
-    corporate_badge: isAr ? 'جرين وود ليفينج هي إحدى الأذرع الصناعية التابعة لمجموعة دبليو دي القابضة.' : 'GreenWood Living is an industrial operating division of WD Group Holding.',
+    corporate_badge: isAr ? 'الأثاث الفاخر والتجهيزات هي إحدى الأذرع الاستثمارية التابعة لمجموعة دبليو دي للأعمال.' : 'WD Group Living & FF&E is a core industrial division of WD Group Holding.',
     back_to_wd: isAr ? 'زيارة بوابة مجموعة دبليو دي القابضة' : 'Visit WD Group Corporate Portal',
     cr_vat: isAr ? 'سجل تجاري: 1010000000 · الرقم الضريبي: 300000000000003 · جميع الحقوق محفوظة ©' : 'CR: 1010000000 · Tax ID (VAT): 300000000000003 · All Rights Reserved ©',
   };
@@ -55,16 +57,22 @@ export default function EcommerceFooter() {
           
           {/* Brand Col (Takes 2 cols on desktop) */}
           <div className="lg:col-span-2 space-y-4">
-            <Link href="/furniture" className="inline-flex items-center gap-3 group">
-              <div className="w-10 h-10 rounded-xl bg-[#C9A86A]/15 border border-[#C9A86A]/30 flex items-center justify-center text-[#C9A86A]">
-                <ShoppingBag className="w-5 h-5" />
+            <Link href="/furniture" className="inline-flex items-center gap-3.5 group">
+              <div className={`relative h-10 sm:h-12 ${isAr ? 'w-36 sm:w-44' : 'w-32 sm:w-38'} transition-all duration-300 group-hover:scale-105`}>
+                <Image
+                  src={logoSrc}
+                  alt={isAr ? 'مجموعة دبليو دي للأعمال' : 'WD Group'}
+                  fill
+                  sizes="(max-width: 640px) 176px, 176px"
+                  className="object-contain drop-shadow-[0_0_16px_rgba(201,168,106,0.25)]"
+                />
               </div>
-              <div>
-                <span className="text-xl font-extrabold text-white block tracking-tight">
-                  {isAr ? 'جرين وود للأثاث الفاخر' : 'GreenWood Living'}
+              <div className="border-l rtl:border-l-0 rtl:border-r border-white/15 pl-3.5 rtl:pl-0 rtl:pr-3.5 py-0.5">
+                <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#C9A86A] block font-mono">
+                  {isAr ? 'الأثاث الفاخر' : 'LIVING & FF&E'}
                 </span>
-                <span className="text-[10px] font-mono text-[#C9A86A] uppercase tracking-wider block">
-                  {isAr ? 'تصنيع وطني سعودي بمعايير فندقية' : 'Made in Saudi Arabia · High-End FF&E'}
+                <span className="text-[11px] text-zinc-400 font-medium block -mt-0.5">
+                  {isAr ? 'مجموعة دبليو دي' : 'WD Group'}
                 </span>
               </div>
             </Link>

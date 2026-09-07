@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useLanguage } from '@/context/LanguageContext';
 import { useWishlist } from '@/context/WishlistContext';
@@ -36,6 +37,7 @@ export default function EcommerceNavbar({
   const pathname = usePathname();
   const { lang, toggleLanguage, dict } = useLanguage();
   const isAr = lang === 'ar';
+  const logoSrc = isAr ? '/brand/wd-group-logo-ar-white.png' : '/brand/wd-group-logo-white.png';
   const { wishlistIds, setIsWishlistDrawerOpen } = useWishlist();
 
   const [scrolled, setScrolled] = useState(false);
@@ -398,22 +400,24 @@ export default function EcommerceNavbar({
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between gap-4">
             
-            {/* Store Brand Identity */}
-            <Link href="/furniture" className="flex items-center gap-3 group shrink-0">
-              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#C9A86A]/10 border border-[#C9A86A]/30 flex items-center justify-center text-[#C9A86A] group-hover:bg-[#C9A86A]/20 transition-all shadow-[0_0_20px_rgba(201,168,106,0.15)]">
-                <ShoppingBag className="w-5 h-5" />
+            {/* Store Brand Identity: Official WD Group Brand Logo */}
+            <Link href="/furniture" className="flex items-center gap-3.5 group shrink-0">
+              <div className={`relative h-9 sm:h-11 ${isAr ? 'w-36 sm:w-44' : 'w-32 sm:w-40'} transition-all duration-300 group-hover:scale-105`}>
+                <Image
+                  src={logoSrc}
+                  alt={isAr ? 'مجموعة دبليو دي - الأثاث الفاخر والتجهيزات' : 'WD Group Living & FF&E'}
+                  fill
+                  sizes="(max-width: 640px) 176px, 176px"
+                  className="object-contain drop-shadow-[0_0_16px_rgba(201,168,106,0.25)]"
+                  priority
+                />
               </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="text-base sm:text-lg font-black tracking-tight text-white group-hover:text-[#C9A86A] transition-colors">
-                    {ecomDict.store_brand}
-                  </span>
-                  <span className="text-[9px] font-mono font-extrabold uppercase px-1.5 py-0.5 rounded bg-[#C9A86A]/15 text-[#C9A86A] border border-[#C9A86A]/30 hidden sm:inline-block">
-                    FF&E
-                  </span>
-                </div>
-                <span className="text-[10px] text-zinc-400 block -mt-0.5 font-medium">
-                  {ecomDict.store_sub}
+              <div className="hidden sm:block border-l rtl:border-l-0 rtl:border-r border-white/15 pl-3.5 rtl:pl-0 rtl:pr-3.5 py-0.5">
+                <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#C9A86A] block font-mono">
+                  {isAr ? 'الأثاث الفاخر' : 'LIVING & FF&E'}
+                </span>
+                <span className="text-[10px] text-zinc-400 font-medium block -mt-0.5">
+                  {isAr ? 'مجموعة دبليو دي' : 'WD Group'}
                 </span>
               </div>
             </Link>
@@ -526,22 +530,6 @@ export default function EcommerceNavbar({
                   </button>
                 )}
               </div>
-
-              {/* Wishlist Pill */}
-              <button
-                type="button"
-                onClick={() => setIsWishlistDrawerOpen(true)}
-                className="p-2.5 sm:px-3 sm:py-2 rounded-xl bg-[#12151F] hover:bg-[#1A1F2E] border border-white/10 hover:border-rose-500/30 text-zinc-300 hover:text-white transition-all flex items-center gap-2 cursor-pointer relative"
-                title={ecomDict.wishlist}
-              >
-                <Heart className={`w-4 h-4 ${wishlistIds.length > 0 ? 'text-rose-400 fill-rose-400' : 'text-zinc-400'}`} />
-                <span className="text-xs font-bold hidden md:inline">{ecomDict.wishlist}</span>
-                {wishlistIds.length > 0 && (
-                  <span className="w-4 h-4 rounded-full bg-rose-500 text-white text-[9px] font-bold font-mono flex items-center justify-center">
-                    {wishlistIds.length}
-                  </span>
-                )}
-              </button>
 
               {/* Shopping Bag / Cart Pill */}
               <button
