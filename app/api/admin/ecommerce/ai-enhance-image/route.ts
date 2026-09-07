@@ -7,7 +7,7 @@ export async function POST(req: NextRequest) {
   const startTime = Date.now();
   try {
     const body = await req.json();
-    const { imageUrl, mode = 'studio_lighting' } = body;
+    const { imageUrl, prompt = '', mode = 'studio_lighting' } = body;
 
     if (!imageUrl) {
       return NextResponse.json(
@@ -57,7 +57,9 @@ export async function POST(req: NextRequest) {
     if (googleCloudKey && base64Data) {
       // 1. Try NanoBanana Pro Image Editing via Google Interactions API
       try {
-        const nanoBananaPrompt = `Enhance this luxury Saudi architectural furniture photograph for WD Group: Apply studio-grade key lighting, pristine museum neutral architectural backdrop, micro-contrast enhancement on natural wood grain and woven upholstery, 8K ultra-clean clarity.`;
+        const nanoBananaPrompt = prompt
+          ? `Enhance this luxury architectural furniture piece according to user prompt: "${prompt}". Apply high-end studio-grade lighting, authentic material preservation, pristine neutral architectural pedestal, 8K ultra-clean clarity.`
+          : `Enhance this luxury Saudi architectural furniture photograph for WD Group: Apply studio-grade key lighting, pristine museum neutral architectural backdrop, micro-contrast enhancement on natural wood grain and woven upholstery, 8K ultra-clean clarity.`;
 
         const interactionRes = await fetch('https://generativelanguage.googleapis.com/v1beta/interactions', {
           method: 'POST',

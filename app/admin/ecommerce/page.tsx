@@ -280,6 +280,7 @@ function EcommerceAdminContent() {
   >('overview');
 
   const [openAiStudioDirectly, setOpenAiStudioDirectly] = useState(false);
+  const [studioInitialMode, setStudioInitialMode] = useState<'visual' | 'content'>('visual');
 
   const [orders, setOrders] = useState<EcommerceOrderRecord[]>(INITIAL_ORDERS);
   const [products, setProducts] = useState<FurnitureItem[]>(FURNITURE_CATALOG);
@@ -296,12 +297,20 @@ function EcommerceAdminContent() {
   useEffect(() => {
     const syncTabFromUrl = () => {
       const tabParam = searchParams?.get('tab');
-      const studioParam = searchParams?.get('studio') || searchParams?.get('ai');
+      const studioParam = (searchParams?.get('studio') || searchParams?.get('ai') || '').toLowerCase();
       const hash = typeof window !== 'undefined' ? window.location.hash.replace('#', '') : '';
       const target = (tabParam || hash || '').toLowerCase();
 
-      if (target === 'studio' || target === 'aistudio' || target === 'ai' || studioParam === 'true' || studioParam === '1') {
+      if (
+        target === 'studio' || target === 'aistudio' || target === 'ai' ||
+        studioParam === 'true' || studioParam === '1' || studioParam === 'visual' || studioParam === 'content'
+      ) {
         setActiveTab('products');
+        if (studioParam === 'content') {
+          setStudioInitialMode('content');
+        } else {
+          setStudioInitialMode('visual');
+        }
         setOpenAiStudioDirectly(true);
         return;
       }
@@ -596,10 +605,10 @@ function EcommerceAdminContent() {
               setActiveTab('products');
               setOpenAiStudioDirectly(true);
             }}
-            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-600 hover:from-purple-500 hover:to-indigo-500 text-white text-xs font-mono font-bold shadow-lg shadow-purple-900/40 transition-all cursor-pointer shrink-0 whitespace-nowrap"
+            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-500/20 via-purple-600/30 to-indigo-600/30 hover:border-[#C9A86A] border border-[#C9A86A]/40 text-white text-xs font-mono font-bold shadow-lg transition-all cursor-pointer shrink-0 whitespace-nowrap"
           >
-            <Sparkles className="w-3.5 h-3.5 text-amber-300 animate-pulse" />
-            <span>{isAr ? 'استوديو الذكاء الاصطناعي ✨' : 'AI Product Studio ✨'}</span>
+            <Sparkles className="w-3.5 h-3.5 text-[#C9A86A] animate-pulse" />
+            <span>{isAr ? 'مركز الذكاء الاصطناعي (AI Hub) ✨' : 'AI Hub (Visual & Content) ✨'}</span>
           </button>
 
           <Link
@@ -678,8 +687,9 @@ function EcommerceAdminContent() {
             currency={currency}
             onSelectOrder={setSelectedOrder}
             onNavigateTab={(t) => setActiveTab(t as any)}
-            onOpenAiStudio={() => {
+            onOpenAiStudio={(mode) => {
               setActiveTab('products');
+              if (mode) setStudioInitialMode(mode);
               setOpenAiStudioDirectly(true);
             }}
           />
@@ -703,6 +713,7 @@ function EcommerceAdminContent() {
             onUpdateProduct={handleUpdateProduct}
             onDeleteProduct={handleDeleteProduct}
             initialOpenAiStudio={openAiStudioDirectly}
+            initialStudioMode={studioInitialMode}
             onResetAiStudio={() => setOpenAiStudioDirectly(false)}
           />
         )}
