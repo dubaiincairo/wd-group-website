@@ -581,7 +581,7 @@ export default function ChatKitWidget({ onClose, initialConfig }: ChatKitWidgetP
 
           {/* 4. Composer Input */}
           <div className="p-4 border-t border-white/10 bg-[#0B0D14]">
-            <div className="relative flex items-center bg-[#151926] border border-white/15 focus-within:border-[#C9A86A]/60 rounded-2xl p-1.5 transition-all shadow-inner">
+            <div className="relative flex items-center bg-[#151926]/90 border border-white/10 hover:border-white/20 focus-within:border-[#C9A86A] focus-within:ring-2 focus-within:ring-[#C9A86A]/25 focus-within:shadow-[0_0_20px_rgba(201,168,106,0.18)] rounded-2xl p-1.5 transition-all duration-300">
               <textarea
                 ref={inputRef}
                 value={inputValue}
@@ -594,7 +594,8 @@ export default function ChatKitWidget({ onClose, initialConfig }: ChatKitWidgetP
                     : (config?.composer_placeholder_en || `Type your message to ${agentName}...`)
                 }
                 disabled={isStreaming}
-                className="w-full bg-transparent text-sm text-white placeholder-zinc-500 px-3 py-2 outline-none resize-none max-h-28"
+                className="w-full bg-transparent text-sm text-white placeholder-zinc-500 px-3 py-2 outline-none focus:outline-none focus-visible:outline-none ring-0 focus:ring-0 focus-visible:ring-0 border-none shadow-none resize-none max-h-28 no-focus-outline"
+                style={{ outline: 'none', boxShadow: 'none' }}
               />
 
               <button
