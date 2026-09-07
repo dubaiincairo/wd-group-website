@@ -548,58 +548,70 @@ export default function ChatbotControlCenter({ content, setContent }: ChatbotCon
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                     <div className="space-y-1">
-                      <label className="text-[10px] font-mono text-zinc-400">{isAr ? 'عنوان الزر (بالعربية)' : 'Button Label (AR)'}</label>
+                      <div className="flex items-center justify-between text-[10px] font-mono text-zinc-400">
+                        <span className="font-bold text-sky-400">{isAr ? 'عنوان الزر (بالعربية - RTL)' : 'Button Label (AR)'}</span>
+                      </div>
                       <input
                         type="text"
+                        dir="rtl"
                         value={item.label_ar}
                         onChange={(e) => {
                           const updated = [...chatbot.starter_prompts];
                           updated[idx] = { ...updated[idx], label_ar: e.target.value };
                           updateChatbot({ starter_prompts: updated });
                         }}
-                        className="w-full bg-[#08090C] border border-white/10 rounded-lg px-3 py-1.5 text-xs text-white"
+                        className="w-full bg-[#08090C] border border-white/10 rounded-lg px-3 py-1.5 text-xs text-white font-arabic focus:outline-none focus:border-[#C9A86A] focus:ring-1 focus:ring-[#C9A86A]/40 transition-colors"
                       />
                     </div>
-                    <div className="space-y-1">
-                      <label className="text-[10px] font-mono text-zinc-400">{isAr ? 'عنوان الزر (بالإنجليزية)' : 'Button Label (EN)'}</label>
+                    <div className="space-y-1" dir="ltr">
+                      <div className="flex items-center justify-between text-[10px] font-mono text-zinc-400">
+                        <span className="font-bold text-blue-400">{isAr ? 'عنوان الزر (بالإنجليزية - LTR)' : 'Button Label (EN - LTR)'}</span>
+                      </div>
                       <input
                         type="text"
+                        dir="ltr"
                         value={item.label_en}
                         onChange={(e) => {
                           const updated = [...chatbot.starter_prompts];
                           updated[idx] = { ...updated[idx], label_en: e.target.value };
                           updateChatbot({ starter_prompts: updated });
                         }}
-                        className="w-full bg-[#08090C] border border-white/10 rounded-lg px-3 py-1.5 text-xs text-white"
+                        className="w-full bg-[#08090C] border border-white/10 rounded-lg px-3 py-1.5 text-xs text-white text-left font-sans focus:outline-none focus:border-[#C9A86A] focus:ring-1 focus:ring-[#C9A86A]/40 transition-colors"
                       />
                     </div>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                     <div className="space-y-1">
-                      <label className="text-[10px] font-mono text-zinc-400">{isAr ? 'النص المرسل لسلطان (بالعربية)' : 'Prompt Message Sent (AR)'}</label>
+                      <div className="flex items-center justify-between text-[10px] font-mono text-zinc-400">
+                        <span className="font-bold text-sky-400">{isAr ? 'النص المرسل لسلطان (بالعربية - RTL)' : 'Prompt Message Sent (AR)'}</span>
+                      </div>
                       <input
                         type="text"
+                        dir="rtl"
                         value={item.prompt_ar}
                         onChange={(e) => {
                           const updated = [...chatbot.starter_prompts];
                           updated[idx] = { ...updated[idx], prompt_ar: e.target.value };
                           updateChatbot({ starter_prompts: updated });
                         }}
-                        className="w-full bg-[#08090C] border border-white/10 rounded-lg px-3 py-1.5 text-xs text-white"
+                        className="w-full bg-[#08090C] border border-white/10 rounded-lg px-3 py-1.5 text-xs text-white font-arabic focus:outline-none focus:border-[#C9A86A] focus:ring-1 focus:ring-[#C9A86A]/40 transition-colors"
                       />
                     </div>
-                    <div className="space-y-1">
-                      <label className="text-[10px] font-mono text-zinc-400">{isAr ? 'النص المرسل لسلطان (بالإنجليزية)' : 'Prompt Message Sent (EN)'}</label>
+                    <div className="space-y-1" dir="ltr">
+                      <div className="flex items-center justify-between text-[10px] font-mono text-zinc-400">
+                        <span className="font-bold text-blue-400">{isAr ? 'النص المرسل لسلطان (بالإنجليزية - LTR)' : 'Prompt Message Sent (EN - LTR)'}</span>
+                      </div>
                       <input
                         type="text"
+                        dir="ltr"
                         value={item.prompt_en}
                         onChange={(e) => {
                           const updated = [...chatbot.starter_prompts];
                           updated[idx] = { ...updated[idx], prompt_en: e.target.value };
                           updateChatbot({ starter_prompts: updated });
                         }}
-                        className="w-full bg-[#08090C] border border-white/10 rounded-lg px-3 py-1.5 text-xs text-white"
+                        className="w-full bg-[#08090C] border border-white/10 rounded-lg px-3 py-1.5 text-xs text-white text-left font-sans focus:outline-none focus:border-[#C9A86A] focus:ring-1 focus:ring-[#C9A86A]/40 transition-colors"
                       />
                     </div>
                   </div>
@@ -615,37 +627,61 @@ export default function ChatbotControlCenter({ content, setContent }: ChatbotCon
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <input
-                  type="text"
-                  placeholder={isAr ? 'عنوان الزر بالعربية (مثال: 🏨 فنادق سويس بلو)' : 'Button Label AR'}
-                  value={newPromptLabelAr}
-                  onChange={(e) => setNewPromptLabelAr(e.target.value)}
-                  className="bg-[#141721] border border-white/10 rounded-lg px-3 py-2 text-xs text-white"
-                />
-                <input
-                  type="text"
-                  placeholder={isAr ? 'عنوان الزر بالإنجليزية (مثال: 🏨 SwissBlue Hotels)' : 'Button Label EN'}
-                  value={newPromptLabelEn}
-                  onChange={(e) => setNewPromptLabelEn(e.target.value)}
-                  className="bg-[#141721] border border-white/10 rounded-lg px-3 py-2 text-xs text-white"
-                />
+                <div className="space-y-1" dir="rtl">
+                  <label className="text-[10px] font-mono text-zinc-400 block text-right font-bold text-sky-400">
+                    {isAr ? 'عنوان الزر (بالعربية - RTL)' : 'Button Label (AR)'}
+                  </label>
+                  <input
+                    type="text"
+                    dir="rtl"
+                    placeholder={isAr ? 'مثال: 🏨 فنادق سويس بلو' : 'Button Label AR'}
+                    value={newPromptLabelAr}
+                    onChange={(e) => setNewPromptLabelAr(e.target.value)}
+                    className="w-full bg-[#141721] border border-white/10 rounded-lg px-3 py-2 text-xs text-white text-right font-arabic focus:outline-none focus:border-[#C9A86A] focus:ring-1 focus:ring-[#C9A86A]/40 transition-colors"
+                  />
+                </div>
+                <div className="space-y-1" dir="ltr">
+                  <label className="text-[10px] font-mono text-zinc-400 block text-left font-bold text-blue-400">
+                    {isAr ? 'عنوان الزر (بالإنجليزية - LTR)' : 'Button Label (EN - LTR)'}
+                  </label>
+                  <input
+                    type="text"
+                    dir="ltr"
+                    placeholder={isAr ? 'e.g. 🏨 SwissBlue Hotels' : 'Button Label EN'}
+                    value={newPromptLabelEn}
+                    onChange={(e) => setNewPromptLabelEn(e.target.value)}
+                    className="w-full bg-[#141721] border border-white/10 rounded-lg px-3 py-2 text-xs text-white text-left font-sans focus:outline-none focus:border-[#C9A86A] focus:ring-1 focus:ring-[#C9A86A]/40 transition-colors"
+                  />
+                </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <input
-                  type="text"
-                  placeholder={isAr ? 'نص السؤال المرسل لسلطان (AR)' : 'Prompt Text AR'}
-                  value={newPromptMsgAr}
-                  onChange={(e) => setNewPromptMsgAr(e.target.value)}
-                  className="bg-[#141721] border border-white/10 rounded-lg px-3 py-2 text-xs text-white"
-                />
-                <input
-                  type="text"
-                  placeholder={isAr ? 'نص السؤال المرسل لسلطان (EN)' : 'Prompt Text EN'}
-                  value={newPromptMsgEn}
-                  onChange={(e) => setNewPromptMsgEn(e.target.value)}
-                  className="bg-[#141721] border border-white/10 rounded-lg px-3 py-2 text-xs text-white"
-                />
+                <div className="space-y-1" dir="rtl">
+                  <label className="text-[10px] font-mono text-zinc-400 block text-right font-bold text-sky-400">
+                    {isAr ? 'نص السؤال المرسل لسلطان (بالعربية - RTL)' : 'Prompt Text (AR)'}
+                  </label>
+                  <input
+                    type="text"
+                    dir="rtl"
+                    placeholder={isAr ? 'أخبرني عن منشآت سويس بلو للضيافة' : 'Prompt Text AR'}
+                    value={newPromptMsgAr}
+                    onChange={(e) => setNewPromptMsgAr(e.target.value)}
+                    className="w-full bg-[#141721] border border-white/10 rounded-lg px-3 py-2 text-xs text-white text-right font-arabic focus:outline-none focus:border-[#C9A86A] focus:ring-1 focus:ring-[#C9A86A]/40 transition-colors"
+                  />
+                </div>
+                <div className="space-y-1" dir="ltr">
+                  <label className="text-[10px] font-mono text-zinc-400 block text-left font-bold text-blue-400">
+                    {isAr ? 'نص السؤال المرسل لسلطان (بالإنجليزية - LTR)' : 'Prompt Text (EN - LTR)'}
+                  </label>
+                  <input
+                    type="text"
+                    dir="ltr"
+                    placeholder={isAr ? 'Tell me more about SwissBlue...' : 'Prompt Text EN'}
+                    value={newPromptMsgEn}
+                    onChange={(e) => setNewPromptMsgEn(e.target.value)}
+                    className="w-full bg-[#141721] border border-white/10 rounded-lg px-3 py-2 text-xs text-white text-left font-sans focus:outline-none focus:border-[#C9A86A] focus:ring-1 focus:ring-[#C9A86A]/40 transition-colors"
+                  />
+                </div>
               </div>
 
               <div className="flex justify-end">
@@ -905,6 +941,7 @@ export default function ChatbotControlCenter({ content, setContent }: ChatbotCon
                 </div>
                 <input
                   type="number"
+                  dir="ltr"
                   min={100}
                   max={4000}
                   step={50}
@@ -1051,6 +1088,7 @@ export default function ChatbotControlCenter({ content, setContent }: ChatbotCon
 
             <textarea
               rows={8}
+              dir="ltr"
               value={chatbot.system_prompt_override || ''}
               onChange={(e) => updateChatbot({ system_prompt_override: e.target.value })}
               placeholder={defaultPromptSample}
