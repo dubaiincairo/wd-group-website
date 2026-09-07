@@ -255,7 +255,7 @@ export function buildChatbotSystemPrompt(config: ChatbotConfig): string {
   if (config.sector_knowledge?.ecommerce) {
     sectors.push(`4. E-Commerce & Bespoke Furniture Catalog:
    - Bespoke furniture collection with CAD blueprint customization, luxury fabrics, solid walnut, travertine marble, and brushed brass.
-   - Website page: /catalog`);
+   - Website page: /furniture`);
   }
 
   if (config.sector_knowledge?.corporate) {

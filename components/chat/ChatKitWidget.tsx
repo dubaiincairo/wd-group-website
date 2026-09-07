@@ -574,7 +574,7 @@ export default function ChatKitWidget({ onClose, initialConfig }: ChatKitWidgetP
 
               {quickActions.show_catalog !== false && (
                 <Link
-                  href="/catalog"
+                  href="/furniture"
                   onClick={onClose}
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-zinc-300 hover:text-white transition-colors shrink-0"
                 >

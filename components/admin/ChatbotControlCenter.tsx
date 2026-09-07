@@ -805,10 +805,10 @@ export default function ChatbotControlCenter({ content, setContent }: ChatbotCon
                   </div>
                   <div>
                     <span className="text-xs font-bold text-white block">
-                      {isAr ? 'زر استعراض كتالوج الأثاث الفندقي (/catalog)' : 'Furniture Showroom / Catalog Button'}
+                      {isAr ? 'زر استعراض متجر وكتالوج الأثاث (/furniture)' : 'Furniture Showroom Button (/furniture)'}
                     </span>
                     <span className="text-[10px] text-zinc-400 block">
-                      {isAr ? 'يوجه الزائر مباشرة لكتالوج أثاث مصنع جرين وود الفاخر' : 'Direct link to /catalog & bespoke furniture'}
+                      {isAr ? 'يوجه الزائر مباشرة لمتجر وكتالوج أثاث مصنع جرين وود الفاخر' : 'Direct link to /furniture & bespoke luxury pieces'}
                     </span>
                   </div>
                 </div>
@@ -1017,8 +1017,8 @@ export default function ChatbotControlCenter({ content, setContent }: ChatbotCon
                 },
                 {
                   key: 'ecommerce',
-                  labelAr: 'متجر وكتالوج الأثاث الفاخر (/catalog)',
-                  labelEn: 'E-Commerce & Furniture Catalog',
+                  labelAr: 'متجر وكتالوج الأثاث الفاخر (/furniture)',
+                  labelEn: 'E-Commerce & Furniture Catalog (/furniture)',
                   icon: Sparkles,
                 },
                 {
