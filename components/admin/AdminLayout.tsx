@@ -23,8 +23,27 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const { lang } = useLanguage();
   const isAr = lang === 'ar';
 
-  const [user, setUser] = useState<SessionUserState | null>(null);
-  const [loading, setLoading] = useState(true);
+  // Instant session hydration from sessionStorage (0ms UI render)
+  const [user, setUser] = useState<SessionUserState | null>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const cached = sessionStorage.getItem('wd_admin_user');
+        if (cached) return JSON.parse(cached);
+      } catch (_) {}
+    }
+    return null;
+  });
+
+  // If user session already exists in cache, do not block the screen
+  const [loading, setLoading] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        if (sessionStorage.getItem('wd_admin_user')) return false;
+      } catch (_) {}
+    }
+    return true;
+  });
+
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
   const isLoginPage = pathname === '/admin/login' || pathname.startsWith('/admin/login/');
@@ -35,29 +54,43 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       return;
     }
 
+    let isMounted = true;
+
     async function fetchSession() {
       try {
         const res = await fetch('/api/admin/auth/session');
         if (!res.ok) {
+          try { sessionStorage.removeItem('wd_admin_user'); } catch (_) {}
           router.push('/admin/login');
           return;
         }
         const data = await res.json();
         if (data.authenticated && data.user) {
-          setUser(data.user);
+          if (isMounted) {
+            setUser(data.user);
+            try { sessionStorage.setItem('wd_admin_user', JSON.stringify(data.user)); } catch (_) {}
+          }
         } else {
+          try { sessionStorage.removeItem('wd_admin_user'); } catch (_) {}
           router.push('/admin/login');
         }
       } catch (err) {
         console.error('Session fetch error:', err);
+        try { sessionStorage.removeItem('wd_admin_user'); } catch (_) {}
         router.push('/admin/login');
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     }
 
     fetchSession();
-  }, [pathname, isLoginPage, router]);
+
+    return () => {
+      isMounted = false;
+    };
+  }, [isLoginPage, router]);
 
   if (isLoginPage) {
     return (

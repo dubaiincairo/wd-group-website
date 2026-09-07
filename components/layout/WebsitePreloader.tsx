@@ -16,7 +16,12 @@ export default function WebsitePreloader({ forced = false }: { forced?: boolean 
   const [fadingOut, setFadingOut] = useState(false);
 
   // 1. Instantly bypass preloader for any admin route
-  const isAdminRoute = pathname?.startsWith('/admin');
+  const isAdminRoute = Boolean(
+    (pathname && pathname.startsWith('/admin')) ||
+    (typeof window !== 'undefined' && window.location.pathname.startsWith('/admin'))
+  );
+
+  if (isAdminRoute && !forced) return null;
 
   useEffect(() => {
     // If on admin or forced false, immediately exit
