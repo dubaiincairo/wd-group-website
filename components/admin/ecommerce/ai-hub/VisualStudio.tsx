@@ -78,6 +78,40 @@ export default function VisualStudio({
   const [showFineTune, setShowFineTune] = useState<boolean>(false);
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const [isDraggingSlider, setIsDraggingSlider] = useState<boolean>(false);
+
+  const handleSliderPointerMove = (clientX: number) => {
+    if (!viewportRef.current) return;
+    const rect = viewportRef.current.getBoundingClientRect();
+    const x = clientX - rect.left;
+    const pct = Math.max(0, Math.min(100, (x / rect.width) * 100));
+    setSliderPosition(Math.round(pct));
+  };
+
+  const handleSliderPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!isComparing) return;
+    e.preventDefault();
+    setIsDraggingSlider(true);
+    try {
+      e.currentTarget.setPointerCapture(e.pointerId);
+    } catch (_) {}
+    handleSliderPointerMove(e.clientX);
+  };
+
+  const handleSliderPointerMoveEvent = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!isDraggingSlider) return;
+    handleSliderPointerMove(e.clientX);
+  };
+
+  const handleSliderPointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+    setIsDraggingSlider(false);
+    try {
+      if (e.currentTarget.hasPointerCapture(e.pointerId)) {
+        e.currentTarget.releasePointerCapture(e.pointerId);
+      }
+    } catch (_) {}
+  };
 
   // Gemini API Key & Connection State
   const [apiKey, setApiKey] = useState<string>('');
@@ -636,7 +670,17 @@ export default function VisualStudio({
             </div>
 
             {/* Split Comparison Viewport */}
-            <div className="relative aspect-[16/10] max-h-[55vh] rounded-2xl overflow-hidden bg-black select-none border border-white/10 shadow-inner">
+            <div
+              ref={viewportRef}
+              dir="ltr"
+              onPointerDown={handleSliderPointerDown}
+              onPointerMove={handleSliderPointerMoveEvent}
+              onPointerUp={handleSliderPointerUp}
+              onPointerCancel={handleSliderPointerUp}
+              className={`relative aspect-[16/10] max-h-[55vh] rounded-2xl overflow-hidden bg-black select-none border border-white/10 shadow-inner ${
+                isComparing ? 'cursor-ew-resize touch-none' : ''
+              }`}
+            >
               
               {/* Layer 1: Enhanced (AI Generated Result) */}
               <img
@@ -695,7 +739,7 @@ export default function VisualStudio({
                 </div>
               )}
 
-              {/* Full Range Invisible Drag Overlay */}
+              {/* Accessible Range Input for Keyboard / Screen Readers */}
               {isComparing && (
                 <input
                   type="range"
@@ -703,7 +747,8 @@ export default function VisualStudio({
                   max="100"
                   value={sliderPosition}
                   onChange={(e) => setSliderPosition(Number(e.target.value))}
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-ew-resize z-30"
+                  dir="ltr"
+                  className="sr-only"
                   aria-label="Before and after comparison slider"
                 />
               )}
