@@ -7,6 +7,7 @@ import { useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '@/context/LanguageContext';
 import { FurnitureItem, FURNITURE_CATALOG } from '@/lib/furnitureData';
+import OfficialTaxInvoiceModal from '@/components/furniture/OfficialTaxInvoiceModal';
 import { 
   ShoppingBag, 
   ArrowLeft, 
@@ -50,6 +51,7 @@ function FurnitureCheckoutContent() {
   const isAr = lang === 'ar';
   const searchParams = useSearchParams();
   const [paymentError, setPaymentError] = useState<string | null>(null);
+  const [showInvoiceModal, setShowInvoiceModal] = useState(false);
 
   // 1. Cart Items State (persisted via localStorage or default to catalog signatures)
   const [cartItems, setCartItems] = useState<CartItemState[]>([]);
@@ -457,6 +459,12 @@ function FurnitureCheckoutContent() {
             setIsOrderComplete(true);
             try {
               localStorage.removeItem('wd_furniture_cart');
+              const prevRecent = JSON.parse(localStorage.getItem('wd_customer_recent_orders') || '[]');
+              const updatedRecent = Array.from(new Set([data.orderRef, ...prevRecent])).slice(0, 30);
+              localStorage.setItem('wd_customer_recent_orders', JSON.stringify(updatedRecent));
+              if (deliveryForm.phone) {
+                localStorage.setItem('wd_customer_phone', deliveryForm.phone);
+              }
             } catch (e) {}
             return;
           }
@@ -534,9 +542,24 @@ function FurnitureCheckoutContent() {
     setIsSubmitting(false);
     setIsOrderComplete(true);
 
-    // Clear localStorage cart
+    // Clear localStorage cart and store customer order session
     try {
       localStorage.removeItem('wd_furniture_cart');
+      const prevRecent = JSON.parse(localStorage.getItem('wd_customer_recent_orders') || '[]');
+      const updatedRecent = Array.from(new Set([activeRef, ...prevRecent])).slice(0, 30);
+      localStorage.setItem('wd_customer_recent_orders', JSON.stringify(updatedRecent));
+      if (deliveryForm.phone) {
+        localStorage.setItem('wd_customer_phone', deliveryForm.phone);
+      }
+      localStorage.setItem('wd_customer_profile', JSON.stringify({
+        firstName: deliveryForm.firstName,
+        lastName: deliveryForm.lastName,
+        phone: deliveryForm.phone,
+        email: deliveryForm.email,
+        city: deliveryForm.city,
+        district: deliveryForm.district,
+        address: deliveryForm.address,
+      }));
     } catch (e) {}
   };
 
@@ -671,12 +694,21 @@ function FurnitureCheckoutContent() {
               </a>
 
               <button
-                onClick={() => window.print()}
-                className="inline-flex items-center gap-2 px-5 py-3.5 rounded-xl bg-[#141721] hover:bg-[#1A1E2C] text-zinc-200 border border-white/10 font-bold text-xs sm:text-sm transition-all cursor-pointer"
+                type="button"
+                onClick={() => setShowInvoiceModal(true)}
+                className="inline-flex items-center gap-2 px-5 py-3.5 rounded-xl bg-[#141721] hover:bg-[#1A1E2C] text-zinc-200 border border-[#C9A86A]/40 font-bold text-xs sm:text-sm transition-all cursor-pointer shadow-lg"
               >
                 <Printer className="w-4 h-4 text-[#C9A86A]" />
-                <span>{dict.furniture.checkout.success.print_btn}</span>
+                <span>{isAr ? 'عرض وطباعة الفاتورة الضريبية (ZATCA)' : 'Tax Invoice / Fatoorah (ZATCA)'}</span>
               </button>
+
+              <Link
+                href="/furniture/account"
+                className="inline-flex items-center gap-2 px-5 py-3.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-200 font-bold text-xs sm:text-sm transition-all"
+              >
+                <User className="w-4 h-4 text-[#C9A86A]" />
+                <span>{isAr ? 'الانتقال إلى حسابي وإدارة الطلب' : 'Customer Account Portal'}</span>
+              </Link>
 
               <Link
                 href="/furniture"
@@ -2484,7 +2516,42 @@ function FurnitureCheckoutContent() {
               </motion.div>
             </div>
           )}
-        </AnimatePresence>
+        {/* Official ZATCA Tax Invoice & Quotation Modal */}
+        <OfficialTaxInvoiceModal
+          isOpen={showInvoiceModal}
+          onClose={() => setShowInvoiceModal(false)}
+          order={{
+            orderRef: orderReference,
+            customerName: `${deliveryForm.firstName} ${deliveryForm.lastName}`.trim() || 'Valued Customer',
+            email: deliveryForm.email,
+            phone: deliveryForm.phone,
+            city: deliveryForm.city,
+            address: deliveryForm.address,
+            district: deliveryForm.district,
+            companyName: deliveryForm.companyName,
+            crNumber: deliveryForm.crNumber,
+            vatNumber: deliveryForm.vatNumber,
+            orderDate: new Date().toISOString(),
+            paymentMethod: selectedPayment,
+            paymentStatus: selectedPayment === 'bank_transfer' ? 'pending' : 'paid',
+            subtotal,
+            discountAmount,
+            vatAmount,
+            totalAmount: finalTotal,
+            items: cartItems.map((i) => {
+              const finishObj = i.product.finishes.find((f) => f.id === i.selectedFinishId);
+              return {
+                sku: i.product.sku,
+                nameEn: i.product.nameEn,
+                nameAr: i.product.nameAr,
+                finishName: finishObj?.nameEn || i.selectedFinishId,
+                quantity: i.quantity,
+                unitPrice: i.product.price,
+              };
+            }),
+          }}
+          isQuotation={deliveryForm.orderType === 'b2b'}
+        />
 
       </div>
     </div>

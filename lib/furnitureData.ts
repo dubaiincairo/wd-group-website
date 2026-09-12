@@ -815,3 +815,38 @@ export const FURNITURE_CATALOG: FurnitureItem[] = [
     factoryLocationAr: 'مصنع جرين وود 2 — الرياض',
   },
 ];
+
+/**
+ * Generate clean URL-friendly slug from product name or id
+ */
+export function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/[\s_-]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+/**
+ * Find a furniture product by ID, SKU, or slugified name
+ */
+export function getFurnitureItem(idOrSlug: string): FurnitureItem | undefined {
+  if (!idOrSlug) return undefined;
+  const target = decodeURIComponent(idOrSlug).toLowerCase().trim();
+
+  return FURNITURE_CATALOG.find((item) => {
+    if (item.id.toLowerCase() === target) return true;
+    if (item.sku.toLowerCase() === target) return true;
+    if (slugify(item.nameEn) === target) return true;
+    if (item.id.replace(/^gw-/, '') === target) return true;
+    return false;
+  });
+}
+
+/**
+ * Get all product slugs for static generation or sitemap
+ */
+export function getAllFurnitureSlugs(): string[] {
+  return FURNITURE_CATALOG.map((item) => item.id);
+}
+
