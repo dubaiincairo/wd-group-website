@@ -4,6 +4,7 @@
  */
 
 import { getIntegrationsConfig } from '@/lib/admin/secrets';
+import { getEcommerceSettings } from '@/lib/ecommerce/settings';
 
 export interface SendSmsParams {
   phone: string;
@@ -26,10 +27,18 @@ export async function sendSms({
   message,
   senderName = 'WD GROUP',
 }: SendSmsParams): Promise<SmsResult> {
+  const settings = await getEcommerceSettings().catch(() => null);
+
+  // If SMS notifications are completely disabled by admin
+  if (settings && settings.enableSms === false) {
+    console.log('[Saudi SMS] SMS notifications are disabled in Admin Panel.');
+    return { success: true, simulated: true };
+  }
+
   const integrations = await getIntegrationsConfig().catch(() => null);
-  const provider = integrations?.sms_provider || process.env.SMS_PROVIDER || 'simulator';
-  const apiKey = integrations?.sms_api_key || process.env.SMS_API_KEY;
-  const officialSender = integrations?.sms_sender_name || process.env.SMS_SENDER_NAME || senderName;
+  const provider = settings?.smsProvider || integrations?.sms_provider || process.env.SMS_PROVIDER || 'simulator';
+  const apiKey = settings?.smsApiKey || integrations?.sms_api_key || process.env.SMS_API_KEY;
+  const officialSender = settings?.smsSenderName || integrations?.sms_sender_name || process.env.SMS_SENDER_NAME || senderName;
 
   // Format Saudi mobile number
   let cleanPhone = phone.replace(/[^0-9]/g, '');
@@ -118,6 +127,12 @@ export async function sendOrderConfirmationSms(params: {
   totalAmount: number;
   lang?: 'ar' | 'en';
 }): Promise<SmsResult> {
+  const settings = await getEcommerceSettings().catch(() => null);
+  if (settings && settings.notifySmsOrderConfirmation === false) {
+    console.log('[Saudi SMS] Order confirmation SMS is disabled in Admin Panel.');
+    return { success: true, simulated: true };
+  }
+
   const isAr = params.lang !== 'en';
   const trackUrl = `https://test.wdgroup.online/furniture/track?ref=${encodeURIComponent(params.orderRef)}`;
 
@@ -141,12 +156,19 @@ export async function sendOrderDispatchSms(params: {
   leadTechnician?: string;
   lang?: 'ar' | 'en';
 }): Promise<SmsResult> {
+  const settings = await getEcommerceSettings().catch(() => null);
+  if (settings && settings.notifySmsDispatch === false) {
+    console.log('[Saudi SMS] Out-for-delivery SMS is disabled in Admin Panel.');
+    return { success: true, simulated: true };
+  }
+
   const isAr = params.lang !== 'en';
+  const technician = params.leadTechnician || settings?.leadTechnicianDefault || '';
   const trackUrl = `https://test.wdgroup.online/furniture/track?ref=${encodeURIComponent(params.orderRef)}`;
 
   const text = isAr
-    ? `عزيزنا ${params.customerName}، طلبك رقم (${params.orderRef}) خرج للتسليم والتركيب عبر أسطول دبليو دي المعتمد${params.leadTechnician ? ` بقيادة م. ${params.leadTechnician}` : ''}. يرجى التواجد بالموقع للاستلام: ${trackUrl}`
-    : `Dear ${params.customerName}, order #${params.orderRef} has been dispatched for white-glove assembly${params.leadTechnician ? ` led by Eng. ${params.leadTechnician}` : ''}. Track arrival: ${trackUrl}`;
+    ? `عزيزنا ${params.customerName}، طلبك رقم (${params.orderRef}) خرج للتسليم والتركيب عبر أسطول دبليو دي المعتمد${technician ? ` بقيادة ${technician}` : ''}. يرجى التواجد بالموقع للاستلام: ${trackUrl}`
+    : `Dear ${params.customerName}, order #${params.orderRef} has been dispatched for white-glove assembly${technician ? ` led by ${technician}` : ''}. Track arrival: ${trackUrl}`;
 
   return await sendSms({
     phone: params.phone,

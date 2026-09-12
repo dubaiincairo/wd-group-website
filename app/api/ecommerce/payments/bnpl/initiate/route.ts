@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createEcommerceOrder } from '@/lib/admin/ecommerceDb';
 import { createTamaraCheckoutSession } from '@/lib/ecommerce/tamara';
 import { createTabbyCheckoutSession } from '@/lib/ecommerce/tabby';
+import { getEcommerceSettings } from '@/lib/ecommerce/settings';
 
 export const dynamic = 'force-dynamic';
 
@@ -32,6 +33,20 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(
         { success: false, error: 'Invalid BNPL provider specified. Choose tamara or tabby.' },
         { status: 400 }
+      );
+    }
+
+    const settings = await getEcommerceSettings().catch(() => null);
+    if (provider === 'tamara' && settings && settings.enableTamara === false) {
+      return NextResponse.json(
+        { success: false, error: 'Tamara installment payments are currently disabled by the store administrator.' },
+        { status: 403 }
+      );
+    }
+    if (provider === 'tabby' && settings && settings.enableTabby === false) {
+      return NextResponse.json(
+        { success: false, error: 'Tabby installment payments are currently disabled by the store administrator.' },
+        { status: 403 }
       );
     }
 

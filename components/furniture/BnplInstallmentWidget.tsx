@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '@/context/LanguageContext';
 import { ShieldCheck, Info, X, CheckCircle2, Sparkles, CreditCard, ChevronRight } from 'lucide-react';
@@ -19,9 +19,43 @@ export default function BnplInstallmentWidget({
   const { lang } = useLanguage();
   const isAr = lang === 'ar';
   const [modalOpen, setModalOpen] = useState(false);
-  const [activeProvider, setActiveProvider] = useState<'tamara' | 'tabby'>('tamara');
+  const [settings, setSettings] = useState<{
+    enablePdpBnplWidget: boolean;
+    enableTamara: boolean;
+    enableTabby: boolean;
+    tamaraInstallmentsCount: number;
+  } | null>(null);
 
-  const installmentAmount = Math.round(price / 4);
+  useEffect(() => {
+    fetch('/api/ecommerce/settings')
+      .then((r) => r.json())
+      .then((d) => {
+        if (d?.settings) {
+          setSettings({
+            enablePdpBnplWidget: d.settings.enablePdpBnplWidget !== false,
+            enableTamara: d.settings.enableTamara !== false,
+            enableTabby: d.settings.enableTabby !== false,
+            tamaraInstallmentsCount: d.settings.tamaraInstallmentsCount || 4,
+          });
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const installments = settings?.tamaraInstallmentsCount || 4;
+  const isTamaraActive = settings ? settings.enableTamara : true;
+  const isTabbyActive = settings ? settings.enableTabby : true;
+
+  const [activeProvider, setActiveProvider] = useState<'tamara' | 'tabby'>(
+    isTamaraActive ? 'tamara' : 'tabby'
+  );
+
+  // If widget is disabled by store admin or both providers are off, do not render
+  if (settings && (!settings.enablePdpBnplWidget || (!settings.enableTamara && !settings.enableTabby))) {
+    return null;
+  }
+
+  const installmentAmount = Math.round(price / installments);
 
   return (
     <>
@@ -33,13 +67,19 @@ export default function BnplInstallmentWidget({
         <div className="flex items-center gap-2.5">
           {/* Brand Badges */}
           <div className="flex items-center gap-1.5 shrink-0">
-            <span className="px-2 py-0.5 rounded-md bg-[#FF5C39]/15 border border-[#FF5C39]/30 text-[#FF7A5C] text-[10px] font-black font-mono uppercase tracking-wider">
-              TAMARA
-            </span>
-            <span className="text-zinc-600 font-mono text-xs">/</span>
-            <span className="px-2 py-0.5 rounded-md bg-[#3EFEBA]/15 border border-[#3EFEBA]/30 text-[#3EFEBA] text-[10px] font-black font-mono uppercase tracking-wider">
-              TABBY
-            </span>
+            {isTamaraActive && (
+              <span className="px-2 py-0.5 rounded-md bg-[#FF5C39]/15 border border-[#FF5C39]/30 text-[#FF7A5C] text-[10px] font-black font-mono uppercase tracking-wider">
+                TAMARA
+              </span>
+            )}
+            {isTamaraActive && isTabbyActive && (
+              <span className="text-zinc-600 font-mono text-xs">/</span>
+            )}
+            {isTabbyActive && (
+              <span className="px-2 py-0.5 rounded-md bg-[#3EFEBA]/15 border border-[#3EFEBA]/30 text-[#3EFEBA] text-[10px] font-black font-mono uppercase tracking-wider">
+                TABBY
+              </span>
+            )}
           </div>
 
           <p className="text-xs text-zinc-300 font-medium leading-tight">
@@ -102,30 +142,34 @@ export default function BnplInstallmentWidget({
               </div>
 
               {/* Provider Tabs */}
-              <div className="grid grid-cols-2 gap-2">
-                <button
-                  type="button"
-                  onClick={() => setActiveProvider('tamara')}
-                  className={`py-2 px-3 rounded-xl border text-xs font-black font-mono transition-all flex items-center justify-center gap-2 ${
-                    activeProvider === 'tamara'
-                      ? 'bg-[#FF5C39]/20 border-[#FF5C39] text-white shadow-lg'
-                      : 'bg-white/5 border-white/10 text-zinc-400'
-                  }`}
-                >
-                  <span>TAMARA · تمارا</span>
-                </button>
+              <div className={`grid ${isTamaraActive && isTabbyActive ? 'grid-cols-2' : 'grid-cols-1'} gap-2`}>
+                {isTamaraActive && (
+                  <button
+                    type="button"
+                    onClick={() => setActiveProvider('tamara')}
+                    className={`py-2 px-3 rounded-xl border text-xs font-black font-mono transition-all flex items-center justify-center gap-2 ${
+                      activeProvider === 'tamara'
+                        ? 'bg-[#FF5C39]/20 border-[#FF5C39] text-white shadow-lg'
+                        : 'bg-white/5 border-white/10 text-zinc-400'
+                    }`}
+                  >
+                    <span>TAMARA · تمارا</span>
+                  </button>
+                )}
 
-                <button
-                  type="button"
-                  onClick={() => setActiveProvider('tabby')}
-                  className={`py-2 px-3 rounded-xl border text-xs font-black font-mono transition-all flex items-center justify-center gap-2 ${
-                    activeProvider === 'tabby'
-                      ? 'bg-[#3EFEBA]/20 border-[#3EFEBA] text-[#3EFEBA] shadow-lg'
-                      : 'bg-white/5 border-white/10 text-zinc-400'
-                  }`}
-                >
-                  <span>TABBY · تابي</span>
-                </button>
+                {isTabbyActive && (
+                  <button
+                    type="button"
+                    onClick={() => setActiveProvider('tabby')}
+                    className={`py-2 px-3 rounded-xl border text-xs font-black font-mono transition-all flex items-center justify-center gap-2 ${
+                      activeProvider === 'tabby'
+                        ? 'bg-[#3EFEBA]/20 border-[#3EFEBA] text-[#3EFEBA] shadow-lg'
+                        : 'bg-white/5 border-white/10 text-zinc-400'
+                    }`}
+                  >
+                    <span>TABBY · تابي</span>
+                  </button>
+                )}
               </div>
 
               {/* Installment Breakdown Grid */}

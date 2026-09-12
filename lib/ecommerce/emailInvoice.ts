@@ -6,19 +6,34 @@
 import { sendEmailWithBrevo, renderBrandedShell } from '@/lib/email/brevo';
 import { EcommerceOrderRecord } from '@/lib/admin/types';
 import { generateZatcaQrBase64, generateQrCodeDataUrl } from '@/lib/ecommerce/zatca';
+import { getEcommerceSettings } from '@/lib/ecommerce/settings';
 
 export async function sendOrderTaxInvoiceEmail(
   order: EcommerceOrderRecord,
   lang: 'ar' | 'en' = 'ar'
 ): Promise<{ success: boolean; error?: string }> {
   const isAr = lang === 'ar';
+  const settings = await getEcommerceSettings().catch(() => null);
+
+  // If transactional order emails are disabled by admin, return early
+  if (settings && settings.enableOrderEmails === false) {
+    console.log('[Email Invoice] Transactional emails disabled by admin setting.');
+    return { success: true };
+  }
+
   const orderDateIso = order.createdAt ? new Date(order.createdAt).toISOString() : new Date().toISOString();
   const formattedDate = new Date(orderDateIso).toLocaleDateString('en-GB');
 
+  const sellerNameAr = settings?.companyNameAr || 'شركة تصاميم الوطن المحدودة - مجموعة دبليو دي';
+  const sellerNameEn = settings?.companyNameEn || 'WD Group for Contracting & Hospitality LLC';
+  const vatNumber = settings?.taxNumber || '310492817400003';
+  const crNumber = settings?.crNumber || '1010724891';
+  const showZatcaQr = settings?.enableZatcaQr !== false && settings?.attachZatcaInvoice !== false;
+
   // 1. Generate ZATCA Phase-2 Cryptographic TLV Base64 & QR Data URL
   const zatcaTlvBase64 = generateZatcaQrBase64({
-    sellerName: 'شركة تصاميم الوطن المحدودة - مجموعة دبليو دي',
-    vatRegistrationNumber: '310492817400003',
+    sellerName: sellerNameAr,
+    vatRegistrationNumber: vatNumber,
     timestamp: orderDateIso,
     totalWithVat: order.totalAmount,
     vatTotal: order.vatAmount,
@@ -53,15 +68,16 @@ export async function sendOrderTaxInvoiceEmail(
       <tr>
         <td style="text-align: ${isAr ? 'right' : 'left'}; vertical-align: top;">
           <h2 style="margin: 0 0 6px 0; color: #FFFFFF; font-size: 18px; font-weight: 800;">
-            ${isAr ? 'شركة تصاميم الوطن المحدودة (مجموعة دبليو دي)' : 'WD Group for Contracting & Hospitality LLC'}
+            ${isAr ? sellerNameAr : sellerNameEn}
           </h2>
           <p style="margin: 0 0 4px 0; font-size: 12px; color: #A0A5B5;">
             ${isAr ? 'مصانع جرين وود للأثاث الفندقي والمكتبي الفاخر · الرياض' : 'GreenWood Luxury Hospitality & Office Furniture Atelier · Riyadh'}
           </p>
           <p style="margin: 0; font-size: 11px; font-family: monospace; color: #8F96A9;">
-            CR: 1010724891 · VAT TRN: 310492817400003
+            CR: ${crNumber} · VAT TRN: ${vatNumber}
           </p>
         </td>
+        ${showZatcaQr ? `
         <td style="width: 110px; text-align: center; vertical-align: top;">
           <div style="background: #FFFFFF; padding: 4px; border-radius: 8px; display: inline-block;">
             <img src="${qrImageUrl}" alt="ZATCA Phase-2 QR" width="100" height="100" style="display: block; border: 0;" />
@@ -70,6 +86,7 @@ export async function sendOrderTaxInvoiceEmail(
             ZATCA Phase-2
           </span>
         </td>
+        ` : ''}
       </tr>
     </table>
 
@@ -198,6 +215,33 @@ export async function sendOrderTaxInvoiceEmail(
   const subject = isAr
     ? `فاتورة ضريبية معتمدة: طلبك رقم ${order.orderRef} - مجموعة دبليو دي (جرين وود)`
     : `Official Tax Invoice: Order #${order.orderRef} — WD Group (GreenWood)`;
+
+  // Dispatch high-ticket leadership alert if threshold is met
+  const highTicketThreshold = settings?.highTicketThreshold || 35000;
+  const adminAlertEmail = settings?.adminAlertEmail;
+  if (adminAlertEmail && order.totalAmount >= highTicketThreshold) {
+    sendEmailWithBrevo({
+      to: [{ name: 'WD Group Leadership & Finance', email: adminAlertEmail }],
+      subject: `🚨 [HIGH-TICKET ORDER] ${order.orderRef} — ${order.totalAmount.toLocaleString('en-US')} SAR`,
+      htmlContent: `
+        <div style="font-family: sans-serif; background: #0B0E14; color: #FFFFFF; padding: 24px; border-radius: 12px; border: 1px solid #C9A86A;">
+          <h2 style="color: #C9A86A; margin: 0 0 12px 0;">New High-Ticket VIP Order Received</h2>
+          <p style="font-size: 14px; color: #D1D5DB;">An order exceeding the VIP threshold of ${highTicketThreshold.toLocaleString('en-US')} SAR has been registered in the system:</p>
+          <ul style="color: #FFFFFF; font-size: 13px; line-height: 1.8;">
+            <li><strong>Order Ref:</strong> ${order.orderRef}</li>
+            <li><strong>Total Value:</strong> ${order.totalAmount.toLocaleString('en-US')} SAR (incl. VAT)</li>
+            <li><strong>Customer:</strong> ${order.customerName} (${order.phone} / ${order.email})</li>
+            <li><strong>City / Site:</strong> ${order.city} ${order.district ? `(${order.district})` : ''}</li>
+            <li><strong>Payment Method:</strong> ${order.paymentMethod}</li>
+          </ul>
+          <p style="margin-top: 16px;">
+            <a href="https://test.wdgroup.online/admin/ecommerce?ref=${encodeURIComponent(order.orderRef)}" style="background: #C9A86A; color: #000000; padding: 10px 18px; border-radius: 8px; text-decoration: none; font-weight: bold; display: inline-block;">View in Admin Operations Hub</a>
+          </p>
+        </div>
+      `,
+      tags: ['ecommerce', 'finance-alert', 'high-ticket'],
+    }).catch((err) => console.error('[High-Ticket Email Alert Error]:', err));
+  }
 
   return await sendEmailWithBrevo({
     to: [{ name: order.customerName, email: order.email }],
