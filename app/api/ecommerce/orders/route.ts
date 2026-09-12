@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createEcommerceOrder, listEcommerceOrders, updateEcommerceOrderStatus } from '@/lib/admin/ecommerceDb';
+import { createEcommerceOrder, listEcommerceOrders, updateEcommerceOrderStatus, getEcommerceOrderByRef } from '@/lib/admin/ecommerceDb';
 import { sendOrderStageNotification } from '@/lib/email/orderNotifications';
 import { createOdooSaleOrder, isOdooConfiguredAsync } from '@/lib/odoo/odooClient';
+import { sendOrderTaxInvoiceEmail } from '@/lib/ecommerce/emailInvoice';
+import { sendOrderConfirmationSms, sendOrderDispatchSms } from '@/lib/ecommerce/sms';
 
 export const dynamic = 'force-dynamic';
 
@@ -117,6 +119,23 @@ export async function POST(req: NextRequest) {
       console.warn('[Order Notification Email Failed]', err);
     });
 
+    // 5b. Dispatch Official ZATCA Tax Invoice Email & Saudi SMS Confirmation
+    sendOrderTaxInvoiceEmail(order).catch((err) => {
+      console.warn('[ZATCA Email Dispatch Error]', err);
+    });
+
+    if (customer.phone) {
+      sendOrderConfirmationSms({
+        phone: customer.phone,
+        orderRef: order.orderRef,
+        customerName: customerFullName,
+        totalAmount: calculatedTotal,
+        lang: 'ar',
+      }).catch((err) => {
+        console.warn('[Order Confirmation SMS Error]', err);
+      });
+    }
+
     // 6. Optional Sync with Odoo ERP
     isOdooConfiguredAsync().then((configured) => {
       if (configured) {
@@ -212,6 +231,23 @@ export async function PATCH(req: NextRequest) {
       leadTechnician,
       noteText
     );
+
+    // If out for delivery, dispatch real-time fleet SMS
+    if ((status === 'dispatched' || status === 'out_for_delivery') && updated) {
+      getEcommerceOrderByRef(orderRef).then((order) => {
+        if (order?.phone) {
+          sendOrderDispatchSms({
+            phone: order.phone,
+            orderRef: order.orderRef,
+            customerName: order.customerName,
+            leadTechnician,
+            lang: 'ar',
+          }).catch((smsErr) => {
+            console.warn('[Dispatch SMS Error]:', smsErr);
+          });
+        }
+      }).catch(() => {});
+    }
 
     return NextResponse.json({
       success: updated,

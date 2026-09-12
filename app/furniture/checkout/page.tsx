@@ -481,7 +481,83 @@ function FurnitureCheckoutContent() {
       }
     }
 
-    // 2. Fallback Order Submission (Wire Transfer, PO, Installments)
+    // 2. Direct Gateway Processing for Saudi BNPL (Tamara & Tabby)
+    if (selectedPayment === 'tamara' || selectedPayment === 'tabby') {
+      try {
+        const res = await fetch('/api/ecommerce/payments/bnpl/initiate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            provider: selectedPayment,
+            customer: {
+              firstName: deliveryForm.firstName,
+              lastName: deliveryForm.lastName,
+              email: deliveryForm.email,
+              phone: deliveryForm.phone,
+              city: deliveryForm.city,
+              district: deliveryForm.district,
+              address: deliveryForm.address,
+              villaBuilding: deliveryForm.villaBuilding,
+              deliveryNotes: deliveryForm.deliveryNotes,
+            },
+            orderType: deliveryForm.orderType,
+            deliveryDate: selectedDeliveryDate,
+            timeSlot: selectedTimeSlot,
+            whiteGloveAssembly,
+            wallAnchoring,
+            installmentsCount: selectedPayment === 'tamara' ? tamaraInstallmentsCount : 4,
+            items: cartItems.map((i) => {
+              const finishObj = i.product.finishes.find((f) => f.id === i.selectedFinishId);
+              return {
+                productId: i.product.id,
+                sku: i.product.sku,
+                nameEn: i.product.nameEn,
+                nameAr: i.product.nameAr,
+                finishId: i.selectedFinishId,
+                finishNameEn: finishObj?.nameEn || i.selectedFinishId,
+                finishNameAr: finishObj?.nameAr || i.selectedFinishId,
+                unitPrice: i.product.price,
+                quantity: i.quantity,
+                image: i.product.images[0] || '',
+              };
+            }),
+            subtotal,
+            discountAmount,
+            promoCode: appliedPromo || undefined,
+            vatAmount,
+            totalAmount: finalTotal,
+          }),
+        });
+
+        const data = await res.json();
+        if (data.success && data.redirectUrl) {
+          // Store customer session before redirecting
+          try {
+            localStorage.removeItem('wd_furniture_cart');
+            const prevRecent = JSON.parse(localStorage.getItem('wd_customer_recent_orders') || '[]');
+            const updatedRecent = Array.from(new Set([data.orderRef, ...prevRecent])).slice(0, 30);
+            localStorage.setItem('wd_customer_recent_orders', JSON.stringify(updatedRecent));
+            if (deliveryForm.phone) {
+              localStorage.setItem('wd_customer_phone', deliveryForm.phone);
+            }
+          } catch (e) {}
+
+          window.location.href = data.redirectUrl;
+          return;
+        } else {
+          setPaymentError(data.error || (isAr ? `تعذر الاتصال ببوابة ${selectedPayment === 'tamara' ? 'تمارا' : 'تابي'}. يرجى اختيار وسيلة دفع أخرى.` : `Failed to connect to ${selectedPayment}. Please choose another payment method.`));
+          setIsSubmitting(false);
+          return;
+        }
+      } catch (err: any) {
+        console.warn('BNPL initiation error:', err);
+        setPaymentError(isAr ? 'تعذر إتمام عملية التقسيط، يرجى المحاولة لاحقاً.' : 'Installment request failed. Please try again.');
+        setIsSubmitting(false);
+        return;
+      }
+    }
+
+    // 3. Fallback Order Submission (Wire Transfer, PO, COD)
     const fallbackRef = `WD-ORD-2026-${Math.floor(1000 + Math.random() * 9000)}`;
     let activeRef = fallbackRef;
 

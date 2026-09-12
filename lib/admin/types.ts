@@ -200,6 +200,14 @@ export interface IntegrationsConfig {
   moyasar_publishable_key?: string;
   moyasar_webhook_secret?: string;
   moyasar_test_mode?: boolean;
+  tamara_api_token?: string;
+  tamara_test_mode?: boolean;
+  tabby_secret_key?: string;
+  tabby_public_key?: string;
+  tabby_test_mode?: boolean;
+  sms_provider?: 'unifonic' | 'taqnyat' | 'simulator';
+  sms_api_key?: string;
+  sms_sender_name?: string;
   custom_variables?: CustomVariableRecord[];
 }
 

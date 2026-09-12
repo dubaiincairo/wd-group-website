@@ -13,6 +13,7 @@ import CartQuoteDrawer, { CartItem } from '@/components/furniture/CartQuoteDrawe
 import WishlistDrawer from '@/components/furniture/WishlistDrawer';
 import TrustGuarantees from '@/components/furniture/TrustGuarantees';
 import EcommerceFooter from '@/components/furniture/EcommerceFooter';
+import BnplInstallmentWidget from '@/components/furniture/BnplInstallmentWidget';
 import { 
   ShoppingBag, 
   Heart, 
@@ -250,6 +251,9 @@ function ProductDetailInner({ product, relatedProducts }: ProductDetailClientPro
                 {isAr ? '✓ شامل ضريبة القيمة المضافة 15% والتوصيل الفندقي المباشر' : '✓ Includes 15% Saudi VAT & White-Glove Installation'}
               </span>
             </div>
+
+            {/* Saudi BNPL 4-Installments Widget (Tamara / Tabby) */}
+            <BnplInstallmentWidget price={unitPrice} />
 
             {/* Finishes Selection */}
             <div className="space-y-3">

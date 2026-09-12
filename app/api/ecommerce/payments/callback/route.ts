@@ -3,6 +3,8 @@ import { getEcommerceOrderByRef, updateEcommerceOrderStatus } from '@/lib/admin/
 import { verifyMoyasarPayment } from '@/lib/ecommerce/moyasar';
 import { sendOrderStageNotification } from '@/lib/email/orderNotifications';
 import { createOdooSaleOrder, isOdooConfiguredAsync } from '@/lib/odoo/odooClient';
+import { sendOrderTaxInvoiceEmail } from '@/lib/ecommerce/emailInvoice';
+import { sendOrderConfirmationSms } from '@/lib/ecommerce/sms';
 
 export const dynamic = 'force-dynamic';
 
@@ -62,6 +64,19 @@ export async function GET(req: NextRequest) {
       totalAmount: order.totalAmount,
       lang: 'ar',
     }).catch((e) => console.warn('[Callback Email Notification Warning]', e));
+
+    // 4b. Send Official ZATCA Tax Invoice Email & Saudi SMS
+    const confirmedOrder = { ...order, status: 'confirmed' as const, paymentStatus: 'paid' };
+    sendOrderTaxInvoiceEmail(confirmedOrder).catch((e) => console.warn('[ZATCA Email Warning]', e));
+    if (order.phone) {
+      sendOrderConfirmationSms({
+        phone: order.phone,
+        orderRef: order.orderRef,
+        customerName: order.customerName,
+        totalAmount: order.totalAmount,
+        lang: 'ar',
+      }).catch((e) => console.warn('[SMS Dispatch Warning]', e));
+    }
 
     // 5. Sync to Odoo ERP
     isOdooConfiguredAsync().then((configured) => {
