@@ -304,6 +304,32 @@ export default function SettingsTab() {
                     className="w-full px-3 py-2 rounded-xl bg-black/40 border border-white/10 text-amber-400 font-bold"
                   />
                 </div>
+
+                {/* Moyasar Webhook Secret */}
+                <div className="sm:col-span-2 p-4 rounded-2xl bg-[#141721] space-y-1.5 border border-white/5">
+                  <div className="flex items-center justify-between">
+                    <span className="text-zinc-400 block font-sans font-bold">
+                      {isAr ? 'رمز أمان الويب هوك (Moyasar Webhook Secret)' : 'Moyasar Webhook Secret / Signature'}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => toggleKeyVisibility('moyasar_wh')}
+                      className="text-zinc-500 hover:text-white"
+                    >
+                      {showKeys.moyasar_wh ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                    </button>
+                  </div>
+                  <input
+                    type={showKeys.moyasar_wh ? 'text' : 'password'}
+                    value={settings.moyasarWebhookSecret || ''}
+                    onChange={(e) => setSettings({ ...settings, moyasarWebhookSecret: e.target.value })}
+                    placeholder="whsec_... (Cryptographically verifies incoming Moyasar payment webhooks)"
+                    className="w-full px-3 py-2 rounded-xl bg-black/40 border border-white/10 text-emerald-400 font-bold"
+                  />
+                  <span className="text-[10px] text-zinc-500 block font-sans">
+                    {isAr ? 'يتم التحقق من هذا الرمز عند استلام إشعارات الدفع من ميسر لمنع تزوير العمليات' : 'Used to authenticate asynchronous payment reconciliation webhooks and block forgery attempts.'}
+                  </span>
+                </div>
               </div>
             </div>
           )}
@@ -425,6 +451,32 @@ export default function SettingsTab() {
                     </select>
                   </div>
                 </div>
+
+                {/* Tamara Webhook / Notification Token */}
+                <div className="pt-2 border-t border-white/5 font-mono">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-zinc-400 block font-sans text-xs">
+                      {isAr ? 'رمز إشعارات الويب هوك (Tamara Notification Token / Webhook Secret):' : 'Tamara Notification Token / Webhook Secret:'}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => toggleKeyVisibility('tamara_wh')}
+                      className="text-zinc-500 hover:text-white"
+                    >
+                      {showKeys.tamara_wh ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                    </button>
+                  </div>
+                  <input
+                    type={showKeys.tamara_wh ? 'text' : 'password'}
+                    value={settings.tamaraNotificationToken || ''}
+                    onChange={(e) => setSettings({ ...settings, tamaraNotificationToken: e.target.value })}
+                    placeholder="tamara_whsec_... (Notification token for cryptographic event verification)"
+                    className="w-full px-3 py-2 rounded-xl bg-black/40 border border-white/10 text-[#FF7A5C] font-bold text-xs"
+                  />
+                  <span className="text-[10px] text-zinc-500 block font-sans mt-0.5">
+                    {isAr ? 'يتم التحقق من هذا الرمز عند استلام تحديثات حالة طلبات تمارا لمنع تزوير العمليات' : 'Used to authenticate Tamara webhook event notifications and block fraudulent order status updates.'}
+                  </span>
+                </div>
               </div>
 
               {/* Tabby Sub-Box */}
@@ -488,6 +540,32 @@ export default function SettingsTab() {
                       className="w-full px-3 py-2 rounded-xl bg-black/40 border border-white/10 text-[#3EFEBA] font-bold text-xs"
                     />
                   </div>
+                </div>
+
+                {/* Tabby Webhook Secret */}
+                <div className="pt-2 border-t border-white/5 font-mono">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-zinc-400 block font-sans text-xs">
+                      {isAr ? 'رمز التوقيع الرقمي للويب هوك (Tabby Webhook Secret):' : 'Tabby Webhook HMAC Secret:'}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => toggleKeyVisibility('tabby_wh')}
+                      className="text-zinc-500 hover:text-white"
+                    >
+                      {showKeys.tabby_wh ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                    </button>
+                  </div>
+                  <input
+                    type={showKeys.tabby_wh ? 'text' : 'password'}
+                    value={settings.tabbyWebhookSecret || ''}
+                    onChange={(e) => setSettings({ ...settings, tabbyWebhookSecret: e.target.value })}
+                    placeholder="tabby_whsec_... (Tabby Webhook Secret for HMAC validation)"
+                    className="w-full px-3 py-2 rounded-xl bg-black/40 border border-white/10 text-[#3EFEBA] font-bold text-xs"
+                  />
+                  <span className="text-[10px] text-zinc-500 block font-sans mt-0.5">
+                    {isAr ? 'يتم التحقق من ترويسة X-Tabby-Signature لمنع التزوير وتأكيد عمليات الدفع الموثوقة' : 'Validates cryptographic X-Tabby-Signature headers on incoming payment events.'}
+                  </span>
                 </div>
               </div>
 

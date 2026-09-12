@@ -11,16 +11,19 @@ export interface EcommerceSettingsPayload {
   enableApplePay: boolean;
   moyasarPublishableKey?: string;
   moyasarSecretKey?: string;
+  moyasarWebhookSecret?: string;
   moyasarTestMode: boolean;
 
   // 2. BNPL (Tamara & Tabby)
   enableTamara: boolean;
   tamaraApiToken?: string;
+  tamaraNotificationToken?: string;
   tamaraTestMode: boolean;
   tamaraInstallmentsCount: 3 | 4;
   enableTabby: boolean;
   tabbyPublicKey?: string;
   tabbySecretKey?: string;
+  tabbyWebhookSecret?: string;
   tabbyTestMode: boolean;
   enablePdpBnplWidget: boolean;
 
@@ -64,15 +67,18 @@ export const DEFAULT_ECOMMERCE_SETTINGS: EcommerceSettingsPayload = {
   enableApplePay: true,
   moyasarPublishableKey: 'pk_test_demo_wdgroup_pub_2026',
   moyasarSecretKey: 'sk_test_demo_wdgroup_sec_2026',
+  moyasarWebhookSecret: '',
   moyasarTestMode: false,
 
   enableTamara: true,
   tamaraApiToken: '',
+  tamaraNotificationToken: '',
   tamaraTestMode: true,
   tamaraInstallmentsCount: 4,
   enableTabby: true,
   tabbyPublicKey: '',
   tabbySecretKey: '',
+  tabbyWebhookSecret: '',
   tabbyTestMode: true,
   enablePdpBnplWidget: true,
 
@@ -139,11 +145,14 @@ export async function POST(req: NextRequest) {
       ...existingIntegrations,
       moyasar_secret_key: mergedSettings.moyasarSecretKey || existingIntegrations.moyasar_secret_key,
       moyasar_publishable_key: mergedSettings.moyasarPublishableKey || existingIntegrations.moyasar_publishable_key,
+      moyasar_webhook_secret: mergedSettings.moyasarWebhookSecret || existingIntegrations.moyasar_webhook_secret,
       moyasar_test_mode: mergedSettings.moyasarTestMode,
       tamara_api_token: mergedSettings.tamaraApiToken || existingIntegrations.tamara_api_token,
+      tamara_notification_token: mergedSettings.tamaraNotificationToken || existingIntegrations.tamara_notification_token,
       tamara_test_mode: mergedSettings.tamaraTestMode,
       tabby_secret_key: mergedSettings.tabbySecretKey || existingIntegrations.tabby_secret_key,
       tabby_public_key: mergedSettings.tabbyPublicKey || existingIntegrations.tabby_public_key,
+      tabby_webhook_secret: mergedSettings.tabbyWebhookSecret || existingIntegrations.tabby_webhook_secret,
       tabby_test_mode: mergedSettings.tabbyTestMode,
       sms_provider: mergedSettings.smsProvider,
       sms_api_key: mergedSettings.smsApiKey || existingIntegrations.sms_api_key,

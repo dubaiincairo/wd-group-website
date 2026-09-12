@@ -4,6 +4,7 @@ import { sendOrderStageNotification } from '@/lib/email/orderNotifications';
 import { createOdooSaleOrder, isOdooConfiguredAsync } from '@/lib/odoo/odooClient';
 import { sendOrderTaxInvoiceEmail } from '@/lib/ecommerce/emailInvoice';
 import { sendOrderConfirmationSms, sendOrderDispatchSms } from '@/lib/ecommerce/sms';
+import { calculateAuthoritativePricing } from '@/lib/ecommerce/pricing';
 
 export const dynamic = 'force-dynamic';
 
@@ -55,26 +56,33 @@ export async function POST(req: NextRequest) {
       `${customer.firstName || ''} ${customer.lastName || ''}`.trim() || 
       'Valued Client';
 
-    // Financial calculations fallback check
-    const calculatedSubtotal = Number(subtotal) || items.reduce((s: number, i: any) => s + (Number(i.unitPrice || i.price) * (i.quantity || i.qty || 1)), 0);
-    const calculatedVat = Number(vatAmount) || (calculatedSubtotal * 0.15);
-    const calculatedTotal = Number(totalAmount) || (calculatedSubtotal - Number(discountAmount) + calculatedVat);
+    // 3. Authoritative Server Pricing & Anti-Tampering Engine
+    const pricing = await calculateAuthoritativePricing({
+      items,
+      promoCode,
+      clientSubtotal: Number(subtotal),
+      clientVatAmount: Number(vatAmount),
+      clientTotalAmount: Number(totalAmount),
+    });
 
-    // 3. Format items
-    const formattedItems = items.map((it: any) => ({
-      productId: it.productId || it.id || 'custom-piece',
-      sku: it.sku || 'GW-BESPOKE',
-      nameEn: it.nameEn || it.name || 'Bespoke Furniture Piece',
-      nameAr: it.nameAr || it.name || 'قطعة أثاث فاخرة',
-      finishId: it.finishId || it.finish || 'standard',
-      finishNameEn: it.finishNameEn || it.finishName || 'Standard Finish',
-      finishNameAr: it.finishNameAr || it.finishName || 'التشطيب المعتمد',
-      unitPrice: Number(it.unitPrice || it.price || 0),
-      quantity: Number(it.quantity || it.qty || 1),
-      image: it.image || (it.images && it.images[0]) || '',
+    if (pricing.isTampered) {
+      console.warn(`[SECURITY ALERT] Price tampering intercepted on order ${orderRef}: ${pricing.tamperReason}`);
+    }
+
+    const formattedItems = pricing.items.map((it) => ({
+      productId: it.productId,
+      sku: it.sku,
+      nameEn: it.nameEn,
+      nameAr: it.nameAr,
+      finishId: it.finishId,
+      finishNameEn: it.finishNameEn,
+      finishNameAr: it.finishNameAr,
+      unitPrice: it.unitPrice,
+      quantity: it.quantity,
+      image: it.image,
     }));
 
-    // 4. Save to Database via dual-layer helper
+    // 4. Save to Database via dual-layer helper with tamper-proof totals
     const order = await createEcommerceOrder({
       orderRef,
       customerName: customerFullName,
@@ -94,12 +102,12 @@ export async function POST(req: NextRequest) {
       whiteGloveAssembly: Boolean(whiteGloveAssembly),
       wallAnchoring: Boolean(wallAnchoring),
       paymentMethod,
-      paymentStatus: paymentMethod === 'wire_transfer' ? 'pending' : 'paid',
-      subtotal: calculatedSubtotal,
-      discountAmount: Number(discountAmount) || 0,
+      paymentStatus: paymentMethod === 'cod' ? 'unpaid' : (paymentMethod === 'bank_transfer' ? 'pending' : 'paid'),
+      subtotal: pricing.subtotal,
+      discountAmount: pricing.discountAmount,
       promoCode,
-      vatAmount: calculatedVat,
-      totalAmount: calculatedTotal,
+      vatAmount: pricing.vatAmount,
+      totalAmount: pricing.totalAmount,
       items: formattedItems,
     });
 

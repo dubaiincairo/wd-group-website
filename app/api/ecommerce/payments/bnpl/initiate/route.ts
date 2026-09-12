@@ -3,6 +3,7 @@ import { createEcommerceOrder } from '@/lib/admin/ecommerceDb';
 import { createTamaraCheckoutSession } from '@/lib/ecommerce/tamara';
 import { createTabbyCheckoutSession } from '@/lib/ecommerce/tabby';
 import { getEcommerceSettings } from '@/lib/ecommerce/settings';
+import { calculateAuthoritativePricing } from '@/lib/ecommerce/pricing';
 
 export const dynamic = 'force-dynamic';
 
@@ -70,11 +71,34 @@ export async function POST(req: NextRequest) {
     const orderRef = `${prefix}-2026-${randomSuffix}`;
 
     const customerFullName = customer.fullName || `${customer.firstName || ''} ${customer.lastName || ''}`.trim() || 'WD Client';
-    const calculatedSubtotal = Number(subtotal) || items.reduce((s: number, i: any) => s + (Number(i.unitPrice) * i.quantity), 0);
-    const calculatedVat = Number(vatAmount) || (calculatedSubtotal * 0.15);
-    const calculatedTotal = Number(totalAmount) || (calculatedSubtotal - Number(discountAmount) + calculatedVat);
 
-    // 2. Persist order in DB with pending_payment
+    // 2. Authoritative Pricing & Anti-Tampering Engine
+    const pricing = await calculateAuthoritativePricing({
+      items,
+      promoCode,
+      clientSubtotal: Number(subtotal),
+      clientVatAmount: Number(vatAmount),
+      clientTotalAmount: Number(totalAmount),
+    });
+
+    if (pricing.isTampered) {
+      console.warn(`[SECURITY ALERT] BNPL session price tampering intercepted on ${orderRef}: ${pricing.tamperReason}`);
+    }
+
+    const formattedItems = pricing.items.map((it) => ({
+      productId: it.productId,
+      sku: it.sku,
+      nameEn: it.nameEn,
+      nameAr: it.nameAr,
+      finishId: it.finishId,
+      finishNameEn: it.finishNameEn,
+      finishNameAr: it.finishNameAr,
+      unitPrice: it.unitPrice,
+      quantity: it.quantity,
+      image: it.image,
+    }));
+
+    // 3. Persist order in DB with pending_payment and tamper-proof totals
     const newOrder = await createEcommerceOrder({
       orderRef,
       customerName: customerFullName,
@@ -96,23 +120,12 @@ export async function POST(req: NextRequest) {
       paymentMethod: provider,
       paymentStatus: 'unpaid',
       status: 'pending_payment',
-      subtotal: calculatedSubtotal,
-      discountAmount: Number(discountAmount),
+      subtotal: pricing.subtotal,
+      discountAmount: pricing.discountAmount,
       promoCode,
-      vatAmount: calculatedVat,
-      totalAmount: calculatedTotal,
-      items: items.map((it: any) => ({
-        productId: it.productId || it.id,
-        sku: it.sku,
-        nameEn: it.nameEn,
-        nameAr: it.nameAr,
-        finishId: it.finishId,
-        finishNameEn: it.finishNameEn,
-        finishNameAr: it.finishNameAr,
-        unitPrice: Number(it.unitPrice || it.price),
-        quantity: Number(it.quantity || 1),
-        image: it.image,
-      })),
+      vatAmount: pricing.vatAmount,
+      totalAmount: pricing.totalAmount,
+      items: formattedItems,
     });
 
     const origin = req.nextUrl.origin || 'https://test.wdgroup.online';
@@ -120,11 +133,11 @@ export async function POST(req: NextRequest) {
     const cancelCallbackUrl = `${origin}/furniture/checkout?cancelled=1&ref=${encodeURIComponent(orderRef)}`;
     const failureCallbackUrl = `${origin}/furniture/checkout?failed=1&ref=${encodeURIComponent(orderRef)}`;
 
-    // 3. Initiate BNPL Provider Session
+    // 4. Initiate BNPL Provider Session with Authoritative Total
     if (provider === 'tamara') {
       const tamaraResult = await createTamaraCheckoutSession({
         orderRef,
-        totalAmount: calculatedTotal,
+        totalAmount: pricing.totalAmount,
         consumer: {
           firstName: customer.firstName || 'Valued',
           lastName: customer.lastName || 'Client',
@@ -139,13 +152,13 @@ export async function POST(req: NextRequest) {
           countryCode: 'SA',
           phone: customer.phone,
         },
-        items: items.map((it: any) => ({
+        items: pricing.items.map((it) => ({
           name: it.nameEn,
           referenceId: it.sku,
           sku: it.sku,
-          quantity: Number(it.quantity || 1),
-          unitPrice: Number(it.unitPrice || it.price),
-          totalAmount: Number(it.unitPrice || it.price) * Number(it.quantity || 1),
+          quantity: it.quantity,
+          unitPrice: it.unitPrice,
+          totalAmount: it.totalPrice,
           imageUrl: it.image,
         })),
         installmentsCount: installmentsCount as 3 | 4,
@@ -173,7 +186,7 @@ export async function POST(req: NextRequest) {
     if (provider === 'tabby') {
       const tabbyResult = await createTabbyCheckoutSession({
         orderRef,
-        totalAmount: calculatedTotal,
+        totalAmount: pricing.totalAmount,
         buyer: {
           name: customerFullName,
           email: customer.email,
@@ -181,11 +194,11 @@ export async function POST(req: NextRequest) {
         },
         city: customer.city || 'Riyadh',
         address: `${customer.address || ''} ${customer.district || ''}`.trim(),
-        items: items.map((it: any) => ({
+        items: pricing.items.map((it) => ({
           title: it.nameEn,
           sku: it.sku,
-          unitPrice: Number(it.unitPrice || it.price),
-          quantity: Number(it.quantity || 1),
+          unitPrice: it.unitPrice,
+          quantity: it.quantity,
           imageUrl: it.image,
         })),
         successUrl: successCallbackUrl,
