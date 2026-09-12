@@ -933,7 +933,7 @@ export default function VisualStudio({
   // Helper renderer for prompt bar (used in docked or standby mode)
   function renderPromptBar(hasItems: boolean) {
     return (
-      <div className="max-w-3xl mx-auto rounded-3xl bg-[#12141F]/95 backdrop-blur-xl border border-white/15 p-3.5 shadow-2xl space-y-2.5">
+      <div className="w-full rounded-3xl bg-[#12141F]/95 backdrop-blur-xl border border-white/15 p-3.5 shadow-2xl space-y-2.5">
         
         {/* Active Attached Image Chip / Standby Notice */}
         {activeItem ? (

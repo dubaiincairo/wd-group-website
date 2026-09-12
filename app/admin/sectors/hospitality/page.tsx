@@ -246,9 +246,11 @@ export default function HospitalitySectorAdminPage() {
                         </span>
                       )}
                     </div>
-                    <span className="text-xs text-zinc-400 block truncate mt-0.5">
-                      {isAr ? prop.name_en : prop.name_ar}
-                    </span>
+                    {isAr && prop.name_en && (
+                      <span className="text-xs text-zinc-400 block truncate mt-0.5" dir="ltr">
+                        {prop.name_en}
+                      </span>
+                    )}
                   </div>
                 </div>
 

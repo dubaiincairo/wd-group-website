@@ -6,6 +6,7 @@ import { useToast } from '@/components/admin/ToastProvider';
 import type { SiteContentPayload, ChatbotConfig, StarterPromptItem } from '@/lib/admin/types';
 import { DEFAULT_CHATBOT_CONFIG, buildChatbotSystemPrompt } from '@/lib/admin/chatbot';
 import BilingualInput from '@/components/admin/BilingualInput';
+import MediaFieldUploader from '@/components/admin/MediaFieldUploader';
 import {
   Bot,
   User,
@@ -277,49 +278,26 @@ export default function ChatbotControlCenter({ content, setContent }: ChatbotCon
               <span>{isAr ? 'صورة الوكيل الحقيقية (Avatar Portrait)' : 'Agent Portrait & Avatar'}</span>
             </h4>
 
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5">
-              <div className="relative w-20 h-20 rounded-full border-2 border-[#C9A86A] shadow-xl shrink-0 bg-black ring-2 ring-[#C9A86A]/20">
-                <div className="w-full h-full rounded-full overflow-hidden">
-                  <img
-                    src={chatbot.avatar_url || '/brand/sultan-avatar.jpg'}
-                    alt="Avatar Preview"
-                    className="w-full h-full object-cover object-top"
-                  />
-                </div>
-                {/* Floating Live Indicator Over Outer Rim */}
-                <span className="absolute -bottom-0.5 -right-0.5 flex h-5 w-5 z-20 pointer-events-none">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                  <span className="relative inline-flex rounded-full h-5 w-5 bg-emerald-500 border-[2.5px] border-[#08090C] shadow-[0_0_12px_#10B981]" />
-                </span>
+            <div className="space-y-3">
+              <div className="flex justify-end">
+                <button
+                  type="button"
+                  onClick={() => updateChatbot({ avatar_url: '/brand/sultan-avatar.jpg' })}
+                  className="text-[11px] font-mono text-[#C9A86A] hover:underline cursor-pointer"
+                >
+                  {isAr ? 'استعادة صورة سلطان الرسمية' : 'Use Official Sultan Portrait'}
+                </button>
               </div>
 
-              <div className="flex-1 space-y-2 w-full">
-                <div className="flex items-center justify-between">
-                  <label className="text-xs font-bold text-zinc-300">
-                    {isAr ? 'مسار أو رابط صورة الأفاتار' : 'Avatar URL / Asset Path'}
-                  </label>
-                  <button
-                    type="button"
-                    onClick={() => updateChatbot({ avatar_url: '/brand/sultan-avatar.jpg' })}
-                    className="text-[11px] font-mono text-[#C9A86A] hover:underline cursor-pointer"
-                  >
-                    {isAr ? 'استعادة صورة سلطان الرسمية' : 'Use Official Sultan Portrait'}
-                  </button>
-                </div>
-                <input
-                  type="text"
-                  value={chatbot.avatar_url}
-                  onChange={(e) => updateChatbot({ avatar_url: e.target.value })}
-                  placeholder="/brand/sultan-avatar.jpg"
-                  className="w-full bg-[#141721] border border-white/15 rounded-xl px-4 py-2.5 text-xs font-mono text-white focus:outline-none focus:border-[#C9A86A]"
-                  dir="ltr"
-                />
-                <p className="text-[11px] text-zinc-500">
-                  {isAr
-                    ? 'يمكنك استخدام الصورة المعتمدة لسلطان (/brand/sultan-avatar.jpg) أو وضع رابط مباشر لصورة موظف حقيقي.'
-                    : 'Use Sultan’s authentic corporate Saudi portrait (/brand/sultan-avatar.jpg) or input a direct URL.'}
-                </p>
-              </div>
+              <MediaFieldUploader
+                label={isAr ? 'تحميل صورة المساعد' : 'Upload Agent Photo'}
+                description={isAr ? 'اختر صورة من جهازك أو الصق رابطاً مباشراً.' : 'Choose a photo from your computer or paste a direct URL.'}
+                value={chatbot.avatar_url}
+                onChange={(avatarUrl) => updateChatbot({ avatar_url: avatarUrl })}
+                accept="image"
+                bucket="assets"
+                aspectRatio="1:1"
+              />
             </div>
           </div>
 

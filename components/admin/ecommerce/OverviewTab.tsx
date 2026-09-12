@@ -257,10 +257,10 @@ export default function OverviewTab({
                 <span>NanoBanana Pro + OpenAI Vision</span>
               </span>
             </div>
-            <p className="text-xs text-zinc-300 max-w-2xl leading-relaxed">
+            <p className="text-xs text-zinc-300 max-w-2xl truncate">
               {isAr
-                ? 'استوديو بصري متطور لتحسين ومعايرة إضاءة الصور بـ NanoBanana Pro، واستوديو محتوى ذكي لتحليل الأبعاد والخامات وكتابة الوصف المعماري الفاخر وإدراجه بالكتالوج فوراً.'
-                : 'Remaster studio lighting with NanoBanana Pro in Visual Studio, and extract specs, pricing, and bilingual copy in Content Studio for 1-click catalog publishing.'}
+                ? 'حسّن صور المنتجات وأنشئ المواصفات والأسعار والمحتوى الثنائي اللغة الجاهز للكتالوج.'
+                : 'Remaster product photos and create catalog-ready specifications, pricing, and bilingual copy.'}
             </p>
           </div>
         </div>
