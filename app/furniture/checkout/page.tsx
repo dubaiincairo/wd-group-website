@@ -134,6 +134,7 @@ function FurnitureCheckoutContent() {
     companyName: '',
     crNumber: '',
     vatNumber: '',
+    _hp_website: '',
   });
 
   // Delivery Scheduling State
@@ -445,6 +446,7 @@ function FurnitureCheckoutContent() {
               villaBuilding: deliveryForm.villaBuilding,
               deliveryNotes: deliveryForm.deliveryNotes,
             },
+            _hp_website: deliveryForm._hp_website || undefined,
             orderType: deliveryForm.orderType,
             deliveryDate: selectedDeliveryDate,
             timeSlot: selectedTimeSlot,
@@ -535,6 +537,7 @@ function FurnitureCheckoutContent() {
               villaBuilding: deliveryForm.villaBuilding,
               deliveryNotes: deliveryForm.deliveryNotes,
             },
+            _hp_website: deliveryForm._hp_website || undefined,
             orderType: deliveryForm.orderType,
             deliveryDate: selectedDeliveryDate,
             timeSlot: selectedTimeSlot,
@@ -612,8 +615,9 @@ function FurnitureCheckoutContent() {
             villaBuilding: deliveryForm.villaBuilding,
             deliveryNotes: deliveryForm.deliveryNotes,
           },
+          _hp_website: deliveryForm._hp_website || undefined,
           orderType: deliveryForm.orderType,
-          deliveryDate: deliveryForm.deliveryDate,
+          deliveryDate: selectedDeliveryDate,
           timeSlot: deliveryForm.timeSlot,
           whiteGloveAssembly: deliveryForm.whiteGloveAssembly,
           wallAnchoring: deliveryForm.wallAnchoring,
@@ -970,6 +974,18 @@ function FurnitureCheckoutContent() {
                       </div>
                     </div>
                   )}
+
+                  {/* Anti-Bot Security Honeypot (Zero impact on humans, traps automated scrapers/bots) */}
+                  <input
+                    type="text"
+                    name="_hp_website"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    value={deliveryForm._hp_website}
+                    onChange={(e) => setDeliveryForm({ ...deliveryForm, _hp_website: e.target.value })}
+                    style={{ display: 'none', position: 'absolute', left: '-9999px', opacity: 0, pointerEvents: 'none' }}
+                    aria-hidden="true"
+                  />
 
                   {/* Customer Personal Details */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">

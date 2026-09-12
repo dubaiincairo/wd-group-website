@@ -4,12 +4,29 @@ import { createTamaraCheckoutSession } from '@/lib/ecommerce/tamara';
 import { createTabbyCheckoutSession } from '@/lib/ecommerce/tabby';
 import { getEcommerceSettings } from '@/lib/ecommerce/settings';
 import { calculateAuthoritativePricing } from '@/lib/ecommerce/pricing';
+import { checkCheckoutRateLimit, verifyHoneypot, getClientIp } from '@/lib/security/rateLimit';
 
 export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
+
+    // 0. Honeypot check
+    if (verifyHoneypot(body)) {
+      return NextResponse.json({ success: true, checkoutUrl: '#' });
+    }
+
+    // 1. Rate limiting (10 attempts per 15 min per IP)
+    const clientIp = getClientIp(req);
+    const rateLimit = checkCheckoutRateLimit(clientIp);
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        { success: false, error: rateLimit.reason },
+        { status: 429 }
+      );
+    }
+
     const {
       provider, // 'tamara' | 'tabby'
       customer,

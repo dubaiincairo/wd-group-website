@@ -2,12 +2,29 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createEcommerceOrder, getEcommerceOrderByRef } from '@/lib/admin/ecommerceDb';
 import { initiateMoyasarPayment } from '@/lib/ecommerce/moyasar';
 import { calculateAuthoritativePricing } from '@/lib/ecommerce/pricing';
+import { checkCheckoutRateLimit, verifyHoneypot, getClientIp } from '@/lib/security/rateLimit';
 
 export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
+
+    // 0. Honeypot check
+    if (verifyHoneypot(body)) {
+      return NextResponse.json({ success: true, status: 'initiated', transactionUrl: '#' });
+    }
+
+    // 1. Rate limiting (10 attempts per 15 min per IP)
+    const clientIp = getClientIp(req);
+    const rateLimit = checkCheckoutRateLimit(clientIp);
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        { success: false, error: rateLimit.reason },
+        { status: 429 }
+      );
+    }
+
     const {
       customer,
       items,

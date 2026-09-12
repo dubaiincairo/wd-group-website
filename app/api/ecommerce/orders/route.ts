@@ -5,12 +5,33 @@ import { createOdooSaleOrder, isOdooConfiguredAsync } from '@/lib/odoo/odooClien
 import { sendOrderTaxInvoiceEmail } from '@/lib/ecommerce/emailInvoice';
 import { sendOrderConfirmationSms, sendOrderDispatchSms } from '@/lib/ecommerce/sms';
 import { calculateAuthoritativePricing } from '@/lib/ecommerce/pricing';
+import { checkCheckoutRateLimit, verifyHoneypot, getClientIp } from '@/lib/security/rateLimit';
 
 export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
+
+    // 0. Anti-Bot Honeypot Trap
+    if (verifyHoneypot(body)) {
+      return NextResponse.json({
+        success: true,
+        orderRef: `WD-ORD-2026-${Math.floor(1000 + Math.random() * 9000)}`,
+        status: 'pending_payment',
+      });
+    }
+
+    // 1. Anti-Abuse Rate Limiting (10 checkouts per 15 min per IP)
+    const clientIp = getClientIp(req);
+    const rateLimit = checkCheckoutRateLimit(clientIp);
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        { success: false, error: rateLimit.reason },
+        { status: 429 }
+      );
+    }
+
     const {
       customer,
       items,

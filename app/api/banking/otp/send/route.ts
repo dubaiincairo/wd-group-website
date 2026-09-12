@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { sendEmailWithBrevo, renderBrandedShell } from '@/lib/email/brevo';
 import { getIntegrationsConfig } from '@/lib/admin/secrets';
+import { checkOtpRateLimit, verifyHoneypot, getClientIp } from '@/lib/security/rateLimit';
 
 export const dynamic = 'force-dynamic';
 
@@ -37,6 +38,12 @@ function maskRecipient(recipient: string, channel: 'email' | 'whatsapp'): string
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
+
+    // 1. Silent Honeypot Trap
+    if (verifyHoneypot(body)) {
+      return NextResponse.json({ success: true, expiresInSeconds: 600 });
+    }
+
     const { recipient, channel = 'email', customerName = '' } = body;
 
     if (!recipient || typeof recipient !== 'string' || recipient.trim().length < 3) {
@@ -48,6 +55,20 @@ export async function POST(req: NextRequest) {
 
     const normalizedRecipient = recipient.trim().toLowerCase();
     const effectiveChannel: 'email' | 'whatsapp' = channel === 'whatsapp' || !normalizedRecipient.includes('@') ? 'whatsapp' : 'email';
+
+    // 2. Anti-Abuse Rate Limiting
+    const clientIp = getClientIp(req);
+    const rateLimit = checkOtpRateLimit(normalizedRecipient, clientIp);
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: rateLimit.reason,
+          error_ar: `تم تجاوز الحد المسموح لإرسال رموز التحقق. يرجى الانتظار ${rateLimit.resetSeconds} ثانية.`,
+        },
+        { status: 429 }
+      );
+    }
 
     // Generate secure 6-digit numeric OTP
     const otpCode = Math.floor(100000 + Math.random() * 900000).toString();

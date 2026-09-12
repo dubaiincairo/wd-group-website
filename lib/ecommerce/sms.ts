@@ -5,6 +5,7 @@
 
 import { getIntegrationsConfig } from '@/lib/admin/secrets';
 import { getEcommerceSettings } from '@/lib/ecommerce/settings';
+import { checkSmsRateLimit } from '@/lib/security/rateLimit';
 
 export interface SendSmsParams {
   phone: string;
@@ -46,6 +47,17 @@ export async function sendSms({
     cleanPhone = '966' + cleanPhone.slice(1);
   } else if (!cleanPhone.startsWith('966')) {
     cleanPhone = '966' + cleanPhone;
+  }
+
+  // Quota & Rate Limit Protection: Max 3 SMS per 10 minutes per phone
+  const rateLimit = checkSmsRateLimit(cleanPhone);
+  if (!rateLimit.allowed) {
+    console.warn(`[SMS Quota Guard] Throttling outbound SMS to +${cleanPhone}: ${rateLimit.reason}`);
+    return {
+      success: false,
+      error: `Throttled: ${rateLimit.reason}`,
+      simulated: true,
+    };
   }
 
   // Simulation mode when no active gateway key is configured

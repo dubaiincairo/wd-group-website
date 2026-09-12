@@ -3,10 +3,14 @@ import { getSiteContent, updateSiteContent } from './db';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://fqkbgfdasfwnryekkgqz.supabase.co';
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZxa2JnZmRhc2Z3bnJ5ZWtrZ3F6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc1OTAyMDYsImV4cCI6MjEwMzE2NjIwNn0.IRPdvlCIbeTtFNf8TMc353fT-tlLxYq0Mx3P2HHmM3Q';
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+// Server-side backend calls prefer service role key when available to safely bypass RLS
+const serverDbKey = supabaseServiceKey || supabaseAnonKey;
 
 const defaultHeaders = {
-  'apikey': supabaseAnonKey,
-  'Authorization': `Bearer ${supabaseAnonKey}`,
+  'apikey': serverDbKey,
+  'Authorization': `Bearer ${serverDbKey}`,
   'Content-Type': 'application/json',
 };
 
