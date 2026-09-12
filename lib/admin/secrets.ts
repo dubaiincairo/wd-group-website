@@ -36,6 +36,10 @@ export async function getIntegrationsConfig(): Promise<IntegrationsConfig> {
     google_cloud_api_key: dbIntegrations.google_cloud_api_key?.trim() || process.env.GOOGLE_CLOUD_API_KEY || process.env.GEMINI_API_KEY || '',
     nanobanana_api_key: dbIntegrations.nanobanana_api_key?.trim() || process.env.NANOBANANA_API_KEY || '',
     site_password: dbIntegrations.site_password?.trim() || process.env.SITE_PASSWORD || '',
+    moyasar_secret_key: dbIntegrations.moyasar_secret_key?.trim() || process.env.MOYASAR_SECRET_KEY || 'sk_test_demo_wdgroup_sec_2026',
+    moyasar_publishable_key: dbIntegrations.moyasar_publishable_key?.trim() || process.env.NEXT_PUBLIC_MOYASAR_PUBLISHABLE_KEY || 'pk_test_demo_wdgroup_pub_2026',
+    moyasar_webhook_secret: dbIntegrations.moyasar_webhook_secret?.trim() || process.env.MOYASAR_WEBHOOK_SECRET || '',
+    moyasar_test_mode: dbIntegrations.moyasar_test_mode !== undefined ? Boolean(dbIntegrations.moyasar_test_mode) : (process.env.MOYASAR_TEST_MODE !== 'false'),
     custom_variables: dbIntegrations.custom_variables || [],
   };
 }

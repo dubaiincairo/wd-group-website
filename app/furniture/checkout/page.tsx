@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '@/context/LanguageContext';
 import { FurnitureItem, FURNITURE_CATALOG } from '@/lib/furnitureData';
@@ -44,13 +45,34 @@ interface CartItemState {
   quantity: number;
 }
 
-export default function FurnitureCheckoutPage() {
+function FurnitureCheckoutContent() {
   const { lang, dict } = useLanguage();
   const isAr = lang === 'ar';
+  const searchParams = useSearchParams();
+  const [paymentError, setPaymentError] = useState<string | null>(null);
 
   // 1. Cart Items State (persisted via localStorage or default to catalog signatures)
   const [cartItems, setCartItems] = useState<CartItemState[]>([]);
   const [loaded, setLoaded] = useState(false);
+
+  // Sync with 3D-Secure Bank Callback Parameters
+  useEffect(() => {
+    if (!searchParams) return;
+    const isSuccess = searchParams.get('paymentSuccess') === 'true';
+    const ref = searchParams.get('ref');
+    const err = searchParams.get('paymentError');
+
+    if (isSuccess && ref) {
+      setOrderReference(ref);
+      setIsOrderComplete(true);
+      try {
+        localStorage.removeItem('wd_furniture_cart');
+      } catch (e) {}
+    } else if (err) {
+      setPaymentError(decodeURIComponent(err));
+      setCurrentStep(2); // Return to payment step
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     try {
@@ -366,7 +388,92 @@ export default function FurnitureCheckoutPage() {
   // Handle Final Order Placement
   const handlePlaceOrder = async () => {
     setIsSubmitting(true);
+    setPaymentError(null);
 
+    // 1. Direct Gateway Processing for Mada / Credit Cards via Moyasar
+    if (selectedPayment === 'mada_cards') {
+      try {
+        const res = await fetch('/api/ecommerce/payments/initiate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            customer: {
+              firstName: deliveryForm.firstName,
+              lastName: deliveryForm.lastName,
+              email: deliveryForm.email,
+              phone: deliveryForm.phone,
+              city: deliveryForm.city,
+              district: deliveryForm.district,
+              address: deliveryForm.address,
+              villaBuilding: deliveryForm.villaBuilding,
+              deliveryNotes: deliveryForm.deliveryNotes,
+            },
+            orderType: deliveryForm.orderType,
+            deliveryDate: selectedDeliveryDate,
+            timeSlot: selectedTimeSlot,
+            whiteGloveAssembly,
+            wallAnchoring,
+            paymentMethod: 'mada_cards',
+            card: {
+              name: cardForm.cardHolder || `${deliveryForm.firstName} ${deliveryForm.lastName}`.trim() || 'WD Client',
+              number: cardForm.cardNumber,
+              cvc: cardForm.cvv || '123',
+              month: cardForm.expiry.split('/')[0] || '12',
+              year: cardForm.expiry.split('/')[1] || '28',
+            },
+            items: cartItems.map((i) => {
+              const finishObj = i.product.finishes.find((f) => f.id === i.selectedFinishId);
+              return {
+                productId: i.product.id,
+                sku: i.product.sku,
+                nameEn: i.product.nameEn,
+                nameAr: i.product.nameAr,
+                finishId: i.selectedFinishId,
+                finishNameEn: finishObj?.nameEn || i.selectedFinishId,
+                finishNameAr: finishObj?.nameAr || i.selectedFinishId,
+                unitPrice: i.product.price,
+                quantity: i.quantity,
+                image: i.product.images[0] || '',
+              };
+            }),
+            subtotal,
+            discountAmount,
+            promoCode: appliedPromo || undefined,
+            vatAmount,
+            totalAmount: finalTotal,
+          }),
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          if (data.transactionUrl) {
+            // 3D-Secure Bank OTP Redirect
+            window.location.href = data.transactionUrl;
+            return;
+          }
+          if (data.orderRef) {
+            setOrderReference(data.orderRef);
+            setIsSubmitting(false);
+            setIsOrderComplete(true);
+            try {
+              localStorage.removeItem('wd_furniture_cart');
+            } catch (e) {}
+            return;
+          }
+        } else {
+          setPaymentError(data.error || (isAr ? 'تم رفض عملية الدفع من قبل البنك المصدر للبطاقة' : 'Payment declined by issuing bank'));
+          setIsSubmitting(false);
+          return;
+        }
+      } catch (err: any) {
+        console.warn('Payment initiation error:', err);
+        setPaymentError(isAr ? 'تعذر الاتصال ببوابة الدفع. يرجى المحاولة لاحقاً.' : 'Connection to payment gateway failed.');
+        setIsSubmitting(false);
+        return;
+      }
+    }
+
+    // 2. Fallback Order Submission (Wire Transfer, PO, Installments)
     const fallbackRef = `WD-ORD-2026-${Math.floor(1000 + Math.random() * 9000)}`;
     let activeRef = fallbackRef;
 
@@ -386,7 +493,7 @@ export default function FurnitureCheckoutPage() {
             villaBuilding: deliveryForm.villaBuilding,
             deliveryNotes: deliveryForm.deliveryNotes,
           },
-          orderType: 'retail',
+          orderType: deliveryForm.orderType,
           deliveryDate: deliveryForm.deliveryDate,
           timeSlot: deliveryForm.timeSlot,
           whiteGloveAssembly: deliveryForm.whiteGloveAssembly,
@@ -586,6 +693,23 @@ export default function FurnitureCheckoutPage() {
             {/* LEFT / CENTER: Steps Content (7 Cols) */}
             <div className="lg:col-span-7 space-y-6">
               
+              {/* Payment Error Alert Banner */}
+              {paymentError && (
+                <div className="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-center justify-between gap-3 animate-in fade-in">
+                  <div className="flex items-center gap-2.5">
+                    <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
+                    <span>{paymentError}</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setPaymentError(null)}
+                    className="p-1 rounded-lg text-zinc-400 hover:text-white transition-colors"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
+
               {/* Steps Progress Tabs */}
               <div className="grid grid-cols-3 gap-2 p-1.5 rounded-2xl bg-[#0F1117] border border-white/10 text-xs font-mono">
                 <button
@@ -2366,3 +2490,12 @@ export default function FurnitureCheckoutPage() {
     </div>
   );
 }
+
+export default function FurnitureCheckoutPage() {
+  return (
+    <React.Suspense fallback={<div className="min-h-screen bg-[#08090C] text-white pt-32 text-center">Loading luxury checkout experience...</div>}>
+      <FurnitureCheckoutContent />
+    </React.Suspense>
+  );
+}
+

@@ -196,6 +196,10 @@ export interface IntegrationsConfig {
   google_cloud_api_key?: string;
   nanobanana_api_key?: string;
   site_password?: string;
+  moyasar_secret_key?: string;
+  moyasar_publishable_key?: string;
+  moyasar_webhook_secret?: string;
+  moyasar_test_mode?: boolean;
   custom_variables?: CustomVariableRecord[];
 }
 
