@@ -86,7 +86,13 @@ export default function HospitalitySectorAdminPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(content),
       });
-      if (!res.ok) throw new Error('Failed to save hospitality data');
+      const result = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        if (res.status === 401) {
+          throw new Error(isAr ? 'انتهت جلسة الإدارة. سجّل الدخول مجدداً.' : 'Your admin session expired. Please sign in again.');
+        }
+        throw new Error(result.error || (isAr ? 'فشل حفظ بيانات الضيافة' : 'Failed to save hospitality data'));
+      }
       showToast(isAr ? 'تم حفظ ونشر بيانات الضيافة بنجاح' : 'Hospitality properties saved and published', 'success');
     } catch (err: any) {
       showToast(err.message || (isAr ? 'خطأ في الحفظ' : 'Failed to save hospitality data'), 'error');

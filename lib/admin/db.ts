@@ -17,6 +17,19 @@ const defaultHeaders = {
   'Content-Type': 'application/json',
 };
 
+function getServiceRoleHeaders() {
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!serviceRoleKey) {
+    throw new Error('Admin content storage is not configured. SUPABASE_SERVICE_ROLE_KEY is missing.');
+  }
+
+  return {
+    'apikey': serviceRoleKey,
+    'Authorization': `Bearer ${serviceRoleKey}`,
+    'Content-Type': 'application/json',
+  };
+}
+
 /**
  * Call a PostgreSQL RPC function in Supabase
  */
@@ -79,33 +92,27 @@ export async function updateSiteContent(data: Partial<SiteContentPayload>): Prom
   const current: Partial<SiteContentPayload> = (await getSiteContent()) || {};
   const merged = { ...current, ...data, version: (current.version || 1) + 1 };
 
-  const res = await fetch(`${supabaseUrl}/rest/v1/wdgroup_content?id=eq.main`, {
-    method: 'PATCH',
+  const res = await fetch(`${supabaseUrl}/rest/v1/wdgroup_content?on_conflict=id`, {
+    method: 'POST',
     headers: {
-      ...defaultHeaders,
-      'Prefer': 'return=representation',
+      ...getServiceRoleHeaders(),
+      'Prefer': 'resolution=merge-duplicates,return=representation',
     },
     body: JSON.stringify({
+      id: 'main',
       data: merged,
       updated_at: new Date().toISOString(),
     }),
   });
 
   if (!res.ok) {
-    // If not existing, insert
-    const insertRes = await fetch(`${supabaseUrl}/rest/v1/wdgroup_content`, {
-      method: 'POST',
-      headers: {
-        ...defaultHeaders,
-        'Prefer': 'return=representation',
-      },
-      body: JSON.stringify({
-        id: 'main',
-        data: merged,
-        updated_at: new Date().toISOString(),
-      }),
+    const errorBody = await res.json().catch(() => ({}));
+    console.error('Supabase rejected content update', {
+      status: res.status,
+      code: errorBody?.code,
+      message: errorBody?.message,
     });
-    return insertRes.ok;
+    throw new Error(`Content database rejected the update (${res.status}).`);
   }
 
   return true;

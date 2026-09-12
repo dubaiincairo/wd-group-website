@@ -36,7 +36,7 @@ import {
   RefreshCw,
   Info
 } from 'lucide-react';
-import { EcommerceSettingsPayload, DEFAULT_ECOMMERCE_SETTINGS } from '@/app/api/admin/ecommerce/settings/route';
+import { EcommerceSettingsPayload, DEFAULT_ECOMMERCE_SETTINGS } from '@/lib/ecommerce/settingsConfig';
 
 export default function SettingsTab() {
   const { lang } = useLanguage();
