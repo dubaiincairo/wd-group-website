@@ -304,6 +304,29 @@ function EcommerceAdminContent() {
     }
   }, []);
 
+  // Fetch real database orders from API and merge with default seed
+  useEffect(() => {
+    const fetchLiveOrders = async () => {
+      try {
+        const res = await fetch('/api/ecommerce/orders');
+        if (res.ok) {
+          const data = await res.json();
+          if (data.success && Array.isArray(data.orders) && data.orders.length > 0) {
+            setOrders((prev) => {
+              const liveOrders: EcommerceOrderRecord[] = data.orders;
+              const liveRefs = new Set(liveOrders.map((o) => o.orderRef));
+              const seedOnly = prev.filter((o) => !liveRefs.has(o.orderRef));
+              return [...liveOrders, ...seedOnly];
+            });
+          }
+        }
+      } catch (err) {
+        console.warn('Failed to load live orders from API:', err);
+      }
+    };
+    fetchLiveOrders();
+  }, []);
+
   // Selected Order for Slide-Over Drawer
   const [selectedOrder, setSelectedOrder] = useState<EcommerceOrderRecord | null>(null);
   const [newNoteText, setNewNoteText] = useState('');
@@ -410,8 +433,21 @@ function EcommerceAdminContent() {
   const handleUpdateOrderStatus = async (orderId: string, newStatus: EcommerceOrderStatus) => {
     const targetOrder = orders.find((o) => o.id === orderId);
 
-    // Call Stage Notification API (Brevo Email + WhatsApp)
+    // Call Stage Notification API (Brevo Email + WhatsApp) & Persist to Database
     if (targetOrder) {
+      // 1. Database Persistence
+      fetch('/api/ecommerce/orders', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          orderRef: targetOrder.orderRef,
+          status: newStatus,
+          leadTechnician: targetOrder.leadTechnician,
+          noteText: `Stage updated to ${newStatus} from Admin Portal.`,
+        }),
+      }).catch((err) => console.warn('Order DB update notice:', err));
+
+      // 2. Telemetry Dispatch
       fetch('/api/orders/notify-stage', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

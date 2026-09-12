@@ -76,6 +76,52 @@ function OrderTrackerContent() {
   const fetchOrder = async (targetRef: string) => {
     try {
       setLoadingOrder(true);
+
+      // 1. Check Primary E-Commerce Database
+      const dbRes = await fetch(`/api/ecommerce/orders/${encodeURIComponent(targetRef)}`);
+      if (dbRes.ok) {
+        const dbJson = await dbRes.json();
+        if (dbJson.success && dbJson.data) {
+          const d = dbJson.data;
+          const mappedItems = d.items && d.items.length > 0
+            ? d.items.map((it: any, i: number) => {
+                const matched = FURNITURE_CATALOG.find((c) =>
+                  c.sku === it.sku ||
+                  c.id === it.productId ||
+                  c.nameEn.toLowerCase().includes(it.name?.toLowerCase() || '') ||
+                  (it.name && c.nameAr.includes(it.name))
+                ) || FURNITURE_CATALOG[i % FURNITURE_CATALOG.length];
+                return {
+                  product: matched,
+                  name: isAr ? (it.nameAr || it.name || matched.nameAr) : (it.name || it.nameEn || matched.nameEn),
+                  finishName: it.finishName || (isAr ? 'تشطيب مصنعي معتمد' : 'Factory Certified Finish'),
+                  quantity: it.quantity || it.qty || 1,
+                  image: it.image || matched.images[0],
+                };
+              })
+            : sampleOrder.items;
+
+          setActiveOrder({
+            ...sampleOrder,
+            orderRef: d.orderRef,
+            customerName: d.customerName || sampleOrder.customerName,
+            phone: d.phone || sampleOrder.phone,
+            city: d.city || sampleOrder.city,
+            orderDate: d.orderDate || sampleOrder.orderDate,
+            estimatedDelivery: d.estimatedDelivery || sampleOrder.estimatedDelivery,
+            factory: d.factory || sampleOrder.factory,
+            leadTechnician: d.leadTechnician || sampleOrder.leadTechnician,
+            currentStageIdx: d.currentStageIdx ?? 0,
+            statusText: d.statusText,
+            items: mappedItems,
+          });
+          setIsLiveOdoo(false);
+          setSearched(true);
+          return;
+        }
+      }
+
+      // 2. Fallback to Odoo ERP
       const res = await fetch(`/api/odoo/track?ref=${encodeURIComponent(targetRef)}`);
       if (res.ok) {
         const json = await res.json();
@@ -118,7 +164,7 @@ function OrderTrackerContent() {
         }
       }
     } catch (err) {
-      console.warn('Odoo tracking query notice:', err);
+      console.warn('Tracking query notice:', err);
     } finally {
       setLoadingOrder(false);
     }

@@ -367,45 +367,70 @@ export default function FurnitureCheckoutPage() {
   const handlePlaceOrder = async () => {
     setIsSubmitting(true);
 
-    const generatedRef = `WD-ORD-2026-${Math.floor(1000 + Math.random() * 9000)}`;
-    setOrderReference(generatedRef);
+    const fallbackRef = `WD-ORD-2026-${Math.floor(1000 + Math.random() * 9000)}`;
+    let activeRef = fallbackRef;
 
-    // Simulated API call payload to /api/contact or CRM
     try {
-      await fetch('/api/contact', {
+      const res = await fetch('/api/ecommerce/orders', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          type: 'furniture_checkout',
-          orderRef: generatedRef,
-          customer: deliveryForm,
+          customer: {
+            firstName: deliveryForm.firstName,
+            lastName: deliveryForm.lastName,
+            email: deliveryForm.email,
+            phone: deliveryForm.phone,
+            city: deliveryForm.city,
+            district: deliveryForm.district,
+            address: deliveryForm.address,
+            villaBuilding: deliveryForm.villaBuilding,
+            deliveryNotes: deliveryForm.deliveryNotes,
+          },
+          orderType: 'retail',
+          deliveryDate: deliveryForm.deliveryDate,
+          timeSlot: deliveryForm.timeSlot,
+          whiteGloveAssembly: deliveryForm.whiteGloveAssembly,
+          wallAnchoring: deliveryForm.wallAnchoring,
           paymentMethod: selectedPayment,
-          items: cartItems.map((i) => ({
-            id: i.product.id,
-            sku: i.product.sku,
-            name: isAr ? i.product.nameAr : i.product.nameEn,
-            finish: i.selectedFinishId,
-            qty: i.quantity,
-            unitPrice: i.product.price,
-          })),
+          items: cartItems.map((i) => {
+            const finishObj = i.product.finishes.find((f) => f.id === i.selectedFinishId);
+            return {
+              productId: i.product.id,
+              sku: i.product.sku,
+              nameEn: i.product.nameEn,
+              nameAr: i.product.nameAr,
+              finishId: i.selectedFinishId,
+              finishNameEn: finishObj?.nameEn || i.selectedFinishId,
+              finishNameAr: finishObj?.nameAr || i.selectedFinishId,
+              unitPrice: i.product.price,
+              quantity: i.quantity,
+              image: i.product.images[0] || '',
+            };
+          }),
           subtotal,
-          discount: discountAmount,
-          vat: vatAmount,
-          total: finalTotal,
+          discountAmount,
+          promoCode: appliedPromo || undefined,
+          vatAmount,
+          totalAmount: finalTotal,
         }),
       });
+
+      const data = await res.json();
+      if (data.success && data.orderRef) {
+        activeRef = data.orderRef;
+      }
     } catch (e) {
-      console.warn('Silent fallback for demo', e);
+      console.warn('Order submission encountered error, utilizing client fallback reference:', e);
     }
 
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setIsOrderComplete(true);
-      // Clear localStorage cart
-      try {
-        localStorage.removeItem('wd_furniture_cart');
-      } catch (e) {}
-    }, 1200);
+    setOrderReference(activeRef);
+    setIsSubmitting(false);
+    setIsOrderComplete(true);
+
+    // Clear localStorage cart
+    try {
+      localStorage.removeItem('wd_furniture_cart');
+    } catch (e) {}
   };
 
   // Construct WhatsApp Order Confirmation Text
