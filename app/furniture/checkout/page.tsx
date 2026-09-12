@@ -2635,6 +2635,8 @@ function FurnitureCheckoutContent() {
               </motion.div>
             </div>
           )}
+        </AnimatePresence>
+
         {/* Official ZATCA Tax Invoice & Quotation Modal */}
         <OfficialTaxInvoiceModal
           isOpen={showInvoiceModal}
