@@ -84,15 +84,24 @@ export default function HeroOption3Panoramic({
           <span>{isAr ? slide.tagAr : slide.tagEn}</span>
         </motion.div>
 
-        {/* Panoramic Bold Headline */}
+        {/* Panoramic 2-Line Bold Headline */}
         <motion.h1
           key={`opt3-title-${slide.id}`}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white leading-[1.18] drop-shadow-[0_10px_30px_rgba(0,0,0,0.8)]"
+          className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.14] drop-shadow-[0_10px_35px_rgba(0,0,0,0.85)] flex flex-col items-center justify-center gap-1 sm:gap-2"
         >
-          {isAr ? slide.titleAr : slide.titleEn}
+          <span className="block text-white">
+            {isAr
+              ? (slide.titleLine1Ar || slide.titleAr)
+              : (slide.titleLine1En || slide.titleEn)}
+          </span>
+          <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[#F3E5CD] via-[#C9A86A] to-[#DFBA73] drop-shadow-[0_0_35px_rgba(201,168,106,0.35)]">
+            {isAr
+              ? (slide.titleLine2Ar || '')
+              : (slide.titleLine2En || '')}
+          </span>
         </motion.h1>
 
         {/* Subtitle */}

@@ -117,6 +117,65 @@ export interface CustomVariableRecord {
   isSecret?: boolean;
 }
 
+export interface StarterPromptItem {
+  id: string;
+  label_en: string;
+  label_ar: string;
+  prompt_en: string;
+  prompt_ar: string;
+  icon?: string;
+}
+
+export interface ChatbotSectorKnowledge {
+  hospitality: boolean;
+  manufacturing: boolean;
+  contracting: boolean;
+  ecommerce: boolean;
+  corporate: boolean;
+}
+
+export interface ChatbotQuickActions {
+  show_rfp: boolean;
+  show_whatsapp: boolean;
+  show_catalog: boolean;
+  whatsapp_number: string;
+}
+
+export interface ChatbotConfig {
+  enabled: boolean;
+  agent_name_en: string;
+  agent_name_ar: string;
+  agent_title_en: string;
+  agent_title_ar: string;
+  agent_department_en: string;
+  agent_department_ar: string;
+  status_label_en: string;
+  status_label_ar: string;
+  avatar_url: string;
+  welcome_message_en: string;
+  welcome_message_ar: string;
+  reset_message_en: string;
+  reset_message_ar: string;
+  composer_placeholder_en: string;
+  composer_placeholder_ar: string;
+  hint_bubble_enabled: boolean;
+  hint_bubble_en: string;
+  hint_bubble_ar: string;
+  starter_prompts: StarterPromptItem[];
+  quick_actions: ChatbotQuickActions;
+  theme_color?: string;
+  position?: 'bottom-right' | 'bottom-left';
+  openai_api_key_override?: string;
+  openai_model: string;
+  temperature: number;
+  max_tokens: number;
+  chatkit_mode: 'hybrid' | 'custom_server' | 'official_cdn';
+  workflow_id?: string;
+  system_prompt_override?: string;
+  strict_language_matching: boolean;
+  sector_knowledge: ChatbotSectorKnowledge;
+}
+
 export interface IntegrationsConfig {
   brevo_api_key?: string;
   brevo_sender_email?: string;
@@ -137,6 +196,18 @@ export interface IntegrationsConfig {
   google_cloud_api_key?: string;
   nanobanana_api_key?: string;
   site_password?: string;
+  moyasar_secret_key?: string;
+  moyasar_publishable_key?: string;
+  moyasar_webhook_secret?: string;
+  moyasar_test_mode?: boolean;
+  tamara_api_token?: string;
+  tamara_test_mode?: boolean;
+  tabby_secret_key?: string;
+  tabby_public_key?: string;
+  tabby_test_mode?: boolean;
+  sms_provider?: 'unifonic' | 'taqnyat' | 'simulator';
+  sms_api_key?: string;
+  sms_sender_name?: string;
   custom_variables?: CustomVariableRecord[];
 }
 
@@ -385,6 +456,7 @@ export interface SiteContentPayload {
       apiKey?: string;
     };
     integrations?: IntegrationsConfig;
+    chatbot?: ChatbotConfig;
   };
   seo: {
     global_title_en: string;

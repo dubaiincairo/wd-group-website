@@ -52,6 +52,9 @@ export default function DynamicHeadSEO() {
         </>
       )}
 
+      {/* Canonical Link */}
+      <link rel="canonical" href={canonical} />
+
       {/* 1. Google Site Verification */}
       {seo.google_site_verification && (
         <meta name="google-site-verification" content={seo.google_site_verification} />

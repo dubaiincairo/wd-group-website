@@ -19,9 +19,10 @@ import {
   Truck, 
   ShieldCheck,
   ArrowRight,
-  CreditCard,
-  FileText
+  FileText,
+  FileDown
 } from 'lucide-react';
+import OfficialTaxInvoiceModal, { InvoiceOrderData } from './OfficialTaxInvoiceModal';
 
 export interface CartItem {
   product: FurnitureItem;
@@ -50,6 +51,7 @@ export default function CartQuoteDrawer({
   const isAr = lang === 'ar';
 
   const [checkoutModalOpen, setCheckoutModalOpen] = useState(false);
+  const [quoteModalOpen, setQuoteModalOpen] = useState(false);
   const [orderType, setOrderType] = useState<'retail' | 'b2b'>('retail');
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -66,6 +68,29 @@ export default function CartQuoteDrawer({
   const subtotal = items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
   const vatAmount = subtotal * 0.15;
   const grandTotal = subtotal + vatAmount;
+
+  const quotationData: InvoiceOrderData = {
+    orderRef: `QTN-${Math.floor(100000 + Math.random() * 900000)}`,
+    customerName: formData.fullName || (isAr ? 'عميل مقدر / شريك أعمال' : 'Valued Client / Corporate Partner'),
+    email: formData.email,
+    phone: formData.phone,
+    companyName: formData.companyName,
+    city: formData.city,
+    subtotal: subtotal,
+    vatAmount: vatAmount,
+    totalAmount: grandTotal,
+    items: items.map((i) => {
+      const finishObj = i.product.finishes.find((f) => f.id === i.selectedFinishId);
+      return {
+        sku: i.product.sku,
+        nameEn: i.product.nameEn,
+        nameAr: i.product.nameAr,
+        finishName: finishObj ? (isAr ? finishObj.nameAr : finishObj.nameEn) : i.selectedFinishId,
+        quantity: i.quantity,
+        unitPrice: i.product.price,
+      };
+    }),
+  };
 
   const handleCheckoutSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -353,14 +378,23 @@ ${formData.notes || 'None'}
                         <ArrowRight className="w-4 h-4 rtl:rotate-180" />
                       </Link>
 
+                      <button
+                        type="button"
+                        onClick={() => setQuoteModalOpen(true)}
+                        className="w-full py-2.5 px-3 rounded-xl bg-white/5 hover:bg-[#C9A86A]/15 border border-[#C9A86A]/30 text-[#E3C58A] text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer shadow-sm"
+                      >
+                        <FileDown className="w-4 h-4 text-[#C9A86A]" />
+                        <span>{isAr ? 'تصدير عرض سعر رسمي معتمد (PDF)' : 'Download Formal Quotation (PDF)'}</span>
+                      </button>
+
                       <div className="grid grid-cols-2 gap-2">
                         <button
                           type="button"
                           onClick={() => setCheckoutModalOpen(true)}
-                          className="py-2.5 px-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-300 text-[11px] font-semibold flex items-center justify-center gap-1.5 transition-all"
+                          className="py-2.5 px-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-300 text-[11px] font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer"
                         >
                           <FileText className="w-3.5 h-3.5 text-[#C9A86A]" />
-                          <span>{isAr ? 'عرض سعر (RFQ)' : 'Quick RFQ'}</span>
+                          <span>{isAr ? 'طلب تسعير (RFQ)' : 'Quick RFQ'}</span>
                         </button>
 
                         <a
@@ -423,16 +457,26 @@ ${formData.notes || 'None'}
                   <p className="text-xs text-zinc-300 leading-relaxed max-w-sm mx-auto">
                     {dict.furniture.checkout_modal.success_desc}
                   </p>
-                  <button
-                    onClick={() => {
-                      setSubmitted(false);
-                      setCheckoutModalOpen(false);
-                      onClose();
-                    }}
-                    className="mt-4 px-6 py-2.5 rounded-xl bg-[#C9A86A] text-[#08090C] font-bold text-xs"
-                  >
-                    {isAr ? 'تم، العودة للمتجر' : 'Done & Return to Store'}
-                  </button>
+                  <div className="pt-2 flex flex-col sm:flex-row gap-2 justify-center">
+                    <button
+                      type="button"
+                      onClick={() => setQuoteModalOpen(true)}
+                      className="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-[#C9A86A]/20 border border-[#C9A86A]/40 text-[#E3C58A] text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+                    >
+                      <FileDown className="w-4 h-4 text-[#C9A86A]" />
+                      <span>{isAr ? 'تحميل عرض السعر المعتمد (PDF)' : 'Download Formal Quotation (PDF)'}</span>
+                    </button>
+                    <button
+                      onClick={() => {
+                        setSubmitted(false);
+                        setCheckoutModalOpen(false);
+                        onClose();
+                      }}
+                      className="px-6 py-2.5 rounded-xl bg-[#C9A86A] text-[#08090C] hover:bg-[#E3C58A] font-bold text-xs transition-colors"
+                    >
+                      {isAr ? 'تم، العودة للمتجر' : 'Done & Return to Store'}
+                    </button>
+                  </div>
                 </div>
               ) : (
                 <form onSubmit={handleCheckoutSubmit} className="space-y-4 text-xs">
@@ -582,6 +626,14 @@ ${formData.notes || 'None'}
           </div>
         )}
       </AnimatePresence>
+
+      {/* Formal PDF Price Quotation Modal */}
+      <OfficialTaxInvoiceModal
+        isOpen={quoteModalOpen}
+        onClose={() => setQuoteModalOpen(false)}
+        order={quotationData}
+        isQuotation={true}
+      />
     </>
   );
 }

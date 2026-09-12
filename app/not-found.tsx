@@ -13,7 +13,8 @@ import {
   Factory, 
   HardHat, 
   ShieldAlert, 
-  Search 
+  Search,
+  ShoppingBag
 } from 'lucide-react';
 
 export default function NotFound() {
@@ -73,33 +74,41 @@ export default function NotFound() {
         </div>
 
         {/* Quick Sector Navigation Pills */}
-        <div className="pt-6 border-t border-white/10 max-w-xl mx-auto">
+        <div className="pt-6 border-t border-white/10 max-w-2xl mx-auto">
           <span className="text-[11px] font-mono text-zinc-500 uppercase tracking-wider block mb-3 font-bold">
-            {isAr ? 'روابط سريعة للقطاعات' : 'QUICK SECTOR DIRECTORY'}
+            {isAr ? 'روابط سريعة للقطاعات والمتجر' : 'QUICK DIRECTORY'}
           </span>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
             <Link
               href="/sectors/hospitality"
-              className="p-3 rounded-xl bg-[#0F1117]/80 border border-sky-500/20 hover:border-sky-500/50 hover:bg-sky-500/10 transition-all flex items-center justify-center gap-2 text-xs text-sky-300 font-semibold group"
+              className="p-3 rounded-xl bg-[#0F1117]/80 border border-sky-500/20 hover:border-sky-500/50 hover:bg-sky-500/10 transition-all flex flex-col sm:flex-row items-center justify-center gap-2 text-xs text-sky-300 font-semibold group text-center sm:text-left rtl:sm:text-right"
             >
-              <Building2 className="w-3.5 h-3.5 text-sky-400 group-hover:scale-110 transition-transform" />
-              <span>{isAr ? 'الضيافة (سويس بلو)' : 'Hospitality'}</span>
+              <Building2 className="w-4 h-4 text-sky-400 group-hover:scale-110 transition-transform shrink-0" />
+              <span>{isAr ? 'الضيافة' : 'Hospitality'}</span>
             </Link>
 
             <Link
               href="/sectors/manufacturing"
-              className="p-3 rounded-xl bg-[#0F1117]/80 border border-emerald-500/20 hover:border-emerald-500/50 hover:bg-emerald-500/10 transition-all flex items-center justify-center gap-2 text-xs text-emerald-300 font-semibold group"
+              className="p-3 rounded-xl bg-[#0F1117]/80 border border-emerald-500/20 hover:border-emerald-500/50 hover:bg-emerald-500/10 transition-all flex flex-col sm:flex-row items-center justify-center gap-2 text-xs text-emerald-300 font-semibold group text-center sm:text-left rtl:sm:text-right"
             >
-              <Factory className="w-3.5 h-3.5 text-emerald-400 group-hover:scale-110 transition-transform" />
-              <span>{isAr ? 'التصنيع (جرين وود)' : 'Manufacturing'}</span>
+              <Factory className="w-4 h-4 text-emerald-400 group-hover:scale-110 transition-transform shrink-0" />
+              <span>{isAr ? 'التصنيع' : 'Manufacturing'}</span>
             </Link>
 
             <Link
               href="/sectors/contracting"
-              className="p-3 rounded-xl bg-[#0F1117]/80 border border-amber-500/20 hover:border-amber-500/50 hover:bg-amber-500/10 transition-all flex items-center justify-center gap-2 text-xs text-amber-300 font-semibold group"
+              className="p-3 rounded-xl bg-[#0F1117]/80 border border-amber-500/20 hover:border-amber-500/50 hover:bg-amber-500/10 transition-all flex flex-col sm:flex-row items-center justify-center gap-2 text-xs text-amber-300 font-semibold group text-center sm:text-left rtl:sm:text-right"
             >
-              <HardHat className="w-3.5 h-3.5 text-amber-400 group-hover:scale-110 transition-transform" />
-              <span>{isAr ? 'المقاولات (تصاميم الوطن)' : 'Contracting'}</span>
+              <HardHat className="w-4 h-4 text-amber-400 group-hover:scale-110 transition-transform shrink-0" />
+              <span>{isAr ? 'المقاولات' : 'Contracting'}</span>
+            </Link>
+
+            <Link
+              href="/furniture"
+              className="p-3 rounded-xl bg-[#0F1117]/80 border border-[#C9A86A]/25 hover:border-[#C9A86A]/60 hover:bg-[#C9A86A]/10 transition-all flex flex-col sm:flex-row items-center justify-center gap-2 text-xs text-[#C9A86A] font-semibold group text-center sm:text-left rtl:sm:text-right"
+            >
+              <ShoppingBag className="w-4 h-4 text-[#C9A86A] group-hover:scale-110 transition-transform shrink-0" />
+              <span>{isAr ? 'متجر الأثاث' : 'Furniture'}</span>
             </Link>
           </div>
         </div>

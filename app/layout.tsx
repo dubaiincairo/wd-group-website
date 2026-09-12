@@ -46,14 +46,21 @@ const ibmMono = IBM_Plex_Mono({
   variable: '--font-mono',
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://wdgroup.online';
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: 'WD Group | Holding Company — Hospitality, Manufacturing, Contracting',
   description: 'WD Group is a premier Saudi holding company powering strategic investments across Hospitality (SwissBlue Hotels), Industrial Manufacturing, and General Contracting.',
   keywords: ['WD Group', 'Holding Company', 'Hospitality', 'Manufacturing', 'Contracting', 'SwissBlue', 'Saudi Arabia', 'Vision 2030'],
+  alternates: {
+    canonical: './',
+  },
   openGraph: {
     title: 'WD Group | Holding Company',
     description: 'Premier holding company operating across Hospitality, Precision Manufacturing, and General Contracting.',
     siteName: 'WD Group Holding',
+    url: siteUrl,
     locale: 'en_US',
     type: 'website',
   },

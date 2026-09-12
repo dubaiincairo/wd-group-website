@@ -3,9 +3,11 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '@/context/LanguageContext';
 import { FurnitureItem, FURNITURE_CATALOG } from '@/lib/furnitureData';
+import OfficialTaxInvoiceModal from '@/components/furniture/OfficialTaxInvoiceModal';
 import { 
   ShoppingBag, 
   ArrowLeft, 
@@ -44,13 +46,35 @@ interface CartItemState {
   quantity: number;
 }
 
-export default function FurnitureCheckoutPage() {
+function FurnitureCheckoutContent() {
   const { lang, dict } = useLanguage();
   const isAr = lang === 'ar';
+  const searchParams = useSearchParams();
+  const [paymentError, setPaymentError] = useState<string | null>(null);
+  const [showInvoiceModal, setShowInvoiceModal] = useState(false);
 
   // 1. Cart Items State (persisted via localStorage or default to catalog signatures)
   const [cartItems, setCartItems] = useState<CartItemState[]>([]);
   const [loaded, setLoaded] = useState(false);
+
+  // Sync with 3D-Secure Bank Callback Parameters
+  useEffect(() => {
+    if (!searchParams) return;
+    const isSuccess = searchParams.get('paymentSuccess') === 'true';
+    const ref = searchParams.get('ref');
+    const err = searchParams.get('paymentError');
+
+    if (isSuccess && ref) {
+      setOrderReference(ref);
+      setIsOrderComplete(true);
+      try {
+        localStorage.removeItem('wd_furniture_cart');
+      } catch (e) {}
+    } else if (err) {
+      setPaymentError(decodeURIComponent(err));
+      setCurrentStep(2); // Return to payment step
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     try {
@@ -110,6 +134,7 @@ export default function FurnitureCheckoutPage() {
     companyName: '',
     crNumber: '',
     vatNumber: '',
+    _hp_website: '',
   });
 
   // Delivery Scheduling State
@@ -179,6 +204,40 @@ export default function FurnitureCheckoutPage() {
   const [applePayProcessing, setApplePayProcessing] = useState(false);
   const [applePayDone, setApplePayDone] = useState(false);
   const [tamaraInstallmentsCount, setTamaraInstallmentsCount] = useState<3 | 4>(4);
+  const [storeSettings, setStoreSettings] = useState<{
+    enableMadaCards?: boolean;
+    enableApplePay?: boolean;
+    enableTamara?: boolean;
+    enableTabby?: boolean;
+    tamaraInstallmentsCount?: 3 | 4;
+    vatEnabled?: boolean;
+    vatRate?: number;
+    taxNumber?: string;
+    crNumber?: string;
+    companyNameAr?: string;
+    companyNameEn?: string;
+    enablePdfQuotation?: boolean;
+    freeShippingThreshold?: number;
+    whiteGloveAssemblyDefault?: boolean;
+  } | null>(null);
+
+  // Fetch Admin Store Settings on Mount
+  useEffect(() => {
+    fetch('/api/ecommerce/settings')
+      .then((r) => r.json())
+      .then((d) => {
+        if (d?.settings) {
+          setStoreSettings(d.settings);
+          if (d.settings.tamaraInstallmentsCount) {
+            setTamaraInstallmentsCount(d.settings.tamaraInstallmentsCount);
+          }
+          if (d.settings.enableMadaCards === false) {
+            setSelectedPayment((curr) => (curr === 'mada_cards' ? 'bank_transfer' : curr));
+          }
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   // Sync bankTarget with delivery form inputs
   useEffect(() => {
@@ -198,7 +257,8 @@ export default function FurnitureCheckoutPage() {
   );
   const discountAmount = Math.round(subtotal * (discountPercent / 100));
   const discountedSubtotal = subtotal - discountAmount;
-  const vatAmount = Math.round(discountedSubtotal * 0.15);
+  const effectiveVatRate = storeSettings?.vatEnabled === false ? 0 : ((storeSettings?.vatRate ?? 15) / 100);
+  const vatAmount = Math.round(discountedSubtotal * effectiveVatRate);
   const finalTotal = discountedSubtotal + vatAmount;
 
   // Tabby & Tamara Installment calculations
@@ -366,46 +426,256 @@ export default function FurnitureCheckoutPage() {
   // Handle Final Order Placement
   const handlePlaceOrder = async () => {
     setIsSubmitting(true);
+    setPaymentError(null);
 
-    const generatedRef = `WD-ORD-2026-${Math.floor(1000 + Math.random() * 9000)}`;
-    setOrderReference(generatedRef);
+    // 1. Direct Gateway Processing for Mada / Credit Cards via Moyasar
+    if (selectedPayment === 'mada_cards') {
+      try {
+        const res = await fetch('/api/ecommerce/payments/initiate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            customer: {
+              firstName: deliveryForm.firstName,
+              lastName: deliveryForm.lastName,
+              email: deliveryForm.email,
+              phone: deliveryForm.phone,
+              city: deliveryForm.city,
+              district: deliveryForm.district,
+              address: deliveryForm.address,
+              villaBuilding: deliveryForm.villaBuilding,
+              deliveryNotes: deliveryForm.deliveryNotes,
+            },
+            _hp_website: deliveryForm._hp_website || undefined,
+            orderType: deliveryForm.orderType,
+            deliveryDate: selectedDeliveryDate,
+            timeSlot: selectedTimeSlot,
+            whiteGloveAssembly,
+            wallAnchoring,
+            paymentMethod: 'mada_cards',
+            card: {
+              name: cardForm.cardHolder || `${deliveryForm.firstName} ${deliveryForm.lastName}`.trim() || 'WD Client',
+              number: cardForm.cardNumber,
+              cvc: cardForm.cvv || '123',
+              month: cardForm.expiry.split('/')[0] || '12',
+              year: cardForm.expiry.split('/')[1] || '28',
+            },
+            items: cartItems.map((i) => {
+              const finishObj = i.product.finishes.find((f) => f.id === i.selectedFinishId);
+              return {
+                productId: i.product.id,
+                sku: i.product.sku,
+                nameEn: i.product.nameEn,
+                nameAr: i.product.nameAr,
+                finishId: i.selectedFinishId,
+                finishNameEn: finishObj?.nameEn || i.selectedFinishId,
+                finishNameAr: finishObj?.nameAr || i.selectedFinishId,
+                unitPrice: i.product.price,
+                quantity: i.quantity,
+                image: i.product.images[0] || '',
+              };
+            }),
+            subtotal,
+            discountAmount,
+            promoCode: appliedPromo || undefined,
+            vatAmount,
+            totalAmount: finalTotal,
+          }),
+        });
 
-    // Simulated API call payload to /api/contact or CRM
+        const data = await res.json();
+        if (data.success) {
+          if (data.transactionUrl) {
+            // 3D-Secure Bank OTP Redirect
+            window.location.href = data.transactionUrl;
+            return;
+          }
+          if (data.orderRef) {
+            setOrderReference(data.orderRef);
+            setIsSubmitting(false);
+            setIsOrderComplete(true);
+            try {
+              localStorage.removeItem('wd_furniture_cart');
+              const prevRecent = JSON.parse(localStorage.getItem('wd_customer_recent_orders') || '[]');
+              const updatedRecent = Array.from(new Set([data.orderRef, ...prevRecent])).slice(0, 30);
+              localStorage.setItem('wd_customer_recent_orders', JSON.stringify(updatedRecent));
+              if (deliveryForm.phone) {
+                localStorage.setItem('wd_customer_phone', deliveryForm.phone);
+              }
+            } catch (e) {}
+            return;
+          }
+        } else {
+          setPaymentError(data.error || (isAr ? 'تم رفض عملية الدفع من قبل البنك المصدر للبطاقة' : 'Payment declined by issuing bank'));
+          setIsSubmitting(false);
+          return;
+        }
+      } catch (err: any) {
+        console.warn('Payment initiation error:', err);
+        setPaymentError(isAr ? 'تعذر الاتصال ببوابة الدفع. يرجى المحاولة لاحقاً.' : 'Connection to payment gateway failed.');
+        setIsSubmitting(false);
+        return;
+      }
+    }
+
+    // 2. Direct Gateway Processing for Saudi BNPL (Tamara & Tabby)
+    if (selectedPayment === 'tamara' || selectedPayment === 'tabby') {
+      try {
+        const res = await fetch('/api/ecommerce/payments/bnpl/initiate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            provider: selectedPayment,
+            customer: {
+              firstName: deliveryForm.firstName,
+              lastName: deliveryForm.lastName,
+              email: deliveryForm.email,
+              phone: deliveryForm.phone,
+              city: deliveryForm.city,
+              district: deliveryForm.district,
+              address: deliveryForm.address,
+              villaBuilding: deliveryForm.villaBuilding,
+              deliveryNotes: deliveryForm.deliveryNotes,
+            },
+            _hp_website: deliveryForm._hp_website || undefined,
+            orderType: deliveryForm.orderType,
+            deliveryDate: selectedDeliveryDate,
+            timeSlot: selectedTimeSlot,
+            whiteGloveAssembly,
+            wallAnchoring,
+            installmentsCount: selectedPayment === 'tamara' ? tamaraInstallmentsCount : 4,
+            items: cartItems.map((i) => {
+              const finishObj = i.product.finishes.find((f) => f.id === i.selectedFinishId);
+              return {
+                productId: i.product.id,
+                sku: i.product.sku,
+                nameEn: i.product.nameEn,
+                nameAr: i.product.nameAr,
+                finishId: i.selectedFinishId,
+                finishNameEn: finishObj?.nameEn || i.selectedFinishId,
+                finishNameAr: finishObj?.nameAr || i.selectedFinishId,
+                unitPrice: i.product.price,
+                quantity: i.quantity,
+                image: i.product.images[0] || '',
+              };
+            }),
+            subtotal,
+            discountAmount,
+            promoCode: appliedPromo || undefined,
+            vatAmount,
+            totalAmount: finalTotal,
+          }),
+        });
+
+        const data = await res.json();
+        if (data.success && data.redirectUrl) {
+          // Store customer session before redirecting
+          try {
+            localStorage.removeItem('wd_furniture_cart');
+            const prevRecent = JSON.parse(localStorage.getItem('wd_customer_recent_orders') || '[]');
+            const updatedRecent = Array.from(new Set([data.orderRef, ...prevRecent])).slice(0, 30);
+            localStorage.setItem('wd_customer_recent_orders', JSON.stringify(updatedRecent));
+            if (deliveryForm.phone) {
+              localStorage.setItem('wd_customer_phone', deliveryForm.phone);
+            }
+          } catch (e) {}
+
+          window.location.href = data.redirectUrl;
+          return;
+        } else {
+          setPaymentError(data.error || (isAr ? `تعذر الاتصال ببوابة ${selectedPayment === 'tamara' ? 'تمارا' : 'تابي'}. يرجى اختيار وسيلة دفع أخرى.` : `Failed to connect to ${selectedPayment}. Please choose another payment method.`));
+          setIsSubmitting(false);
+          return;
+        }
+      } catch (err: any) {
+        console.warn('BNPL initiation error:', err);
+        setPaymentError(isAr ? 'تعذر إتمام عملية التقسيط، يرجى المحاولة لاحقاً.' : 'Installment request failed. Please try again.');
+        setIsSubmitting(false);
+        return;
+      }
+    }
+
+    // 3. Fallback Order Submission (Wire Transfer, PO, COD)
+    const fallbackRef = `WD-ORD-2026-${Math.floor(1000 + Math.random() * 9000)}`;
+    let activeRef = fallbackRef;
+
     try {
-      await fetch('/api/contact', {
+      const res = await fetch('/api/ecommerce/orders', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          type: 'furniture_checkout',
-          orderRef: generatedRef,
-          customer: deliveryForm,
+          customer: {
+            firstName: deliveryForm.firstName,
+            lastName: deliveryForm.lastName,
+            email: deliveryForm.email,
+            phone: deliveryForm.phone,
+            city: deliveryForm.city,
+            district: deliveryForm.district,
+            address: deliveryForm.address,
+            villaBuilding: deliveryForm.villaBuilding,
+            deliveryNotes: deliveryForm.deliveryNotes,
+          },
+          _hp_website: deliveryForm._hp_website || undefined,
+          orderType: deliveryForm.orderType,
+          deliveryDate: selectedDeliveryDate,
+          timeSlot: deliveryForm.timeSlot,
+          whiteGloveAssembly: deliveryForm.whiteGloveAssembly,
+          wallAnchoring: deliveryForm.wallAnchoring,
           paymentMethod: selectedPayment,
-          items: cartItems.map((i) => ({
-            id: i.product.id,
-            sku: i.product.sku,
-            name: isAr ? i.product.nameAr : i.product.nameEn,
-            finish: i.selectedFinishId,
-            qty: i.quantity,
-            unitPrice: i.product.price,
-          })),
+          items: cartItems.map((i) => {
+            const finishObj = i.product.finishes.find((f) => f.id === i.selectedFinishId);
+            return {
+              productId: i.product.id,
+              sku: i.product.sku,
+              nameEn: i.product.nameEn,
+              nameAr: i.product.nameAr,
+              finishId: i.selectedFinishId,
+              finishNameEn: finishObj?.nameEn || i.selectedFinishId,
+              finishNameAr: finishObj?.nameAr || i.selectedFinishId,
+              unitPrice: i.product.price,
+              quantity: i.quantity,
+              image: i.product.images[0] || '',
+            };
+          }),
           subtotal,
-          discount: discountAmount,
-          vat: vatAmount,
-          total: finalTotal,
+          discountAmount,
+          promoCode: appliedPromo || undefined,
+          vatAmount,
+          totalAmount: finalTotal,
         }),
       });
+
+      const data = await res.json();
+      if (data.success && data.orderRef) {
+        activeRef = data.orderRef;
+      }
     } catch (e) {
-      console.warn('Silent fallback for demo', e);
+      console.warn('Order submission encountered error, utilizing client fallback reference:', e);
     }
 
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setIsOrderComplete(true);
-      // Clear localStorage cart
-      try {
-        localStorage.removeItem('wd_furniture_cart');
-      } catch (e) {}
-    }, 1200);
+    setOrderReference(activeRef);
+    setIsSubmitting(false);
+    setIsOrderComplete(true);
+
+    // Clear localStorage cart and store customer order session
+    try {
+      localStorage.removeItem('wd_furniture_cart');
+      const prevRecent = JSON.parse(localStorage.getItem('wd_customer_recent_orders') || '[]');
+      const updatedRecent = Array.from(new Set([activeRef, ...prevRecent])).slice(0, 30);
+      localStorage.setItem('wd_customer_recent_orders', JSON.stringify(updatedRecent));
+      if (deliveryForm.phone) {
+        localStorage.setItem('wd_customer_phone', deliveryForm.phone);
+      }
+      localStorage.setItem('wd_customer_profile', JSON.stringify({
+        firstName: deliveryForm.firstName,
+        lastName: deliveryForm.lastName,
+        phone: deliveryForm.phone,
+        email: deliveryForm.email,
+        city: deliveryForm.city,
+        district: deliveryForm.district,
+        address: deliveryForm.address,
+      }));
+    } catch (e) {}
   };
 
   // Construct WhatsApp Order Confirmation Text
@@ -539,12 +809,21 @@ export default function FurnitureCheckoutPage() {
               </a>
 
               <button
-                onClick={() => window.print()}
-                className="inline-flex items-center gap-2 px-5 py-3.5 rounded-xl bg-[#141721] hover:bg-[#1A1E2C] text-zinc-200 border border-white/10 font-bold text-xs sm:text-sm transition-all cursor-pointer"
+                type="button"
+                onClick={() => setShowInvoiceModal(true)}
+                className="inline-flex items-center gap-2 px-5 py-3.5 rounded-xl bg-[#141721] hover:bg-[#1A1E2C] text-zinc-200 border border-[#C9A86A]/40 font-bold text-xs sm:text-sm transition-all cursor-pointer shadow-lg"
               >
                 <Printer className="w-4 h-4 text-[#C9A86A]" />
-                <span>{dict.furniture.checkout.success.print_btn}</span>
+                <span>{isAr ? 'عرض وطباعة الفاتورة الضريبية (ZATCA)' : 'Tax Invoice / Fatoorah (ZATCA)'}</span>
               </button>
+
+              <Link
+                href="/furniture/account"
+                className="inline-flex items-center gap-2 px-5 py-3.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-200 font-bold text-xs sm:text-sm transition-all"
+              >
+                <User className="w-4 h-4 text-[#C9A86A]" />
+                <span>{isAr ? 'الانتقال إلى حسابي وإدارة الطلب' : 'Customer Account Portal'}</span>
+              </Link>
 
               <Link
                 href="/furniture"
@@ -561,6 +840,23 @@ export default function FurnitureCheckoutPage() {
             {/* LEFT / CENTER: Steps Content (7 Cols) */}
             <div className="lg:col-span-7 space-y-6">
               
+              {/* Payment Error Alert Banner */}
+              {paymentError && (
+                <div className="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-center justify-between gap-3 animate-in fade-in">
+                  <div className="flex items-center gap-2.5">
+                    <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
+                    <span>{paymentError}</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setPaymentError(null)}
+                    className="p-1 rounded-lg text-zinc-400 hover:text-white transition-colors"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
+
               {/* Steps Progress Tabs */}
               <div className="grid grid-cols-3 gap-2 p-1.5 rounded-2xl bg-[#0F1117] border border-white/10 text-xs font-mono">
                 <button
@@ -678,6 +974,18 @@ export default function FurnitureCheckoutPage() {
                       </div>
                     </div>
                   )}
+
+                  {/* Anti-Bot Security Honeypot (Zero impact on humans, traps automated scrapers/bots) */}
+                  <input
+                    type="text"
+                    name="_hp_website"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    value={deliveryForm._hp_website}
+                    onChange={(e) => setDeliveryForm({ ...deliveryForm, _hp_website: e.target.value })}
+                    style={{ display: 'none', position: 'absolute', left: '-9999px', opacity: 0, pointerEvents: 'none' }}
+                    aria-hidden="true"
+                  />
 
                   {/* Customer Personal Details */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
@@ -997,421 +1305,429 @@ export default function FurnitureCheckoutPage() {
                   <div className="space-y-3">
                     
                     {/* 1. Mada & Credit Cards */}
-                    <div
-                      onClick={() => setSelectedPayment('mada_cards')}
-                      className={`p-4 rounded-2xl border transition-all cursor-pointer ${
-                        selectedPayment === 'mada_cards'
-                          ? 'bg-[#C9A86A]/10 border-[#C9A86A] shadow-[0_0_20px_rgba(201,168,106,0.15)]'
-                          : 'bg-[#141721] border-white/10 hover:border-white/20'
-                      }`}
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <input
-                            type="radio"
-                            name="payment_choice"
-                            checked={selectedPayment === 'mada_cards'}
-                            onChange={() => setSelectedPayment('mada_cards')}
-                            className="text-[#C9A86A] focus:ring-[#C9A86A]"
-                          />
-                          <span className="text-xs sm:text-sm font-bold text-white">
-                            {dict.furniture.checkout.payment.mada_cards}
-                          </span>
+                    {storeSettings?.enableMadaCards !== false && (
+                      <div
+                        onClick={() => setSelectedPayment('mada_cards')}
+                        className={`p-4 rounded-2xl border transition-all cursor-pointer ${
+                          selectedPayment === 'mada_cards'
+                            ? 'bg-[#C9A86A]/10 border-[#C9A86A] shadow-[0_0_20px_rgba(201,168,106,0.15)]'
+                            : 'bg-[#141721] border-white/10 hover:border-white/20'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <input
+                              type="radio"
+                              name="payment_choice"
+                              checked={selectedPayment === 'mada_cards'}
+                              onChange={() => setSelectedPayment('mada_cards')}
+                              className="text-[#C9A86A] focus:ring-[#C9A86A]"
+                            />
+                            <span className="text-xs sm:text-sm font-bold text-white">
+                              {dict.furniture.checkout.payment.mada_cards}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-1.5">
+                            <span className="px-2 py-0.5 rounded bg-white/10 text-[9px] font-mono font-bold text-emerald-400 border border-emerald-500/30">
+                              mada
+                            </span>
+                            <span className="px-2 py-0.5 rounded bg-white/10 text-[9px] font-mono font-bold text-sky-400 border border-sky-500/30">
+                              VISA
+                            </span>
+                            <span className="px-2 py-0.5 rounded bg-white/10 text-[9px] font-mono font-bold text-amber-400 border border-amber-500/30">
+                              MC
+                            </span>
+                          </div>
                         </div>
-                        <div className="flex items-center gap-1.5">
-                          <span className="px-2 py-0.5 rounded bg-white/10 text-[9px] font-mono font-bold text-emerald-400 border border-emerald-500/30">
-                            mada
-                          </span>
-                          <span className="px-2 py-0.5 rounded bg-white/10 text-[9px] font-mono font-bold text-sky-400 border border-sky-500/30">
-                            VISA
-                          </span>
-                          <span className="px-2 py-0.5 rounded bg-white/10 text-[9px] font-mono font-bold text-amber-400 border border-amber-500/30">
-                            MC
-                          </span>
-                        </div>
-                      </div>
 
-                      {/* Interactive Credit Card Form */}
-                      {selectedPayment === 'mada_cards' && (
-                        <motion.div
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: 'auto' }}
-                          className="pt-4 mt-4 border-t border-white/10 space-y-4"
-                        >
-                          <div className="text-xs space-y-3">
-                            <div>
-                              <label className="block text-zinc-300 font-semibold mb-1">
-                                {dict.furniture.checkout.payment.card_number}
-                              </label>
-                              <input
-                                type="text"
-                                maxLength={19}
-                                value={cardForm.cardNumber}
-                                onChange={handleCardNumberChange}
-                                placeholder="4000 1234 5678 9010"
-                                className="w-full px-3.5 py-2.5 rounded-xl bg-[#08090C] border border-white/15 text-white font-mono focus:outline-none focus:border-[#C9A86A]"
-                                dir="ltr"
-                              />
-                            </div>
-
-                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                              <div className="sm:col-span-2">
-                                <label className="block text-zinc-300 font-semibold mb-1">
-                                  {dict.furniture.checkout.payment.card_holder}
-                                </label>
-                                <input
-                                  type="text"
-                                  value={cardForm.cardHolder}
-                                  onChange={(e) => setCardForm({ ...cardForm, cardHolder: e.target.value })}
-                                  placeholder="MOHAMMED AL-SAUD"
-                                  className="w-full px-3.5 py-2.5 rounded-xl bg-[#08090C] border border-white/15 text-white uppercase focus:outline-none focus:border-[#C9A86A]"
-                                />
-                              </div>
+                        {/* Interactive Credit Card Form */}
+                        {selectedPayment === 'mada_cards' && (
+                          <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: 'auto' }}
+                            className="pt-4 mt-4 border-t border-white/10 space-y-4"
+                          >
+                            <div className="text-xs space-y-3">
                               <div>
                                 <label className="block text-zinc-300 font-semibold mb-1">
-                                  {dict.furniture.checkout.payment.expiry}
+                                  {dict.furniture.checkout.payment.card_number}
                                 </label>
                                 <input
                                   type="text"
-                                  maxLength={5}
-                                  value={cardForm.expiry}
-                                  onChange={handleExpiryChange}
-                                  placeholder="08/28"
+                                  maxLength={19}
+                                  value={cardForm.cardNumber}
+                                  onChange={handleCardNumberChange}
+                                  placeholder="4000 1234 5678 9010"
+                                  className="w-full px-3.5 py-2.5 rounded-xl bg-[#08090C] border border-white/15 text-white font-mono focus:outline-none focus:border-[#C9A86A]"
+                                  dir="ltr"
+                                />
+                              </div>
+
+                              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                <div className="sm:col-span-2">
+                                  <label className="block text-zinc-300 font-semibold mb-1">
+                                    {dict.furniture.checkout.payment.card_holder}
+                                  </label>
+                                  <input
+                                    type="text"
+                                    value={cardForm.cardHolder}
+                                    onChange={(e) => setCardForm({ ...cardForm, cardHolder: e.target.value })}
+                                    placeholder="MOHAMMED AL-SAUD"
+                                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#08090C] border border-white/15 text-white uppercase focus:outline-none focus:border-[#C9A86A]"
+                                  />
+                                </div>
+                                <div>
+                                  <label className="block text-zinc-300 font-semibold mb-1">
+                                    {dict.furniture.checkout.payment.expiry}
+                                  </label>
+                                  <input
+                                    type="text"
+                                    maxLength={5}
+                                    value={cardForm.expiry}
+                                    onChange={handleExpiryChange}
+                                    placeholder="08/28"
+                                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#08090C] border border-white/15 text-white font-mono focus:outline-none focus:border-[#C9A86A]"
+                                    dir="ltr"
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="w-1/2 sm:w-1/3">
+                                <label className="block text-zinc-300 font-semibold mb-1">
+                                  {dict.furniture.checkout.payment.cvv}
+                                </label>
+                                <input
+                                  type="password"
+                                  maxLength={4}
+                                  value={cardForm.cvv}
+                                  onChange={(e) => setCardForm({ ...cardForm, cvv: e.target.value.replace(/\D/g, '') })}
+                                  placeholder="•••"
                                   className="w-full px-3.5 py-2.5 rounded-xl bg-[#08090C] border border-white/15 text-white font-mono focus:outline-none focus:border-[#C9A86A]"
                                   dir="ltr"
                                 />
                               </div>
                             </div>
-
-                            <div className="w-1/2 sm:w-1/3">
-                              <label className="block text-zinc-300 font-semibold mb-1">
-                                {dict.furniture.checkout.payment.cvv}
-                              </label>
-                              <input
-                                type="password"
-                                maxLength={4}
-                                value={cardForm.cvv}
-                                onChange={(e) => setCardForm({ ...cardForm, cvv: e.target.value.replace(/\D/g, '') })}
-                                placeholder="•••"
-                                className="w-full px-3.5 py-2.5 rounded-xl bg-[#08090C] border border-white/15 text-white font-mono focus:outline-none focus:border-[#C9A86A]"
-                                dir="ltr"
-                              />
-                            </div>
-                          </div>
-                        </motion.div>
-                      )}
-                    </div>
+                          </motion.div>
+                        )}
+                      </div>
+                    )}
 
                     {/* 2. Apple Pay (Mirrored Apple HIG Experience) */}
-                    <div
-                      onClick={() => setSelectedPayment('apple_pay')}
-                      className={`p-4 rounded-2xl border transition-all cursor-pointer ${
-                        selectedPayment === 'apple_pay'
-                          ? 'bg-[#C9A86A]/10 border-[#C9A86A] shadow-[0_0_20px_rgba(201,168,106,0.15)]'
-                          : 'bg-[#141721] border-white/10 hover:border-white/20'
-                      }`}
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <input
-                            type="radio"
-                            name="payment_choice"
-                            checked={selectedPayment === 'apple_pay'}
-                            onChange={() => setSelectedPayment('apple_pay')}
-                            className="text-[#C9A86A]"
-                          />
-                          <div>
-                            <span className="text-xs sm:text-sm font-bold text-white flex items-center gap-2">
-                              <span>{dict.furniture.checkout.payment.apple_pay}</span>
-                              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/10 text-zinc-300 font-normal">
-                                Touch ID / Face ID
+                    {storeSettings?.enableApplePay !== false && (
+                      <div
+                        onClick={() => setSelectedPayment('apple_pay')}
+                        className={`p-4 rounded-2xl border transition-all cursor-pointer ${
+                          selectedPayment === 'apple_pay'
+                            ? 'bg-[#C9A86A]/10 border-[#C9A86A] shadow-[0_0_20px_rgba(201,168,106,0.15)]'
+                            : 'bg-[#141721] border-white/10 hover:border-white/20'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <input
+                              type="radio"
+                              name="payment_choice"
+                              checked={selectedPayment === 'apple_pay'}
+                              onChange={() => setSelectedPayment('apple_pay')}
+                              className="text-[#C9A86A]"
+                            />
+                            <div>
+                              <span className="text-xs sm:text-sm font-bold text-white flex items-center gap-2">
+                                <span>{dict.furniture.checkout.payment.apple_pay}</span>
+                                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/10 text-zinc-300 font-normal">
+                                  Touch ID / Face ID
+                                </span>
                               </span>
-                            </span>
-                            <span className="text-[11px] text-zinc-400">
-                              {dict.furniture.checkout.payment.apple_pay_desc}
-                            </span>
-                          </div>
-                        </div>
-                        <div className="px-3.5 py-1.5 rounded-xl bg-black border border-white/25 text-white font-bold text-sm font-mono flex items-center gap-1 shadow-md">
-                          <span></span>
-                          <span>Pay</span>
-                        </div>
-                      </div>
-
-                      {selectedPayment === 'apple_pay' && (
-                        <motion.div
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: 'auto' }}
-                          className="mt-4 pt-4 border-t border-white/10 space-y-3 text-xs"
-                        >
-                          <div className="p-4 rounded-2xl bg-black/60 border border-white/15 space-y-3">
-                            <div className="flex items-center justify-between">
-                              <span className="text-zinc-400 text-xs">{isAr ? 'الدفع السريع المعتمد' : 'Express Checkout'}</span>
-                              <span className="text-emerald-400 text-xs font-mono font-bold flex items-center gap-1">
-                                <ShieldCheck className="w-3.5 h-3.5" />
-                                <span>Apple Secure Enclave</span>
+                              <span className="text-[11px] text-zinc-400">
+                                {dict.furniture.checkout.payment.apple_pay_desc}
                               </span>
                             </div>
-
-                            <button
-                              type="button"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setShowApplePaySheet(true);
-                              }}
-                              className="w-full py-3.5 rounded-xl bg-white text-black hover:bg-zinc-200 transition-all font-bold text-sm flex items-center justify-center gap-2 shadow-xl cursor-pointer"
-                            >
-                              <span className="text-lg leading-none"></span>
-                              <span>{isAr ? 'الدفع بواسطة Apple Pay' : 'Pay with Apple Pay'}</span>
-                            </button>
-
-                            <p className="text-[11px] text-center text-zinc-400">
-                              {isAr
-                                ? 'سيتم فتح نافذة Apple Pay الرسمية لإتمام الدفع الآمن برقم البطاقة المشفرة'
-                                : 'Official Apple Pay sheet will open for encrypted instant authorization'}
-                            </p>
                           </div>
-                        </motion.div>
-                      )}
-                    </div>
+                          <div className="px-3.5 py-1.5 rounded-xl bg-black border border-white/25 text-white font-bold text-sm font-mono flex items-center gap-1 shadow-md">
+                            <span></span>
+                            <span>Pay</span>
+                          </div>
+                        </div>
+
+                        {selectedPayment === 'apple_pay' && (
+                          <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: 'auto' }}
+                            className="mt-4 pt-4 border-t border-white/10 space-y-3 text-xs"
+                          >
+                            <div className="p-4 rounded-2xl bg-black/60 border border-white/15 space-y-3">
+                              <div className="flex items-center justify-between">
+                                <span className="text-zinc-400 text-xs">{isAr ? 'الدفع السريع المعتمد' : 'Express Checkout'}</span>
+                                <span className="text-emerald-400 text-xs font-mono font-bold flex items-center gap-1">
+                                  <ShieldCheck className="w-3.5 h-3.5" />
+                                  <span>Apple Secure Enclave</span>
+                                </span>
+                              </div>
+
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setShowApplePaySheet(true);
+                                }}
+                                className="w-full py-3.5 rounded-xl bg-white text-black hover:bg-zinc-200 transition-all font-bold text-sm flex items-center justify-center gap-2 shadow-xl cursor-pointer"
+                              >
+                                <span className="text-lg leading-none"></span>
+                                <span>{isAr ? 'الدفع بواسطة Apple Pay' : 'Pay with Apple Pay'}</span>
+                              </button>
+
+                              <p className="text-[11px] text-center text-zinc-400">
+                                {isAr
+                                  ? 'سيتم فتح نافذة Apple Pay الرسمية لإتمام الدفع الآمن برقم البطاقة المشفرة'
+                                  : 'Official Apple Pay sheet will open for encrypted instant authorization'}
+                              </p>
+                            </div>
+                          </motion.div>
+                        )}
+                      </div>
+                    )}
 
                     {/* 3. Tabby (Mirrored Official GCC UI/UX) */}
-                    <div
-                      onClick={() => setSelectedPayment('tabby')}
-                      className={`p-4 rounded-2xl border transition-all cursor-pointer ${
-                        selectedPayment === 'tabby'
-                          ? 'bg-[#3EEDBF]/10 border-[#3EEDBF]/60 shadow-[0_0_20px_rgba(62,237,191,0.15)]'
-                          : 'bg-[#141721] border-white/10 hover:border-white/20'
-                      }`}
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <input
-                            type="radio"
-                            name="payment_choice"
-                            checked={selectedPayment === 'tabby'}
-                            onChange={() => setSelectedPayment('tabby')}
-                            className="text-[#3EEDBF]"
-                          />
-                          <div>
-                            <span className="text-xs sm:text-sm font-bold text-white flex items-center gap-2">
-                              <span>{dict.furniture.checkout.payment.tabby}</span>
-                              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#3EEDBF]/20 text-[#3EEDBF] font-semibold">
-                                {isAr ? 'بدون فوائد 0%' : '0% Interest'}
+                    {storeSettings?.enableTabby !== false && (
+                      <div
+                        onClick={() => setSelectedPayment('tabby')}
+                        className={`p-4 rounded-2xl border transition-all cursor-pointer ${
+                          selectedPayment === 'tabby'
+                            ? 'bg-[#3EEDBF]/10 border-[#3EEDBF]/60 shadow-[0_0_20px_rgba(62,237,191,0.15)]'
+                            : 'bg-[#141721] border-white/10 hover:border-white/20'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <input
+                              type="radio"
+                              name="payment_choice"
+                              checked={selectedPayment === 'tabby'}
+                              onChange={() => setSelectedPayment('tabby')}
+                              className="text-[#3EEDBF]"
+                            />
+                            <div>
+                              <span className="text-xs sm:text-sm font-bold text-white flex items-center gap-2">
+                                <span>{dict.furniture.checkout.payment.tabby}</span>
+                                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#3EEDBF]/20 text-[#3EEDBF] font-semibold">
+                                  {isAr ? 'بدون فوائد 0%' : '0% Interest'}
+                                </span>
                               </span>
-                            </span>
-                            <span className="text-[11px] text-zinc-400">
-                              {dict.furniture.checkout.payment.tabby_desc}
-                            </span>
+                              <span className="text-[11px] text-zinc-400">
+                                {dict.furniture.checkout.payment.tabby_desc}
+                              </span>
+                            </div>
+                          </div>
+                          <div className="px-3 py-1 rounded-lg bg-[#3EEDBF] text-[#08090C] font-black text-xs font-mono tracking-tight shadow">
+                            tabby
                           </div>
                         </div>
-                        <div className="px-3 py-1 rounded-lg bg-[#3EEDBF] text-[#08090C] font-black text-xs font-mono tracking-tight shadow">
-                          tabby
-                        </div>
+
+                        {selectedPayment === 'tabby' && (
+                          <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: 'auto' }}
+                            className="mt-4 pt-4 border-t border-white/10 space-y-3"
+                          >
+                            {/* Tabby Sharia & Guarantee Badge */}
+                            <div className="flex items-center justify-between text-[11px] font-mono text-zinc-300 bg-[#3EEDBF]/10 p-2.5 rounded-xl border border-[#3EEDBF]/20">
+                              <span className="flex items-center gap-1.5 text-[#3EEDBF] font-bold">
+                                <ShieldCheck className="w-4 h-4" />
+                                <span>{isAr ? 'متوافق مع أحكام الشريعة الإسلامية' : 'Shariah-Compliant · No Late Fees'}</span>
+                              </span>
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setShowTabbyModal(true);
+                                }}
+                                className="text-xs text-white underline hover:text-[#3EEDBF] flex items-center gap-1 transition-colors"
+                              >
+                                <span>{isAr ? 'كيف يعمل تابي؟' : 'How it works'}</span>
+                                <Info className="w-3 h-3" />
+                              </button>
+                            </div>
+
+                            {/* Mirrored 4-Installment Timeline Schedule */}
+                            <div className="grid grid-cols-4 gap-2 pt-1 text-center font-mono">
+                              {/* Step 1: Today */}
+                              <div className="p-2.5 rounded-xl bg-black/40 border border-[#3EEDBF]/40 space-y-1">
+                                <span className="text-[10px] text-[#3EEDBF] font-bold uppercase block">
+                                  {isAr ? 'اليوم' : 'Today'}
+                                </span>
+                                <span className="text-xs sm:text-sm font-extrabold text-white block">
+                                  {tabbyInstallment.toLocaleString('en-US')}
+                                </span>
+                                <span className="text-[9px] text-zinc-400 block">{isAr ? 'ر.س (25%)' : 'SAR (25%)'}</span>
+                              </div>
+
+                              {/* Step 2: 1 Month */}
+                              <div className="p-2.5 rounded-xl bg-black/40 border border-white/10 space-y-1">
+                                <span className="text-[10px] text-zinc-400 uppercase block">
+                                  {isAr ? 'بعد شهر' : 'In 1 Mo'}
+                                </span>
+                                <span className="text-xs sm:text-sm font-bold text-zinc-300 block">
+                                  {tabbyInstallment.toLocaleString('en-US')}
+                                </span>
+                                <span className="text-[9px] text-zinc-500 block">{isAr ? 'ر.س (25%)' : 'SAR (25%)'}</span>
+                              </div>
+
+                              {/* Step 3: 2 Months */}
+                              <div className="p-2.5 rounded-xl bg-black/40 border border-white/10 space-y-1">
+                                <span className="text-[10px] text-zinc-400 uppercase block">
+                                  {isAr ? 'بعد شهرين' : 'In 2 Mo'}
+                                </span>
+                                <span className="text-xs sm:text-sm font-bold text-zinc-300 block">
+                                  {tabbyInstallment.toLocaleString('en-US')}
+                                </span>
+                                <span className="text-[9px] text-zinc-500 block">{isAr ? 'ر.س (25%)' : 'SAR (25%)'}</span>
+                              </div>
+
+                              {/* Step 4: 3 Months */}
+                              <div className="p-2.5 rounded-xl bg-black/40 border border-white/10 space-y-1">
+                                <span className="text-[10px] text-zinc-400 uppercase block">
+                                  {isAr ? 'بعد 3 أشهر' : 'In 3 Mo'}
+                                </span>
+                                <span className="text-xs sm:text-sm font-bold text-zinc-300 block">
+                                  {tabbyInstallment.toLocaleString('en-US')}
+                                </span>
+                                <span className="text-[9px] text-zinc-500 block">{isAr ? 'ر.س (25%)' : 'SAR (25%)'}</span>
+                              </div>
+                            </div>
+
+                            <div className="text-[11px] text-zinc-400 pt-1 flex items-center justify-between">
+                              <span>{isAr ? 'لا توجد فوائد، ولا توجد أي رسوم تسجيل.' : 'No interest, no sign-up fees.'}</span>
+                              <span className="text-[#3EEDBF] font-mono font-bold">
+                                {isAr ? 'الموافقة فورية برقم الجوال' : 'Instant mobile approval'}
+                              </span>
+                            </div>
+                          </motion.div>
+                        )}
                       </div>
-
-                      {selectedPayment === 'tabby' && (
-                        <motion.div
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: 'auto' }}
-                          className="mt-4 pt-4 border-t border-white/10 space-y-3"
-                        >
-                          {/* Tabby Sharia & Guarantee Badge */}
-                          <div className="flex items-center justify-between text-[11px] font-mono text-zinc-300 bg-[#3EEDBF]/10 p-2.5 rounded-xl border border-[#3EEDBF]/20">
-                            <span className="flex items-center gap-1.5 text-[#3EEDBF] font-bold">
-                              <ShieldCheck className="w-4 h-4" />
-                              <span>{isAr ? 'متوافق مع أحكام الشريعة الإسلامية' : 'Shariah-Compliant · No Late Fees'}</span>
-                            </span>
-                            <button
-                              type="button"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setShowTabbyModal(true);
-                              }}
-                              className="text-xs text-white underline hover:text-[#3EEDBF] flex items-center gap-1 transition-colors"
-                            >
-                              <span>{isAr ? 'كيف يعمل تابي؟' : 'How it works'}</span>
-                              <Info className="w-3 h-3" />
-                            </button>
-                          </div>
-
-                          {/* Mirrored 4-Installment Timeline Schedule */}
-                          <div className="grid grid-cols-4 gap-2 pt-1 text-center font-mono">
-                            {/* Step 1: Today */}
-                            <div className="p-2.5 rounded-xl bg-black/40 border border-[#3EEDBF]/40 space-y-1">
-                              <span className="text-[10px] text-[#3EEDBF] font-bold uppercase block">
-                                {isAr ? 'اليوم' : 'Today'}
-                              </span>
-                              <span className="text-xs sm:text-sm font-extrabold text-white block">
-                                {tabbyInstallment.toLocaleString('en-US')}
-                              </span>
-                              <span className="text-[9px] text-zinc-400 block">{isAr ? 'ر.س (25%)' : 'SAR (25%)'}</span>
-                            </div>
-
-                            {/* Step 2: 1 Month */}
-                            <div className="p-2.5 rounded-xl bg-black/40 border border-white/10 space-y-1">
-                              <span className="text-[10px] text-zinc-400 uppercase block">
-                                {isAr ? 'بعد شهر' : 'In 1 Mo'}
-                              </span>
-                              <span className="text-xs sm:text-sm font-bold text-zinc-300 block">
-                                {tabbyInstallment.toLocaleString('en-US')}
-                              </span>
-                              <span className="text-[9px] text-zinc-500 block">{isAr ? 'ر.س (25%)' : 'SAR (25%)'}</span>
-                            </div>
-
-                            {/* Step 3: 2 Months */}
-                            <div className="p-2.5 rounded-xl bg-black/40 border border-white/10 space-y-1">
-                              <span className="text-[10px] text-zinc-400 uppercase block">
-                                {isAr ? 'بعد شهرين' : 'In 2 Mo'}
-                              </span>
-                              <span className="text-xs sm:text-sm font-bold text-zinc-300 block">
-                                {tabbyInstallment.toLocaleString('en-US')}
-                              </span>
-                              <span className="text-[9px] text-zinc-500 block">{isAr ? 'ر.س (25%)' : 'SAR (25%)'}</span>
-                            </div>
-
-                            {/* Step 4: 3 Months */}
-                            <div className="p-2.5 rounded-xl bg-black/40 border border-white/10 space-y-1">
-                              <span className="text-[10px] text-zinc-400 uppercase block">
-                                {isAr ? 'بعد 3 أشهر' : 'In 3 Mo'}
-                              </span>
-                              <span className="text-xs sm:text-sm font-bold text-zinc-300 block">
-                                {tabbyInstallment.toLocaleString('en-US')}
-                              </span>
-                              <span className="text-[9px] text-zinc-500 block">{isAr ? 'ر.س (25%)' : 'SAR (25%)'}</span>
-                            </div>
-                          </div>
-
-                          <div className="text-[11px] text-zinc-400 pt-1 flex items-center justify-between">
-                            <span>{isAr ? 'لا توجد فوائد، ولا توجد أي رسوم تسجيل.' : 'No interest, no sign-up fees.'}</span>
-                            <span className="text-[#3EEDBF] font-mono font-bold">
-                              {isAr ? 'الموافقة فورية برقم الجوال' : 'Instant mobile approval'}
-                            </span>
-                          </div>
-                        </motion.div>
-                      )}
-                    </div>
+                    )}
 
                     {/* 4. Tamara (Mirrored Official GCC UI/UX) */}
-                    <div
-                      onClick={() => setSelectedPayment('tamara')}
-                      className={`p-4 rounded-2xl border transition-all cursor-pointer ${
-                        selectedPayment === 'tamara'
-                          ? 'bg-[#FF7A59]/10 border-[#FF7A59]/60 shadow-[0_0_20px_rgba(255,122,89,0.15)]'
-                          : 'bg-[#141721] border-white/10 hover:border-white/20'
-                      }`}
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <input
-                            type="radio"
-                            name="payment_choice"
-                            checked={selectedPayment === 'tamara'}
-                            onChange={() => setSelectedPayment('tamara')}
-                            className="text-[#FF7A59]"
-                          />
-                          <div>
-                            <span className="text-xs sm:text-sm font-bold text-white flex items-center gap-2">
-                              <span>{dict.furniture.checkout.payment.tamara}</span>
-                              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#FF7A59]/20 text-[#FF7A59] font-semibold">
-                                {isAr ? 'مرخص من ساما SAMA' : 'SAMA Licensed'}
+                    {storeSettings?.enableTamara !== false && (
+                      <div
+                        onClick={() => setSelectedPayment('tamara')}
+                        className={`p-4 rounded-2xl border transition-all cursor-pointer ${
+                          selectedPayment === 'tamara'
+                            ? 'bg-[#FF7A59]/10 border-[#FF7A59]/60 shadow-[0_0_20px_rgba(255,122,89,0.15)]'
+                            : 'bg-[#141721] border-white/10 hover:border-white/20'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <input
+                              type="radio"
+                              name="payment_choice"
+                              checked={selectedPayment === 'tamara'}
+                              onChange={() => setSelectedPayment('tamara')}
+                              className="text-[#FF7A59]"
+                            />
+                            <div>
+                              <span className="text-xs sm:text-sm font-bold text-white flex items-center gap-2">
+                                <span>{dict.furniture.checkout.payment.tamara}</span>
+                                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#FF7A59]/20 text-[#FF7A59] font-semibold">
+                                  {isAr ? 'مرخص من ساما SAMA' : 'SAMA Licensed'}
+                                </span>
                               </span>
-                            </span>
-                            <span className="text-[11px] text-zinc-400">
-                              {dict.furniture.checkout.payment.tamara_desc}
-                            </span>
+                              <span className="text-[11px] text-zinc-400">
+                                {dict.furniture.checkout.payment.tamara_desc}
+                              </span>
+                            </div>
+                          </div>
+                          <div className="px-3 py-1 rounded-lg bg-[#FF7A59] text-white font-black text-xs font-mono tracking-tight shadow">
+                            tamara
                           </div>
                         </div>
-                        <div className="px-3 py-1 rounded-lg bg-[#FF7A59] text-white font-black text-xs font-mono tracking-tight shadow">
-                          tamara
-                        </div>
-                      </div>
 
-                      {selectedPayment === 'tamara' && (
-                        <motion.div
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: 'auto' }}
-                          className="mt-4 pt-4 border-t border-white/10 space-y-3"
-                        >
-                          {/* SAMA & Shariah Header */}
-                          <div className="flex items-center justify-between text-[11px] font-mono text-zinc-300 bg-[#FF7A59]/10 p-2.5 rounded-xl border border-[#FF7A59]/20">
-                            <span className="flex items-center gap-1.5 text-[#FF7A59] font-bold">
-                              <ShieldCheck className="w-4 h-4" />
-                              <span>{isAr ? 'مرخص رسمياً من البنك المركزي السعودي (ساما)' : 'Licensed by Saudi Central Bank (SAMA)'}</span>
-                            </span>
-                            <button
-                              type="button"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setShowTamaraModal(true);
-                              }}
-                              className="text-xs text-white underline hover:text-[#FF7A59] flex items-center gap-1 transition-colors"
-                            >
-                              <span>{isAr ? 'تفاصيل تمارا' : 'Details'}</span>
-                              <Info className="w-3 h-3" />
-                            </button>
-                          </div>
+                        {selectedPayment === 'tamara' && (
+                          <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: 'auto' }}
+                            className="mt-4 pt-4 border-t border-white/10 space-y-3"
+                          >
+                            {/* SAMA & Shariah Header */}
+                            <div className="flex items-center justify-between text-[11px] font-mono text-zinc-300 bg-[#FF7A59]/10 p-2.5 rounded-xl border border-[#FF7A59]/20">
+                              <span className="flex items-center gap-1.5 text-[#FF7A59] font-bold">
+                                <ShieldCheck className="w-4 h-4" />
+                                <span>{isAr ? 'مرخص رسمياً من البنك المركزي السعودي (ساما)' : 'Licensed by Saudi Central Bank (SAMA)'}</span>
+                              </span>
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setShowTamaraModal(true);
+                                }}
+                                className="text-xs text-white underline hover:text-[#FF7A59] flex items-center gap-1 transition-colors"
+                              >
+                                <span>{isAr ? 'تفاصيل تمارا' : 'Details'}</span>
+                                <Info className="w-3 h-3" />
+                              </button>
+                            </div>
 
-                          {/* Installments Option Selector: 4 vs 3 */}
-                          <div className="flex items-center gap-2 bg-black/40 p-1 rounded-xl border border-white/10">
-                            <button
-                              type="button"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setTamaraInstallmentsCount(4);
-                              }}
-                              className={`flex-1 py-1.5 rounded-lg text-xs font-mono font-bold transition-all ${
-                                tamaraInstallmentsCount === 4
-                                  ? 'bg-[#FF7A59] text-white shadow'
-                                  : 'text-zinc-400 hover:text-white'
-                              }`}
-                            >
-                              {isAr ? '4 دفعات (موصى به)' : 'Split in 4 (Recommended)'}
-                            </button>
-                            <button
-                              type="button"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setTamaraInstallmentsCount(3);
-                              }}
-                              className={`flex-1 py-1.5 rounded-lg text-xs font-mono font-bold transition-all ${
-                                tamaraInstallmentsCount === 3
-                                  ? 'bg-[#FF7A59] text-white shadow'
-                                  : 'text-zinc-400 hover:text-white'
-                              }`}
-                            >
-                              {isAr ? '3 دفعات' : 'Split in 3'}
-                            </button>
-                          </div>
+                            {/* Installments Option Selector: 4 vs 3 */}
+                            <div className="flex items-center gap-2 bg-black/40 p-1 rounded-xl border border-white/10">
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setTamaraInstallmentsCount(4);
+                                }}
+                                className={`flex-1 py-1.5 rounded-lg text-xs font-mono font-bold transition-all ${
+                                  tamaraInstallmentsCount === 4
+                                    ? 'bg-[#FF7A59] text-white shadow'
+                                    : 'text-zinc-400 hover:text-white'
+                                }`}
+                              >
+                                {isAr ? '4 دفعات (موصى به)' : 'Split in 4 (Recommended)'}
+                              </button>
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setTamaraInstallmentsCount(3);
+                                }}
+                                className={`flex-1 py-1.5 rounded-lg text-xs font-mono font-bold transition-all ${
+                                  tamaraInstallmentsCount === 3
+                                    ? 'bg-[#FF7A59] text-white shadow'
+                                    : 'text-zinc-400 hover:text-white'
+                                }`}
+                              >
+                                {isAr ? '3 دفعات' : 'Split in 3'}
+                              </button>
+                            </div>
 
-                          {/* Timeline display */}
-                          <div className={`grid gap-2 pt-1 text-center font-mono ${tamaraInstallmentsCount === 4 ? 'grid-cols-4' : 'grid-cols-3'}`}>
-                            <div className="p-2.5 rounded-xl bg-black/40 border border-[#FF7A59]/40 space-y-1">
-                              <span className="text-[10px] text-[#FF7A59] font-bold uppercase block">{isAr ? 'الدفعة 1' : 'Payment 1'}</span>
-                              <span className="text-xs sm:text-sm font-extrabold text-white block">{tamaraInstallment.toLocaleString('en-US')}</span>
-                              <span className="text-[9px] text-zinc-400 block">{isAr ? 'اليوم' : 'Today'}</span>
-                            </div>
-                            <div className="p-2.5 rounded-xl bg-black/40 border border-white/10 space-y-1">
-                              <span className="text-[10px] text-zinc-400 uppercase block">{isAr ? 'الدفعة 2' : 'Payment 2'}</span>
-                              <span className="text-xs sm:text-sm font-bold text-zinc-300 block">{tamaraInstallment.toLocaleString('en-US')}</span>
-                              <span className="text-[9px] text-zinc-500 block">{isAr ? 'بعد شهر' : '+1 Month'}</span>
-                            </div>
-                            <div className="p-2.5 rounded-xl bg-black/40 border border-white/10 space-y-1">
-                              <span className="text-[10px] text-zinc-400 uppercase block">{isAr ? 'الدفعة 3' : 'Payment 3'}</span>
-                              <span className="text-xs sm:text-sm font-bold text-zinc-300 block">{tamaraInstallment.toLocaleString('en-US')}</span>
-                              <span className="text-[9px] text-zinc-500 block">{isAr ? 'بعد شهرين' : '+2 Months'}</span>
-                            </div>
-                            {tamaraInstallmentsCount === 4 && (
-                              <div className="p-2.5 rounded-xl bg-black/40 border border-white/10 space-y-1">
-                                <span className="text-[10px] text-zinc-400 uppercase block">{isAr ? 'الدفعة 4' : 'Payment 4'}</span>
-                                <span className="text-xs sm:text-sm font-bold text-zinc-300 block">{tamaraInstallment.toLocaleString('en-US')}</span>
-                                <span className="text-[9px] text-zinc-500 block">{isAr ? 'بعد 3 أشهر' : '+3 Months'}</span>
+                            {/* Timeline display */}
+                            <div className={`grid gap-2 pt-1 text-center font-mono ${tamaraInstallmentsCount === 4 ? 'grid-cols-4' : 'grid-cols-3'}`}>
+                              <div className="p-2.5 rounded-xl bg-black/40 border border-[#FF7A59]/40 space-y-1">
+                                <span className="text-[10px] text-[#FF7A59] font-bold uppercase block">{isAr ? 'الدفعة 1' : 'Payment 1'}</span>
+                                <span className="text-xs sm:text-sm font-extrabold text-white block">{tamaraInstallment.toLocaleString('en-US')}</span>
+                                <span className="text-[9px] text-zinc-400 block">{isAr ? 'اليوم' : 'Today'}</span>
                               </div>
-                            )}
-                          </div>
-                        </motion.div>
-                      )}
-                    </div>
+                              <div className="p-2.5 rounded-xl bg-black/40 border border-white/10 space-y-1">
+                                <span className="text-[10px] text-zinc-400 uppercase block">{isAr ? 'الدفعة 2' : 'Payment 2'}</span>
+                                <span className="text-xs sm:text-sm font-bold text-zinc-300 block">{tamaraInstallment.toLocaleString('en-US')}</span>
+                                <span className="text-[9px] text-zinc-500 block">{isAr ? 'بعد شهر' : '+1 Month'}</span>
+                              </div>
+                              <div className="p-2.5 rounded-xl bg-black/40 border border-white/10 space-y-1">
+                                <span className="text-[10px] text-zinc-400 uppercase block">{isAr ? 'الدفعة 3' : 'Payment 3'}</span>
+                                <span className="text-xs sm:text-sm font-bold text-zinc-300 block">{tamaraInstallment.toLocaleString('en-US')}</span>
+                                <span className="text-[9px] text-zinc-500 block">{isAr ? 'بعد شهرين' : '+2 Months'}</span>
+                              </div>
+                              {tamaraInstallmentsCount === 4 && (
+                                <div className="p-2.5 rounded-xl bg-black/40 border border-white/10 space-y-1">
+                                  <span className="text-[10px] text-zinc-400 uppercase block">{isAr ? 'الدفعة 4' : 'Payment 4'}</span>
+                                  <span className="text-xs sm:text-sm font-bold text-zinc-300 block">{tamaraInstallment.toLocaleString('en-US')}</span>
+                                  <span className="text-[9px] text-zinc-500 block">{isAr ? 'بعد 3 أشهر' : '+3 Months'}</span>
+                                </div>
+                              )}
+                            </div>
+                          </motion.div>
+                        )}
+                      </div>
+                    )}
 
                     {/* 5. Direct Official Corporate Bank Transfer (With OTP Verification Gate) */}
                     <div
@@ -2337,7 +2653,53 @@ export default function FurnitureCheckoutPage() {
           )}
         </AnimatePresence>
 
+        {/* Official ZATCA Tax Invoice & Quotation Modal */}
+        <OfficialTaxInvoiceModal
+          isOpen={showInvoiceModal}
+          onClose={() => setShowInvoiceModal(false)}
+          order={{
+            orderRef: orderReference,
+            customerName: `${deliveryForm.firstName} ${deliveryForm.lastName}`.trim() || 'Valued Customer',
+            email: deliveryForm.email,
+            phone: deliveryForm.phone,
+            city: deliveryForm.city,
+            address: deliveryForm.address,
+            district: deliveryForm.district,
+            companyName: deliveryForm.companyName,
+            crNumber: deliveryForm.crNumber,
+            vatNumber: deliveryForm.vatNumber,
+            orderDate: new Date().toISOString(),
+            paymentMethod: selectedPayment,
+            paymentStatus: selectedPayment === 'bank_transfer' ? 'pending' : 'paid',
+            subtotal,
+            discountAmount,
+            vatAmount,
+            totalAmount: finalTotal,
+            items: cartItems.map((i) => {
+              const finishObj = i.product.finishes.find((f) => f.id === i.selectedFinishId);
+              return {
+                sku: i.product.sku,
+                nameEn: i.product.nameEn,
+                nameAr: i.product.nameAr,
+                finishName: finishObj?.nameEn || i.selectedFinishId,
+                quantity: i.quantity,
+                unitPrice: i.product.price,
+              };
+            }),
+          }}
+          isQuotation={deliveryForm.orderType === 'b2b'}
+        />
+
       </div>
     </div>
   );
 }
+
+export default function FurnitureCheckoutPage() {
+  return (
+    <React.Suspense fallback={<div className="min-h-screen bg-[#08090C] text-white pt-32 text-center">Loading luxury checkout experience...</div>}>
+      <FurnitureCheckoutContent />
+    </React.Suspense>
+  );
+}
+

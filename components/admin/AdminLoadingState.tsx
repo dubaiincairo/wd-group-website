@@ -19,45 +19,29 @@ export default function AdminLoadingState({
   const { lang } = useLanguage();
   const isAr = lang === 'ar';
 
-  const [progress, setProgress] = useState(0);
+  const [progress, setProgress] = useState(15);
 
   useEffect(() => {
-    let startTime: number | null = null;
-    let animationFrameId: number;
-    const duration = 1400; // 1.4s elegant duration
+    // Asymptotic fluid progress that advances smoothly while the real request is pending
+    const interval = setInterval(() => {
+      setProgress((prev) => {
+        if (prev >= 94) return prev;
+        const remaining = 95 - prev;
+        return prev + Math.max(1, Math.round(remaining * 0.15));
+      });
+    }, 120);
 
-    const step = (timestamp: number) => {
-      if (!startTime) startTime = timestamp;
-      const elapsed = timestamp - startTime;
-      const t = Math.min(1, elapsed / duration);
-      
-      // Smooth cubic ease-out
-      const eased = 1 - Math.pow(1 - t, 3);
-      const currentProgress = Math.min(100, Math.round(eased * 100));
-      setProgress(currentProgress);
-
-      if (t < 1) {
-        animationFrameId = requestAnimationFrame(step);
-      } else {
-        setProgress(100);
-      }
-    };
-
-    animationFrameId = requestAnimationFrame(step);
-
-    return () => {
-      if (animationFrameId) cancelAnimationFrame(animationFrameId);
-    };
+    return () => clearInterval(interval);
   }, []);
 
   const logoSrc = isAr ? '/brand/wd-group-logo-ar-white.png' : '/brand/wd-group-logo-white.png';
   const logoAlt = isAr ? 'مجموعة دبليو دي للأعمال' : 'WD Group';
-  const defaultMsg = isAr ? 'جارٍ تحميل البيانات وإعداد المنظومة…' : 'LOADING HOLDING CONSOLE DATA…';
+  const defaultMsg = isAr ? 'جارٍ تهيئة البوابة والمصادقة المؤسسية…' : 'ESTABLISHING SECURE GATEWAY…';
 
   const content = (
-    <div className="relative z-10 flex flex-col items-center max-w-sm w-full px-6 text-center select-none animate-in fade-in duration-300">
+    <div className="relative z-10 flex flex-col items-center max-w-sm w-full px-6 text-center select-none animate-in fade-in duration-200">
       {/* Ambient Luxury Lighting Backdrops */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[420px] h-[420px] bg-radial from-[#C9A86A]/10 via-blue-600/5 to-transparent blur-[100px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[420px] h-[420px] bg-radial from-[#C9A86A]/15 via-blue-600/5 to-transparent blur-[100px] pointer-events-none" />
 
       {/* Expanding 1px Laser Horizon Line */}
       <div className="relative w-full max-w-xs flex items-center justify-center mb-6">
@@ -85,7 +69,7 @@ export default function AdminLoadingState({
       <div className="space-y-1 mb-6">
         <h3 className="text-sm sm:text-base font-bold tracking-tight text-white flex items-center justify-center gap-1.5">
           <span>{isAr ? 'مجموعة دبليو دي للأعمال' : 'WD GROUP HOLDING'}</span>
-          <Sparkles className="w-3 h-3 text-[#C9A86A]" />
+          <Sparkles className="w-3.5 h-3.5 text-[#C9A86A]" />
         </h3>
         <p className="text-[10px] sm:text-[11px] font-mono tracking-[0.2em] text-zinc-400 uppercase">
           {isAr ? 'شركة قابضة · المملكة العربية السعودية' : 'HOLDING COMPANY · SAUDI ARABIA'}
@@ -102,12 +86,12 @@ export default function AdminLoadingState({
         {/* Precision 2px Hairline Track */}
         <div className="w-48 sm:w-56 mx-auto h-[2px] bg-white/10 rounded-full overflow-hidden">
           <div
-            className="h-full bg-gradient-to-r from-[#C9A86A] via-[#E3C58A] to-[#C9A86A] shadow-[0_0_10px_#C9A86A]"
+            className="h-full bg-gradient-to-r from-[#C9A86A] via-[#E3C58A] to-[#C9A86A] shadow-[0_0_10px_#C9A86A] transition-all duration-150 ease-out"
             style={{ width: `${progress}%` }}
           />
         </div>
 
-        <p className="text-[10px] font-mono text-zinc-500 tracking-widest uppercase">
+        <p className="text-[10px] font-mono text-zinc-400 tracking-widest uppercase pt-1">
           {message || defaultMsg}
         </p>
       </div>
@@ -119,7 +103,7 @@ export default function AdminLoadingState({
       <div
         dir={isAr ? 'rtl' : 'ltr'}
         lang={lang}
-        className="fixed inset-0 z-[99999] flex flex-col items-center justify-center bg-[#08090C] text-white"
+        className="fixed inset-0 z-50 flex items-center justify-center bg-[#08090C] text-white"
       >
         {content}
       </div>
@@ -130,7 +114,7 @@ export default function AdminLoadingState({
     <div
       dir={isAr ? 'rtl' : 'ltr'}
       lang={lang}
-      className={`w-full ${minHeight} flex-1 flex flex-col items-center justify-center relative overflow-hidden py-12`}
+      className={`w-full ${minHeight} flex-1 flex items-center justify-center relative overflow-hidden py-8`}
     >
       {content}
     </div>

@@ -23,7 +23,8 @@ import {
   Lock,
   Activity, 
   Globe, 
-  ExternalLink
+  ExternalLink,
+  Bot
 } from 'lucide-react';
 import type { AdminRole } from '@/lib/admin/types';
 
@@ -85,6 +86,18 @@ const NAV_GROUPS: NavGroup[] = [
         icon: ShoppingCart,
         iconBg: 'bg-[#C9A86A]/15 text-[#C9A86A] border-[#C9A86A]/25 group-hover:bg-[#C9A86A]/25',
         allowedRoles: ['owner', 'admin', 'crm', 'editor'],
+      },
+      {
+        id: 'ai-studio',
+        label: 'AI Creative Studio',
+        labelAr: 'استوديو الذكاء الاصطناعي',
+        href: '/admin/ai-studio',
+        icon: Sparkles,
+        iconBg: 'bg-amber-500/15 text-amber-400 border-amber-500/25 group-hover:bg-amber-500/25',
+        badge: 'NanoBanana Pro',
+        badgeAr: 'برو',
+        badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30 shadow-[0_0_10px_rgba(245,158,11,0.2)]',
+        allowedRoles: ['owner', 'admin', 'editor', 'crm'],
       },
       {
         id: 'inquiries',
@@ -156,6 +169,18 @@ const NAV_GROUPS: NavGroup[] = [
         href: '/admin/seo',
         icon: Search,
         iconBg: 'bg-cyan-500/15 text-cyan-400 border-cyan-500/25 group-hover:bg-cyan-500/25',
+        allowedRoles: ['owner', 'admin', 'editor'],
+      },
+      {
+        id: 'chatbot',
+        label: 'AI Chatbot (Sultan)',
+        labelAr: 'المساعد الذكي (سلطان)',
+        href: '/admin/system/settings?section=chatbot',
+        icon: Bot,
+        iconBg: 'bg-[#C9A86A]/15 text-[#C9A86A] border-[#C9A86A]/25 group-hover:bg-[#C9A86A]/25',
+        badge: 'Live',
+        badgeAr: 'سلطان',
+        badgeColor: 'bg-[#C9A86A]/20 text-[#E3C58A] border-[#C9A86A]/30',
         allowedRoles: ['owner', 'admin', 'editor'],
       },
     ],

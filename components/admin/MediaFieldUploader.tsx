@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { useToast } from './ToastProvider';
 import { useLanguage } from '@/context/LanguageContext';
+import { optimizeImageForWeb } from '@/lib/admin/imageOptimizer';
 
 interface MediaFieldUploaderProps {
   label: string;
@@ -81,7 +82,25 @@ export default function MediaFieldUploader({
 
     try {
       setUploading(true);
-      const cleanFileName = `${Date.now()}_${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
+
+      // Auto-optimize images to 2K Ultra-HD WebP without compromising quality
+      let fileToUpload = file;
+      if (
+        file.type.startsWith('image/') &&
+        file.type !== 'image/svg+xml' &&
+        file.type !== 'image/gif' &&
+        !isPdf &&
+        !isVideo
+      ) {
+        try {
+          const optResult = await optimizeImageForWeb(file, { maxDimension: 2560, quality: 0.88 });
+          if (optResult.wasOptimized) {
+            fileToUpload = optResult.file;
+          }
+        } catch (_) {}
+      }
+
+      const cleanFileName = `${Date.now()}_${fileToUpload.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
       const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://fqkbgfdasfwnryekkgqz.supabase.co';
       const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZxa2JnZmRhc2Z3bnJ5ZWtrZ3F6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc1OTAyMDYsImV4cCI6MjEwMzE2NjIwNn0.IRPdvlCIbeTtFNf8TMc353fT-tlLxYq0Mx3P2HHmM3Q';
 
@@ -94,9 +113,9 @@ export default function MediaFieldUploader({
         headers: {
           'apikey': supabaseAnonKey,
           'Authorization': `Bearer ${supabaseAnonKey}`,
-          'Content-Type': file.type || (isPdf ? 'application/pdf' : accept === 'video' ? 'video/mp4' : 'image/jpeg'),
+          'Content-Type': fileToUpload.type || (isPdf ? 'application/pdf' : accept === 'video' ? 'video/mp4' : 'image/jpeg'),
         },
-        body: file,
+        body: fileToUpload,
       });
 
       // Fallback if bucket does not exist
@@ -107,9 +126,9 @@ export default function MediaFieldUploader({
           headers: {
             'apikey': supabaseAnonKey,
             'Authorization': `Bearer ${supabaseAnonKey}`,
-            'Content-Type': file.type || (isPdf ? 'application/pdf' : accept === 'video' ? 'video/mp4' : 'image/jpeg'),
+            'Content-Type': fileToUpload.type || (isPdf ? 'application/pdf' : accept === 'video' ? 'video/mp4' : 'image/jpeg'),
           },
-          body: file,
+          body: fileToUpload,
         });
       }
 
@@ -129,8 +148,8 @@ export default function MediaFieldUploader({
             bucket_id: effectiveBucket,
             file_name: cleanFileName,
             file_url: fileUrl,
-            file_size: file.size,
-            mime_type: file.type || (isPdf ? 'application/pdf' : 'application/octet-stream'),
+            file_size: fileToUpload.size,
+            mime_type: fileToUpload.type || (isPdf ? 'application/pdf' : 'application/octet-stream'),
             alt_text_en: label,
             tags: [isPdf ? 'pdf' : accept, effectiveBucket],
           }),

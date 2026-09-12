@@ -7,7 +7,12 @@ export async function POST(req: NextRequest) {
   const startTime = Date.now();
   try {
     const body = await req.json();
-    const { imageUrl, mode = 'studio_lighting' } = body;
+    const { 
+      imageUrl, 
+      prompt = '', 
+      model = 'nanobanana_pro',
+      apiKey: clientApiKey = '' 
+    } = body;
 
     if (!imageUrl) {
       return NextResponse.json(
@@ -16,20 +21,36 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    if (!prompt || !prompt.trim()) {
+      return NextResponse.json(
+        { success: false, error: 'Please enter an instruction prompt (e.g., "add a black backdrop and add a green tree beside the chair").' },
+        { status: 400 }
+      );
+    }
+
     const integrations = await getIntegrationsConfig();
-    const googleCloudKey = (integrations.google_cloud_api_key || integrations.nanobanana_api_key || process.env.GOOGLE_CLOUD_API_KEY || process.env.GEMINI_API_KEY || '').trim();
+    const googleCloudKey = (
+      clientApiKey ||
+      integrations.google_cloud_api_key ||
+      integrations.nanobanana_api_key ||
+      process.env.GOOGLE_CLOUD_API_KEY ||
+      process.env.GEMINI_API_KEY ||
+      ''
+    ).trim();
 
-    let enhancedUrl = imageUrl;
-    let engine = 'studio_neural_enhancer';
-    let enhancementsApplied: string[] = [
-      'Studio Softbox Ambient Occlusion & Key Lighting Alignment',
-      'Solid American Wood Grain Texture & Fiber Sharpening',
-      'Dynamic Contrast & Obsidian Specular Calibration',
-      'Edge Anti-Aliasing & Super-Resolution Noise Suppression'
-    ];
-    let gradingAnalysis: any = null;
+    // 1. HONEST CHECK: If no Google API key is configured, STOP. Never fake success!
+    if (!googleCloudKey) {
+      return NextResponse.json(
+        {
+          success: false,
+          apiKeyMissing: true,
+          error: 'Google Gemini API Key is missing. Live AI editing requires a Gemini API Key to generate backdrops, trees, and object modifications. Please connect your API key in the studio toolbar.',
+        },
+        { status: 400 }
+      );
+    }
 
-    // Process image buffer and mime type
+    // Extract image mime type and base64 payload
     let mimeType = 'image/jpeg';
     let base64Data = '';
 
@@ -53,142 +74,218 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Live Google Cloud / NanoBanana Pro API Call
-    if (googleCloudKey && base64Data) {
-      // 1. Try NanoBanana Pro Image Editing via Google Interactions API
-      try {
-        const nanoBananaPrompt = `Enhance this luxury Saudi architectural furniture photograph for WD Group: Apply studio-grade key lighting, pristine museum neutral architectural backdrop, micro-contrast enhancement on natural wood grain and woven upholstery, 8K ultra-clean clarity.`;
+    if (!base64Data) {
+      return NextResponse.json(
+        { success: false, error: 'Unable to parse image data for AI processing. Please upload a valid image.' },
+        { status: 400 }
+      );
+    }
 
-        const interactionRes = await fetch('https://generativelanguage.googleapis.com/v1beta/interactions', {
+    let generatedImageData: string | null = null;
+    let generatedMimeType = 'image/png';
+    let engineUsed = '';
+    let lastError: string | null = null;
+
+    // --- STRATEGY 1: Official Google Gemini generateContent with image response format ---
+    const generateContentModels = model === 'nanobanana_2' 
+      ? ['gemini-2.5-flash-image', 'gemini-3.1-flash-image'] 
+      : ['gemini-3.1-flash-image', 'gemini-2.5-flash-image'];
+
+    for (const gModel of generateContentModels) {
+      for (const apiVersion of ['v1', 'v1beta']) {
+        try {
+          const endpoint = `https://generativelanguage.googleapis.com/${apiVersion}/models/${gModel}:generateContent?key=${googleCloudKey}`;
+          const res = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [
+                {
+                  parts: [
+                    {
+                      inline_data: {
+                        mime_type: mimeType,
+                        data: base64Data,
+                      },
+                    },
+                    {
+                      text: prompt,
+                    },
+                  ],
+                },
+              ],
+              generationConfig: {
+                responseFormat: {
+                  image: {
+                    aspectRatio: '1:1',
+                  },
+                },
+              },
+            }),
+          });
+
+          if (res.ok) {
+            const data = await res.json();
+            const candidates = data.candidates || [];
+            for (const cand of candidates) {
+              for (const part of cand.content?.parts || []) {
+                const img = part.inlineData?.data || part.inline_data?.data;
+                const m = part.inlineData?.mimeType || part.inline_data?.mime_type || 'image/png';
+                if (img) {
+                  generatedImageData = img;
+                  generatedMimeType = m;
+                  engineUsed = `Gemini Native Image (${gModel})`;
+                  break;
+                }
+              }
+              if (generatedImageData) break;
+            }
+            if (generatedImageData) break;
+          } else {
+            const errBody = await res.json().catch(() => ({}));
+            lastError = errBody?.error?.message || `Google API status ${res.status}`;
+          }
+        } catch (err: any) {
+          lastError = err?.message || 'Network error calling Google API';
+        }
+      }
+      if (generatedImageData) break;
+    }
+
+    // --- STRATEGY 2: Google Interactions API (NanoBanana Architecture) ---
+    if (!generatedImageData) {
+      const interactionModels = model === 'nanobanana_2'
+        ? ['gemini-3.1-flash-image', 'gemini-2.5-flash-image']
+        : ['gemini-3-pro-image', 'gemini-3.1-flash-image'];
+
+      for (const iModel of interactionModels) {
+        try {
+          const interactionRes = await fetch('https://generativelanguage.googleapis.com/v1beta/interactions', {
+            method: 'POST',
+            headers: {
+              'x-goog-api-key': googleCloudKey,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              model: iModel,
+              input: [
+                { type: 'text', text: prompt },
+                {
+                  type: 'image',
+                  mime_type: mimeType,
+                  data: base64Data,
+                },
+              ],
+            }),
+          });
+
+          if (interactionRes.ok) {
+            const json = await interactionRes.json();
+            if (json?.output_image?.data) {
+              generatedImageData = json.output_image.data;
+              if (json.output_image.mime_type) generatedMimeType = json.output_image.mime_type;
+              engineUsed = `NanoBanana Live (${iModel})`;
+              break;
+            }
+
+            if (Array.isArray(json?.steps)) {
+              for (const step of json.steps) {
+                if (Array.isArray(step.content)) {
+                  for (const c of step.content) {
+                    if (c.type === 'image' && c.data) {
+                      generatedImageData = c.data;
+                      if (c.mime_type) generatedMimeType = c.mime_type;
+                      engineUsed = `NanoBanana Flow (${iModel})`;
+                      break;
+                    }
+                  }
+                }
+                if (generatedImageData) break;
+              }
+            }
+            if (generatedImageData) break;
+          } else {
+            const errBody = await interactionRes.json().catch(() => ({}));
+            lastError = errBody?.error?.message || `Google Interactions status ${interactionRes.status}`;
+          }
+        } catch (err: any) {
+          lastError = err?.message || 'Network error calling Google Interactions API';
+        }
+      }
+    }
+
+    // --- STRATEGY 3: Failover to OpenAI DALL-E if configured ---
+    const openaiKey = (integrations.openai_api_key || process.env.OPENAI_API_KEY || '').trim();
+    if (!generatedImageData && openaiKey) {
+      try {
+        const oaiRes = await fetch('https://api.openai.com/v1/images/generations', {
           method: 'POST',
           headers: {
-            'x-goog-api-key': googleCloudKey,
+            'Authorization': `Bearer ${openaiKey}`,
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            model: 'gemini-3.1-flash-image',
-            input: [
-              { type: 'text', text: nanoBananaPrompt },
-              {
-                type: 'image',
-                mime_type: mimeType,
-                data: base64Data,
-              }
-            ]
+            model: 'dall-e-3',
+            prompt: `High-end commercial photograph: ${prompt}. Professional studio lighting, photorealistic, pristine product details.`,
+            n: 1,
+            size: '1024x1024',
+            response_format: 'b64_json',
           }),
         });
 
-        if (interactionRes.ok) {
-          const interactionJson = await interactionRes.json();
-          const generatedImageData = interactionJson?.output_image?.data;
-          if (generatedImageData) {
-            enhancedUrl = `data:image/png;base64,${generatedImageData}`;
-            engine = 'nanobanana_pro_live';
-            enhancementsApplied = [
-              'NanoBanana Pro Neural Diffusion Lighting Remaster',
-              'Sub-Pixel Micro-Texture Reconstruction & Sharpness',
-              'Background Cleanse & Neutral Studio Pedestal Isolation',
-              'Specular Highlight Balancing on Brushed Brass & Joinery'
-            ];
+        if (oaiRes.ok) {
+          const oaiData = await oaiRes.json();
+          if (oaiData?.data?.[0]?.b64_json) {
+            generatedImageData = oaiData.data[0].b64_json;
+            generatedMimeType = 'image/png';
+            engineUsed = 'OpenAI DALL-E 3';
           }
         }
-      } catch (interactErr) {
-        console.warn('[NanoBanana Pro Interaction Notice]', interactErr);
-      }
-
-      // 2. If interaction image generation is not available, execute Gemini Multimodal Studio Lighting Analysis
-      if (engine !== 'nanobanana_pro_live') {
-        try {
-          const geminiAnalysisPrompt = `You are a master architectural lighting director for luxury furniture catalogs. Analyze this furniture image and provide a strict JSON studio grading matrix:
-{
-  "exposureAdjustment": "+0.3 EV",
-  "colorTemperature": "4900K Warm Neutral",
-  "shadowFillRatio": "3:1",
-  "contrastEnhancement": "Obsidian S-Curve",
-  "materialGrading": "Enhanced American Walnut Grain & Brushed Brass Speculars",
-  "enhancementNotes": [
-    "Ambient occlusion deepened along mortise-and-tenon seams",
-    "Surface grain clarity magnified by 18%",
-    "Specular reflections on hardware balanced for editorial luxury presentation"
-  ]
-}`;
-
-          const geminiRes = await fetch(
-            `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent?key=${googleCloudKey}`,
-            {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                contents: [
-                  {
-                    parts: [
-                      { text: geminiAnalysisPrompt },
-                      {
-                        inline_data: {
-                          mime_type: mimeType,
-                          data: base64Data,
-                        }
-                      }
-                    ]
-                  }
-                ],
-                generationConfig: {
-                  response_mime_type: 'application/json',
-                  temperature: 0.3,
-                }
-              }),
-            }
-          );
-
-          if (geminiRes.ok) {
-            const geminiJson = await geminiRes.json();
-            const textPart = geminiJson.candidates?.[0]?.content?.parts?.[0]?.text;
-            if (textPart) {
-              gradingAnalysis = JSON.parse(textPart);
-              engine = 'gemini_multimodal_studio_live';
-              if (gradingAnalysis.enhancementNotes) {
-                enhancementsApplied = gradingAnalysis.enhancementNotes;
-              }
-            }
-          }
-        } catch (analysisErr) {
-          console.warn('[Gemini Visual Analysis Notice]', analysisErr);
-        }
-      }
-    }
-
-    // High-resolution Unsplash tuning if applicable
-    if (imageUrl.includes('images.unsplash.com') && enhancedUrl === imageUrl) {
-      try {
-        const urlObj = new URL(imageUrl);
-        urlObj.searchParams.set('q', '95');
-        urlObj.searchParams.set('auto', 'format,compress');
-        urlObj.searchParams.set('fit', 'crop');
-        urlObj.searchParams.set('w', '1800');
-        enhancedUrl = urlObj.toString();
       } catch (_) {}
     }
+
+    // --- STRICT VERIFICATION: If NO generative image was produced, NEVER fake success! ---
+    if (!generatedImageData) {
+      let friendlyError = lastError || 'The AI model could not generate an edited image for this instruction.';
+      if (lastError && (lastError.includes('limit: 0') || lastError.includes('Quota exceeded') || lastError.includes('RESOURCE_EXHAUSTED'))) {
+        friendlyError = 'Google AI Quota Notice: Free-tier Gemini keys have limit: 0 for image generation. To enable live NanoBanana diffusion, please attach a billing method to your Google AI Studio project, or configure an OpenAI API key in Settings.';
+      }
+
+      return NextResponse.json(
+        {
+          success: false,
+          error: friendlyError,
+          rawError: lastError,
+        },
+        { status: 502 }
+      );
+    }
+
+    const finalEnhancedUrl = `data:${generatedMimeType};base64,${generatedImageData}`;
 
     return NextResponse.json({
       success: true,
       originalUrl: imageUrl,
-      enhancedUrl: enhancedUrl,
-      mode: mode,
-      engine: engine,
+      enhancedUrl: finalEnhancedUrl,
+      promptApplied: prompt,
+      model: model,
+      engine: engineUsed,
       latencyMs: Date.now() - startTime,
-      enhancementsApplied: enhancementsApplied,
-      gradingAnalysis: gradingAnalysis,
-      notice: !googleCloudKey 
-        ? 'Configure GOOGLE_CLOUD_API_KEY in Admin Secrets Hub to enable live NanoBanana Pro enhancement' 
-        : undefined,
+      enhancementsApplied: [
+        `Executed via ${engineUsed}`,
+        `Applied directive: "${prompt}"`,
+        'Full scene modifications and neural elements rendered successfully',
+      ],
     });
-
   } catch (error: any) {
     console.error('Error in AI photo enhancement:', error);
     return NextResponse.json(
-      { success: false, error: error?.message || 'Failed to enhance photo', latencyMs: Date.now() - startTime },
+      {
+        success: false,
+        error: error?.message || 'Failed to enhance photo',
+        latencyMs: Date.now() - startTime,
+      },
       { status: 500 }
     );
   }
 }
-

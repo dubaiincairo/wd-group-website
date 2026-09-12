@@ -36,6 +36,18 @@ export async function getIntegrationsConfig(): Promise<IntegrationsConfig> {
     google_cloud_api_key: dbIntegrations.google_cloud_api_key?.trim() || process.env.GOOGLE_CLOUD_API_KEY || process.env.GEMINI_API_KEY || '',
     nanobanana_api_key: dbIntegrations.nanobanana_api_key?.trim() || process.env.NANOBANANA_API_KEY || '',
     site_password: dbIntegrations.site_password?.trim() || process.env.SITE_PASSWORD || '',
+    moyasar_secret_key: dbIntegrations.moyasar_secret_key?.trim() || process.env.MOYASAR_SECRET_KEY || 'sk_test_demo_wdgroup_sec_2026',
+    moyasar_publishable_key: dbIntegrations.moyasar_publishable_key?.trim() || process.env.NEXT_PUBLIC_MOYASAR_PUBLISHABLE_KEY || 'pk_test_demo_wdgroup_pub_2026',
+    moyasar_webhook_secret: dbIntegrations.moyasar_webhook_secret?.trim() || process.env.MOYASAR_WEBHOOK_SECRET || '',
+    moyasar_test_mode: dbIntegrations.moyasar_test_mode !== undefined ? Boolean(dbIntegrations.moyasar_test_mode) : (process.env.MOYASAR_TEST_MODE !== 'false'),
+    tamara_api_token: dbIntegrations.tamara_api_token?.trim() || process.env.TAMARA_API_TOKEN || '',
+    tamara_test_mode: dbIntegrations.tamara_test_mode !== undefined ? Boolean(dbIntegrations.tamara_test_mode) : (process.env.TAMARA_TEST_MODE !== 'false'),
+    tabby_secret_key: dbIntegrations.tabby_secret_key?.trim() || process.env.TABBY_SECRET_KEY || '',
+    tabby_public_key: dbIntegrations.tabby_public_key?.trim() || process.env.NEXT_PUBLIC_TABBY_PUBLIC_KEY || process.env.TABBY_PUBLIC_KEY || '',
+    tabby_test_mode: dbIntegrations.tabby_test_mode !== undefined ? Boolean(dbIntegrations.tabby_test_mode) : (process.env.TABBY_TEST_MODE !== 'false'),
+    sms_provider: dbIntegrations.sms_provider || (process.env.SMS_PROVIDER as any) || 'simulator',
+    sms_api_key: dbIntegrations.sms_api_key?.trim() || process.env.SMS_API_KEY || '',
+    sms_sender_name: dbIntegrations.sms_sender_name?.trim() || process.env.SMS_SENDER_NAME || 'WD GROUP',
     custom_variables: dbIntegrations.custom_variables || [],
   };
 }

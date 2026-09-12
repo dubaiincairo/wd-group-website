@@ -27,7 +27,7 @@ interface OverviewTabProps {
   currency: 'SAR' | 'USD';
   onSelectOrder: (order: EcommerceOrderRecord) => void;
   onNavigateTab: (tab: string) => void;
-  onOpenAiStudio?: () => void;
+  onOpenAiStudio?: (mode?: 'visual' | 'content') => void;
 }
 
 export default function OverviewTab({
@@ -240,42 +240,47 @@ export default function OverviewTab({
       </div>
 
       {/* 2.5 AI Product Studio Quick Launch Banner */}
-      <div className="glass-card rounded-3xl p-6 border border-purple-500/35 bg-gradient-to-r from-purple-950/40 via-[#141726]/90 to-[#0F1117] flex flex-col md:flex-row md:items-center justify-between gap-5 shadow-2xl relative overflow-hidden group">
+      <div className="glass-card rounded-3xl p-6 border border-[#C9A86A]/35 bg-gradient-to-r from-amber-950/25 via-[#141726]/90 to-[#0F1117] flex flex-col lg:flex-row lg:items-center justify-between gap-5 shadow-2xl relative overflow-hidden group">
         <div className="absolute top-0 right-0 w-80 h-full bg-gradient-to-l from-purple-600/10 to-transparent pointer-events-none" />
         
         <div className="flex items-start sm:items-center gap-4 relative z-10">
-          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center text-white shadow-[0_0_25px_rgba(168,85,247,0.4)] shrink-0 group-hover:scale-105 transition-transform">
-            <Sparkles className="w-7 h-7 text-amber-300 animate-pulse" />
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500 via-[#DFBA73] to-purple-600 flex items-center justify-center text-black shadow-[0_0_25px_rgba(201,168,106,0.4)] shrink-0 group-hover:scale-105 transition-transform">
+            <Sparkles className="w-7 h-7 text-black animate-pulse" />
           </div>
 
           <div className="space-y-1">
             <div className="flex items-center gap-2 flex-wrap">
               <h3 className="text-base sm:text-lg font-bold text-white tracking-tight">
-                {isAr ? 'استوديو الذكاء الاصطناعي للمنتجات (AI Product Studio)' : 'AI Multi-Photo Product Studio & Enhancer'}
+                {isAr ? 'مركز الذكاء الاصطناعي للمتجر (AI Hub)' : 'WD Group AI Hub — Visual & Content Studios'}
               </h3>
-              <span className="px-2.5 py-0.5 rounded-full bg-purple-500/20 border border-purple-500/30 text-purple-300 text-[10px] font-mono font-bold flex items-center gap-1 shadow-sm">
-                <span>OpenAI Vision + NanoBanana Pro</span>
+              <span className="px-2.5 py-0.5 rounded-full bg-[#C9A86A]/20 border border-[#C9A86A]/30 text-[#C9A86A] text-[10px] font-mono font-bold flex items-center gap-1 shadow-sm">
+                <span>NanoBanana Pro + OpenAI Vision</span>
               </span>
             </div>
             <p className="text-xs text-zinc-300 max-w-2xl leading-relaxed">
               {isAr
-                ? 'ارفع دفعة صور لقطع الأثاث الفاخرة، وسيقوم الذكاء الاصطناعي بتحليل المواد والأبعاد وتوليد الأسعار والمواصفات باللغتين مع تحسين إضاءة الصور بضغطة زر وإضافتها للكتالوج مباشرة.'
-                : 'Upload multi-angle furniture photos to auto-extract dimensions, materials, and pricing, enhance studio lighting with AI, and insert into the catalog in 1 click.'}
+                ? 'استوديو بصري متطور لتحسين ومعايرة إضاءة الصور بـ NanoBanana Pro، واستوديو محتوى ذكي لتحليل الأبعاد والخامات وكتابة الوصف المعماري الفاخر وإدراجه بالكتالوج فوراً.'
+                : 'Remaster studio lighting with NanoBanana Pro in Visual Studio, and extract specs, pricing, and bilingual copy in Content Studio for 1-click catalog publishing.'}
             </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-3 relative z-10 shrink-0">
-          <button
-            onClick={() => {
-              if (onOpenAiStudio) onOpenAiStudio();
-              else onNavigateTab('products');
-            }}
-            className="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-600 hover:from-purple-500 hover:to-indigo-500 text-white font-mono font-bold text-xs sm:text-sm shadow-[0_0_25px_rgba(168,85,247,0.4)] hover:shadow-[0_0_35px_rgba(168,85,247,0.6)] transition-all flex items-center justify-center gap-2.5 cursor-pointer"
+        <div className="flex flex-wrap items-center gap-2.5 relative z-10 shrink-0">
+          <Link
+            href="/admin/ai-studio?mode=visual"
+            className="px-4 py-3 rounded-2xl bg-amber-500 hover:bg-amber-400 text-black font-mono font-bold text-xs shadow-md transition-all flex items-center gap-2 cursor-pointer"
           >
-            <Sparkles className="w-4 h-4 text-amber-300" />
-            <span>{isAr ? 'فتح استوديو المنتجات الذكي الآن' : 'Launch AI Product Studio'}</span>
-          </button>
+            <span>🎨</span>
+            <span>{isAr ? 'الاستوديو البصري (NanoBanana)' : 'Visual Studio'}</span>
+          </Link>
+
+          <Link
+            href="/admin/ai-studio?mode=content"
+            className="px-4 py-3 rounded-2xl bg-purple-600 hover:bg-purple-500 text-white font-mono font-bold text-xs shadow-md transition-all flex items-center gap-2 cursor-pointer"
+          >
+            <span>✍️</span>
+            <span>{isAr ? 'استوديو المحتوى والكتالوج' : 'Content Studio'}</span>
+          </Link>
         </div>
       </div>
 

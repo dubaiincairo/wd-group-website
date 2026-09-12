@@ -21,7 +21,8 @@ import {
   ChevronUp,
   Maximize2,
   Minimize2,
-  CheckCircle2
+  CheckCircle2,
+  Bot
 } from 'lucide-react';
 import BilingualInput from '@/components/admin/BilingualInput';
 import MediaFieldUploader from '@/components/admin/MediaFieldUploader';
@@ -31,6 +32,7 @@ import { useLanguage } from '@/context/LanguageContext';
 import type { SiteContentPayload, BankAccountRecord } from '@/lib/admin/types';
 import OdooIntegrationCard from '@/components/admin/OdooIntegrationCard';
 import IntegrationsSecretsCard from '@/components/admin/IntegrationsSecretsCard';
+import ChatbotControlCenter from '@/components/admin/ChatbotControlCenter';
 
 export default function GlobalSettingsAdminPage() {
   const { showToast } = useToast();
@@ -42,13 +44,14 @@ export default function GlobalSettingsAdminPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
-  // Accordion state for all 7 sections
+  // Accordion state for all 8 sections
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({
     general: true,
     contact: false,
     branding: false,
     maintenance: false,
     banking: false,
+    chatbot: false,
     secrets: false,
     odoo: false,
   });
@@ -64,6 +67,7 @@ export default function GlobalSettingsAdminPage() {
       branding: true,
       maintenance: true,
       banking: true,
+      chatbot: true,
       secrets: true,
       odoo: true,
     });
@@ -76,6 +80,7 @@ export default function GlobalSettingsAdminPage() {
       branding: false,
       maintenance: false,
       banking: false,
+      chatbot: false,
       secrets: false,
       odoo: false,
     });
@@ -106,7 +111,7 @@ export default function GlobalSettingsAdminPage() {
     const navigateToSection = (sectionId: string) => {
       if (!sectionId) return;
       const cleanId = sectionId.replace('#', '');
-      if (['general', 'contact', 'branding', 'maintenance', 'banking', 'secrets', 'odoo'].includes(cleanId)) {
+      if (['general', 'contact', 'branding', 'maintenance', 'banking', 'chatbot', 'secrets', 'odoo'].includes(cleanId)) {
         // Auto-expand the targeted section
         setOpenSections((prev) => ({ ...prev, [cleanId]: true }));
         // Smooth scroll to the target section with an offset for header
@@ -207,7 +212,7 @@ export default function GlobalSettingsAdminPage() {
       {/* Accordion Quick Expand / Collapse Controls */}
       <div className="flex items-center justify-between px-1 py-1">
         <span className="text-xs font-mono text-zinc-400 font-bold">
-          {isAr ? 'أقسام إعدادات المنظومة (7 أقسام قابلة للطي)' : 'SYSTEM CONFIGURATION SECTIONS (7 FOLDABLE MODULES)'}
+          {isAr ? 'أقسام إعدادات المنظومة (8 أقسام قابلة للطي)' : 'SYSTEM CONFIGURATION SECTIONS (8 FOLDABLE MODULES)'}
         </span>
         <div className="flex items-center gap-2">
           <button
@@ -878,7 +883,52 @@ export default function GlobalSettingsAdminPage() {
           )}
         </div>
 
-        {/* 6. Integrations & Secrets Management Hub */}
+        {/* 6. AI Chatbot & Sultan Concierge Control Center */}
+        <div id="chatbot" className="bg-[#0F1117]/90 border border-[#C9A86A]/30 rounded-3xl p-6 transition-all shadow-xl scroll-mt-24">
+          <div 
+            onClick={() => toggleSection('chatbot')}
+            className="flex items-center justify-between cursor-pointer select-none group"
+          >
+            <div className="flex items-center gap-3.5">
+              <div className="w-9 h-9 rounded-xl bg-[#C9A86A]/15 border border-[#C9A86A]/30 flex items-center justify-center text-[#C9A86A] font-mono text-xs font-bold shrink-0">
+                <Bot className="w-4 h-4" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-mono font-bold text-[#C9A86A] uppercase tracking-wider block">
+                    {isAr ? 'المساعد الذكي والكونسيرج (سلطان) - التحكم الشامل' : 'AI CHATBOT & SULTAN CONCIERGE CONTROL CENTER'}
+                  </span>
+                  <span className={`text-[10px] font-mono px-2 py-0.5 rounded-full border ${
+                    s.chatbot?.enabled !== false
+                      ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+                      : 'bg-zinc-800 border-zinc-700 text-zinc-400'
+                  } hidden sm:inline`}>
+                    {s.chatbot?.enabled !== false ? (isAr ? 'نشط على الموقع' : 'ACTIVE') : (isAr ? 'معطل' : 'DISABLED')}
+                  </span>
+                </div>
+                <span className="text-[11px] text-zinc-400 block mt-0.5">
+                  {isAr 
+                    ? 'إدارة شخصية سلطان، هوية الوكيل، الأسئلة المقترحة، الـ System Prompt، ومحرك OpenAI'
+                    : 'Manage Sultan’s persona, bilingual greetings, starter prompts, AI parameters & live playground'}
+                </span>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <span className="text-[10px] font-mono text-zinc-500 group-hover:text-zinc-300 hidden sm:inline">
+                {openSections.chatbot ? (isAr ? 'طي القسم' : 'Collapse') : (isAr ? 'إدارة المساعد' : 'Expand')}
+              </span>
+              {openSections.chatbot ? <ChevronUp className="w-4 h-4 text-zinc-400" /> : <ChevronDown className="w-4 h-4 text-zinc-400" />}
+            </div>
+          </div>
+
+          {openSections.chatbot && (
+            <div className="pt-5 border-t border-white/10 mt-5 animate-in fade-in duration-150">
+              <ChatbotControlCenter content={content} setContent={setContent} />
+            </div>
+          )}
+        </div>
+
+        {/* 7. Integrations & Secrets Management Hub */}
         <div id="secrets" className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6 transition-all shadow-xl scroll-mt-24">
           <div 
             onClick={() => toggleSection('secrets')}

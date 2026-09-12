@@ -3,6 +3,7 @@ import { getRequestSession, hasPermission } from '@/lib/admin/auth';
 import { getSiteContent, updateSiteContent } from '@/lib/admin/db';
 import { recordAuditLog } from '@/lib/admin/audit';
 import { translations } from '@/lib/translations';
+import { DEFAULT_CHATBOT_CONFIG } from '@/lib/admin/chatbot';
 
 export const dynamic = 'force-dynamic';
 
@@ -282,6 +283,7 @@ function getDefaultContent() {
         site_password: '',
         custom_variables: [],
       },
+      chatbot: DEFAULT_CHATBOT_CONFIG,
     },
     seo: {
       global_title_en: 'WD Group | Integrated Hospitality, Manufacturing & Contracting',
@@ -352,7 +354,25 @@ export async function GET(req: NextRequest) {
           ? dbContent.contracting.services
           : defaultContent.contracting.services,
       },
-      settings: { ...defaultContent.settings, ...(dbContent?.settings || {}) },
+      settings: { 
+        ...defaultContent.settings, 
+        ...(dbContent?.settings || {}),
+        chatbot: {
+          ...defaultContent.settings.chatbot,
+          ...(dbContent?.settings?.chatbot || {}),
+          starter_prompts: Array.isArray(dbContent?.settings?.chatbot?.starter_prompts) && dbContent.settings.chatbot.starter_prompts.length > 0
+            ? dbContent.settings.chatbot.starter_prompts
+            : defaultContent.settings.chatbot.starter_prompts,
+          quick_actions: {
+            ...defaultContent.settings.chatbot.quick_actions,
+            ...(dbContent?.settings?.chatbot?.quick_actions || {}),
+          },
+          sector_knowledge: {
+            ...defaultContent.settings.chatbot.sector_knowledge,
+            ...(dbContent?.settings?.chatbot?.sector_knowledge || {}),
+          },
+        },
+      },
       seo: { ...defaultContent.seo, ...(dbContent?.seo || {}) },
     };
 

@@ -7,6 +7,7 @@ import { useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '@/context/LanguageContext';
 import { FURNITURE_CATALOG } from '@/lib/furnitureData';
+import OfficialTaxInvoiceModal from '@/components/furniture/OfficialTaxInvoiceModal';
 import { 
   Search, 
   Truck, 
@@ -39,6 +40,7 @@ function OrderTrackerContent() {
   const [query, setQuery] = useState('');
   const [searched, setSearched] = useState(false);
   const [activeOrder, setActiveOrder] = useState<any>(null);
+  const [showInvoiceModal, setShowInvoiceModal] = useState(false);
 
   // Demo active order data with cleaned leadTechnician (removed White-Glove Lead from name)
   const sampleOrder = {
@@ -76,6 +78,52 @@ function OrderTrackerContent() {
   const fetchOrder = async (targetRef: string) => {
     try {
       setLoadingOrder(true);
+
+      // 1. Check Primary E-Commerce Database
+      const dbRes = await fetch(`/api/ecommerce/orders/${encodeURIComponent(targetRef)}`);
+      if (dbRes.ok) {
+        const dbJson = await dbRes.json();
+        if (dbJson.success && dbJson.data) {
+          const d = dbJson.data;
+          const mappedItems = d.items && d.items.length > 0
+            ? d.items.map((it: any, i: number) => {
+                const matched = FURNITURE_CATALOG.find((c) =>
+                  c.sku === it.sku ||
+                  c.id === it.productId ||
+                  c.nameEn.toLowerCase().includes(it.name?.toLowerCase() || '') ||
+                  (it.name && c.nameAr.includes(it.name))
+                ) || FURNITURE_CATALOG[i % FURNITURE_CATALOG.length];
+                return {
+                  product: matched,
+                  name: isAr ? (it.nameAr || it.name || matched.nameAr) : (it.name || it.nameEn || matched.nameEn),
+                  finishName: it.finishName || (isAr ? 'تشطيب مصنعي معتمد' : 'Factory Certified Finish'),
+                  quantity: it.quantity || it.qty || 1,
+                  image: it.image || matched.images[0],
+                };
+              })
+            : sampleOrder.items;
+
+          setActiveOrder({
+            ...sampleOrder,
+            orderRef: d.orderRef,
+            customerName: d.customerName || sampleOrder.customerName,
+            phone: d.phone || sampleOrder.phone,
+            city: d.city || sampleOrder.city,
+            orderDate: d.orderDate || sampleOrder.orderDate,
+            estimatedDelivery: d.estimatedDelivery || sampleOrder.estimatedDelivery,
+            factory: d.factory || sampleOrder.factory,
+            leadTechnician: d.leadTechnician || sampleOrder.leadTechnician,
+            currentStageIdx: d.currentStageIdx ?? 0,
+            statusText: d.statusText,
+            items: mappedItems,
+          });
+          setIsLiveOdoo(false);
+          setSearched(true);
+          return;
+        }
+      }
+
+      // 2. Fallback to Odoo ERP
       const res = await fetch(`/api/odoo/track?ref=${encodeURIComponent(targetRef)}`);
       if (res.ok) {
         const json = await res.json();
@@ -118,7 +166,7 @@ function OrderTrackerContent() {
         }
       }
     } catch (err) {
-      console.warn('Odoo tracking query notice:', err);
+      console.warn('Tracking query notice:', err);
     } finally {
       setLoadingOrder(false);
     }
@@ -702,18 +750,56 @@ function OrderTrackerContent() {
                 </p>
               </div>
 
-              <a
-                href={`https://wa.me/966505725070?text=${encodeURIComponent(
-                  `مرحباً جرين وود، أستفسر عن موعد تركيب طلبي رقم: ${activeOrder.orderRef}`
-                )}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm shadow-lg transition-all shrink-0 cursor-pointer"
-              >
-                <MessageSquare className="w-4 h-4" />
-                <span>{dict.furniture.tracking.contact_btn}</span>
-              </a>
+              <div className="flex items-center gap-3 shrink-0 flex-wrap justify-center sm:justify-end">
+                <button
+                  type="button"
+                  onClick={() => setShowInvoiceModal(true)}
+                  className="inline-flex items-center gap-2 px-5 py-3.5 rounded-xl bg-[#141721] hover:bg-[#1A1E2C] text-zinc-200 border border-[#C9A86A]/40 font-bold text-xs sm:text-sm shadow-md transition-all cursor-pointer"
+                >
+                  <FileText className="w-4 h-4 text-[#C9A86A]" />
+                  <span>{isAr ? 'عرض الفاتورة الضريبية (ZATCA)' : 'Tax Invoice (ZATCA)'}</span>
+                </button>
+
+                <a
+                  href={`https://wa.me/966505725070?text=${encodeURIComponent(
+                    `مرحباً جرين وود، أستفسر عن موعد تركيب طلبي رقم: ${activeOrder.orderRef}`
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm shadow-lg transition-all shrink-0 cursor-pointer"
+                >
+                  <MessageSquare className="w-4 h-4" />
+                  <span>{dict.furniture.tracking.contact_btn}</span>
+                </a>
+              </div>
             </div>
+
+            {/* Official Tax Invoice Modal */}
+            <OfficialTaxInvoiceModal
+              isOpen={showInvoiceModal}
+              onClose={() => setShowInvoiceModal(false)}
+              order={{
+                orderRef: activeOrder.orderRef,
+                customerName: activeOrder.customerName,
+                phone: activeOrder.phone,
+                city: activeOrder.city,
+                orderDate: activeOrder.orderDate,
+                paymentMethod: activeOrder.paymentMethod || 'mada_cards',
+                paymentStatus: activeOrder.paymentStatus || 'paid',
+                subtotal: activeOrder.subtotal || 27650,
+                vatAmount: activeOrder.vatAmount || 4147.5,
+                totalAmount: activeOrder.totalAmount || 31797.5,
+                items: (activeOrder.items || []).map((i: any) => ({
+                  sku: i.sku || (i.product && i.product.sku) || 'GW-BESPOKE',
+                  nameEn: i.name || (i.product && i.product.nameEn) || 'Bespoke Furniture',
+                  nameAr: i.nameAr || (i.product && i.product.nameAr),
+                  finishName: i.finishName,
+                  quantity: i.quantity || 1,
+                  unitPrice: i.unitPrice || (i.product && i.product.price) || 18900,
+                })),
+              }}
+              isQuotation={activeOrder.orderType === 'b2b'}
+            />
 
           </motion.div>
         )}

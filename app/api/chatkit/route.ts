@@ -1,71 +1,37 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getIntegrationsConfig } from '@/lib/admin/secrets';
+import { getChatbotConfig, buildChatbotSystemPrompt } from '@/lib/admin/chatbot';
 
 export const dynamic = 'force-dynamic';
-
-const SYSTEM_PROMPT = `You are the official AI Concierge for "WD Group Holding" (مجموعة دبليو دي القابضة), a premier Saudi holding company headquartered in Riyadh, Saudi Arabia, aligned with Saudi Vision 2030.
-
-ABOUT WD GROUP & SUBSIDIARIES:
-1. Hospitality Sector (SwissBlue Hotels):
-   - Upscale, boutique, and luxury hotel asset portfolio across prime locations in Saudi Arabia (Riyadh, Jeddah, Eastern Province).
-   - Specialized in premium guest experiences, asset management, and hospitality partnerships.
-   - Website page: /sectors/hospitality
-
-2. Industrial Manufacturing Sector (GreenWood Manufacturing):
-   - State-of-the-art Riyadh manufacturing facility specializing in bespoke luxury furniture, architectural joinery, 5-star hospitality fit-out furniture, acoustic wood panels, and fire-rated doors.
-   - Certified "Saudi Made" (صناعة سعودية) combining European craftsmanship with Saudi industrial excellence.
-   - Website page: /sectors/manufacturing
-
-3. General Contracting Sector:
-   - Turnkey construction, hospitality interior fit-outs, MEP engineering, and commercial infrastructure.
-   - Proven track record delivering complex commercial and luxury residential projects on schedule.
-   - Website page: /sectors/contracting
-
-4. E-Commerce & Bespoke Furniture Catalog:
-   - Bespoke furniture collection with CAD blueprint customization, luxury fabrics, solid walnut, travertine marble, and brushed brass.
-   - Website page: /catalog
-
-5. Corporate Information & Careers:
-   - Careers page: /careers
-   - Contact & RFP submissions: /contact
-   - Direct VIP WhatsApp: +966 50 572 5070
-   - Official Email: ceo@wdgroup.online
-
-COMMUNICATION GUIDELINES:
-- When the user asks in Arabic, respond in refined, professional Arabic (أسلوب راقٍ واحترافي يليق بمجموعة استثمارية سعودية كبرى).
-- When the user asks in English, respond in polished, executive English.
-- Always provide clear, helpful answers with relevant page links when appropriate (e.g., [Explore SwissBlue Hotels](/sectors/hospitality), [GreenWood Manufacturing](/sectors/manufacturing), [Submit an RFP](/contact)).
-- Be welcoming, knowledgeable, concise, and proactive.`;
 
 /**
  * Intelligent Fallback Generator for offline/demo environments
  */
 function generateFallbackResponse(userMessage: string, lang: 'ar' | 'en'): string {
-  const isAr = lang === 'ar' || /[\u0600-\u06FF]/.test(userMessage);
+  const isAr = /[\u0600-\u06FF]/.test(userMessage) || (lang === 'ar' && !/[a-zA-Z]/.test(userMessage));
   const q = userMessage.toLowerCase();
 
   if (isAr) {
     if (q.includes('فندق') || q.includes('سويس') || q.includes('ضيافة')) {
-      return `أهلاً بك في **مجموعة WD القابضة**.\n\nيقود قطاع الضيافة لدينا العلامة الفندقية الفاخرة **SwissBlue Hotels (فنادق سويس بلو)**، والتي تدير وتطور أصولاً فندقية راقية ومتميزة في مواقع استراتيجية بالمملكة العربية السعودية (الرياض، جدة، والمنطقة الشرقية).\n\n🔹 **المميزات:** أجنحة بوتيكية فاخرة، خدمات كونسيرج VIP، وإدارة تشغيلية وفق أعلى معايير الضيافة العالمية.\n\n👉 يمكنك استعراض تفاصيل القطاع عبر [صفحة الضيافة](/sectors/hospitality) أو [التواصل معنا](/contact) لمناقشة فرص الشراكة والاستثمار.`;
+      return `أهلاً بك! معك سلطان من خدمة عملاء مجموعة WD.\n\nيسعدني إفادتك بأن قطاع الضيافة في مجموعتنا تقوده العلامة الفندقية الراقية **SwissBlue Hotels (فنادق سويس بلو)**، حيث ندير ونطور نخبة من الأصول الفندقية الفاخرة في الرياض وجدة والمنطقة الشرقية.\n\n🔹 **خدماتنا الفندقية:** أجنحة بوتيكية راقية، كونسيرج VIP متكامل، وإدارة أصول فندقية بمعايير عالمية.\n\n👉 يمكنك استعراض التفاصيل عبر [صفحة الضيافة](/sectors/hospitality) أو [التواصل المباشر معنا](/contact) لتنسيق طلبك.`;
     }
     if (q.includes('أثاث') || q.includes('تصنيع') || q.includes('مصنع') || q.includes('جرين')) {
-      return `أهلاً بك! يمثل قطاع التصنيع لدينا ذراعنا الصناعي المتقدم **GreenWood Manufacturing (مصنع جرين وود)** في الرياض.\n\n🔹 **القدرات الصناعية:**\n- تصنيع الأثاث الفندقي الراقي المخصص للمشاريع الكبرى (Bespoke Luxury Furniture).\n- أعمال النجارة المعمارية (Architectural Joinery) والكسوات الخشبية الجدارية.\n- تصنيع معتمد يحمل فخر "صناعة سعودية" بدقة هندسية عالية وتصاميم CAD مخصصة.\n\n👉 ندعوك لزيارة [صفحة قطاع التصنيع](/sectors/manufacturing) أو استعراض [كتالوج الأثاث](/catalog).`;
+      return `مرحباً بك! معك سلطان.\n\nيمثل مصنعنا **GreenWood Manufacturing (جرين وود)** في الرياض ذراعنا الصناعي الرائد لتصنيع الأثاث الفندقي والمكتبي الفاخر:\n\n🔹 **قدراتنا الصناعية:**\n- تصنيع أثاث الفنادق 5 نجوم والمشاريع الكبرى بجودة "صناعة سعودية" معتمدة.\n- أعمال النجارة المعمارية والكسوات الجدارية الخشبية والأبواب المقاومة للحريق.\n- حلول هندسية متكاملة وتصاميم CAD مخصصة لأدق التفاصيل.\n\n👉 يسعدني اطلاعك على [صفحة التصنيع](/sectors/manufacturing) أو استعراض [كتالوج الأثاث](/furniture).`;
     }
     if (q.includes('مقاولات') || q.includes('بناء') || q.includes('تشييد') || q.includes('مشروع')) {
-      return `مرحباً بك! يتولى **قطاع المقاولات العامة** في مجموعة WD تنفيذ مشاريع التشييد المتكاملة وأعمال التشطيبات الفندقية والإنشائية والتجهيزات الكهروميكانيكية (MEP) بنظام تسليم المفتاح.\n\n🔹 **مجالات التميز:** مشاريع الضيافة الفاخرة، المراكز التجارية، والأبراج السكنية المتميزة.\n\n👉 لتقديم كراسة الشروط أو طلب عرض سعر، تفضل بزيارة [صفحة طلب العروض](/contact).`;
+      return `أهلاً وسهلاً بك! معك سلطان.\n\nيقوم **قطاع المقاولات العامة** في مجموعة WD بتنفيذ مشاريع التشييد المتكاملة وأعمال التشطيبات الفندقية والتجهيزات الكهروميكانيكية (MEP) بنظام تسليم المفتاح بأعلى معايير الدقة.\n\n👉 إذا كان لديك كراسة شروط أو مشروع ترغب في تسعيره، تفضل بزيارة [صفحة طلب العروض RFP](/contact) وسيتواصل معك فريقنا الهندسي فوراً.`;
     }
-    return `أهلاً بك في **مجموعة WD القابضة** (WD Group Holding) — المجموعة الاستثمارية السعودية الرائدة في قطاعات **الضيافة (SwissBlue Hotels)**، **التصنيع الصناعي للأثاث (GreenWood)**، و**المقاولات العامة والتجهيزات الفندقية**.\n\nكيف يمكنني مساعدتك اليوم؟ يمكنك سؤالي عن:\n- 🏨 محفظة ومشاريع فنادق سويس بلو\n- 🪵 حلول تصنيع الأثاث الفندقي والمكتبي\n- 🏗️ خدمات المقاولات وإدارة المشاريع\n- 📄 تقديم طلب عرض سعر (RFP) أو التقديم على الوظائف`;
+    return `أهلاً وسهلاً بك! معك **سلطان** من خدمة عملاء مجموعة WD القابضة بالرياض.\n\nيسعدني جداً مساعدتك وإجابتك عن أي استفسار حول قطاعاتنا:\n- 🏨 **فنادق سويس بلو** والمشاريع الفندقية\n- 🪵 **مصنع جرين وود** لتصنيع الأثاث الفندقي الفاخر\n- 🏗️ **المقاولات العامة** والتجهيزات المتكاملة\n- 📄 **تقديم طلبات عروض الأسعار (RFP)** والشراكات الاستثمارية\n\nتفضل بطرح استفسارك وسأجيبك بكل سرور!`;
   } else {
     if (q.includes('hotel') || q.includes('swiss') || q.includes('hospitality')) {
-      return `Welcome to **WD Group Holding**.\n\nOur hospitality division is spearheaded by **SwissBlue Hotels**, an upscale hospitality brand managing and developing luxury boutique assets across strategic destinations in Saudi Arabia (Riyadh, Jeddah, Eastern Province).\n\n🔹 **Key Offerings:** Executive suites, VIP concierge, and premier hotel asset management.\n\n👉 Discover more on our [Hospitality Sector page](/sectors/hospitality) or [contact our corporate office](/contact) for partnership inquiries.`;
+      return `Hello! I am Sultan from WD Group Customer Support.\n\nI would be delighted to assist you with our hospitality portfolio led by **SwissBlue Hotels**. We operate and develop upscale boutique hotel assets in prime Saudi destinations including Riyadh, Jeddah, and the Eastern Province.\n\n🔹 **Key Offerings:** Executive suites, VIP concierge, and premier hotel asset management.\n\n👉 You can discover more on our [Hospitality Sector page](/sectors/hospitality) or [contact our office](/contact) for partnership inquiries.`;
     }
     if (q.includes('furniture') || q.includes('manufactur') || q.includes('greenwood') || q.includes('factory')) {
-      return `Welcome! Our industrial arm is powered by **GreenWood Manufacturing** in Riyadh, Saudi Arabia.\n\n🔹 **Capabilities:**\n- Bespoke contract furniture engineered for 5-star hotels and luxury residences.\n- Architectural joinery, acoustic wooden wall paneling, and custom doors.\n- Certified "Saudi Made" with computerized CNC precision and custom CAD blueprint engineering.\n\n👉 Explore our [Industrial Manufacturing page](/sectors/manufacturing) or browse our [Furniture Catalog](/catalog).`;
+      return `Hello! Sultan here from WD Group Client Care.\n\nOur industrial arm is **GreenWood Manufacturing**, based at our high-tech facility in Riyadh:\n\n🔹 **Capabilities:**\n- Bespoke contract furniture engineered for 5-star hotels and luxury commercial projects.\n- Architectural joinery, acoustic wooden wall paneling, and custom doors.\n- Certified "Saudi Made" with CNC precision and custom CAD blueprint engineering.\n\n👉 Feel free to explore our [Manufacturing Division page](/sectors/manufacturing) or browse our [Furniture Catalog](/furniture).`;
     }
     if (q.includes('contract') || q.includes('construct') || q.includes('build') || q.includes('fitout')) {
-      return `Welcome! **WD General Contracting** delivers turnkey construction, comprehensive MEP solutions, and luxury hospitality interior fit-outs throughout the Kingdom of Saudi Arabia.\n\n🔹 **Specialties:** Turnkey 5-star hotel fit-outs, commercial infrastructure, and premium developments.\n\n👉 You can submit an RFP or project inquiry via our [Contact Page](/contact).`;
+      return `Hello! I am Sultan from WD Group.\n\n**WD General Contracting** delivers turnkey construction, MEP engineering, and luxury interior fit-outs throughout Saudi Arabia.\n\n👉 If you have a tender or project requirement, please submit it via our [Contact & RFP Page](/contact), and our engineering team will follow up promptly.`;
     }
-    return `Welcome to **WD Group Holding**, a premier Saudi holding company powering strategic investments in **Hospitality (SwissBlue Hotels)**, **Precision Manufacturing (GreenWood)**, and **General Contracting**.\n\nHow can I assist you today? You can inquire about:\n- 🏨 SwissBlue Hotels portfolio & amenities\n- 🪵 Bespoke contract furniture & GreenWood factory\n- 🏗️ Turnkey contracting & fit-out capabilities\n- 📄 Submitting an RFP or exploring career openings`;
+    return `Hello! My name is **Sultan**, your dedicated customer care representative at WD Group Holding in Riyadh.\n\nI am here to assist you with any questions regarding our divisions:\n- 🏨 **SwissBlue Hotels** portfolio and hospitality investments\n- 🪵 **GreenWood Manufacturing** bespoke furniture factory\n- 🏗️ **Turnkey Contracting** and commercial fit-outs\n- 📄 **RFP submissions** and commercial inquiries\n\nHow can I help you today?`;
   }
 }
 
@@ -75,10 +41,21 @@ function generateFallbackResponse(userMessage: string, lang: 'ar' | 'en'): strin
  */
 export async function POST(req: NextRequest) {
   try {
-    const integrations = await getIntegrationsConfig();
-    const apiKey = integrations.openai_api_key?.trim();
-    const model = integrations.openai_model || 'gpt-4o';
-    const customPrompt = integrations.chatkit_system_prompt?.trim();
+    const config = await getChatbotConfig();
+
+    if (!config.enabled) {
+      return NextResponse.json({
+        thread_id: 'disabled',
+        text: 'The AI Concierge is currently unavailable. Please contact us via WhatsApp or submit an inquiry through our Contact page.',
+        source: 'system_disabled',
+      });
+    }
+
+    const apiKey = config.openai_api_key_override?.trim();
+    const model = config.openai_model || 'gpt-4o';
+    const temperature = typeof config.temperature === 'number' ? config.temperature : 0.7;
+    const maxTokens = typeof config.max_tokens === 'number' ? config.max_tokens : 800;
+    const systemContent = buildChatbotSystemPrompt(config);
 
     let body: any = {};
     try {
@@ -97,8 +74,18 @@ export async function POST(req: NextRequest) {
 
     // 1. If OpenAI API Key is available, invoke OpenAI API
     if (apiKey) {
+      const languageInstruction = config.strict_language_matching
+        ? (isArabic
+            ? "CRITICAL LANGUAGE DIRECTIVE: The client's message is in Arabic. You MUST respond 100% in Arabic as Sultan. Do not reply in English."
+            : "CRITICAL LANGUAGE DIRECTIVE: The client's message is in English. You MUST respond 100% in English as Sultan. Do not reply in Arabic.")
+        : "";
+
+      const effectiveSystemContent = languageInstruction
+        ? `${systemContent}\n\n${languageInstruction}`
+        : systemContent;
+
       const openAiMessages = [
-        { role: 'system', content: customPrompt ? `${SYSTEM_PROMPT}\n\nADMIN OVERRIDE INSTRUCTIONS:\n${customPrompt}` : SYSTEM_PROMPT },
+        { role: 'system', content: effectiveSystemContent },
         ...(messages.length > 0
           ? messages.map((m: any) => ({ role: m.role || 'user', content: m.content || '' }))
           : [{ role: 'user', content: inputMessage || (isArabic ? 'مرحباً، ما هي مجموعة WD؟' : 'Hello, what is WD Group?') }]),
@@ -115,7 +102,8 @@ export async function POST(req: NextRequest) {
           body: JSON.stringify({
             model: model,
             messages: openAiMessages,
-            temperature: 0.7,
+            temperature: temperature,
+            max_tokens: maxTokens,
             stream: true,
           }),
         });
@@ -202,7 +190,8 @@ export async function POST(req: NextRequest) {
           body: JSON.stringify({
             model: model,
             messages: openAiMessages,
-            temperature: 0.7,
+            temperature: temperature,
+            max_tokens: maxTokens,
             stream: false,
           }),
         });
@@ -276,13 +265,19 @@ export async function POST(req: NextRequest) {
  * GET Handler for ChatKit metadata inspection & health check
  */
 export async function GET() {
-  const integrations = await getIntegrationsConfig();
+  const config = await getChatbotConfig();
   return NextResponse.json({
     status: 'online',
     protocol: 'chatkit_v1',
-    has_openai_key: Boolean(integrations.openai_api_key),
-    model: integrations.openai_model || 'gpt-4o',
-    has_workflow_id: Boolean(integrations.openai_chatkit_workflow_id),
-    enabled: integrations.chatkit_enabled !== false,
+    enabled: config.enabled,
+    agent_name_en: config.agent_name_en,
+    agent_name_ar: config.agent_name_ar,
+    has_openai_key: Boolean(config.openai_api_key_override),
+    model: config.openai_model || 'gpt-4o',
+    temperature: config.temperature,
+    max_tokens: config.max_tokens,
+    chatkit_mode: config.chatkit_mode,
+    has_workflow_id: Boolean(config.workflow_id),
+    strict_language_matching: config.strict_language_matching,
   });
 }

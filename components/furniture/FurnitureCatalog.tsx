@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo, useEffect } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '@/context/LanguageContext';
 import { useWishlist } from '@/context/WishlistContext';
@@ -382,7 +383,9 @@ export default function FurnitureCatalog({
 
                   {/* Product Title */}
                   <h3 className="text-base font-bold text-white group-hover:text-[#C9A86A] transition-colors leading-snug mb-2 line-clamp-1">
-                    {isAr ? item.nameAr : item.nameEn}
+                    <Link href={`/furniture/${item.id}`} onClick={(e) => e.stopPropagation()} className="hover:underline">
+                      {isAr ? item.nameAr : item.nameEn}
+                    </Link>
                   </h3>
 
                   {/* Short Description */}
@@ -484,7 +487,9 @@ export default function FurnitureCatalog({
                     </div>
 
                     <h3 className="text-base font-bold text-white group-hover:text-[#C9A86A] transition-colors">
-                      {isAr ? item.nameAr : item.nameEn}
+                      <Link href={`/furniture/${item.id}`} onClick={(e) => e.stopPropagation()} className="hover:underline">
+                        {isAr ? item.nameAr : item.nameEn}
+                      </Link>
                     </h3>
 
                     <p className="text-xs text-zinc-400 max-w-lg line-clamp-1">

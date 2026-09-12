@@ -24,6 +24,118 @@ const nextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: '/catalog',
+        destination: '/furniture',
+        permanent: true,
+      },
+      {
+        source: '/catalog/:path*',
+        destination: '/furniture',
+        permanent: true,
+      },
+      {
+        source: '/store',
+        destination: '/furniture',
+        permanent: true,
+      },
+      {
+        source: '/shop',
+        destination: '/furniture',
+        permanent: true,
+      },
+      {
+        source: '/ecommerce',
+        destination: '/furniture',
+        permanent: true,
+      },
+      {
+        source: '/sectors',
+        destination: '/#sectors',
+        permanent: true,
+      },
+      {
+        source: '/hospitality',
+        destination: '/sectors/hospitality',
+        permanent: true,
+      },
+      {
+        source: '/hotels',
+        destination: '/sectors/hospitality',
+        permanent: true,
+      },
+      {
+        source: '/manufacturing',
+        destination: '/sectors/manufacturing',
+        permanent: true,
+      },
+      {
+        source: '/greenwood',
+        destination: '/sectors/manufacturing',
+        permanent: true,
+      },
+      {
+        source: '/contracting',
+        destination: '/sectors/contracting',
+        permanent: true,
+      },
+      {
+        source: '/career',
+        destination: '/careers',
+        permanent: true,
+      },
+      {
+        source: '/jobs',
+        destination: '/careers',
+        permanent: true,
+      },
+      {
+        source: '/contact-us',
+        destination: '/contact',
+        permanent: true,
+      },
+      {
+        source: '/media',
+        destination: '/about',
+        permanent: true,
+      },
+    ];
+  },
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          {
+            key: 'X-DNS-Prefetch-Control',
+            value: 'on',
+          },
+          {
+            key: 'Strict-Transport-Security',
+            value: 'max-age=63072000; includeSubDomains; preload',
+          },
+          {
+            key: 'X-Frame-Options',
+            value: 'SAMEORIGIN',
+          },
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
+          },
+          {
+            key: 'Referrer-Policy',
+            value: 'strict-origin-when-cross-origin',
+          },
+          {
+            key: 'Permissions-Policy',
+            value: 'camera=(), microphone=(), geolocation=(), payment=(self "https://api.moyasar.com" "https://applepay.cdn-apple.com")',
+          },
+        ],
+      },
+    ];
+  },
 };
 
 export default nextConfig;

@@ -7,7 +7,7 @@ export async function POST(req: NextRequest) {
   const startTime = Date.now();
   try {
     const body = await req.json();
-    const { imageUrl, hints = '' } = body;
+    const { imageUrl, hints = '', prompt: customPrompt = '' } = body;
 
     if (!imageUrl) {
       return NextResponse.json(
@@ -21,10 +21,11 @@ export async function POST(req: NextRequest) {
     const openAiModel = integrations.openai_model || 'gpt-4o';
     const googleCloudKey = (integrations.google_cloud_api_key || integrations.nanobanana_api_key || process.env.GOOGLE_CLOUD_API_KEY || process.env.GEMINI_API_KEY || '').trim();
 
+    const userDirectives = (customPrompt || hints || '').trim();
     const prompt = `You are a world-class luxury furniture architect and catalog copywriter for "WD Group — GreenWood Manufacturing" in Saudi Arabia.
 Analyze this furniture piece image and generate complete, production-ready e-commerce catalog specifications in strict JSON format.
 
-HINTS: ${hints || 'High-end Saudi hospitality and residential custom furniture manufactured in Riyadh'}
+USER DIRECTIVES & COLLECTION CONTEXT: ${userDirectives || 'High-end Saudi hospitality and residential custom furniture manufactured at GreenWood facility in Riyadh'}
 
 Return ONLY valid JSON matching this schema:
 {

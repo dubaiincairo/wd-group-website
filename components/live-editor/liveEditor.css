@@ -1,0 +1,41 @@
+/* Live In-Place Editor Visual Affordances */
+
+body.live-editor-active .live-editor-target {
+  position: relative;
+  transition: outline 0.15s cubic-bezier(0.16, 1, 0.3, 1), 
+              box-shadow 0.15s cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 0.15s ease;
+  border-radius: 4px;
+}
+
+body.live-editor-active .live-editor-target:hover {
+  outline: 1.5px dashed rgba(201, 168, 106, 0.7) !important;
+  outline-offset: 3px !important;
+  cursor: text !important;
+}
+
+body.live-editor-active .live-editor-target:focus {
+  outline: 2px solid #C9A86A !important;
+  outline-offset: 3px !important;
+  box-shadow: 0 0 20px rgba(201, 168, 106, 0.35) !important;
+  background-color: rgba(201, 168, 106, 0.05) !important;
+  caret-color: #E3C58A !important;
+}
+
+body.live-editor-active .live-editor-target[data-live-dirty="true"] {
+  outline: 1.5px solid rgba(245, 158, 11, 0.8) !important;
+  outline-offset: 3px !important;
+}
+
+/* Prevent unwanted browser outlines or drag behavior */
+body.live-editor-active [contenteditable="true"] {
+  -webkit-user-modify: read-write-plaintext-only;
+}
+
+/* Make links and buttons text-editable without navigating */
+body.live-editor-active a.live-editor-target,
+body.live-editor-active button.live-editor-target,
+body.live-editor-active a .live-editor-target,
+body.live-editor-active button .live-editor-target {
+  cursor: text !important;
+}
