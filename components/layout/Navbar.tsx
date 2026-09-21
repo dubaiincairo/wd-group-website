@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
@@ -9,7 +9,6 @@ import {
   Building2, 
   Factory, 
   HardHat, 
-  ChevronDown, 
   Globe, 
   Menu, 
   X, 
@@ -24,6 +23,32 @@ export default function Navbar() {
   const [sectorsOpen, setSectorsOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const dropdownTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const handleMouseEnterSectors = () => {
+    if (dropdownTimeoutRef.current) {
+      clearTimeout(dropdownTimeoutRef.current);
+      dropdownTimeoutRef.current = null;
+    }
+    setSectorsOpen(true);
+  };
+
+  const handleMouseLeaveSectors = () => {
+    if (dropdownTimeoutRef.current) {
+      clearTimeout(dropdownTimeoutRef.current);
+    }
+    dropdownTimeoutRef.current = setTimeout(() => {
+      setSectorsOpen(false);
+    }, 200);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (dropdownTimeoutRef.current) {
+        clearTimeout(dropdownTimeoutRef.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -99,11 +124,11 @@ export default function Navbar() {
             {/* Sectors Dropdown */}
             <div 
               className="relative shrink-0"
-              onMouseEnter={() => setSectorsOpen(true)}
-              onMouseLeave={() => setSectorsOpen(false)}
+              onMouseEnter={handleMouseEnterSectors}
+              onMouseLeave={handleMouseLeaveSectors}
             >
               <button 
-                className={`px-3 xl:px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap shrink-0 transition-all duration-200 flex items-center gap-1.5 ${
+                className={`px-3 xl:px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap shrink-0 transition-all duration-200 flex items-center ${
                   pathname.startsWith('/sectors') 
                     ? 'text-white bg-white/15 shadow-sm font-bold' 
                     : 'text-zinc-300 hover:text-white hover:bg-white/5'
@@ -111,90 +136,104 @@ export default function Navbar() {
                 onClick={() => setSectorsOpen(!sectorsOpen)}
               >
                 <span className="whitespace-nowrap">{dict.nav.sectors}</span>
-                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 shrink-0 ${sectorsOpen ? 'rotate-180 text-[#C9A86A]' : ''}`} />
               </button>
 
               {sectorsOpen && (
-                <div className="absolute top-full -left-10 rtl:-left-auto rtl:-right-10 mt-2 w-80 bg-[#0F1117]/95 rounded-2xl p-2.5 shadow-2xl border border-white/15 backdrop-blur-2xl animate-in fade-in duration-150 z-50">
-                  <div className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-[#C9A86A] font-mono" data-live-field="nav.sectors_dropdown_title">
-                    {(dict.nav as any).sectors_dropdown_title || (lang === 'ar' ? 'القطاعات الاستراتيجية' : 'STRATEGIC SECTORS')}
-                  </div>
+                <div 
+                  className="absolute top-full -left-10 rtl:-left-auto rtl:-right-10 pt-2 w-80 z-50 animate-in fade-in duration-150"
+                  onMouseEnter={handleMouseEnterSectors}
+                  onMouseLeave={handleMouseLeaveSectors}
+                >
+                  <div className="w-full bg-[#0F1117]/95 rounded-2xl p-2.5 shadow-2xl border border-white/15 backdrop-blur-2xl">
+                    <div className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-[#C9A86A] font-mono" data-live-field="nav.sectors_dropdown_title">
+                      {(dict.nav as any).sectors_dropdown_title || (lang === 'ar' ? 'القطاعات الاستراتيجية' : 'STRATEGIC SECTORS')}
+                    </div>
 
                     <div className="space-y-1">
-                    <Link 
-                      href="/sectors/hospitality" 
-                      onClick={() => setSectorsOpen(false)}
-                      className={`flex items-center justify-between p-2.5 rounded-xl hover:bg-white/5 transition-all group/item ${
-                        pathname === '/sectors/hospitality' ? 'bg-sky-500/10 border border-sky-500/20' : ''
-                      }`}
-                    >
-                      <div className="flex items-center gap-2.5">
-                        <div className="w-7 h-7 rounded-lg bg-sky-500/10 flex items-center justify-center text-sky-400 group-hover/item:scale-110 transition-transform">
-                          <Building2 className="w-4 h-4" />
+                      <Link 
+                        href="/sectors/hospitality" 
+                        onClick={() => {
+                          if (dropdownTimeoutRef.current) clearTimeout(dropdownTimeoutRef.current);
+                          setSectorsOpen(false);
+                        }}
+                        className={`flex items-center justify-between p-2.5 rounded-xl hover:bg-white/5 transition-all group/item ${
+                          pathname === '/sectors/hospitality' ? 'bg-sky-500/10 border border-sky-500/20' : ''
+                        }`}
+                      >
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-7 h-7 rounded-lg bg-sky-500/10 flex items-center justify-center text-sky-400 group-hover/item:scale-110 transition-transform">
+                            <Building2 className="w-4 h-4" />
+                          </div>
+                          <div>
+                            <span className="text-xs font-semibold text-zinc-200 group-hover/item:text-white block whitespace-nowrap" data-live-field="nav.hospitality">
+                              {dict.nav.hospitality}
+                            </span>
+                            <span className="text-[10px] text-zinc-400 whitespace-nowrap" data-live-field="nav.hospitality_subtitle">
+                              {(dict.nav as any).hospitality_subtitle || (lang === 'ar' ? 'فنادق ومنتجعات سويس بلو' : 'SwissBlue Hotels & Suites')}
+                            </span>
+                          </div>
                         </div>
-                        <div>
-                          <span className="text-xs font-semibold text-zinc-200 group-hover/item:text-white block whitespace-nowrap" data-live-field="nav.hospitality">
-                            {dict.nav.hospitality}
-                          </span>
-                          <span className="text-[10px] text-zinc-400 whitespace-nowrap" data-live-field="nav.hospitality_subtitle">
-                            {(dict.nav as any).hospitality_subtitle || (lang === 'ar' ? 'فنادق ومنتجعات سويس بلو' : 'SwissBlue Hotels & Suites')}
-                          </span>
-                        </div>
-                      </div>
-                      <span className="text-[10px] font-semibold text-sky-400 bg-sky-500/10 px-2 py-0.5 rounded-full border border-sky-500/20 font-mono whitespace-nowrap" data-live-field="nav.hospitality_badge">
-                        {(dict.nav as any).hospitality_badge || (lang === 'ar' ? '6 منشآت' : '6 Props')}
-                      </span>
-                    </Link>
+                        <span className="text-[10px] font-semibold text-sky-400 bg-sky-500/10 px-2 py-0.5 rounded-full border border-sky-500/20 font-mono whitespace-nowrap" data-live-field="nav.hospitality_badge">
+                          {(dict.nav as any).hospitality_badge || (lang === 'ar' ? '6 منشآت' : '6 Props')}
+                        </span>
+                      </Link>
 
-                    <Link 
-                      href="/sectors/manufacturing" 
-                      onClick={() => setSectorsOpen(false)}
-                      className={`flex items-center justify-between p-2.5 rounded-xl hover:bg-white/5 transition-all group/item ${
-                        pathname === '/sectors/manufacturing' ? 'bg-emerald-500/10 border border-emerald-500/20' : ''
-                      }`}
-                    >
-                      <div className="flex items-center gap-2.5">
-                        <div className="w-7 h-7 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-400 group-hover/item:scale-110 transition-transform">
-                          <Factory className="w-4 h-4" />
+                      <Link 
+                        href="/sectors/manufacturing" 
+                        onClick={() => {
+                          if (dropdownTimeoutRef.current) clearTimeout(dropdownTimeoutRef.current);
+                          setSectorsOpen(false);
+                        }}
+                        className={`flex items-center justify-between p-2.5 rounded-xl hover:bg-white/5 transition-all group/item ${
+                          pathname === '/sectors/manufacturing' ? 'bg-emerald-500/10 border border-emerald-500/20' : ''
+                        }`}
+                      >
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-7 h-7 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-400 group-hover/item:scale-110 transition-transform">
+                            <Factory className="w-4 h-4" />
+                          </div>
+                          <div>
+                            <span className="text-xs font-semibold text-zinc-200 group-hover/item:text-white block whitespace-nowrap" data-live-field="nav.manufacturing">
+                              {dict.nav.manufacturing}
+                            </span>
+                            <span className="text-[10px] text-zinc-400 whitespace-nowrap" data-live-field="nav.manufacturing_subtitle">
+                              {(dict.nav as any).manufacturing_subtitle || (lang === 'ar' ? 'مصانع جرين وود الوطنية' : 'GreenWood & Factories')}
+                            </span>
+                          </div>
                         </div>
-                        <div>
-                          <span className="text-xs font-semibold text-zinc-200 group-hover/item:text-white block whitespace-nowrap" data-live-field="nav.manufacturing">
-                            {dict.nav.manufacturing}
-                          </span>
-                          <span className="text-[10px] text-zinc-400 whitespace-nowrap" data-live-field="nav.manufacturing_subtitle">
-                            {(dict.nav as any).manufacturing_subtitle || (lang === 'ar' ? 'مصانع جرين وود الوطنية' : 'GreenWood & Factories')}
-                          </span>
-                        </div>
-                      </div>
-                      <span className="text-[10px] font-semibold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20 font-mono whitespace-nowrap" data-live-field="nav.manufacturing_badge">
-                        {(dict.nav as any).manufacturing_badge || (lang === 'ar' ? '3 مصانع' : '3 Factories')}
-                      </span>
-                    </Link>
+                        <span className="text-[10px] font-semibold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20 font-mono whitespace-nowrap" data-live-field="nav.manufacturing_badge">
+                          {(dict.nav as any).manufacturing_badge || (lang === 'ar' ? '3 مصانع' : '3 Factories')}
+                        </span>
+                      </Link>
 
-                    <Link 
-                      href="/sectors/contracting" 
-                      onClick={() => setSectorsOpen(false)}
-                      className={`flex items-center justify-between p-2.5 rounded-xl hover:bg-white/5 transition-all group/item ${
-                        pathname === '/sectors/contracting' ? 'bg-amber-500/10 border border-amber-500/20' : ''
-                      }`}
-                    >
-                      <div className="flex items-center gap-2.5">
-                        <div className="w-7 h-7 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-400 group-hover/item:scale-110 transition-transform">
-                          <HardHat className="w-4 h-4" />
+                      <Link 
+                        href="/sectors/contracting" 
+                        onClick={() => {
+                          if (dropdownTimeoutRef.current) clearTimeout(dropdownTimeoutRef.current);
+                          setSectorsOpen(false);
+                        }}
+                        className={`flex items-center justify-between p-2.5 rounded-xl hover:bg-white/5 transition-all group/item ${
+                          pathname === '/sectors/contracting' ? 'bg-amber-500/10 border border-amber-500/20' : ''
+                        }`}
+                      >
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-7 h-7 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-400 group-hover/item:scale-110 transition-transform">
+                            <HardHat className="w-4 h-4" />
+                          </div>
+                          <div>
+                            <span className="text-xs font-semibold text-zinc-200 group-hover/item:text-white block whitespace-nowrap" data-live-field="nav.contracting">
+                              {dict.nav.contracting}
+                            </span>
+                            <span className="text-[10px] text-zinc-400 whitespace-nowrap" data-live-field="nav.contracting_subtitle">
+                              {(dict.nav as any).contracting_subtitle || (lang === 'ar' ? 'المقاولات والتنفيذ الشامل' : 'Engineering & Turnkey')}
+                            </span>
+                          </div>
                         </div>
-                        <div>
-                          <span className="text-xs font-semibold text-zinc-200 group-hover/item:text-white block whitespace-nowrap" data-live-field="nav.contracting">
-                            {dict.nav.contracting}
-                          </span>
-                          <span className="text-[10px] text-zinc-400 whitespace-nowrap" data-live-field="nav.contracting_subtitle">
-                            {(dict.nav as any).contracting_subtitle || (lang === 'ar' ? 'المقاولات والتنفيذ الشامل' : 'Engineering & Turnkey')}
-                          </span>
-                        </div>
-                      </div>
-                      <span className="text-[10px] font-semibold text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20 font-mono whitespace-nowrap" data-live-field="nav.contracting_badge">
-                        {(dict.nav as any).contracting_badge || (lang === 'ar' ? 'تنفيذ شامل' : 'Turnkey')}
-                      </span>
-                    </Link>
+                        <span className="text-[10px] font-semibold text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20 font-mono whitespace-nowrap" data-live-field="nav.contracting_badge">
+                          {(dict.nav as any).contracting_badge || (lang === 'ar' ? 'تنفيذ شامل' : 'Turnkey')}
+                        </span>
+                      </Link>
+                    </div>
                   </div>
                 </div>
               )}
