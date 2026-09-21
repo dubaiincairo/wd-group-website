@@ -105,6 +105,10 @@ const TRANSLATION_TO_ADMIN_FIELD: Record<string, string> = {
   'contact.hero.body': 'contact.hero_body',
   'contact.cards.hq_address': 'settings.headquarters',
   'nav.contactCta': 'settings.nav_cta',
+  'nav.furniture': 'settings.nav_furniture',
+  'nav.furnitureBadge': 'settings.nav_furniture_badge',
+  'nav.brand': 'settings.company_name',
+  'nav.holding': 'settings.company_name',
 };
 
 // Flatten any deeply nested object into a key -> value dictionary
@@ -143,10 +147,24 @@ function hashText(str: string): string {
   return Math.abs(hash).toString(36);
 }
 
-// Deep set helper
+// Deep set helper with flat key support for translations_override
 function setNestedValue(obj: any, path: string, value: any): any {
   try {
     const clone = JSON.parse(JSON.stringify(obj || {}));
+
+    // If path starts with 'translations_override.', keep the keyPath flat!
+    // Example: translations_override.ar.nav.furniture -> clone.translations_override.ar["nav.furniture"] = value
+    if (path.startsWith('translations_override.')) {
+      const parts = path.split('.');
+      const overrideLang = parts[1];
+      const keyPath = parts.slice(2).join('.');
+
+      if (!clone.translations_override) clone.translations_override = {};
+      if (!clone.translations_override[overrideLang]) clone.translations_override[overrideLang] = {};
+      clone.translations_override[overrideLang][keyPath] = value;
+      return clone;
+    }
+
     const parts = path.split('.');
     let curr = clone;
     for (let i = 0; i < parts.length - 1; i++) {
@@ -235,24 +253,50 @@ export default function LiveEditorDock() {
   }, []);
 
   // Apply a field edit into state & context
-  const applyFieldEdit = useCallback((targetPath: string, newText: string) => {
+  const applyFieldEdit = useCallback((targetPath: string, newText: string, originalText?: string) => {
     const currentLang = stateRef.current.lang;
 
-    // Determine exact persistence path
-    let resolvedPath = targetPath;
-    if (!resolvedPath.startsWith('translations_override.') && !resolvedPath.endsWith('_en') && !resolvedPath.endsWith('_ar') && !resolvedPath.endsWith('_num')) {
-      resolvedPath = `${resolvedPath}_${currentLang}`;
+    // Check if targetPath maps to an admin field
+    const adminField = TRANSLATION_TO_ADMIN_FIELD[targetPath];
+    const changes: Record<string, string> = {};
+
+    if (adminField) {
+      const primaryPath = `${adminField}_${currentLang}`;
+      changes[primaryPath] = newText;
+      // Also sync to translations_override for double reliability
+      changes[`translations_override.${currentLang}.${targetPath}`] = newText;
+    } else if (!targetPath.startsWith('translations_override.') && !targetPath.endsWith('_en') && !targetPath.endsWith('_ar') && !targetPath.endsWith('_num')) {
+      const primaryPath = `${targetPath}_${currentLang}`;
+      changes[primaryPath] = newText;
+      changes[`translations_override.${currentLang}.${targetPath}`] = newText;
+    } else {
+      changes[targetPath] = newText;
+    }
+
+    // If custom override, also track in _custom_map for universal DOM replacer
+    if (targetPath.includes('.custom.')) {
+      const parts = targetPath.split('.');
+      const hash = parts[parts.length - 1];
+      const routeSlug = parts[parts.length - 2] || 'home';
+      if (originalText) {
+        changes[`translations_override.${currentLang}._custom_map.${hash}.original`] = originalText;
+        changes[`translations_override.${currentLang}._custom_map.${hash}.replacement`] = newText;
+        changes[`translations_override.${currentLang}._custom_map.${hash}.route`] = routeSlug;
+      }
     }
 
     setPendingChanges((prev) => ({
       ...prev,
-      [resolvedPath]: newText,
+      ...changes,
     }));
 
     // Update dynamicContent live
     setDynamicContent((prevContent: any) => {
-      const base = prevContent || stateRef.current.serverState || {};
-      return setNestedValue(base, resolvedPath, newText);
+      let base = prevContent || stateRef.current.serverState || {};
+      for (const [p, v] of Object.entries(changes)) {
+        base = setNestedValue(base, p, v);
+      }
+      return base;
     });
   }, [setDynamicContent]);
 
@@ -310,7 +354,7 @@ export default function LiveEditorDock() {
 
       function scanAndBindElements() {
         const candidates = document.querySelectorAll(
-          'h1, h2, h3, h4, h5, h6, p, button, a, span, label, li, blockquote, [data-live-field]'
+          'h1, h2, h3, h4, h5, h6, p, button, a, span, label, li, blockquote, div, small, strong, b, em, i, [data-live-field]'
         );
 
         candidates.forEach((node) => {
@@ -319,7 +363,7 @@ export default function LiveEditorDock() {
           // Skip dock UI and scripts/styles/media
           if (
             el.closest('#live-editor-floating-dock') ||
-            el.closest('script, style, svg, pre, code, input, textarea, select')
+            el.closest('script, style, svg, pre, code, input, textarea, select, canvas, video, audio, iframe')
           ) {
             return;
           }
@@ -329,42 +373,54 @@ export default function LiveEditorDock() {
 
           // If not tagged, check if it's an editable leaf element
           if (!fieldPath) {
-            // Check if element has nested block container (skip parent containers, bind to the innermost leaf)
-            const hasBlockChild = el.querySelector('h1, h2, h3, h4, h5, h6, p, blockquote, li, table, form');
-            if (!hasBlockChild) {
-              // Extract text
-              const rawText = (el.innerText || el.textContent || '').trim();
-              if (rawText && rawText.length > 0 && !rawText.startsWith('http')) {
-                // If it's a button or link with a child element, only bind if this element itself has no child tags
-                if ((el.tagName === 'BUTTON' || el.tagName === 'A') && el.children.length > 0) {
-                  // If it has children (like <button><span>Text</span><svg/></button>), let the span handle the edit
-                  const hasChildTextSpan = el.querySelector('span');
-                  if (hasChildTextSpan) return;
-                }
+            const rawText = (el.innerText || el.textContent || '').trim();
+            if (!rawText || rawText.length === 0 || rawText.startsWith('http://') || rawText.startsWith('https://')) {
+              return;
+            }
 
-                // 1. Exact match
-                fieldPath = exactMap.get(rawText);
+            // Skip parent containers that hold block-level children
+            const hasBlockChild = el.querySelector('h1, h2, h3, h4, h5, h6, p, blockquote, li, ul, ol, table, form, section, article, nav, header, footer, main');
+            if (hasBlockChild) {
+              return;
+            }
 
-                // 2. Normalized match
-                if (!fieldPath) {
-                  fieldPath = normalizedMap.get(normalizeText(rawText));
-                }
+            // If it has children with text, let the innermost child handle the edit
+            const childrenWithText = Array.from(el.children).filter((child) => {
+              const childTag = child.tagName.toLowerCase();
+              if (['svg', 'path', 'img', 'video', 'canvas', 'hr'].includes(childTag)) return false;
+              return (child.textContent || '').trim().length > 0;
+            });
 
-                // 3. Deterministic custom override fallback for any unindexed text
-                if (!fieldPath) {
-                  const routeSlug = (pathname || 'home').replace(/[^a-zA-Z0-9]/g, '_');
-                  const hash = hashText(rawText);
-                  fieldPath = `translations_override.${lang}.custom.${routeSlug}.${hash}`;
-                }
+            if (childrenWithText.length > 0) {
+              return;
+            }
 
-                if (fieldPath) {
-                  el.setAttribute('data-live-field', fieldPath);
-                }
-              }
+            // 1. Exact match
+            fieldPath = exactMap.get(rawText);
+
+            // 2. Normalized match
+            if (!fieldPath) {
+              fieldPath = normalizedMap.get(normalizeText(rawText));
+            }
+
+            // 3. Deterministic custom override fallback for any unindexed text
+            if (!fieldPath) {
+              const routeSlug = (pathname || 'home').replace(/[^a-zA-Z0-9]/g, '_');
+              const hash = hashText(rawText);
+              fieldPath = `translations_override.${lang}.custom.${routeSlug}.${hash}`;
+            }
+
+            if (fieldPath) {
+              el.setAttribute('data-live-field', fieldPath);
             }
           }
 
           if (fieldPath) {
+            const currentRaw = (el.innerText || el.textContent || '').trim();
+            if (!el.hasAttribute('data-live-original') && currentRaw) {
+              el.setAttribute('data-live-original', currentRaw);
+            }
+
             el.setAttribute('contenteditable', 'true');
             el.setAttribute('spellcheck', 'false');
             el.classList.add('live-editor-target');
@@ -408,14 +464,20 @@ export default function LiveEditorDock() {
       const target = e.target as HTMLElement;
       if (target.closest('#live-editor-floating-dock')) return;
 
-      const editable = target.closest('.live-editor-target') as HTMLElement;
-      if (editable) {
-        // Stop navigation and form submits
-        const clickableParent = target.closest('a, button');
-        if (clickableParent) {
-          e.preventDefault();
-          e.stopPropagation();
+      // In Edit Mode, prevent navigation on any clicked link or button
+      const clickableParent = target.closest('a, button');
+      if (clickableParent) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const editable = target.closest('.live-editor-target') as HTMLElement;
+        if (editable) {
           editable.focus();
+        } else {
+          const innerEditable = clickableParent.querySelector('.live-editor-target') as HTMLElement;
+          if (innerEditable) {
+            innerEditable.focus();
+          }
         }
       }
     };
@@ -429,7 +491,8 @@ export default function LiveEditorDock() {
       if (!fieldPath) return;
 
       const newText = target.innerText;
-      applyFieldEdit(fieldPath, newText);
+      const originalText = target.getAttribute('data-live-original') || '';
+      applyFieldEdit(fieldPath, newText, originalText);
       target.setAttribute('data-live-dirty', 'true');
     };
 

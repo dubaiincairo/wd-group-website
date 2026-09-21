@@ -37,6 +37,22 @@ import { useLanguage } from '@/context/LanguageContext';
 import { translations } from '@/lib/translations';
 import type { SiteContentPayload } from '@/lib/admin/types';
 
+function flattenObject(obj: any, prefix = ''): Record<string, string> {
+  const result: Record<string, string> = {};
+  if (!obj || typeof obj !== 'object') return result;
+
+  for (const key of Object.keys(obj)) {
+    const val = obj[key];
+    const fullPath = prefix ? `${prefix}.${key}` : key;
+    if (typeof val === 'string' && val.trim().length > 0) {
+      result[fullPath] = val.trim();
+    } else if (val && typeof val === 'object' && !Array.isArray(val)) {
+      Object.assign(result, flattenObject(val, fullPath));
+    }
+  }
+  return result;
+}
+
 function createDefaultContent(): SiteContentPayload {
   const en = translations.en;
   const ar = translations.ar;
@@ -102,6 +118,50 @@ function createDefaultContent(): SiteContentPayload {
         stat4_text_en: en.home.metrics.stat4_text,
         stat4_text_ar: ar.home.metrics.stat4_text,
       },
+      sectors: {
+        label_en: en.home.sectors.label,
+        label_ar: ar.home.sectors.label,
+        heading_en: en.home.sectors.heading,
+        heading_ar: ar.home.sectors.heading,
+        intro_en: en.home.sectors.intro,
+        intro_ar: ar.home.sectors.intro,
+        hospitality_eyebrow_en: en.home.sectors.hospitality.eyebrow,
+        hospitality_eyebrow_ar: ar.home.sectors.hospitality.eyebrow,
+        hospitality_title_en: en.home.sectors.hospitality.title,
+        hospitality_title_ar: ar.home.sectors.hospitality.title,
+        hospitality_slogan_en: en.home.sectors.hospitality.slogan,
+        hospitality_slogan_ar: ar.home.sectors.hospitality.slogan,
+        hospitality_desc_en: en.home.sectors.hospitality.desc,
+        hospitality_desc_ar: ar.home.sectors.hospitality.desc,
+        hospitality_proof_en: en.home.sectors.hospitality.proof,
+        hospitality_proof_ar: ar.home.sectors.hospitality.proof,
+        hospitality_cta_en: en.home.sectors.hospitality.cta,
+        hospitality_cta_ar: ar.home.sectors.hospitality.cta,
+        manufacturing_eyebrow_en: en.home.sectors.manufacturing.eyebrow,
+        manufacturing_eyebrow_ar: ar.home.sectors.manufacturing.eyebrow,
+        manufacturing_title_en: en.home.sectors.manufacturing.title,
+        manufacturing_title_ar: ar.home.sectors.manufacturing.title,
+        manufacturing_slogan_en: en.home.sectors.manufacturing.slogan,
+        manufacturing_slogan_ar: ar.home.sectors.manufacturing.slogan,
+        manufacturing_desc_en: en.home.sectors.manufacturing.desc,
+        manufacturing_desc_ar: ar.home.sectors.manufacturing.desc,
+        manufacturing_proof_en: en.home.sectors.manufacturing.proof,
+        manufacturing_proof_ar: ar.home.sectors.manufacturing.proof,
+        manufacturing_cta_en: en.home.sectors.manufacturing.cta,
+        manufacturing_cta_ar: ar.home.sectors.manufacturing.cta,
+        contracting_eyebrow_en: en.home.sectors.contracting.eyebrow,
+        contracting_eyebrow_ar: ar.home.sectors.contracting.eyebrow,
+        contracting_title_en: en.home.sectors.contracting.title,
+        contracting_title_ar: ar.home.sectors.contracting.title,
+        contracting_slogan_en: en.home.sectors.contracting.slogan,
+        contracting_slogan_ar: ar.home.sectors.contracting.slogan,
+        contracting_desc_en: en.home.sectors.contracting.desc,
+        contracting_desc_ar: ar.home.sectors.contracting.desc,
+        contracting_proof_en: en.home.sectors.contracting.proof,
+        contracting_proof_ar: ar.home.sectors.contracting.proof,
+        contracting_cta_en: en.home.sectors.contracting.cta,
+        contracting_cta_ar: ar.home.sectors.contracting.cta,
+      },
       synergy: {
         label_en: en.home.synergy.label,
         label_ar: ar.home.synergy.label,
@@ -109,14 +169,17 @@ function createDefaultContent(): SiteContentPayload {
         heading_ar: ar.home.synergy.heading,
         intro_en: en.home.synergy.intro,
         intro_ar: ar.home.synergy.intro,
+        step1_num: en.home.synergy.step1_num,
         step1_title_en: en.home.synergy.step1_title,
         step1_title_ar: ar.home.synergy.step1_title,
         step1_text_en: en.home.synergy.step1_text,
         step1_text_ar: ar.home.synergy.step1_text,
+        step2_num: en.home.synergy.step2_num,
         step2_title_en: en.home.synergy.step2_title,
         step2_title_ar: ar.home.synergy.step2_title,
         step2_text_en: en.home.synergy.step2_text,
         step2_text_ar: ar.home.synergy.step2_text,
+        step3_num: en.home.synergy.step3_num,
         step3_title_en: en.home.synergy.step3_title,
         step3_title_ar: ar.home.synergy.step3_title,
         step3_text_en: en.home.synergy.step3_text,
@@ -135,22 +198,22 @@ function createDefaultContent(): SiteContentPayload {
         mission_desc_ar: ar.home.identity.mission_desc,
         values_title_en: en.home.identity.values_title,
         values_title_ar: ar.home.identity.values_title,
-        val1_title_en: en.home.identity.values[0]?.title || '',
-        val1_title_ar: ar.home.identity.values[0]?.title || '',
-        val1_desc_en: en.home.identity.values[0]?.desc || '',
-        val1_desc_ar: ar.home.identity.values[0]?.desc || '',
-        val2_title_en: en.home.identity.values[1]?.title || '',
-        val2_title_ar: ar.home.identity.values[1]?.title || '',
-        val2_desc_en: en.home.identity.values[1]?.desc || '',
-        val2_desc_ar: ar.home.identity.values[1]?.desc || '',
-        val3_title_en: en.home.identity.values[2]?.title || '',
-        val3_title_ar: ar.home.identity.values[2]?.title || '',
-        val3_desc_en: en.home.identity.values[2]?.desc || '',
-        val3_desc_ar: ar.home.identity.values[2]?.desc || '',
-        val4_title_en: en.home.identity.values[3]?.title || '',
-        val4_title_ar: ar.home.identity.values[3]?.title || '',
-        val4_desc_en: en.home.identity.values[3]?.desc || '',
-        val4_desc_ar: ar.home.identity.values[3]?.desc || '',
+        val1_title_en: en.home.identity.val1_title,
+        val1_title_ar: ar.home.identity.val1_title,
+        val1_desc_en: en.home.identity.val1_desc,
+        val1_desc_ar: ar.home.identity.val1_desc,
+        val2_title_en: en.home.identity.val2_title,
+        val2_title_ar: ar.home.identity.val2_title,
+        val2_desc_en: en.home.identity.val2_desc,
+        val2_desc_ar: ar.home.identity.val2_desc,
+        val3_title_en: en.home.identity.val3_title,
+        val3_title_ar: ar.home.identity.val3_title,
+        val3_desc_en: en.home.identity.val3_desc,
+        val3_desc_ar: ar.home.identity.val3_desc,
+        val4_title_en: en.home.identity.val4_title,
+        val4_title_ar: ar.home.identity.val4_title,
+        val4_desc_en: en.home.identity.val4_desc,
+        val4_desc_ar: ar.home.identity.val4_desc,
       },
       ceo: {
         label_en: en.home.ceo.label,
@@ -161,7 +224,6 @@ function createDefaultContent(): SiteContentPayload {
         name_ar: ar.home.ceo.name,
         title_en: en.home.ceo.title,
         title_ar: ar.home.ceo.title,
-        photo_url: '',
       },
       partnership: {
         label_en: en.home.partnership.label,
@@ -247,6 +309,12 @@ function createDefaultContent(): SiteContentPayload {
     settings: {
       company_name_ar: 'شركة تصاميم الوطن المحدودة / مجموعة دبليو دي للأعمال',
       company_name_en: 'WD Group for Business / Watan Designs Ltd.',
+      nav_cta_en: en.nav.contactCta,
+      nav_cta_ar: ar.nav.contactCta,
+      nav_furniture_en: (en.nav as any).furniture || 'Luxury Living Store',
+      nav_furniture_ar: (ar.nav as any).furniture || 'المتجر والأثاث الفاخر',
+      nav_furniture_badge_en: (en.nav as any).furnitureBadge || 'NEW',
+      nav_furniture_badge_ar: (ar.nav as any).furnitureBadge || 'جديد',
       cr_number: '5950011057',
       vat_number: '300865965100003',
       headquarters_ar: 'طريق الملك عبدالعزيز، حي الخالدية، نجران، المملكة العربية السعودية',
@@ -661,6 +729,22 @@ export default function PagesContentEditor() {
                   valueAr={content.settings.nav_cta_ar || 'تواصل معنا'}
                   onChangeEn={(v) => setContent({ ...content, settings: { ...content.settings, nav_cta_en: v } })}
                   onChangeAr={(v) => setContent({ ...content, settings: { ...content.settings, nav_cta_ar: v } })}
+                />
+
+                <BilingualInput
+                  label={isAr ? 'زر المتجر في القائمة العلوية' : 'Header Navigation Store Button (E-Commerce)'}
+                  valueEn={content.settings.nav_furniture_en || 'Luxury Living Store'}
+                  valueAr={content.settings.nav_furniture_ar || 'المتجر والأثاث الفاخر'}
+                  onChangeEn={(v) => setContent({ ...content, settings: { ...content.settings, nav_furniture_en: v } })}
+                  onChangeAr={(v) => setContent({ ...content, settings: { ...content.settings, nav_furniture_ar: v } })}
+                />
+
+                <BilingualInput
+                  label={isAr ? 'شارة زر المتجر (مثل: جديد)' : 'Store Button Badge (e.g. NEW)'}
+                  valueEn={content.settings.nav_furniture_badge_en || 'NEW'}
+                  valueAr={content.settings.nav_furniture_badge_ar || 'جديد'}
+                  onChangeEn={(v) => setContent({ ...content, settings: { ...content.settings, nav_furniture_badge_en: v } })}
+                  onChangeAr={(v) => setContent({ ...content, settings: { ...content.settings, nav_furniture_badge_ar: v } })}
                 />
               </div>
             )}
@@ -1558,10 +1642,12 @@ export default function PagesContentEditor() {
 
             {/* Overrides Table / Cards */}
             {(() => {
+              const flatEn = flattenObject(content.translations_override?.en || {});
+              const flatAr = flattenObject(content.translations_override?.ar || {});
               const allKeys = Array.from(new Set([
-                ...Object.keys(content.translations_override?.en || {}),
-                ...Object.keys(content.translations_override?.ar || {}),
-              ]));
+                ...Object.keys(flatEn),
+                ...Object.keys(flatAr),
+              ])).filter(k => !k.startsWith('_'));
 
               if (allKeys.length === 0) {
                 return (
@@ -1590,8 +1676,8 @@ export default function PagesContentEditor() {
                         <button
                           type="button"
                           onClick={() => {
-                            const newEn = { ...(content.translations_override?.en || {}) };
-                            const newAr = { ...(content.translations_override?.ar || {}) };
+                            const newEn = { ...flatEn };
+                            const newAr = { ...flatAr };
                             delete newEn[keyPath];
                             delete newAr[keyPath];
                             setContent({
@@ -1613,16 +1699,14 @@ export default function PagesContentEditor() {
                           </label>
                           <input
                             type="text"
-                            value={content.translations_override?.en?.[keyPath] || ''}
+                            value={flatEn[keyPath] || ''}
                             onChange={(e) => {
+                              const newEn = { ...flatEn, [keyPath]: e.target.value };
                               setContent({
                                 ...content,
                                 translations_override: {
                                   ...(content.translations_override || {}),
-                                  en: {
-                                    ...(content.translations_override?.en || {}),
-                                    [keyPath]: e.target.value,
-                                  }
+                                  en: newEn,
                                 }
                               });
                             }}
@@ -1638,16 +1722,14 @@ export default function PagesContentEditor() {
                           <input
                             type="text"
                             dir="rtl"
-                            value={content.translations_override?.ar?.[keyPath] || ''}
+                            value={flatAr[keyPath] || ''}
                             onChange={(e) => {
+                              const newAr = { ...flatAr, [keyPath]: e.target.value };
                               setContent({
                                 ...content,
                                 translations_override: {
                                   ...(content.translations_override || {}),
-                                  ar: {
-                                    ...(content.translations_override?.ar || {}),
-                                    [keyPath]: e.target.value,
-                                  }
+                                  ar: newAr,
                                 }
                               });
                             }}

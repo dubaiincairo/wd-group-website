@@ -429,6 +429,10 @@ export interface SiteContentPayload {
     favicon_url?: string;
     nav_cta_en?: string;
     nav_cta_ar?: string;
+    nav_furniture_en?: string;
+    nav_furniture_ar?: string;
+    nav_furniture_badge_en?: string;
+    nav_furniture_badge_ar?: string;
     cr_number: string;
     vat_number: string;
     headquarters_ar: string;

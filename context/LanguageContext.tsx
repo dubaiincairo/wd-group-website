@@ -47,6 +47,31 @@ function resolveUrl(isAr: boolean, valAr: any, valEn: any, baseAr: any, baseEn: 
   }
 }
 
+function flattenObject(obj: any, prefix = ''): Record<string, string> {
+  const result: Record<string, string> = {};
+  if (!obj || typeof obj !== 'object') return result;
+
+  for (const key of Object.keys(obj)) {
+    const val = obj[key];
+    const fullPath = prefix ? `${prefix}.${key}` : key;
+    if (typeof val === 'string' && val.trim().length > 0) {
+      result[fullPath] = val.trim();
+    } else if (val && typeof val === 'object' && !Array.isArray(val)) {
+      Object.assign(result, flattenObject(val, fullPath));
+    }
+  }
+  return result;
+}
+
+function hashText(str: string): string {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = (hash << 5) - hash + str.charCodeAt(i);
+    hash |= 0;
+  }
+  return Math.abs(hash).toString(36);
+}
+
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [lang, setLang] = useState<Language>(() => {
     if (typeof window !== 'undefined') {
@@ -116,6 +141,8 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
       nav: {
         ...baseDict.nav,
         contactCta: resolveField(isAr, c.settings?.nav_cta_ar, c.settings?.nav_cta_en, arDict.nav.contactCta, enDict.nav.contactCta),
+        furniture: resolveField(isAr, c.settings?.nav_furniture_ar, c.settings?.nav_furniture_en, (arDict.nav as any).furniture, (enDict.nav as any).furniture),
+        furnitureBadge: resolveField(isAr, c.settings?.nav_furniture_badge_ar, c.settings?.nav_furniture_badge_en, (arDict.nav as any).furnitureBadge, (enDict.nav as any).furnitureBadge),
       },
       home: {
         ...baseDict.home,
@@ -416,9 +443,10 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     };
 
     // Deep merge granular live editor translation overrides
-    const overrides = c.translations_override?.[lang];
-    if (overrides && typeof overrides === 'object') {
-      for (const [path, val] of Object.entries(overrides)) {
+    const rawOverrides = c.translations_override?.[lang];
+    if (rawOverrides && typeof rawOverrides === 'object') {
+      const flatOverrides = flattenObject(rawOverrides);
+      for (const [path, val] of Object.entries(flatOverrides)) {
         if (typeof val === 'string' && val.trim().length > 0) {
           const parts = path.split('.');
           let curr: any = dict;
@@ -429,17 +457,97 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
             }
             curr = curr[p];
           }
-          curr[parts[parts.length - 1]] = val;
+          curr[parts[parts.length - 1]] = val.trim();
         }
+      }
+
+      // Backward compatibility: If the legacy custom hash for the store button exists, map it to nav.furniture
+      if (flatOverrides['custom._.fc4qc2']) {
+        (dict.nav as any).furniture = flatOverrides['custom._.fc4qc2'].trim();
       }
     }
   }
 
+  // Universal DOM Replacement Effect for any custom / hardcoded text overrides
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const rawOverrides = dynamicContent?.translations_override?.[lang];
+    if (!rawOverrides || typeof rawOverrides !== 'object') return;
+
+    const flat = flattenObject(rawOverrides);
+    const customMap = rawOverrides._custom_map || {};
+
+    const replacements: { original?: string; replacement: string; hash?: string }[] = [];
+
+    if (customMap && typeof customMap === 'object') {
+      for (const item of Object.values(customMap) as any[]) {
+        if (item?.original && item?.replacement) {
+          replacements.push({ original: item.original.trim(), replacement: item.replacement.trim() });
+        }
+      }
+    }
+
+    for (const [key, val] of Object.entries(flat)) {
+      if (key.includes('custom.') && typeof val === 'string' && val.trim().length > 0) {
+        const parts = key.split('.');
+        const hash = parts[parts.length - 1];
+        replacements.push({ hash, replacement: val.trim() });
+      }
+    }
+
+    if (replacements.length === 0) return;
+
+    function applyDomReplacements() {
+      const walker = document.createTreeWalker(
+        document.body,
+        NodeFilter.SHOW_TEXT,
+        {
+          acceptNode(node) {
+            const parent = node.parentElement;
+            if (!parent) return NodeFilter.FILTER_REJECT;
+            if (parent.closest('#live-editor-floating-dock, script, style, pre, code, svg, input, textarea, select')) {
+              return NodeFilter.FILTER_REJECT;
+            }
+            return NodeFilter.FILTER_ACCEPT;
+          }
+        }
+      );
+
+      let textNode = walker.nextNode();
+      while (textNode) {
+        const currentText = textNode.nodeValue || '';
+        const trimmed = currentText.trim();
+        if (trimmed.length > 0) {
+          for (const rep of replacements) {
+            if (rep.original && trimmed === rep.original) {
+              textNode.nodeValue = currentText.replace(rep.original, rep.replacement);
+              break;
+            } else if (rep.hash && (hashText(trimmed) === rep.hash || (rep.hash === 'fc4qc2' && trimmed.includes('المتجر والأثاث الفاخر')))) {
+              textNode.nodeValue = currentText.replace(trimmed, rep.replacement);
+              break;
+            }
+          }
+        }
+        textNode = walker.nextNode();
+      }
+    }
+
+    applyDomReplacements();
+    const t1 = setTimeout(applyDomReplacements, 150);
+    const t2 = setTimeout(applyDomReplacements, 600);
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+    };
+  }, [dynamicContent, lang]);
+
   // Helper to access nested translation keys like 'nav.about'
   const t = (path: string) => {
-    const overrides = dynamicContent?.translations_override?.[lang];
-    if (overrides && overrides[path]) {
-      return overrides[path];
+    const rawOverrides = dynamicContent?.translations_override?.[lang];
+    if (rawOverrides && typeof rawOverrides === 'object') {
+      if (typeof rawOverrides[path] === 'string') return rawOverrides[path];
+      const flat = flattenObject(rawOverrides);
+      if (flat[path]) return flat[path];
     }
     const keys = path.split('.');
     let current: any = dict;

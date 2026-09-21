@@ -116,8 +116,8 @@ export default function Navbar() {
 
               {sectorsOpen && (
                 <div className="absolute top-full -left-10 rtl:-left-auto rtl:-right-10 mt-2 w-80 bg-[#0F1117]/95 rounded-2xl p-2.5 shadow-2xl border border-white/15 backdrop-blur-2xl animate-in fade-in duration-150 z-50">
-                  <div className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-[#C9A86A] font-mono">
-                    {lang === 'ar' ? 'القطاعات الاستراتيجية' : 'STRATEGIC SECTORS'}
+                  <div className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-[#C9A86A] font-mono" data-live-field="nav.sectors_dropdown_title">
+                    {(dict.nav as any).sectors_dropdown_title || (lang === 'ar' ? 'القطاعات الاستراتيجية' : 'STRATEGIC SECTORS')}
                   </div>
 
                     <div className="space-y-1">
@@ -133,16 +133,16 @@ export default function Navbar() {
                           <Building2 className="w-4 h-4" />
                         </div>
                         <div>
-                          <span className="text-xs font-semibold text-zinc-200 group-hover/item:text-white block">
+                          <span className="text-xs font-semibold text-zinc-200 group-hover/item:text-white block" data-live-field="nav.hospitality">
                             {dict.nav.hospitality}
                           </span>
-                          <span className="text-[10px] text-zinc-400">
-                            {lang === 'ar' ? 'فنادق ومنتجعات سويس بلو' : 'SwissBlue Hotels & Suites'}
+                          <span className="text-[10px] text-zinc-400" data-live-field="nav.hospitality_subtitle">
+                            {(dict.nav as any).hospitality_subtitle || (lang === 'ar' ? 'فنادق ومنتجعات سويس بلو' : 'SwissBlue Hotels & Suites')}
                           </span>
                         </div>
                       </div>
-                      <span className="text-[10px] font-semibold text-sky-400 bg-sky-500/10 px-2 py-0.5 rounded-full border border-sky-500/20 font-mono">
-                        {lang === 'ar' ? '6 منشآت' : '6 Props'}
+                      <span className="text-[10px] font-semibold text-sky-400 bg-sky-500/10 px-2 py-0.5 rounded-full border border-sky-500/20 font-mono" data-live-field="nav.hospitality_badge">
+                        {(dict.nav as any).hospitality_badge || (lang === 'ar' ? '6 منشآت' : '6 Props')}
                       </span>
                     </Link>
 
@@ -158,16 +158,16 @@ export default function Navbar() {
                           <Factory className="w-4 h-4" />
                         </div>
                         <div>
-                          <span className="text-xs font-semibold text-zinc-200 group-hover/item:text-white block">
+                          <span className="text-xs font-semibold text-zinc-200 group-hover/item:text-white block" data-live-field="nav.manufacturing">
                             {dict.nav.manufacturing}
                           </span>
-                          <span className="text-[10px] text-zinc-400">
-                            {lang === 'ar' ? 'مصانع جرين وود الوطنية' : 'GreenWood & Factories'}
+                          <span className="text-[10px] text-zinc-400" data-live-field="nav.manufacturing_subtitle">
+                            {(dict.nav as any).manufacturing_subtitle || (lang === 'ar' ? 'مصانع جرين وود الوطنية' : 'GreenWood & Factories')}
                           </span>
                         </div>
                       </div>
-                      <span className="text-[10px] font-semibold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20 font-mono">
-                        {lang === 'ar' ? '3 مصانع' : '3 Factories'}
+                      <span className="text-[10px] font-semibold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20 font-mono" data-live-field="nav.manufacturing_badge">
+                        {(dict.nav as any).manufacturing_badge || (lang === 'ar' ? '3 مصانع' : '3 Factories')}
                       </span>
                     </Link>
 
@@ -183,16 +183,16 @@ export default function Navbar() {
                           <HardHat className="w-4 h-4" />
                         </div>
                         <div>
-                          <span className="text-xs font-semibold text-zinc-200 group-hover/item:text-white block">
+                          <span className="text-xs font-semibold text-zinc-200 group-hover/item:text-white block" data-live-field="nav.contracting">
                             {dict.nav.contracting}
                           </span>
-                          <span className="text-[10px] text-zinc-400">
-                            {lang === 'ar' ? 'المقاولات والتنفيذ الشامل' : 'Engineering & Turnkey'}
+                          <span className="text-[10px] text-zinc-400" data-live-field="nav.contracting_subtitle">
+                            {(dict.nav as any).contracting_subtitle || (lang === 'ar' ? 'المقاولات والتنفيذ الشامل' : 'Engineering & Turnkey')}
                           </span>
                         </div>
                       </div>
-                      <span className="text-[10px] font-semibold text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20 font-mono">
-                        {lang === 'ar' ? 'تنفيذ شامل' : 'Turnkey'}
+                      <span className="text-[10px] font-semibold text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20 font-mono" data-live-field="nav.contracting_badge">
+                        {(dict.nav as any).contracting_badge || (lang === 'ar' ? 'تنفيذ شامل' : 'Turnkey')}
                       </span>
                     </Link>
                   </div>
@@ -221,9 +221,9 @@ export default function Navbar() {
               }`}
             >
               <ShoppingBag className="w-3.5 h-3.5 text-[#C9A86A]" />
-              <span>{lang === 'ar' ? 'المتجر والأثاث الفاخر' : 'Luxury Living Store'}</span>
-              <span className="text-[9px] font-mono font-black uppercase px-1.5 py-0.5 rounded bg-[#C9A86A] text-[#08090C]">
-                {lang === 'ar' ? 'جديد' : 'NEW'}
+              <span data-live-field="nav.furniture">{(dict.nav as any).furniture || (lang === 'ar' ? 'المتجر والأثاث الفاخر' : 'Luxury Living Store')}</span>
+              <span data-live-field="nav.furnitureBadge" className="text-[9px] font-mono font-black uppercase px-1.5 py-0.5 rounded bg-[#C9A86A] text-[#08090C]">
+                {(dict.nav as any).furnitureBadge || (lang === 'ar' ? 'جديد' : 'NEW')}
               </span>
             </Link>
 
@@ -341,10 +341,10 @@ export default function Navbar() {
             >
               <div className="flex items-center gap-2">
                 <ShoppingBag className="w-4 h-4 text-[#C9A86A]" />
-                <span>{lang === 'ar' ? 'المتجر والأثاث الفاخر' : 'Luxury Living Store'}</span>
+                <span data-live-field="nav.furniture">{(dict.nav as any).furniture || (lang === 'ar' ? 'المتجر والأثاث الفاخر' : 'Luxury Living Store')}</span>
               </div>
-              <span className="text-xs bg-[#C9A86A] text-[#08090C] font-extrabold px-2 py-0.5 rounded-full font-mono">
-                {lang === 'ar' ? 'جديد' : 'NEW'}
+              <span data-live-field="nav.furnitureBadge" className="text-xs bg-[#C9A86A] text-[#08090C] font-extrabold px-2 py-0.5 rounded-full font-mono">
+                {(dict.nav as any).furnitureBadge || (lang === 'ar' ? 'جديد' : 'NEW')}
               </span>
             </Link>
             <Link 
