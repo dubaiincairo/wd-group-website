@@ -537,7 +537,7 @@ export default function MaintenanceView({ settings }: MaintenanceViewProps) {
                         {submitting ? (
                           <div className="w-3.5 h-3.5 border-2 border-[#0E1A24] border-t-transparent rounded-full animate-spin" />
                         ) : (
-                          <Send className="w-3.5 h-3.5 rtl:rotate-180" />
+                          <Send className="w-3.5 h-3.5 rtl:-scale-x-100" />
                         )}
                         <span>{submitting ? (isAr ? 'جارٍ الإرسال...' : 'Submitting...') : (isAr ? 'إرسال الاستفسار' : 'Send Inquiry')}</span>
                       </button>

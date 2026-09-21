@@ -614,7 +614,7 @@ ${formData.notes || 'None'}
                       disabled={submitting}
                       className="w-full py-3.5 rounded-xl font-bold text-xs bg-gradient-to-r from-[#C9A86A] via-[#DFBA73] to-[#C9A86A] text-[#08090C] hover:shadow-[0_0_20px_rgba(201,168,106,0.35)] transition-all flex items-center justify-center gap-2"
                     >
-                      <Send className="w-4 h-4" />
+                      <Send className="w-4 h-4 rtl:-scale-x-100" />
                       <span>
                         {submitting ? dict.furniture.checkout_modal.submitting : dict.furniture.checkout_modal.submit_btn}
                       </span>

@@ -407,7 +407,7 @@ export default function ManufacturingPage() {
                   disabled={loading}
                   className="w-full py-3.5 rounded-xl font-bold text-xs bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white shadow-[0_0_20px_rgba(52,211,153,0.3)] transition-all flex items-center justify-center gap-2"
                 >
-                  <Send className="w-4 h-4" />
+                  <Send className="w-4 h-4 rtl:-scale-x-100" />
                   <span>{loading ? (lang === 'ar' ? 'جارٍ الإرسال…' : 'Submitting…') : dict.manufacturing.rfp.cta}</span>
                 </button>
               </div>

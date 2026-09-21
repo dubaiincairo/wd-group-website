@@ -391,7 +391,7 @@ export default function ContractingPage() {
                   disabled={loading}
                   className="w-full py-3.5 rounded-xl font-bold text-xs bg-amber-600 hover:bg-amber-500 disabled:opacity-50 text-white shadow-[0_0_20px_rgba(251,191,36,0.3)] transition-all flex items-center justify-center gap-2"
                 >
-                  <Send className="w-4 h-4" />
+                  <Send className="w-4 h-4 rtl:-scale-x-100" />
                   <span>{loading ? (lang === 'ar' ? 'جارٍ الإرسال…' : 'Submitting…') : dict.contracting.rfp.cta}</span>
                 </button>
               </div>

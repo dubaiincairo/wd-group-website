@@ -225,7 +225,7 @@ export default function EcommerceFooter() {
               className="text-[#C9A86A] hover:underline font-semibold inline-flex items-center gap-1 shrink-0 ml-1"
             >
               <span>{footerDict.back_to_wd}</span>
-              <ExternalLink className="w-3 h-3" />
+              <ExternalLink className="w-3 h-3 rtl:-scale-x-100" />
             </Link>
           </div>
 

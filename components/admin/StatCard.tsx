@@ -87,7 +87,7 @@ export default function StatCard({
       {href && (
         <div className="mt-4 pt-3 border-t border-white/5 flex items-center justify-between text-xs text-blue-400 font-semibold group-hover:text-blue-300">
           <span>{isAr ? 'عرض التفاصيل' : 'View details'}</span>
-          <ArrowUpRight className="w-3.5 h-3.5 rtl:rotate-270 transition-transform group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5 group-hover:-translate-y-0.5" />
+          <ArrowUpRight className="w-3.5 h-3.5 rtl:-scale-x-100 transition-transform group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5 group-hover:-translate-y-0.5" />
         </div>
       )}
     </div>

@@ -90,7 +90,7 @@ export default function ContactCTA() {
                 onClick={() => setModalOpen(true)}
                 className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl text-sm font-bold text-[#0E1A24] bg-[#C9A86A] hover:bg-[#E3C58A] shadow-glow-camel hover:scale-[1.02] active:scale-[0.98] transition-all"
               >
-                <Send className="w-4 h-4" />
+                <Send className="w-4 h-4 rtl:-scale-x-100" />
                 <span data-live-field="home.partnership.primary_cta">{dict.home.partnership.primaryCta}</span>
               </button>
 

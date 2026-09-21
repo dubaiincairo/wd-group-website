@@ -452,7 +452,7 @@ export default function OverviewTab({
               className="text-xs font-mono text-[#C9A86A] hover:underline flex items-center gap-1 cursor-pointer"
             >
               <span>{isAr ? 'عرض الكل' : 'View all'}</span>
-              <ArrowUpRight className="w-3.5 h-3.5 rtl:rotate-180" />
+              <ArrowUpRight className="w-3.5 h-3.5 rtl:-scale-x-100" />
             </button>
           </div>
 

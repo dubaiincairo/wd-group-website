@@ -356,7 +356,7 @@ export default function EcommerceNavbar({
           >
             <span className="w-1.5 h-1.5 rounded-full bg-[#C9A86A] group-hover:scale-125 transition-transform" />
             <span>{ecomDict.back_to_holding}</span>
-            <ExternalLink className="w-3 h-3 opacity-60 group-hover:opacity-100 transition-opacity" />
+            <ExternalLink className="w-3 h-3 opacity-60 group-hover:opacity-100 transition-opacity rtl:-scale-x-100" />
           </Link>
 
           {/* Announcement Ticker Message */}

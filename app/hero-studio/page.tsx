@@ -260,7 +260,7 @@ export default function HeroStudioPage() {
                         className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-xs text-zinc-300 bg-brand-surface hover:bg-brand-card border border-white/10 transition-all"
                       >
                         <span>{dict.nav.contactCta}</span>
-                        <ArrowUpRight className="w-4 h-4 rtl:rotate-270 text-zinc-400" />
+                        <ArrowUpRight className="w-4 h-4 rtl:-scale-x-100 text-zinc-400" />
                       </Link>
                     </div>
 

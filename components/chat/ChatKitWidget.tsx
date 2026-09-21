@@ -339,7 +339,7 @@ export default function ChatKitWidget({ onClose, initialConfig }: ChatKitWidgetP
             className="inline-flex items-center gap-1 text-[#C9A86A] hover:text-white font-semibold underline underline-offset-2 transition-colors mx-1"
           >
             <span>{label}</span>
-            <ExternalLink className="w-3 h-3" />
+            <ExternalLink className="w-3 h-3 rtl:-scale-x-100" />
           </a>
         )
       );
@@ -611,7 +611,7 @@ export default function ChatKitWidget({ onClose, initialConfig }: ChatKitWidgetP
                 className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#C9A86A] to-[#B29255] hover:from-[#d5b577] hover:to-[#be9d5f] disabled:opacity-40 disabled:hover:from-[#C9A86A] text-black font-bold flex items-center justify-center shrink-0 transition-all shadow-md cursor-pointer disabled:cursor-not-allowed"
                 title={isAr ? 'إرسال' : 'Send'}
               >
-                <Send className="w-4 h-4 rtl:rotate-180" />
+                <Send className="w-4 h-4 rtl:-scale-x-100" />
               </button>
             </div>
             

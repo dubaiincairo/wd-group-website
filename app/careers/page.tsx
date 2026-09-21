@@ -560,7 +560,7 @@ export default function CareersPage() {
                   {loading ? (
                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                   ) : (
-                    <Send className="w-4 h-4" />
+                    <Send className="w-4 h-4 rtl:-scale-x-100" />
                   )}
                   <span>{loading ? (lang === 'ar' ? 'جارٍ إرسال الطلب…' : 'Submitting…') : dict.careers.talentPool.cta}</span>
                 </button>

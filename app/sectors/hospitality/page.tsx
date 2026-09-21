@@ -115,7 +115,7 @@ export default function HospitalityPage() {
               className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl text-xs sm:text-sm font-bold text-sky-200 bg-[#1A476A]/60 hover:bg-[#1A476A] border border-sky-400/30 transition-all"
             >
               <span>{dict.hospitality.hero.secondaryCta}</span>
-              <ExternalLink className="w-3.5 h-3.5" />
+              <ExternalLink className="w-3.5 h-3.5 rtl:-scale-x-100" />
             </a>
           </div>
         </motion.section>

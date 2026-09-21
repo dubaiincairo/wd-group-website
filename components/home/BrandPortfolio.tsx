@@ -162,7 +162,7 @@ export default function BrandPortfolio() {
                     <div>
                       <h3 className="text-lg font-black text-white group-hover:text-[#C9A86A] transition-colors flex items-center gap-1.5">
                         <span>{lang === 'ar' ? brand.nameAr : brand.name}</span>
-                        <ArrowUpRight className="w-3.5 h-3.5 opacity-0 -translate-x-1 rtl:translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all text-[#C9A86A]" />
+                        <ArrowUpRight className="w-3.5 h-3.5 opacity-0 -translate-x-1 rtl:translate-x-1 rtl:-scale-x-100 group-hover:opacity-100 group-hover:translate-x-0 transition-all text-[#C9A86A]" />
                       </h3>
                       <div className="text-[11px] font-semibold text-zinc-300">
                         {brand.fullName}
