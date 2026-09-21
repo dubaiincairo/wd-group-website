@@ -30,9 +30,30 @@ body.live-editor-active .live-editor-target[data-live-dirty="true"] {
 }
 
 /* Prevent unwanted browser outlines or drag behavior */
-body.live-editor-active [contenteditable="true"] {
+body.live-editor-active [contenteditable],
+body.live-editor-active [contenteditable="true"],
+body.live-editor-active [contenteditable="plaintext-only"] {
   -webkit-user-modify: read-write-plaintext-only;
   user-select: text;
+}
+
+/* Explicit RTL & LTR BiDi isolation for in-place editing */
+[dir="rtl"] .live-editor-target,
+body[dir="rtl"] .live-editor-target,
+body.live-editor-active [dir="rtl"] .live-editor-target,
+body.live-editor-active .live-editor-target[dir="rtl"] {
+  direction: rtl !important;
+  text-align: inherit;
+  unicode-bidi: isolate;
+}
+
+[dir="ltr"] .live-editor-target,
+body[dir="ltr"] .live-editor-target,
+body.live-editor-active [dir="ltr"] .live-editor-target,
+body.live-editor-active .live-editor-target[dir="ltr"] {
+  direction: ltr !important;
+  text-align: inherit;
+  unicode-bidi: isolate;
 }
 
 /* Make links and buttons text-editable without navigating */

@@ -83,7 +83,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
         if (document.documentElement.dir === 'rtl') return 'ar';
       } catch (e) {}
     }
-    return 'en';
+    return 'ar';
   });
   const [dynamicContent, setDynamicContent] = useState<any>(null);
 
@@ -116,6 +116,17 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     document.documentElement.lang = lang;
     document.documentElement.dir = dir;
+    if (typeof document !== 'undefined' && document.body) {
+      document.body.dir = dir;
+      document.body.setAttribute('dir', dir);
+      if (dir === 'rtl') {
+        document.body.classList.add('rtl');
+        document.body.classList.remove('ltr');
+      } else {
+        document.body.classList.add('ltr');
+        document.body.classList.remove('rtl');
+      }
+    }
     localStorage.setItem('wd_lang', lang);
   }, [lang, dir]);
 
@@ -505,7 +516,12 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
           acceptNode(node) {
             const parent = node.parentElement;
             if (!parent) return NodeFilter.FILTER_REJECT;
-            if (parent.closest('#live-editor-floating-dock, script, style, pre, code, svg, input, textarea, select')) {
+            if (
+              parent.closest('#live-editor-floating-dock, script, style, pre, code, svg, input, textarea, select') ||
+              parent.isContentEditable ||
+              parent.closest('[contenteditable="true"], [contenteditable="plaintext-only"], .live-editor-target') ||
+              parent === document.activeElement
+            ) {
               return NodeFilter.FILTER_REJECT;
             }
             return NodeFilter.FILTER_ACCEPT;

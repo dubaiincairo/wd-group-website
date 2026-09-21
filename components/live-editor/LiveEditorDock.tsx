@@ -252,18 +252,15 @@ export default function LiveEditorDock() {
     };
   }, []);
 
-  // Apply a field edit into state & context
-  const applyFieldEdit = useCallback((targetPath: string, newText: string, originalText?: string) => {
+  // Build unified change payload for state and overrides
+  const buildChangePayload = useCallback((targetPath: string, newText: string, originalText?: string) => {
     const currentLang = stateRef.current.lang;
-
-    // Check if targetPath maps to an admin field
     const adminField = TRANSLATION_TO_ADMIN_FIELD[targetPath];
     const changes: Record<string, string> = {};
 
     if (adminField) {
       const primaryPath = `${adminField}_${currentLang}`;
       changes[primaryPath] = newText;
-      // Also sync to translations_override for double reliability
       changes[`translations_override.${currentLang}.${targetPath}`] = newText;
     } else if (!targetPath.startsWith('translations_override.') && !targetPath.endsWith('_en') && !targetPath.endsWith('_ar') && !targetPath.endsWith('_num')) {
       const primaryPath = `${targetPath}_${currentLang}`;
@@ -273,7 +270,6 @@ export default function LiveEditorDock() {
       changes[targetPath] = newText;
     }
 
-    // If custom override, also track in _custom_map for universal DOM replacer
     if (targetPath.includes('.custom.')) {
       const parts = targetPath.split('.');
       const hash = parts[parts.length - 1];
@@ -285,12 +281,28 @@ export default function LiveEditorDock() {
       }
     }
 
+    return changes;
+  }, []);
+
+  // 1. Record edit locally during live typing without triggering full-page React re-render
+  // This keeps the browser selection, caret, backspace, and RTL ligatures 100% stable
+  const recordFieldEdit = useCallback((targetPath: string, newText: string, originalText?: string) => {
+    const changes = buildChangePayload(targetPath, newText, originalText);
+    setPendingChanges((prev) => ({
+      ...prev,
+      ...changes,
+    }));
+  }, [buildChangePayload]);
+
+  // 2. Commit edit into dynamicContent context on element blur (when typing has finished)
+  const commitFieldEdit = useCallback((targetPath: string, newText: string, originalText?: string) => {
+    const changes = buildChangePayload(targetPath, newText, originalText);
+
     setPendingChanges((prev) => ({
       ...prev,
       ...changes,
     }));
 
-    // Update dynamicContent live
     setDynamicContent((prevContent: any) => {
       let base = prevContent || stateRef.current.serverState || {};
       for (const [p, v] of Object.entries(changes)) {
@@ -298,7 +310,7 @@ export default function LiveEditorDock() {
       }
       return base;
     });
-  }, [setDynamicContent]);
+  }, [buildChangePayload, setDynamicContent]);
 
   // Universal DOM Element Scanning and Binding
   useEffect(() => {
@@ -421,9 +433,16 @@ export default function LiveEditorDock() {
               el.setAttribute('data-live-original', currentRaw);
             }
 
-            el.setAttribute('contenteditable', 'true');
-            el.setAttribute('spellcheck', 'false');
-            el.classList.add('live-editor-target');
+            if (!el.classList.contains('live-editor-target')) {
+              try {
+                el.setAttribute('contenteditable', 'plaintext-only');
+              } catch (e) {
+                el.setAttribute('contenteditable', 'true');
+              }
+              el.setAttribute('spellcheck', 'false');
+              el.setAttribute('dir', isAr ? 'rtl' : 'ltr');
+              el.classList.add('live-editor-target');
+            }
 
             // Set dirty state if edited
             const isDirty = 
@@ -441,8 +460,25 @@ export default function LiveEditorDock() {
 
       scanAndBindElements();
 
-      const observer = new MutationObserver(() => {
-        scanAndBindElements();
+      const observer = new MutationObserver((mutations) => {
+        const hasExternalMutation = mutations.some((m) => {
+          const t = m.target as HTMLElement;
+          if (!t) return false;
+          // Ignore typing mutations inside the actively edited element or dock
+          if (
+            t === document.activeElement ||
+            t.closest?.('#live-editor-floating-dock') ||
+            t.closest?.('.live-editor-target') ||
+            (t as any).isContentEditable
+          ) {
+            return false;
+          }
+          return true;
+        });
+
+        if (hasExternalMutation) {
+          scanAndBindElements();
+        }
       });
 
       observer.observe(document.body, { childList: true, subtree: true });
@@ -453,7 +489,7 @@ export default function LiveEditorDock() {
     } catch (err) {
       console.warn('Live In-Place Editor DOM binding warning:', err);
     }
-  }, [isEditMode, lang, dynamicContent, serverState, hasMounted, pathname]);
+  }, [isEditMode, lang, dynamicContent, serverState, hasMounted, pathname, isAr]);
 
   // Global event listeners for editing interactions
   useEffect(() => {
@@ -482,21 +518,45 @@ export default function LiveEditorDock() {
       }
     };
 
-    // 2. Real-time text input
+    // 2. Real-time text input without full-page React re-render
+    // Native DOM holds typing naturally, preserving caret position, RTL ligatures, and Backspace
     const handleInput = (e: Event) => {
       const target = e.target as HTMLElement;
-      if (!target.classList.contains('live-editor-target')) return;
+      if (!target || !target.classList?.contains('live-editor-target')) return;
 
       const fieldPath = target.getAttribute('data-live-field');
       if (!fieldPath) return;
 
-      const newText = target.innerText;
+      const newText = (target.innerText !== undefined ? target.innerText : target.textContent || '').replace(/\r?\n$/, '');
       const originalText = target.getAttribute('data-live-original') || '';
-      applyFieldEdit(fieldPath, newText, originalText);
+      recordFieldEdit(fieldPath, newText, originalText);
       target.setAttribute('data-live-dirty', 'true');
     };
 
-    // 3. Keyboard handlers (Enter, Escape, Ctrl+S, Ctrl+E)
+    // 3. Commit to dynamicContent context on blur (when typing in element is finished)
+    const handleBlur = (e: FocusEvent) => {
+      const target = e.target as HTMLElement;
+      if (!target || !target.classList?.contains('live-editor-target')) return;
+
+      const fieldPath = target.getAttribute('data-live-field');
+      if (!fieldPath) return;
+
+      const newText = (target.innerText !== undefined ? target.innerText : target.textContent || '').replace(/\r?\n$/, '');
+      const originalText = target.getAttribute('data-live-original') || '';
+      commitFieldEdit(fieldPath, newText, originalText);
+    };
+
+    // 4. Intercept paste to guarantee clean plain text and prevent HTML injection
+    const handlePaste = (e: ClipboardEvent) => {
+      const target = e.target as HTMLElement;
+      if (!target || !target.classList?.contains('live-editor-target')) return;
+
+      e.preventDefault();
+      const text = e.clipboardData?.getData('text/plain') || '';
+      document.execCommand('insertText', false, text);
+    };
+
+    // 5. Keyboard handlers (Enter, Escape, Ctrl+S, Ctrl+E)
     const handleKeyDown = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement;
 
@@ -525,9 +585,9 @@ export default function LiveEditorDock() {
       }
 
       // Enter key: Single-line elements blur on Enter to prevent awkward breaks
-      if (e.key === 'Enter' && target.classList.contains('live-editor-target')) {
+      if (e.key === 'Enter' && target.classList?.contains('live-editor-target') && !e.shiftKey) {
         const tag = target.tagName.toLowerCase();
-        if (['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'span', 'button', 'a', 'label'].includes(tag)) {
+        if (['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'span', 'button', 'a', 'label', 'div', 'small', 'strong', 'b', 'em', 'i'].includes(tag)) {
           e.preventDefault();
           target.blur();
         }
@@ -536,18 +596,27 @@ export default function LiveEditorDock() {
 
     document.addEventListener('click', handleClick, true);
     document.addEventListener('input', handleInput);
+    document.addEventListener('focusout', handleBlur, true);
+    document.addEventListener('paste', handlePaste);
     document.addEventListener('keydown', handleKeyDown);
 
     return () => {
       document.removeEventListener('click', handleClick, true);
       document.removeEventListener('input', handleInput);
+      document.removeEventListener('focusout', handleBlur, true);
+      document.removeEventListener('paste', handlePaste);
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [isEditMode, applyFieldEdit, hasMounted]);
+  }, [isEditMode, recordFieldEdit, commitFieldEdit, hasMounted]);
 
   // Execute database save
   const handleSave = async () => {
     if (saving || !hasUnsaved) return;
+
+    // Blur active element before saving to commit any final keystroke
+    if (document.activeElement && (document.activeElement as HTMLElement).classList?.contains('live-editor-target')) {
+      (document.activeElement as HTMLElement).blur();
+    }
 
     setSaving(true);
     setErrorMessage(null);
