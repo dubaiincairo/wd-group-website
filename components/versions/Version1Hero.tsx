@@ -81,36 +81,48 @@ export default function Version1Hero() {
             
             <div className="flex flex-col items-center text-center sm:px-6 pt-4 sm:pt-0">
               <div className="text-4xl sm:text-5xl font-extrabold tracking-tight text-blue-400 mb-2 font-mono">
-                <AnimatedCounter target={6} />
+                <AnimatedCounter 
+                  value={dict.home.metrics.stat1_num || '6'} 
+                  data-live-field="home.metrics.stat1_num"
+                />
               </div>
-              <div className="text-xs sm:text-sm font-medium text-zinc-300 leading-snug">
+              <div className="text-xs sm:text-sm font-medium text-zinc-300 leading-snug" data-live-field="home.metrics.stat1_text">
                 {dict.home.metrics.stat1_text}
               </div>
             </div>
 
             <div className="flex flex-col items-center text-center sm:px-6 pt-6 sm:pt-0">
               <div className="text-4xl sm:text-5xl font-extrabold tracking-tight text-emerald-400 mb-2 font-mono">
-                <AnimatedCounter target={3} />
+                <AnimatedCounter 
+                  value={dict.home.metrics.stat2_num || '3'} 
+                  data-live-field="home.metrics.stat2_num"
+                />
               </div>
-              <div className="text-xs sm:text-sm font-medium text-zinc-300 leading-snug">
+              <div className="text-xs sm:text-sm font-medium text-zinc-300 leading-snug" data-live-field="home.metrics.stat2_text">
                 {dict.home.metrics.stat2_text}
               </div>
             </div>
 
             <div className="flex flex-col items-center text-center sm:px-6 pt-6 sm:pt-0">
               <div className="text-4xl sm:text-5xl font-extrabold tracking-tight text-amber-400 mb-2 font-mono">
-                <AnimatedCounter target={80} suffix="+" />
+                <AnimatedCounter 
+                  value={dict.home.metrics.stat3_num || '80+'} 
+                  data-live-field="home.metrics.stat3_num"
+                />
               </div>
-              <div className="text-xs sm:text-sm font-medium text-zinc-300 leading-snug">
+              <div className="text-xs sm:text-sm font-medium text-zinc-300 leading-snug" data-live-field="home.metrics.stat3_text">
                 {dict.home.metrics.stat3_text}
               </div>
             </div>
 
             <div className="flex flex-col items-center text-center sm:px-6 pt-6 sm:pt-0">
               <div className="text-4xl sm:text-5xl font-extrabold tracking-tight text-zinc-100 mb-2 font-mono">
-                <AnimatedCounter target={3} />
+                <AnimatedCounter 
+                  value={dict.home.metrics.stat4_num || '3'} 
+                  data-live-field="home.metrics.stat4_num"
+                />
               </div>
-              <div className="text-xs sm:text-sm font-medium text-zinc-300 leading-snug">
+              <div className="text-xs sm:text-sm font-medium text-zinc-300 leading-snug" data-live-field="home.metrics.stat4_text">
                 {dict.home.metrics.stat4_text}
               </div>
             </div>

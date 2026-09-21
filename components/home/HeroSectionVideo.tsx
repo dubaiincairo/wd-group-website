@@ -203,9 +203,12 @@ export default function HeroSectionVideo() {
             {/* Stat 1: 6 Hospitality Properties (No Left Border) */}
             <div className="text-center px-4">
               <div className="text-2xl sm:text-4xl font-extrabold text-white font-mono tracking-tight text-glow">
-                <AnimatedCounter target={6} />
+                <AnimatedCounter 
+                  value={dict.home.metrics.stat1_num || '6'} 
+                  data-live-field="home.metrics.stat1_num"
+                />
               </div>
-              <p className="text-xs text-zinc-400 mt-1 font-medium">
+              <p className="text-xs text-zinc-400 mt-1 font-medium" data-live-field="home.metrics.stat1_text">
                 {dict.home.metrics.stat1_text}
               </p>
             </div>
@@ -213,9 +216,12 @@ export default function HeroSectionVideo() {
             {/* Stat 2: 3 Specialized Factories */}
             <div className="text-center px-4 border-s border-white/10">
               <div className="text-2xl sm:text-4xl font-extrabold text-emerald-400 font-mono tracking-tight">
-                <AnimatedCounter target={3} />
+                <AnimatedCounter 
+                  value={dict.home.metrics.stat2_num || '3'} 
+                  data-live-field="home.metrics.stat2_num"
+                />
               </div>
-              <p className="text-xs text-zinc-400 mt-1 font-medium">
+              <p className="text-xs text-zinc-400 mt-1 font-medium" data-live-field="home.metrics.stat2_text">
                 {dict.home.metrics.stat2_text}
               </p>
             </div>
@@ -223,9 +229,12 @@ export default function HeroSectionVideo() {
             {/* Stat 3: 80+ Specialized Team */}
             <div className="text-center px-4 md:border-s border-white/10">
               <div className="text-2xl sm:text-4xl font-extrabold text-amber-400 font-mono tracking-tight">
-                <AnimatedCounter target={80} suffix="+" />
+                <AnimatedCounter 
+                  value={dict.home.metrics.stat3_num || '80+'} 
+                  data-live-field="home.metrics.stat3_num"
+                />
               </div>
-              <p className="text-xs text-zinc-400 mt-1 font-medium">
+              <p className="text-xs text-zinc-400 mt-1 font-medium" data-live-field="home.metrics.stat3_text">
                 {dict.home.metrics.stat3_text}
               </p>
             </div>
@@ -233,9 +242,12 @@ export default function HeroSectionVideo() {
             {/* Stat 4: 3 Strategic Business Sectors */}
             <div className="text-center px-4 border-s border-white/10">
               <div className="text-2xl sm:text-4xl font-extrabold text-sky-400 font-mono tracking-tight">
-                <AnimatedCounter target={3} />
+                <AnimatedCounter 
+                  value={dict.home.metrics.stat4_num || '3'} 
+                  data-live-field="home.metrics.stat4_num"
+                />
               </div>
-              <p className="text-xs text-zinc-400 mt-1 font-medium">
+              <p className="text-xs text-zinc-400 mt-1 font-medium" data-live-field="home.metrics.stat4_text">
                 {dict.home.metrics.stat4_text}
               </p>
             </div>

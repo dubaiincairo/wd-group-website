@@ -233,13 +233,13 @@ export function LanguageProvider({
         },
         metrics: {
           ...baseDict.home.metrics,
-          stat1_num: c.home?.metrics?.stat1_num || baseDict.home.metrics.stat1_num,
+          stat1_num: (isAr ? (c.home?.metrics?.stat1_num_ar || c.home?.metrics?.stat1_num) : (c.home?.metrics?.stat1_num_en || c.home?.metrics?.stat1_num)) || baseDict.home.metrics.stat1_num,
           stat1_text: resolveField(isAr, c.home?.metrics?.stat1_text_ar, c.home?.metrics?.stat1_text_en, arDict.home.metrics.stat1_text, enDict.home.metrics.stat1_text),
-          stat2_num: c.home?.metrics?.stat2_num || baseDict.home.metrics.stat2_num,
+          stat2_num: (isAr ? (c.home?.metrics?.stat2_num_ar || c.home?.metrics?.stat2_num) : (c.home?.metrics?.stat2_num_en || c.home?.metrics?.stat2_num)) || baseDict.home.metrics.stat2_num,
           stat2_text: resolveField(isAr, c.home?.metrics?.stat2_text_ar, c.home?.metrics?.stat2_text_en, arDict.home.metrics.stat2_text, enDict.home.metrics.stat2_text),
-          stat3_num: c.home?.metrics?.stat3_num || baseDict.home.metrics.stat3_num,
+          stat3_num: (isAr ? (c.home?.metrics?.stat3_num_ar || c.home?.metrics?.stat3_num) : (c.home?.metrics?.stat3_num_en || c.home?.metrics?.stat3_num)) || baseDict.home.metrics.stat3_num,
           stat3_text: resolveField(isAr, c.home?.metrics?.stat3_text_ar, c.home?.metrics?.stat3_text_en, arDict.home.metrics.stat3_text, enDict.home.metrics.stat3_text),
-          stat4_num: c.home?.metrics?.stat4_num || baseDict.home.metrics.stat4_num,
+          stat4_num: (isAr ? (c.home?.metrics?.stat4_num_ar || c.home?.metrics?.stat4_num) : (c.home?.metrics?.stat4_num_en || c.home?.metrics?.stat4_num)) || baseDict.home.metrics.stat4_num,
           stat4_text: resolveField(isAr, c.home?.metrics?.stat4_text_ar, c.home?.metrics?.stat4_text_en, arDict.home.metrics.stat4_text, enDict.home.metrics.stat4_text),
         },
         sectors: {

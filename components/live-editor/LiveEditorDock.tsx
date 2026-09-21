@@ -41,9 +41,13 @@ const TRANSLATION_TO_ADMIN_FIELD: Record<string, string> = {
   'home.hero.dock.contracting_label': 'home.hero.dock_contracting_label',
   'home.hero.dock.contracting_badge': 'home.hero.dock_contracting_badge',
   'home.hero.scroll_cue': 'home.hero.scroll_cue',
+  'home.metrics.stat1_num': 'home.metrics.stat1_num',
   'home.metrics.stat1_text': 'home.metrics.stat1_text',
+  'home.metrics.stat2_num': 'home.metrics.stat2_num',
   'home.metrics.stat2_text': 'home.metrics.stat2_text',
+  'home.metrics.stat3_num': 'home.metrics.stat3_num',
   'home.metrics.stat3_text': 'home.metrics.stat3_text',
+  'home.metrics.stat4_num': 'home.metrics.stat4_num',
   'home.metrics.stat4_text': 'home.metrics.stat4_text',
   'home.sectors.label': 'home.sectors.label',
   'home.sectors.heading': 'home.sectors.heading',
@@ -265,9 +269,15 @@ export default function LiveEditorDock() {
     const changes: Record<string, string> = {};
 
     if (adminField) {
-      const primaryPath = `${adminField}_${currentLang}`;
-      changes[primaryPath] = newText;
-      changes[`translations_override.${currentLang}.${targetPath}`] = newText;
+      if (adminField.endsWith('_num')) {
+        changes[adminField] = newText;
+        changes[`${adminField}_${currentLang}`] = newText;
+        changes[`translations_override.${currentLang}.${targetPath}`] = newText;
+      } else {
+        const primaryPath = `${adminField}_${currentLang}`;
+        changes[primaryPath] = newText;
+        changes[`translations_override.${currentLang}.${targetPath}`] = newText;
+      }
     } else if (!targetPath.startsWith('translations_override.') && !targetPath.endsWith('_en') && !targetPath.endsWith('_ar') && !targetPath.endsWith('_num')) {
       const primaryPath = `${targetPath}_${currentLang}`;
       changes[primaryPath] = newText;
