@@ -6,18 +6,18 @@ import { LanguageProvider } from '@/context/LanguageContext';
 import { ToastProvider } from '@/components/admin/ToastProvider';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
-import dynamic from 'next/dynamic';
+import dynamicComponent from 'next/dynamic';
 import MaintenanceGate from '@/components/layout/MaintenanceGate';
 import DynamicHeadSEO from '@/components/seo/DynamicHeadSEO';
 import WebsitePreloader from '@/components/layout/WebsitePreloader';
 import { getSiteContent } from '@/lib/admin/db';
 
-const LiveEditorDock = dynamic(
+const LiveEditorDock = dynamicComponent(
   () => import('@/components/live-editor/LiveEditorDock'),
   { ssr: false }
 );
 
-const ChatKitLauncher = dynamic(
+const ChatKitLauncher = dynamicComponent(
   () => import('@/components/chat/ChatKitLauncher'),
   { ssr: false }
 );
