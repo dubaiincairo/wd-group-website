@@ -218,7 +218,7 @@ export default function MetricsEditorPage() {
       </div>
 
       {/* 4 Metric Foldable Cards */}
-      <div className="space-y-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start">
         {metricItems.map((m) => {
           const isOpen = Boolean(openSections[m.id]);
           const Icon = m.icon;

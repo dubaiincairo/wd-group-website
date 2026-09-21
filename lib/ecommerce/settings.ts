@@ -1,5 +1,5 @@
 import { getSiteContent } from '@/lib/admin/db';
-import { DEFAULT_ECOMMERCE_SETTINGS, EcommerceSettingsPayload } from '@/app/api/admin/ecommerce/settings/route';
+import { DEFAULT_ECOMMERCE_SETTINGS, EcommerceSettingsPayload } from '@/lib/ecommerce/settingsConfig';
 
 export async function getEcommerceSettings(): Promise<EcommerceSettingsPayload> {
   try {

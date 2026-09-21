@@ -620,7 +620,7 @@ function EcommerceAdminContent() {
 
           <h1 className="text-xl sm:text-3xl font-extrabold text-white flex items-center gap-2.5">
             <ShoppingCart className="w-6 h-6 text-[#C9A86A]" />
-            <span>{isAr ? 'منظومة مبيعات وعمليات الأثاث والتوريد' : 'E-Commerce Sales & Operations Center'}</span>
+            <span>{isAr ? 'مركز التجارة الإلكترونية' : 'E-Commerce Hub'}</span>
           </h1>
         </div>
 
@@ -655,7 +655,7 @@ function EcommerceAdminContent() {
             className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-500/20 via-purple-600/30 to-indigo-600/30 hover:border-[#C9A86A] border border-[#C9A86A]/40 text-white text-xs font-mono font-bold shadow-lg transition-all cursor-pointer shrink-0 whitespace-nowrap"
           >
             <Sparkles className="w-3.5 h-3.5 text-[#C9A86A] animate-pulse" />
-            <span>{isAr ? 'استوديو الذكاء الاصطناعي (AI Studio) ✨' : 'AI Studio (Visual & Content) ✨'}</span>
+            <span>AI Studio</span>
           </Link>
 
           <Link

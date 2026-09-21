@@ -25,6 +25,11 @@ export async function GET() {
 
 export async function PUT(req: NextRequest) {
   try {
+    const session = await getRequestSession(req);
+    if (!session) {
+      return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
+    }
+
     const body = await req.json();
     if (!body || typeof body !== 'object') {
       return NextResponse.json({ success: false, error: 'Invalid content payload' }, { status: 400 });
@@ -35,18 +40,14 @@ export async function PUT(req: NextRequest) {
       return NextResponse.json({ success: false, error: 'Failed to update content in database' }, { status: 500 });
     }
 
-    // Record audit log if session exists
-    const session = await getRequestSession(req);
-    if (session) {
-      await recordAuditLog({
-        actorId: session.userId,
-        actorEmail: session.email,
-        action: 'UPDATE_CONTENT_LIVE_EDITOR',
-        resourceType: 'site_content',
-        resourceId: 'main',
-        details: { liveEditor: true, timestamp: new Date().toISOString() },
-      });
-    }
+    await recordAuditLog({
+      actorId: session.userId,
+      actorEmail: session.email,
+      action: 'UPDATE_CONTENT_LIVE_EDITOR',
+      resourceType: 'site_content',
+      resourceId: 'main',
+      details: { liveEditor: true, timestamp: new Date().toISOString() },
+    });
 
     return NextResponse.json({ success: true, message: 'Content updated successfully' });
   } catch (error: any) {
