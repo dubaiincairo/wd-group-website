@@ -10,6 +10,7 @@ import dynamic from 'next/dynamic';
 import MaintenanceGate from '@/components/layout/MaintenanceGate';
 import DynamicHeadSEO from '@/components/seo/DynamicHeadSEO';
 import WebsitePreloader from '@/components/layout/WebsitePreloader';
+import { getSiteContent } from '@/lib/admin/db';
 
 const LiveEditorDock = dynamic(
   () => import('@/components/live-editor/LiveEditorDock'),
@@ -75,11 +76,16 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const initialContent = await getSiteContent();
+
   return (
     <html lang="ar" dir="rtl" className={`${inter.variable} ${notoKufi.variable} ${playfair.variable} ${ibmMono.variable}`}>
       <head>
@@ -95,6 +101,10 @@ export default function RootLayout({
                   } else {
                     document.documentElement.lang = 'ar';
                     document.documentElement.dir = 'rtl';
+                  }
+                  var cached = localStorage.getItem('wd_content_cache');
+                  if (cached) {
+                    window.__WD_INITIAL_CONTENT__ = JSON.parse(cached);
                   }
                 } catch(e) {}
               })();
@@ -125,7 +135,7 @@ export default function RootLayout({
         />
       </head>
       <body className="bg-[#08090C] text-[#F8FAFC] min-h-screen flex flex-col font-sans selection:bg-blue-600 selection:text-white antialiased">
-        <LanguageProvider>
+        <LanguageProvider initialContent={initialContent}>
           <DynamicHeadSEO />
           <ToastProvider>
             <MaintenanceGate>

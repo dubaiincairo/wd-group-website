@@ -189,7 +189,7 @@ export default function LiveEditorDock() {
   const [hasMounted, setHasMounted] = useState<boolean>(false);
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [isMinimized, setIsMinimized] = useState<boolean>(false);
-  const [serverState, setServerState] = useState<any>(null);
+  const [serverState, setServerState] = useState<any>(() => dynamicContent || null);
   const [pendingChanges, setPendingChanges] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState<boolean>(false);
   const [saveSuccess, setSaveSuccess] = useState<boolean>(false);
@@ -251,6 +251,12 @@ export default function LiveEditorDock() {
       isCancelled = true;
     };
   }, []);
+
+  useEffect(() => {
+    if (dynamicContent && !serverState) {
+      setServerState(dynamicContent);
+    }
+  }, [dynamicContent, serverState]);
 
   // Build unified change payload for state and overrides
   const buildChangePayload = useCallback((targetPath: string, newText: string, originalText?: string) => {
@@ -650,6 +656,12 @@ export default function LiveEditorDock() {
 
       setServerState(merged);
       setDynamicContent(merged);
+      try {
+        localStorage.setItem('wd_content_cache', JSON.stringify(merged));
+        if (typeof window !== 'undefined') {
+          (window as any).__WD_INITIAL_CONTENT__ = merged;
+        }
+      } catch (e) {}
       setPendingChanges({});
       setSaveSuccess(true);
 

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getSiteContent, updateSiteContent } from '@/lib/admin/db';
 import { getRequestSession } from '@/lib/admin/auth';
 import { recordAuditLog } from '@/lib/admin/audit';
+import { revalidatePath } from 'next/cache';
 
 export const dynamic = 'force-dynamic';
 
@@ -41,6 +42,12 @@ export async function PUT(req: NextRequest) {
     const ok = await updateSiteContent(body);
     if (!ok) {
       return NextResponse.json({ success: false, error: 'Failed to update content in database' }, { status: 500 });
+    }
+
+    try {
+      revalidatePath('/', 'layout');
+    } catch (revalErr) {
+      console.warn('revalidatePath warning:', revalErr);
     }
 
     await recordAuditLog({

@@ -4,6 +4,7 @@ import { getSiteContent, updateSiteContent } from '@/lib/admin/db';
 import { recordAuditLog } from '@/lib/admin/audit';
 import { translations } from '@/lib/translations';
 import { DEFAULT_CHATBOT_CONFIG } from '@/lib/admin/chatbot';
+import { revalidatePath } from 'next/cache';
 
 export const dynamic = 'force-dynamic';
 
@@ -412,6 +413,12 @@ export async function PUT(req: NextRequest) {
 
     if (!success) {
       return NextResponse.json({ error: 'Failed to persist content update' }, { status: 500 });
+    }
+
+    try {
+      revalidatePath('/', 'layout');
+    } catch (revalErr) {
+      console.warn('revalidatePath warning:', revalErr);
     }
 
     await recordAuditLog({

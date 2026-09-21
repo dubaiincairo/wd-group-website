@@ -72,7 +72,13 @@ function hashText(str: string): string {
   return Math.abs(hash).toString(36);
 }
 
-export function LanguageProvider({ children }: { children: React.ReactNode }) {
+export function LanguageProvider({ 
+  children,
+  initialContent = null,
+}: { 
+  children: React.ReactNode;
+  initialContent?: any;
+}) {
   const [lang, setLang] = useState<Language>(() => {
     if (typeof window !== 'undefined') {
       try {
@@ -85,10 +91,44 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     }
     return 'ar';
   });
-  const [dynamicContent, setDynamicContent] = useState<any>(null);
+
+  const [dynamicContent, setDynamicContentState] = useState<any>(() => {
+    if (initialContent) return initialContent;
+    if (typeof window !== 'undefined') {
+      if ((window as any).__WD_INITIAL_CONTENT__) {
+        return (window as any).__WD_INITIAL_CONTENT__;
+      }
+      try {
+        const cached = localStorage.getItem('wd_content_cache');
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          if (parsed && typeof parsed === 'object') return parsed;
+        }
+      } catch (e) {}
+    }
+    return null;
+  });
+
+  const setDynamicContent = (data: any) => {
+    setDynamicContentState(data);
+    if (typeof window !== 'undefined' && data) {
+      try {
+        localStorage.setItem('wd_content_cache', JSON.stringify(data));
+        (window as any).__WD_INITIAL_CONTENT__ = data;
+      } catch (e) {}
+    }
+  };
 
   useEffect(() => {
-    // Fetch dynamic published CMS content
+    // Save SSR initialContent to localStorage immediately on client mount
+    if (initialContent && typeof window !== 'undefined') {
+      try {
+        localStorage.setItem('wd_content_cache', JSON.stringify(initialContent));
+        (window as any).__WD_INITIAL_CONTENT__ = initialContent;
+      } catch (e) {}
+    }
+
+    // Fetch dynamic published CMS content in background for silent revalidation
     async function loadDynamicContent() {
       try {
         const res = await fetch(`/api/content?t=${Date.now()}`, { 
@@ -101,7 +141,16 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
         if (res.ok) {
           const d = await res.json();
           if (d.data) {
-            setDynamicContent(d.data);
+            setDynamicContentState((prev: any) => {
+              if (JSON.stringify(prev) === JSON.stringify(d.data)) {
+                return prev;
+              }
+              try {
+                localStorage.setItem('wd_content_cache', JSON.stringify(d.data));
+                (window as any).__WD_INITIAL_CONTENT__ = d.data;
+              } catch (e) {}
+              return d.data;
+            });
           }
         }
       } catch (err) {
@@ -109,7 +158,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
       }
     }
     loadDynamicContent();
-  }, []);
+  }, [initialContent]);
 
   const dir: 'ltr' | 'rtl' = lang === 'ar' ? 'rtl' : 'ltr';
 
@@ -549,8 +598,8 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     }
 
     applyDomReplacements();
-    const t1 = setTimeout(applyDomReplacements, 150);
-    const t2 = setTimeout(applyDomReplacements, 600);
+    const t1 = setTimeout(applyDomReplacements, 100);
+    const t2 = setTimeout(applyDomReplacements, 300);
     return () => {
       clearTimeout(t1);
       clearTimeout(t2);
