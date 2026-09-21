@@ -34,12 +34,12 @@ export default function Footer() {
           {/* Col 1: Brand & Statement */}
           <div className="space-y-3">
             <Link href="/" className="inline-block group">
-              <div className={`relative h-10 ${lang === 'ar' ? 'w-44' : 'w-36'} transition-transform group-hover:scale-105`}>
+              <div className={`relative h-10 ${lang === 'ar' ? 'w-[93px] aspect-[1024/439]' : 'w-[98px] aspect-[1024/417]'} transition-transform group-hover:scale-105 shrink-0`}>
                 <Image 
                   src={logoSrc} 
                   alt={lang === 'ar' ? 'مجموعة دبليو دي للأعمال' : 'WD Group'} 
                   fill
-                  sizes="176px"
+                  sizes="120px"
                   className="object-contain"
                 />
               </div>

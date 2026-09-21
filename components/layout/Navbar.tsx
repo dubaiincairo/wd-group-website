@@ -76,13 +76,13 @@ export default function Navbar() {
         <div className="flex items-center justify-between gap-2 xl:gap-4">
           
           {/* Dynamic Language-Aware Brand Logo */}
-          <Link href="/" className="flex items-center gap-2.5 xl:gap-3.5 group shrink-0">
-            <div className={`relative h-10 sm:h-12 ${lang === 'ar' ? 'w-36 sm:w-44' : 'w-32 sm:w-38'} transition-all duration-300 group-hover:scale-105`}>
+          <Link href="/" className="flex items-center gap-2.5 xl:gap-3 group shrink-0">
+            <div className={`relative h-10 sm:h-12 ${lang === 'ar' ? 'w-[93px] sm:w-[112px] aspect-[1024/439]' : 'w-[98px] sm:w-[118px] aspect-[1024/417]'} transition-all duration-300 group-hover:scale-105 shrink-0`}>
               <Image 
                 src={logoSrc} 
                 alt={lang === 'ar' ? 'مجموعة دبليو دي للأعمال' : 'WD Group'} 
                 fill
-                sizes="(max-width: 640px) 176px, 176px"
+                sizes="(max-width: 640px) 112px, 118px"
                 className="object-contain drop-shadow-[0_0_16px_rgba(201,168,106,0.25)]"
                 priority
               />

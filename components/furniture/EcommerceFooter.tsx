@@ -57,13 +57,13 @@ export default function EcommerceFooter() {
           
           {/* Brand Col (Takes 2 cols on desktop) */}
           <div className="lg:col-span-2 space-y-4">
-            <Link href="/furniture" className="inline-flex items-center gap-3.5 group">
-              <div className={`relative h-10 sm:h-12 ${isAr ? 'w-36 sm:w-44' : 'w-32 sm:w-38'} transition-all duration-300 group-hover:scale-105`}>
+            <Link href="/furniture" className="inline-flex items-center gap-3 group">
+              <div className={`relative h-10 sm:h-12 ${isAr ? 'w-[93px] sm:w-[112px] aspect-[1024/439]' : 'w-[98px] sm:w-[118px] aspect-[1024/417]'} transition-all duration-300 group-hover:scale-105 shrink-0`}>
                 <Image
                   src={logoSrc}
                   alt={isAr ? 'مجموعة دبليو دي للأعمال' : 'WD Group'}
                   fill
-                  sizes="(max-width: 640px) 176px, 176px"
+                  sizes="(max-width: 640px) 112px, 118px"
                   className="object-contain drop-shadow-[0_0_16px_rgba(201,168,106,0.25)]"
                 />
               </div>

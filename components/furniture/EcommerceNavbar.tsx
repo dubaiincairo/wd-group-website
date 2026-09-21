@@ -412,13 +412,13 @@ export default function EcommerceNavbar({
           <div className="flex items-center justify-between gap-4">
             
             {/* Store Brand Identity: Official WD Group Brand Logo */}
-            <Link href="/furniture" className="flex items-center gap-3.5 group shrink-0">
-              <div className={`relative h-9 sm:h-11 ${isAr ? 'w-36 sm:w-44' : 'w-32 sm:w-40'} transition-all duration-300 group-hover:scale-105`}>
+            <Link href="/furniture" className="flex items-center gap-3 group shrink-0">
+              <div className={`relative h-9 sm:h-11 ${isAr ? 'w-[84px] sm:w-[103px] aspect-[1024/439]' : 'w-[88px] sm:w-[108px] aspect-[1024/417]'} transition-all duration-300 group-hover:scale-105 shrink-0`}>
                 <Image
                   src={logoSrc}
                   alt={isAr ? 'مجموعة دبليو دي - الأثاث الفاخر والتجهيزات' : 'WD Group Living & FF&E'}
                   fill
-                  sizes="(max-width: 640px) 176px, 176px"
+                  sizes="(max-width: 640px) 103px, 108px"
                   className="object-contain drop-shadow-[0_0_16px_rgba(201,168,106,0.25)]"
                   priority
                 />
