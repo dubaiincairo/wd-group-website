@@ -74,3 +74,14 @@ body.live-editor-active button .live-editor-target {
 body.live-editor-active .live-editor-target[data-live-dirty="true"] {
   animation: dirtyPulse 2.5s infinite ease-in-out;
 }
+
+/* Ensure navbar items and editable text in header never wrap onto multiple lines */
+header nav,
+header nav a,
+header nav button,
+header nav span,
+header nav .live-editor-target {
+  white-space: nowrap !important;
+  word-break: keep-all !important;
+}
+
