@@ -9,27 +9,30 @@ body.live-editor-active .live-editor-target {
 }
 
 body.live-editor-active .live-editor-target:hover {
-  outline: 1.5px dashed rgba(201, 168, 106, 0.7) !important;
+  outline: 1.5px dashed rgba(201, 168, 106, 0.75) !important;
   outline-offset: 3px !important;
   cursor: text !important;
+  background-color: rgba(201, 168, 106, 0.08) !important;
 }
 
 body.live-editor-active .live-editor-target:focus {
   outline: 2px solid #C9A86A !important;
   outline-offset: 3px !important;
-  box-shadow: 0 0 20px rgba(201, 168, 106, 0.35) !important;
-  background-color: rgba(201, 168, 106, 0.05) !important;
+  box-shadow: 0 0 24px rgba(201, 168, 106, 0.45) !important;
+  background-color: rgba(201, 168, 106, 0.12) !important;
   caret-color: #E3C58A !important;
 }
 
 body.live-editor-active .live-editor-target[data-live-dirty="true"] {
-  outline: 1.5px solid rgba(245, 158, 11, 0.8) !important;
+  outline: 2px solid rgba(245, 158, 11, 0.9) !important;
   outline-offset: 3px !important;
+  box-shadow: 0 0 16px rgba(245, 158, 11, 0.3) !important;
 }
 
 /* Prevent unwanted browser outlines or drag behavior */
 body.live-editor-active [contenteditable="true"] {
   -webkit-user-modify: read-write-plaintext-only;
+  user-select: text;
 }
 
 /* Make links and buttons text-editable without navigating */
@@ -38,4 +41,15 @@ body.live-editor-active button.live-editor-target,
 body.live-editor-active a .live-editor-target,
 body.live-editor-active button .live-editor-target {
   cursor: text !important;
+  pointer-events: auto !important;
+}
+
+/* Dirty element pulse animation */
+@keyframes dirtyPulse {
+  0%, 100% { outline-color: rgba(245, 158, 11, 0.9); }
+  50% { outline-color: rgba(251, 191, 36, 0.4); }
+}
+
+body.live-editor-active .live-editor-target[data-live-dirty="true"] {
+  animation: dirtyPulse 2.5s infinite ease-in-out;
 }

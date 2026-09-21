@@ -27,7 +27,10 @@ export async function PUT(req: NextRequest) {
   try {
     const session = await getRequestSession(req);
     if (!session) {
-      return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(
+        { success: false, error: 'Admin session required to publish content', requireAuth: true },
+        { status: 401 }
+      );
     }
 
     const body = await req.json();

@@ -85,12 +85,31 @@ export async function getSiteContent(): Promise<SiteContentPayload | null> {
   }
 }
 
+function deepMergeContent(target: any, source: any): any {
+  if (!source || typeof source !== 'object' || Array.isArray(source)) {
+    return source !== undefined ? source : target;
+  }
+  const output = { ...(target || {}) };
+  for (const key of Object.keys(source)) {
+    const val = source[key];
+    if (val && typeof val === 'object' && !Array.isArray(val)) {
+      output[key] = deepMergeContent(target?.[key], val);
+    } else if (val !== undefined) {
+      output[key] = val;
+    }
+  }
+  return output;
+}
+
 /**
  * Update centralized site content in Supabase
  */
 export async function updateSiteContent(data: Partial<SiteContentPayload>): Promise<boolean> {
   const current: Partial<SiteContentPayload> = (await getSiteContent()) || {};
-  const merged = { ...current, ...data, version: (current.version || 1) + 1 };
+  const merged = deepMergeContent(current, {
+    ...data,
+    version: (current.version || 1) + 1,
+  });
 
   const res = await fetch(`${supabaseUrl}/rest/v1/wdgroup_content?on_conflict=id`, {
     method: 'POST',

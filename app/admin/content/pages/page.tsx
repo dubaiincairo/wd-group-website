@@ -25,7 +25,9 @@ import {
   Users,
   Quote,
   Handshake,
-  FileText
+  FileText,
+  Trash2,
+  Plus
 } from 'lucide-react';
 import BilingualInput from '@/components/admin/BilingualInput';
 import MediaFieldUploader from '@/components/admin/MediaFieldUploader';
@@ -287,6 +289,7 @@ function createDefaultContent(): SiteContentPayload {
       schema_phone: '+966 50 572 5070',
       schema_email: 'ceo@wdgroup.online',
     },
+    translations_override: { en: {}, ar: {} },
     version: 1,
   };
 }
@@ -296,7 +299,7 @@ export default function PagesContentEditor() {
   const { lang } = useLanguage();
   const isAr = lang === 'ar';
 
-  const [activeTab, setActiveTab] = useState<'home' | 'about' | 'hospitality' | 'manufacturing' | 'contracting'>('home');
+  const [activeTab, setActiveTab] = useState<'home' | 'about' | 'hospitality' | 'manufacturing' | 'contracting' | 'overrides'>('home');
   const [content, setContent] = useState<SiteContentPayload>(createDefaultContent());
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -306,7 +309,7 @@ export default function PagesContentEditor() {
   // Sync tab from URL query params when clicked from sidebar
   useEffect(() => {
     const tab = searchParams?.get('tab');
-    if (tab && ['home', 'about', 'hospitality', 'manufacturing', 'contracting'].includes(tab)) {
+    if (tab && ['home', 'about', 'hospitality', 'manufacturing', 'contracting', 'overrides'].includes(tab)) {
       setActiveTab(tab as any);
     }
   }, [searchParams]);
@@ -399,6 +402,7 @@ export default function PagesContentEditor() {
             },
             settings: { ...defaults.settings, ...(d.data.settings || {}) },
             seo: { ...defaults.seo, ...(d.data.seo || {}) },
+            translations_override: d.data.translations_override || { en: {}, ar: {} },
           });
         }
       }
@@ -480,6 +484,12 @@ export default function PagesContentEditor() {
           { id: 'hospitality', label: isAr ? 'الضيافة' : 'SwissBlue Hospitality', icon: Building2 },
           { id: 'manufacturing', label: isAr ? 'التصنيع' : 'GreenWood Manufacturing', icon: Factory },
           { id: 'contracting', label: isAr ? 'المقاولات' : 'Contracting & Fit-Out', icon: HardHat },
+          { 
+            id: 'overrides', 
+            label: isAr ? 'تعديلات المحرر المباشر' : 'Live Editor Overrides', 
+            icon: Sparkles,
+            badge: (Object.keys(content.translations_override?.en || {}).length + Object.keys(content.translations_override?.ar || {}).length)
+          },
         ].map((tab) => {
           const Icon = tab.icon;
           return (
@@ -495,6 +505,11 @@ export default function PagesContentEditor() {
             >
               <Icon className="w-3.5 h-3.5" />
               <span>{tab.label}</span>
+              {Boolean(tab.badge && tab.badge > 0) && (
+                <span className="px-1.5 py-0.5 text-[10px] rounded-full bg-amber-500 text-black font-bold font-mono">
+                  {tab.badge}
+                </span>
+              )}
             </button>
           );
         })}
@@ -1496,6 +1511,157 @@ export default function PagesContentEditor() {
                 </div>
               ))}
             </div>
+          </div>
+
+        </div>
+      )}
+
+      {/* ─── TAB 6: LIVE EDITOR OVERRIDES (EVERY BUTTON, LABEL & MICRO-COPY) ─── */}
+      {activeTab === 'overrides' && (
+        <div className="space-y-6 animate-in fade-in duration-200">
+          
+          <div className="bg-[#0F1117]/90 border border-white/10 rounded-3xl p-6">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-white/10 pb-4 mb-6">
+              <div>
+                <span className="text-xs font-mono font-bold text-amber-400 uppercase tracking-wider block">
+                  {isAr ? 'النصوص وتعديلات الأزرار المحفوظة مباشرة' : 'LIVE EDITOR TEXT & BUTTON OVERRIDES'}
+                </span>
+                <p className="text-xs text-zinc-400 mt-1">
+                  {isAr 
+                    ? 'جميع النصوص وعناوين الأزرار والشارات التي تم تعديلها عبر وضع التحرير المباشر في الموقع تظهر هنا ويتم مزامنتها دائماً مع قاعدة البيانات.' 
+                    : 'All button labels, badges, micro-copy, and text overrides saved directly via the on-page Live Editor are synchronized here.'}
+                </p>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    const key = window.prompt(isAr ? 'أدخل مسار المفتاح (مثال: common.learnMore):' : 'Enter translation key path (e.g. common.learnMore):');
+                    if (key) {
+                      setContent({
+                        ...content,
+                        translations_override: {
+                          en: { ...(content.translations_override?.en || {}), [key]: '' },
+                          ar: { ...(content.translations_override?.ar || {}), [key]: '' },
+                        }
+                      });
+                    }
+                  }}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-bold hover:bg-amber-500/20 transition-all cursor-pointer"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                  <span>{isAr ? 'إضافة تعديل يدوي' : 'Add Custom Override'}</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Overrides Table / Cards */}
+            {(() => {
+              const allKeys = Array.from(new Set([
+                ...Object.keys(content.translations_override?.en || {}),
+                ...Object.keys(content.translations_override?.ar || {}),
+              ]));
+
+              if (allKeys.length === 0) {
+                return (
+                  <div className="p-8 text-center rounded-2xl bg-black/30 border border-white/5 space-y-2">
+                    <Sparkles className="w-8 h-8 text-zinc-500 mx-auto" />
+                    <p className="text-sm font-bold text-zinc-300">
+                      {isAr ? 'لا توجد تعديلات نصوص مخصصة حالياً' : 'No Custom Micro-Copy Overrides Yet'}
+                    </p>
+                    <p className="text-xs text-zinc-500 max-w-md mx-auto">
+                      {isAr 
+                        ? 'عند تشغيل وضع التحرير المباشر في الموقع وتعديل أي زر أو نص، سيتم حفظه ومزامنته هنا تلقائياً وبشكل دائم.' 
+                        : 'When you use the Live Editor on the website to modify any button or text, it will automatically appear and synchronize here permanently.'}
+                    </p>
+                  </div>
+                );
+              }
+
+              return (
+                <div className="space-y-4">
+                  {allKeys.map((keyPath) => (
+                    <div key={keyPath} className="p-4 rounded-2xl bg-black/40 border border-white/10 space-y-3">
+                      <div className="flex items-center justify-between gap-3">
+                        <span className="text-xs font-mono font-bold text-[#C9A86A] bg-[#C9A86A]/10 px-2.5 py-1 rounded-md border border-[#C9A86A]/20">
+                          {keyPath}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const newEn = { ...(content.translations_override?.en || {}) };
+                            const newAr = { ...(content.translations_override?.ar || {}) };
+                            delete newEn[keyPath];
+                            delete newAr[keyPath];
+                            setContent({
+                              ...content,
+                              translations_override: { en: newEn, ar: newAr }
+                            });
+                          }}
+                          className="p-1.5 rounded-lg text-zinc-500 hover:text-red-400 hover:bg-red-500/10 transition-colors"
+                          title={isAr ? 'حذف التعديل والعودة للأصل' : 'Delete override and revert to default'}
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                          <label className="block text-[11px] font-mono text-zinc-400 mb-1">
+                            English Override
+                          </label>
+                          <input
+                            type="text"
+                            value={content.translations_override?.en?.[keyPath] || ''}
+                            onChange={(e) => {
+                              setContent({
+                                ...content,
+                                translations_override: {
+                                  ...(content.translations_override || {}),
+                                  en: {
+                                    ...(content.translations_override?.en || {}),
+                                    [keyPath]: e.target.value,
+                                  }
+                                }
+                              });
+                            }}
+                            className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:border-blue-500 focus:outline-none"
+                            placeholder="Enter English override..."
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-[11px] font-mono text-zinc-400 mb-1">
+                            Arabic Override (عربي)
+                          </label>
+                          <input
+                            type="text"
+                            dir="rtl"
+                            value={content.translations_override?.ar?.[keyPath] || ''}
+                            onChange={(e) => {
+                              setContent({
+                                ...content,
+                                translations_override: {
+                                  ...(content.translations_override || {}),
+                                  ar: {
+                                    ...(content.translations_override?.ar || {}),
+                                    [keyPath]: e.target.value,
+                                  }
+                                }
+                              });
+                            }}
+                            className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:border-blue-500 focus:outline-none text-right font-sans"
+                            placeholder="أدخل النص العربي البديل..."
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              );
+            })()}
+
           </div>
 
         </div>

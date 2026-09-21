@@ -414,10 +414,33 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
         },
       },
     };
+
+    // Deep merge granular live editor translation overrides
+    const overrides = c.translations_override?.[lang];
+    if (overrides && typeof overrides === 'object') {
+      for (const [path, val] of Object.entries(overrides)) {
+        if (typeof val === 'string' && val.trim().length > 0) {
+          const parts = path.split('.');
+          let curr: any = dict;
+          for (let i = 0; i < parts.length - 1; i++) {
+            const p = parts[i];
+            if (!curr[p] || typeof curr[p] !== 'object') {
+              curr[p] = {};
+            }
+            curr = curr[p];
+          }
+          curr[parts[parts.length - 1]] = val;
+        }
+      }
+    }
   }
 
   // Helper to access nested translation keys like 'nav.about'
   const t = (path: string) => {
+    const overrides = dynamicContent?.translations_override?.[lang];
+    if (overrides && overrides[path]) {
+      return overrides[path];
+    }
     const keys = path.split('.');
     let current: any = dict;
     for (const key of keys) {

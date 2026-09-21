@@ -374,6 +374,7 @@ export async function GET(req: NextRequest) {
         },
       },
       seo: { ...defaultContent.seo, ...(dbContent?.seo || {}) },
+      translations_override: dbContent?.translations_override || { en: {}, ar: {} },
     };
 
     return NextResponse.json(

@@ -482,6 +482,11 @@ export interface SiteContentPayload {
     schema_phone?: string;
     schema_email?: string;
   };
+  translations_override?: {
+    en?: Record<string, string>;
+    ar?: Record<string, string>;
+  };
+  custom_blocks?: Record<string, any>;
   version: number;
 }
 
