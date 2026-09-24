@@ -137,7 +137,7 @@ export default function WhatsAppServiceAdminPage() {
               whatsapp_dispatch_phone: integ.whatsapp_dispatch_phone || '+966505725070',
               whatsapp_api_key: integ.whatsapp_api_key || '',
               whatsapp_phone_number_id: integ.whatsapp_phone_number_id || '',
-              whatsapp_business_account_id: integ.whatsapp_business_account_id || '',
+              whatsapp_business_account_id: integ.whatsapp_business_account_id || '2735873883423694',
             });
           }
         }
@@ -1170,6 +1170,38 @@ export default function WhatsAppServiceAdminPage() {
           </div>
 
           <div className="space-y-4">
+            {/* Meta App Connected Info Box */}
+            <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-500/10 to-blue-500/10 border border-amber-500/20 text-xs text-zinc-300 space-y-2">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <div className="flex items-center gap-2 text-amber-400 font-bold">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <span>{isAr ? 'تطبيق ميتا المعتمد: Odoo Integration' : 'Linked Meta App: Odoo Integration'}</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <a
+                    href="https://developers.facebook.com/apps/2707406719606944/whatsapp-business/wa-dev-console/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-[11px] text-amber-400 hover:text-amber-300 font-mono underline cursor-pointer"
+                  >
+                    <span>{isAr ? 'لوحة API Setup (نسخ التوكن والرقم) ↗' : 'WhatsApp API Setup (Copy Token & IDs) ↗'}</span>
+                  </a>
+                  <a
+                    href="https://business.facebook.com/settings/system-users?business_id=2735873883423694"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-[11px] text-blue-400 hover:text-blue-300 font-mono underline cursor-pointer"
+                  >
+                    <span>{isAr ? 'توكن دائم (System User) ↗' : 'Permanent Token ↗'}</span>
+                  </a>
+                </div>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] font-mono text-zinc-400 pt-1 border-t border-white/5">
+                <div>App ID: <span className="text-white font-bold select-all">2707406719606944</span></div>
+                <div>Business ID: <span className="text-white font-bold select-all">2735873883423694</span></div>
+              </div>
+            </div>
+
             {/* Dispatch Phone Number */}
             <div>
               <label className="text-xs font-mono text-zinc-300 block mb-1.5 font-bold">

@@ -184,6 +184,8 @@ export interface IntegrationsConfig {
   resend_api_key?: string;
   resend_sender_email?: string;
   whatsapp_provider?: 'cloud_api' | 'brevo' | 'twilio' | 'ultramsg' | 'wasapi' | 'custom' | 'deep_link';
+  whatsapp_app_id?: string;
+  whatsapp_app_secret?: string;
   whatsapp_api_key?: string;
   whatsapp_phone_number_id?: string;
   whatsapp_business_account_id?: string;
