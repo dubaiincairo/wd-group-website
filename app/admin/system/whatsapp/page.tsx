@@ -134,10 +134,10 @@ export default function WhatsAppServiceAdminPage() {
           if (integ) {
             setIntegrationsConfig({
               whatsapp_provider: integ.whatsapp_provider || 'cloud_api',
-              whatsapp_dispatch_phone: integ.whatsapp_dispatch_phone || '+966505725070',
-              whatsapp_api_key: integ.whatsapp_api_key || 'EAAmeXzZCI4KABSrAf5lEzjnuV83qjIgWBPyp1cxnZC1f0R8D10A8zZAsLMh950JESsg0ZAKFjBoHl9B6EZAI6tjS9dfU673VhFgA3ooGpz1YplGIJ3LAlToBccnzwXuaOxblsY7WMYRlnOP1ZBBGu2B8j777ZAtVJCKZBpZB3GAyC3cN6U2mfEJRwEKCIsnYw8Q11HAZDZD',
-              whatsapp_phone_number_id: integ.whatsapp_phone_number_id || '1147702245092804',
-              whatsapp_business_account_id: integ.whatsapp_business_account_id || '2072896399925199',
+              whatsapp_dispatch_phone: integ.whatsapp_dispatch_phone || '+966 50 707 4949',
+              whatsapp_api_key: integ.whatsapp_api_key || 'EAFZCkloPu7OoBSvgNVgXsWjcfkMOxrh49vKjq8RbAZA8eUUexJrsx9jZC2CflII5B9L725fNoiyokZCLb0BjzXZBk4dD6ixEJz9nsFPkc9SMKav7KVLOQ66DKjm34aZBG6pKvW7Kpq742KeTYUCPtiOcXbohgJCWyX3ZAltT6UZAox0I9VJSXBBRprOvy6ZCp0ZCynfQZDZD',
+              whatsapp_phone_number_id: integ.whatsapp_phone_number_id || '978544632005886',
+              whatsapp_business_account_id: integ.whatsapp_business_account_id || '881895264727770',
             });
           }
         }
@@ -1201,20 +1201,32 @@ export default function WhatsAppServiceAdminPage() {
                 <div>Business ID: <span className="text-white font-bold select-all">2735873883423694</span></div>
               </div>
               <div className="flex flex-wrap items-center gap-2 pt-2 text-[11px] font-mono">
-                <span className="text-zinc-400">{isAr ? 'حسابات واتساب المكتشفة:' : 'Connected WhatsApp Accounts:'}</span>
+                <span className="text-zinc-400">{isAr ? 'حسابات واتساب المعتمدة:' : 'Connected WhatsApp Accounts:'}</span>
                 <button
                   type="button"
-                  onClick={() => setIntegrationsConfig({ ...integrationsConfig, whatsapp_business_account_id: '2072896399925199', whatsapp_phone_number_id: '1147702245092804' })}
-                  className="px-2.5 py-1 rounded-lg bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 hover:bg-emerald-500/25 transition-colors cursor-pointer"
+                  onClick={() => setIntegrationsConfig({
+                    ...integrationsConfig,
+                    whatsapp_business_account_id: '881895264727770',
+                    whatsapp_phone_number_id: '978544632005886',
+                    whatsapp_dispatch_phone: '+966 50 707 4949',
+                    whatsapp_api_key: 'EAFZCkloPu7OoBSvgNVgXsWjcfkMOxrh49vKjq8RbAZA8eUUexJrsx9jZC2CflII5B9L725fNoiyokZCLb0BjzXZBk4dD6ixEJz9nsFPkc9SMKav7KVLOQ66DKjm34aZBG6pKvW7Kpq742KeTYUCPtiOcXbohgJCWyX3ZAltT6UZAox0I9VJSXBBRprOvy6ZCp0ZCynfQZDZD',
+                  })}
+                  className="px-2.5 py-1 rounded-lg bg-sky-500/15 text-sky-300 border border-sky-500/30 hover:bg-sky-500/25 transition-colors cursor-pointer font-bold"
                 >
-                  GreenWood (WABA: 2072896399925199 · Phone: 1147702245092804)
+                  ★ SwissBlue Group (+966 50 707 4949 · Live Cloud API)
                 </button>
                 <button
                   type="button"
-                  onClick={() => setIntegrationsConfig({ ...integrationsConfig, whatsapp_business_account_id: '881895264727770' })}
-                  className="px-2.5 py-1 rounded-lg bg-sky-500/15 text-sky-300 border border-sky-500/30 hover:bg-sky-500/25 transition-colors cursor-pointer"
+                  onClick={() => setIntegrationsConfig({
+                    ...integrationsConfig,
+                    whatsapp_business_account_id: '2072896399925199',
+                    whatsapp_phone_number_id: '1147702245092804',
+                    whatsapp_dispatch_phone: '+966505725070',
+                    whatsapp_api_key: 'EAAmeXzZCI4KABSrAf5lEzjnuV83qjIgWBPyp1cxnZC1f0R8D10A8zZAsLMh950JESsg0ZAKFjBoHl9B6EZAI6tjS9dfU673VhFgA3ooGpz1YplGIJ3LAlToBccnzwXuaOxblsY7WMYRlnOP1ZBBGu2B8j777ZAtVJCKZBpZB3GAyC3cN6U2mfEJRwEKCIsnYw8Q11HAZDZD',
+                  })}
+                  className="px-2.5 py-1 rounded-lg bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 hover:bg-emerald-500/25 transition-colors cursor-pointer"
                 >
-                  SwissBlue LLC (WABA: 881895264727770)
+                  GreenWood / WatanDesigns (Quotation & Sales WABA)
                 </button>
               </div>
             </div>
