@@ -1198,11 +1198,12 @@ export default function WhatsAppServiceAdminPage() {
                 onChange={(e) => setIntegrationsConfig({ ...integrationsConfig, whatsapp_provider: e.target.value })}
                 className="w-full px-4 py-2.5 rounded-xl bg-[#141724] border border-white/10 focus:border-amber-400 focus:outline-none text-xs text-white"
               >
-                <option value="cloud_api">Meta WhatsApp Cloud API (Official Graph API v19.0)</option>
-                <option value="ultramsg">UltraMsg Gateway (Webhook & QR)</option>
-                <option value="wasapi">Wasapi Engine</option>
-                <option value="twilio">Twilio Programmable WhatsApp</option>
-                <option value="deep_link">Click-to-Chat Only (wa.me direct links without API keys)</option>
+                <option value="cloud_api">Meta WhatsApp Cloud API (Official Free Tier Direct)</option>
+                <option value="brevo">Brevo WhatsApp Business API (Shared Account & Billing)</option>
+                <option value="deep_link">Click-to-Chat Direct Links (wa.me - 100% Free, No API Keys)</option>
+                <option value="twilio">Twilio Programmable WhatsApp (Legacy)</option>
+                <option value="ultramsg">UltraMsg Gateway (QR-based Web Session)</option>
+                <option value="wasapi">Wasapi Engine (CRM Bridge)</option>
               </select>
             </div>
 

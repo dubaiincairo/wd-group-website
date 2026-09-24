@@ -183,7 +183,7 @@ export interface IntegrationsConfig {
   admin_notification_email?: string;
   resend_api_key?: string;
   resend_sender_email?: string;
-  whatsapp_provider?: 'cloud_api' | 'twilio' | 'ultramsg' | 'wasapi' | 'custom';
+  whatsapp_provider?: 'cloud_api' | 'brevo' | 'twilio' | 'ultramsg' | 'wasapi' | 'custom' | 'deep_link';
   whatsapp_api_key?: string;
   whatsapp_phone_number_id?: string;
   whatsapp_business_account_id?: string;

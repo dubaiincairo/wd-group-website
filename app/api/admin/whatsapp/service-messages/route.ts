@@ -86,13 +86,41 @@ export async function POST(req: NextRequest) {
     const waMeUrl = generateWhatsAppChatUrl(cleanPhone, messageText);
     const integrations = await getIntegrationsConfig();
 
-    let apiDispatchResult: { sent: boolean; response?: any; mode: 'cloud_api' | 'deep_link' | 'simulation' } = {
+    const provider = integrations.whatsapp_provider || 'cloud_api';
+    let apiDispatchResult: { sent: boolean; response?: any; mode: 'cloud_api' | 'brevo' | 'deep_link' | 'simulation' } = {
       sent: false,
       mode: 'deep_link',
     };
 
-    // If API dispatch is explicitly requested and Cloud API credentials exist
-    if (sendViaApi && integrations.whatsapp_api_key && integrations.whatsapp_phone_number_id) {
+    // If API dispatch is explicitly requested
+    if (sendViaApi && provider === 'brevo' && (integrations.brevo_api_key || integrations.whatsapp_api_key)) {
+      const brevoKey = (integrations.brevo_api_key || integrations.whatsapp_api_key)!;
+      const senderPhone = (integrations.whatsapp_dispatch_phone || '+966505725070').replace(/^\+/, '');
+      try {
+        const brevoRes = await fetch('https://api.brevo.com/v3/whatsapp/sendMessage', {
+          method: 'POST',
+          headers: {
+            'api-key': brevoKey,
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+          body: JSON.stringify({
+            senderNumber: senderPhone,
+            contactNumbers: [cleanPhone],
+            text: messageText,
+          }),
+        });
+
+        const brevoData = await brevoRes.json().catch(() => ({}));
+        if (brevoRes.ok) {
+          apiDispatchResult = { sent: true, response: brevoData, mode: 'brevo' };
+        } else {
+          apiDispatchResult = { sent: false, response: brevoData, mode: 'brevo' };
+        }
+      } catch (brevoErr: any) {
+        apiDispatchResult = { sent: false, response: { error: brevoErr.message }, mode: 'brevo' };
+      }
+    } else if (sendViaApi && (provider === 'cloud_api' || !provider) && integrations.whatsapp_api_key && integrations.whatsapp_phone_number_id) {
       try {
         const metaRes = await fetch(
           `https://graph.facebook.com/v19.0/${integrations.whatsapp_phone_number_id}/messages`,
@@ -127,7 +155,7 @@ export async function POST(req: NextRequest) {
         sent: true,
         mode: 'simulation',
         response: {
-          note: 'Simulation mode: Message prepared and validated for WhatsApp dispatch.',
+          note: `Simulation mode (${provider}): Message prepared and validated for WhatsApp dispatch.`,
         },
       };
     }
