@@ -47,7 +47,7 @@ export default function CartQuoteDrawer({
   onRemoveItem,
   onClearCart,
 }: CartQuoteDrawerProps) {
-  const { lang, dict } = useLanguage();
+  const { lang, dict, getLocalizedPath } = useLanguage();
   const isAr = lang === 'ar';
 
   const [checkoutModalOpen, setCheckoutModalOpen] = useState(false);
@@ -364,7 +364,7 @@ ${formData.notes || 'None'}
                     {/* Action Buttons */}
                     <div className="space-y-2.5 pt-1">
                       <Link
-                        href="/furniture/checkout"
+                        href={getLocalizedPath('/furniture/checkout')}
                         onClick={() => {
                           try {
                             localStorage.setItem('wd_furniture_cart', JSON.stringify(items));

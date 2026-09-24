@@ -21,7 +21,7 @@ import {
 } from 'lucide-react';
 
 export default function EcommerceFooter() {
-  const { lang, dict } = useLanguage();
+  const { lang, dict, getLocalizedPath } = useLanguage();
   const isAr = lang === 'ar';
   const logoSrc = isAr ? '/brand/wd-group-logo-ar-white.png' : '/brand/wd-group-logo-white.png';
   const currentYear = new Date().getFullYear();
@@ -57,7 +57,7 @@ export default function EcommerceFooter() {
           
           {/* Brand Col (Takes 2 cols on desktop) */}
           <div className="lg:col-span-2 space-y-4">
-            <Link href="/furniture" className="inline-flex items-center gap-3 group">
+            <Link href={getLocalizedPath('/furniture')} className="inline-flex items-center gap-3 group">
               <div className={`relative h-10 sm:h-12 ${isAr ? 'w-[93px] sm:w-[112px] aspect-[1024/439]' : 'w-[98px] sm:w-[118px] aspect-[1024/417]'} transition-all duration-300 group-hover:scale-105 shrink-0`}>
                 <Image
                   src={logoSrc}
@@ -135,7 +135,7 @@ export default function EcommerceFooter() {
             </h4>
             <ul className="space-y-2 text-xs text-zinc-400">
               <li>
-                <Link href="/furniture/track" className="hover:text-emerald-400 text-emerald-300 font-medium transition-colors inline-flex items-center gap-1.5">
+                <Link href={getLocalizedPath('/furniture/track')} className="hover:text-emerald-400 text-emerald-300 font-medium transition-colors inline-flex items-center gap-1.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                   <span>{footerDict.track_order}</span>
                 </Link>
@@ -156,7 +156,7 @@ export default function EcommerceFooter() {
                 </a>
               </li>
               <li>
-                <Link href="/furniture/checkout" className="hover:text-white transition-colors">
+                <Link href={getLocalizedPath('/furniture/checkout')} className="hover:text-white transition-colors">
                   {isAr ? 'إتمام الطلب والدفع المباشر' : 'Direct Checkout'}
                 </Link>
               </li>
@@ -175,17 +175,17 @@ export default function EcommerceFooter() {
                 </a>
               </li>
               <li>
-                <Link href="/contact" className="hover:text-white transition-colors">
+                <Link href={getLocalizedPath('/contact')} className="hover:text-white transition-colors">
                   {isAr ? 'تقديم كراسة الشروط والمواصفات (BOQ)' : 'Submit Architectural BOQ'}
                 </Link>
               </li>
               <li>
-                <Link href="/sectors/hospitality" className="hover:text-white transition-colors">
+                <Link href={getLocalizedPath('/sectors/hospitality')} className="hover:text-white transition-colors">
                   {isAr ? 'مشروعات أجنحة سويس بلو' : 'SwissBlue Hotel Suites Project'}
                 </Link>
               </li>
               <li>
-                <Link href="/sectors/manufacturing" className="hover:text-white transition-colors">
+                <Link href={getLocalizedPath('/sectors/manufacturing')} className="hover:text-white transition-colors">
                   {isAr ? 'قدرات التصنيع وخطوط CNC' : 'Industrial CNC Capabilities'}
                 </Link>
               </li>
@@ -221,7 +221,7 @@ export default function EcommerceFooter() {
             <Building2 className="w-4 h-4 text-[#C9A86A] shrink-0" />
             <span>{footerDict.corporate_badge}</span>
             <Link 
-              href="/" 
+              href={getLocalizedPath('/')} 
               className="text-[#C9A86A] hover:underline font-semibold inline-flex items-center gap-1 shrink-0 ml-1"
             >
               <span>{footerDict.back_to_wd}</span>

@@ -83,7 +83,7 @@ interface AccountOrder {
 }
 
 function AccountPortalContent() {
-  const { lang, dict } = useLanguage();
+  const { lang, dict, getLocalizedPath } = useLanguage();
   const isAr = lang === 'ar';
   const searchParams = useSearchParams();
 
@@ -361,7 +361,7 @@ function AccountPortalContent() {
               </a>
 
               <Link
-                href="/furniture"
+                href={getLocalizedPath('/furniture')}
                 className="px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-300 text-xs font-semibold flex items-center gap-2 transition-all"
               >
                 <span>{isAr ? 'تصفح الكتالوج' : 'Explore Catalog'}</span>
@@ -493,7 +493,7 @@ function AccountPortalContent() {
                 </p>
                 <div className="pt-2">
                   <Link
-                    href="/furniture"
+                    href={getLocalizedPath('/furniture')}
                     className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#C9A86A] text-[#08090C] font-extrabold text-xs hover:bg-[#DFBA73] transition-colors"
                   >
                     <span>{isAr ? 'الذهاب لمتجر الأثاث' : 'Browse Furniture Store'}</span>
@@ -543,7 +543,7 @@ function AccountPortalContent() {
                         </button>
 
                         <Link
-                          href={`/furniture/track?ref=${encodeURIComponent(order.orderRef)}`}
+                          href={getLocalizedPath(`/furniture/track?ref=${encodeURIComponent(order.orderRef)}`)}
                           className="px-3.5 py-2 rounded-xl bg-[#C9A86A] text-[#08090C] hover:bg-[#DFBA73] text-xs font-extrabold flex items-center gap-1.5 transition-all"
                         >
                           <Truck className="w-3.5 h-3.5" />

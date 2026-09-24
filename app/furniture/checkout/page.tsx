@@ -47,7 +47,7 @@ interface CartItemState {
 }
 
 function FurnitureCheckoutContent() {
-  const { lang, dict } = useLanguage();
+  const { lang, dict, getLocalizedPath } = useLanguage();
   const isAr = lang === 'ar';
   const searchParams = useSearchParams();
   const [paymentError, setPaymentError] = useState<string | null>(null);
@@ -702,7 +702,7 @@ function FurnitureCheckoutContent() {
         {/* Navigation Breadcrumb */}
         <div className="flex items-center justify-between">
           <Link
-            href="/furniture"
+            href={getLocalizedPath('/furniture')}
             className="inline-flex items-center gap-2 text-xs font-mono font-semibold text-zinc-400 hover:text-[#C9A86A] transition-colors group"
           >
             <ArrowLeft className="w-4 h-4 rtl:rotate-180 group-hover:-translate-x-1 rtl:group-hover:translate-x-1 transition-transform" />
@@ -790,7 +790,7 @@ function FurnitureCheckoutContent() {
             {/* Actions */}
             <div className="flex flex-wrap items-center justify-center gap-3.5 pt-4">
               <Link
-                href={`/furniture/track?ref=${orderReference}`}
+                href={getLocalizedPath(`/furniture/track?ref=${orderReference}`)}
                 className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-gradient-to-r from-[#C9A86A] via-[#DFBA73] to-[#C9A86A] text-[#08090C] font-extrabold text-xs sm:text-sm shadow-lg hover:shadow-[0_0_25px_rgba(201,168,106,0.5)] transition-all cursor-pointer"
               >
                 <Truck className="w-4 h-4" />
@@ -818,7 +818,7 @@ function FurnitureCheckoutContent() {
               </button>
 
               <Link
-                href="/furniture/account"
+                href={getLocalizedPath('/furniture/account')}
                 className="inline-flex items-center gap-2 px-5 py-3.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-200 font-bold text-xs sm:text-sm transition-all"
               >
                 <User className="w-4 h-4 text-[#C9A86A]" />
@@ -826,7 +826,7 @@ function FurnitureCheckoutContent() {
               </Link>
 
               <Link
-                href="/furniture"
+                href={getLocalizedPath('/furniture')}
                 className="inline-flex items-center gap-2 px-5 py-3.5 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-300 font-bold text-xs sm:text-sm transition-all"
               >
                 <span>{dict.furniture.checkout.success.back_btn}</span>

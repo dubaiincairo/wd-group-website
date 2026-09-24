@@ -50,7 +50,7 @@ export default function ProductDetailClient({ product, relatedProducts }: Produc
 }
 
 function ProductDetailInner({ product, relatedProducts }: ProductDetailClientProps) {
-  const { lang, dict } = useLanguage();
+  const { lang, dict, getLocalizedPath } = useLanguage();
   const isAr = lang === 'ar';
   const router = useRouter();
   const { isInWishlist, toggleWishlist, setIsWishlistDrawerOpen } = useWishlist();
@@ -99,7 +99,7 @@ function ProductDetailInner({ product, relatedProducts }: ProductDetailClientPro
 
   const handleBuyNow = () => {
     handleAddToCart();
-    router.push('/furniture/checkout');
+    router.push(getLocalizedPath('/furniture/checkout'));
   };
 
   const handleCopyLink = () => {
@@ -128,9 +128,9 @@ function ProductDetailInner({ product, relatedProducts }: ProductDetailClientPro
         
         {/* Breadcrumb Navigation */}
         <nav className="flex items-center gap-2 text-xs font-mono text-zinc-400">
-          <Link href="/" className="hover:text-[#C9A86A] transition-colors">{isAr ? 'الرئيسية' : 'Home'}</Link>
+          <Link href={getLocalizedPath('/')} className="hover:text-[#C9A86A] transition-colors">{isAr ? 'الرئيسية' : 'Home'}</Link>
           <ChevronRight className="w-3.5 h-3.5 rtl:rotate-180 text-zinc-600" />
-          <Link href="/furniture" className="hover:text-[#C9A86A] transition-colors">{isAr ? 'أثاث جرين وود' : 'GreenWood Furniture'}</Link>
+          <Link href={getLocalizedPath('/furniture')} className="hover:text-[#C9A86A] transition-colors">{isAr ? 'أثاث جرين وود' : 'GreenWood Furniture'}</Link>
           <ChevronRight className="w-3.5 h-3.5 rtl:rotate-180 text-zinc-600" />
           <span className="text-zinc-500">{isAr ? product.categoryAr : product.categoryEn}</span>
           <ChevronRight className="w-3.5 h-3.5 rtl:rotate-180 text-zinc-600" />
@@ -485,7 +485,7 @@ function ProductDetailInner({ product, relatedProducts }: ProductDetailClientPro
             <h3 className="text-xl font-extrabold text-white">
               {isAr ? 'قطع متناسقة تكتمل بها الفخامة' : 'Complete the Suite · Curated Pieces'}
             </h3>
-            <Link href="/furniture" className="text-xs font-mono text-[#C9A86A] hover:underline flex items-center gap-1">
+            <Link href={getLocalizedPath('/furniture')} className="text-xs font-mono text-[#C9A86A] hover:underline flex items-center gap-1">
               <span>{isAr ? 'استعراض الكتالوج كاملاً' : 'View Full Catalog'}</span>
               <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
             </Link>
@@ -495,7 +495,7 @@ function ProductDetailInner({ product, relatedProducts }: ProductDetailClientPro
             {relatedProducts.map((rel) => (
               <Link
                 key={rel.id}
-                href={`/furniture/${rel.id}`}
+                href={getLocalizedPath(`/furniture/${rel.id}`)}
                 className="luxury-card rounded-3xl p-4 border border-white/10 bg-[#0F1117]/80 hover:border-[#C9A86A]/50 group flex flex-col justify-between"
               >
                 <div className="space-y-3">

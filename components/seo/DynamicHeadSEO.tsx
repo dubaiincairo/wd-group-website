@@ -3,9 +3,11 @@
 import React from 'react';
 import Script from 'next/script';
 import { useLanguage } from '@/context/LanguageContext';
+import { usePathname } from 'next/navigation';
 
 export default function DynamicHeadSEO() {
   const { lang, dynamicContent } = useLanguage();
+  const pathname = usePathname();
   const seo = dynamicContent?.seo;
   const isAr = lang === 'ar';
 
@@ -14,7 +16,8 @@ export default function DynamicHeadSEO() {
   const title = isAr ? (seo.global_title_ar || seo.global_title_en) : (seo.global_title_en || seo.global_title_ar);
   const description = isAr ? (seo.global_description_ar || seo.global_description_en) : (seo.global_description_en || seo.global_description_ar);
   const keywords = isAr ? (seo.keywords_ar || seo.keywords_en) : (seo.keywords_en || seo.keywords_ar);
-  const canonical = seo.canonical_base || 'https://wdgroup.online';
+  const baseCanonical = seo.canonical_base || 'https://wdgroup.online';
+  const canonical = `${baseCanonical}${pathname === '/' ? '' : pathname}`;
   const ogImage = seo.og_image_url || 'https://fqkbgfdasfwnryekkgqz.supabase.co/storage/v1/object/public/photos/og-preview.jpg';
 
   const schemaOrg = {
@@ -52,8 +55,7 @@ export default function DynamicHeadSEO() {
         </>
       )}
 
-      {/* Canonical Link */}
-      <link rel="canonical" href={canonical} />
+      {/* Canonical and hreflangs are provided server-side in RootLayout */}
 
       {/* 1. Google Site Verification */}
       {seo.google_site_verification && (

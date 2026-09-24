@@ -11,6 +11,7 @@ import MaintenanceGate from '@/components/layout/MaintenanceGate';
 import DynamicHeadSEO from '@/components/seo/DynamicHeadSEO';
 import WebsitePreloader from '@/components/layout/WebsitePreloader';
 import { getSiteContent } from '@/lib/admin/db';
+import { headers, cookies } from 'next/headers';
 
 const LiveEditorDock = dynamicComponent(
   () => import('@/components/live-editor/LiveEditorDock'),
@@ -94,23 +95,34 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const initialContent = await getSiteContent();
+  const headerList = headers();
+  const localeHeader = headerList.get('x-locale');
+  const internalPath = headerList.get('x-internal-path') || '';
+  const cleanPath = internalPath === '/' ? '' : internalPath;
+  const cookieStore = cookies();
+  const localeCookie = cookieStore.get('wd_lang')?.value;
+  const currentLang: 'ar' | 'en' = (localeHeader === 'en' || (!localeHeader && localeCookie === 'en')) ? 'en' : 'ar';
+  const currentDir = currentLang === 'ar' ? 'rtl' : 'ltr';
 
   return (
-    <html lang="ar" dir="rtl" className={`${inter.variable} ${notoKufi.variable} ${playfair.variable} ${ibmMono.variable}`}>
+    <html lang={currentLang} dir={currentDir} className={`${inter.variable} ${notoKufi.variable} ${playfair.variable} ${ibmMono.variable}`}>
       <head>
+        <link rel="alternate" hrefLang="ar" href={`${siteUrl}/ar${cleanPath}`} />
+        <link rel="alternate" hrefLang="en" href={`${siteUrl}/en${cleanPath}`} />
+        <link rel="alternate" hrefLang="x-default" href={`${siteUrl}/ar${cleanPath}`} />
+        <link rel="canonical" href={`${siteUrl}/${currentLang}${cleanPath}`} />
         <script
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
                 try {
-                  var saved = localStorage.getItem('wd_lang');
-                  if (saved === 'en') {
-                    document.documentElement.lang = 'en';
-                    document.documentElement.dir = 'ltr';
-                  } else {
-                    document.documentElement.lang = 'ar';
-                    document.documentElement.dir = 'rtl';
-                  }
+                  var p = window.location.pathname;
+                  var detectedLang = '${currentLang}';
+                  if (p.startsWith('/en')) detectedLang = 'en';
+                  else if (p.startsWith('/ar')) detectedLang = 'ar';
+                  document.documentElement.lang = detectedLang;
+                  document.documentElement.dir = detectedLang === 'ar' ? 'rtl' : 'ltr';
+                  localStorage.setItem('wd_lang', detectedLang);
                   var cached = localStorage.getItem('wd_content_cache');
                   if (cached) {
                     window.__WD_INITIAL_CONTENT__ = JSON.parse(cached);
@@ -146,7 +158,7 @@ export default async function RootLayout({
         />
       </head>
       <body className="bg-[#08090C] text-[#F8FAFC] min-h-screen flex flex-col font-sans selection:bg-blue-600 selection:text-white antialiased">
-        <LanguageProvider initialContent={initialContent}>
+        <LanguageProvider initialContent={initialContent} initialLocale={currentLang}>
           <DynamicHeadSEO />
           <ToastProvider>
             <MaintenanceGate>

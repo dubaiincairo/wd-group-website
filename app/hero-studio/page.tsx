@@ -25,7 +25,7 @@ const SECTOR_PHOTOS = {
 };
 
 export default function HeroStudioPage() {
-  const { lang, toggleLanguage, dict } = useLanguage();
+  const { lang, toggleLanguage, dict, getLocalizedPath } = useLanguage();
   const [activeStyle, setActiveStyle] = useState<'split-showcase' | 'visual-curtain' | 'full-backdrop'>('split-showcase');
   const [selectedSector, setSelectedSector] = useState<'hospitality' | 'manufacturing' | 'contracting'>('hospitality');
 
@@ -38,7 +38,7 @@ export default function HeroStudioPage() {
           
           {/* Studio Brand */}
           <div className="flex items-center gap-3">
-            <Link href="/" className="flex items-center gap-2">
+            <Link href={getLocalizedPath('/')} className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center font-bold text-xs shadow-glow-blue">
                 WD
               </div>

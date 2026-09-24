@@ -33,7 +33,7 @@ import {
 } from 'lucide-react';
 
 function OrderTrackerContent() {
-  const { lang, dict } = useLanguage();
+  const { lang, dict, getLocalizedPath } = useLanguage();
   const isAr = lang === 'ar';
   const searchParams = useSearchParams();
 
@@ -317,7 +317,7 @@ function OrderTrackerContent() {
         {/* Top Back Navigation */}
         <div className="flex items-center justify-between">
           <Link
-            href="/furniture"
+            href={getLocalizedPath('/furniture')}
             className="inline-flex items-center gap-2 text-xs font-mono text-zinc-400 hover:text-[#C9A86A] transition-colors"
           >
             <ArrowLeft className="w-4 h-4 rtl:rotate-180" />

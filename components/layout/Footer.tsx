@@ -10,7 +10,7 @@ import BankingAccessModal from '@/components/banking/BankingAccessModal';
 
 export default function Footer() {
   const pathname = usePathname();
-  const { lang, dict } = useLanguage();
+  const { lang, dict, getLocalizedPath } = useLanguage();
   const currentYear = new Date().getFullYear();
   const [isBankingModalOpen, setIsBankingModalOpen] = useState(false);
 
@@ -33,7 +33,7 @@ export default function Footer() {
           
           {/* Col 1: Brand & Statement */}
           <div className="space-y-3">
-            <Link href="/" className="inline-block group">
+            <Link href={getLocalizedPath('/')} className="inline-block group">
               <div className={`relative h-10 ${lang === 'ar' ? 'w-[93px] aspect-[1024/439]' : 'w-[98px] aspect-[1024/417]'} transition-transform group-hover:scale-105 shrink-0`}>
                 <Image 
                   src={logoSrc} 
@@ -61,17 +61,17 @@ export default function Footer() {
             </h4>
             <ul className="space-y-1.5 text-xs text-zinc-400">
               <li>
-                <Link href="/about" className="hover:text-white transition-colors">
+                <Link href={getLocalizedPath('/about')} className="hover:text-white transition-colors">
                   {dict.footer.about_us}
                 </Link>
               </li>
               <li>
-                <Link href="/careers" className="hover:text-white transition-colors">
+                <Link href={getLocalizedPath('/careers')} className="hover:text-white transition-colors">
                   {dict.footer.careers}
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="hover:text-white transition-colors">
+                <Link href={getLocalizedPath('/contact')} className="hover:text-white transition-colors">
                   {dict.footer.contact}
                 </Link>
               </li>
@@ -86,7 +86,7 @@ export default function Footer() {
                 </button>
               </li>
               <li>
-                <Link href="/about#profile" className="hover:text-white transition-colors">
+                <Link href={getLocalizedPath('/about#profile')} className="hover:text-white transition-colors">
                   {dict.footer.profile}
                 </Link>
               </li>
@@ -100,26 +100,26 @@ export default function Footer() {
             </h4>
             <ul className="space-y-1.5 text-xs text-zinc-400">
               <li>
-                <Link href="/sectors/hospitality" className="hover:text-sky-300 transition-colors flex items-center gap-1.5">
+                <Link href={getLocalizedPath('/sectors/hospitality')} className="hover:text-sky-300 transition-colors flex items-center gap-1.5">
                   <Building2 className="w-3.5 h-3.5 text-sky-400" />
                   <span>{dict.footer.hosp_title}</span>
                 </Link>
               </li>
               <li>
-                <Link href="/sectors/manufacturing" className="hover:text-emerald-300 transition-colors flex items-center gap-1.5">
+                <Link href={getLocalizedPath('/sectors/manufacturing')} className="hover:text-emerald-300 transition-colors flex items-center gap-1.5">
                   <Factory className="w-3.5 h-3.5 text-emerald-400" />
                   <span>{dict.footer.mfg_title}</span>
                 </Link>
               </li>
               <li>
-                <Link href="/sectors/contracting" className="hover:text-amber-300 transition-colors flex items-center gap-1.5">
+                <Link href={getLocalizedPath('/sectors/contracting')} className="hover:text-amber-300 transition-colors flex items-center gap-1.5">
                   <HardHat className="w-3.5 h-3.5 text-amber-400" />
                   <span>{dict.footer.contr_title}</span>
                 </Link>
               </li>
               <li className="pt-1">
                 <Link 
-                  href="/furniture" 
+                  href={getLocalizedPath('/furniture')} 
                   className="hover:text-[#E3C58A] transition-all flex items-center justify-between group/store p-1.5 -mx-1.5 rounded-lg bg-[#C9A86A]/10 hover:bg-[#C9A86A]/20 border border-[#C9A86A]/30 shadow-sm"
                 >
                   <div className="flex items-center gap-1.5 text-zinc-200 group-hover/store:text-white font-semibold">

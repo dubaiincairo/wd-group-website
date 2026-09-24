@@ -19,11 +19,18 @@ import {
 
 export default function Navbar() {
   const pathname = usePathname();
-  const { lang, toggleLanguage, dict } = useLanguage();
+  const { lang, dict, siblingPath, getLocalizedPath } = useLanguage();
   const [sectorsOpen, setSectorsOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const dropdownTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const isPathActive = (target: string) => {
+    if (target === '/') {
+      return pathname === '/' || pathname === '/ar' || pathname === '/en';
+    }
+    return pathname === target || pathname === `/${lang}${target}` || pathname === `/ar${target}` || pathname === `/en${target}`;
+  };
 
   const handleMouseEnterSectors = () => {
     if (dropdownTimeoutRef.current) {
@@ -76,7 +83,7 @@ export default function Navbar() {
         <div className="flex items-center justify-between gap-2 xl:gap-4">
           
           {/* Dynamic Language-Aware Brand Logo */}
-          <Link href="/" className="flex items-center gap-2.5 xl:gap-3 group shrink-0">
+          <Link href={getLocalizedPath('/')} className="flex items-center gap-2.5 xl:gap-3 group shrink-0">
             <div className={`relative h-10 sm:h-12 ${lang === 'ar' ? 'w-[93px] sm:w-[112px] aspect-[1024/439]' : 'w-[98px] sm:w-[118px] aspect-[1024/417]'} transition-all duration-300 group-hover:scale-105 shrink-0`}>
               <Image 
                 src={logoSrc} 
@@ -100,9 +107,9 @@ export default function Navbar() {
           {/* Desktop Navigation Links */}
           <nav className="hidden lg:flex items-center gap-1 xl:gap-1.5 px-3 xl:px-4 py-1.5 rounded-full bg-[#0F1117]/85 border border-white/10 backdrop-blur-xl shadow-lg whitespace-nowrap shrink-0">
             <Link 
-              href="/" 
+              href={getLocalizedPath('/')} 
               className={`px-3 xl:px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap shrink-0 transition-all duration-200 ${
-                pathname === '/' 
+                isPathActive('/') 
                   ? 'text-white bg-white/15 shadow-sm font-bold' 
                   : 'text-zinc-300 hover:text-white hover:bg-white/5'
               }`}
@@ -111,9 +118,9 @@ export default function Navbar() {
             </Link>
 
             <Link 
-              href="/about" 
+              href={getLocalizedPath('/about')} 
               className={`px-3 xl:px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap shrink-0 transition-all duration-200 ${
-                pathname === '/about' 
+                isPathActive('/about') 
                   ? 'text-white bg-white/15 shadow-sm font-bold' 
                   : 'text-zinc-300 hover:text-white hover:bg-white/5'
               }`}
@@ -129,7 +136,7 @@ export default function Navbar() {
             >
               <button 
                 className={`px-3 xl:px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap shrink-0 transition-all duration-200 flex items-center ${
-                  pathname.startsWith('/sectors') 
+                  pathname.includes('/sectors') 
                     ? 'text-white bg-white/15 shadow-sm font-bold' 
                     : 'text-zinc-300 hover:text-white hover:bg-white/5'
                 }`}
@@ -151,13 +158,13 @@ export default function Navbar() {
 
                     <div className="space-y-1">
                       <Link 
-                        href="/sectors/hospitality" 
+                        href={getLocalizedPath('/sectors/hospitality')} 
                         onClick={() => {
                           if (dropdownTimeoutRef.current) clearTimeout(dropdownTimeoutRef.current);
                           setSectorsOpen(false);
                         }}
                         className={`flex items-center justify-between p-2.5 rounded-xl hover:bg-white/5 transition-all group/item ${
-                          pathname === '/sectors/hospitality' ? 'bg-sky-500/10 border border-sky-500/20' : ''
+                          isPathActive('/sectors/hospitality') ? 'bg-sky-500/10 border border-sky-500/20' : ''
                         }`}
                       >
                         <div className="flex items-center gap-2.5">
@@ -179,13 +186,13 @@ export default function Navbar() {
                       </Link>
 
                       <Link 
-                        href="/sectors/manufacturing" 
+                        href={getLocalizedPath('/sectors/manufacturing')} 
                         onClick={() => {
                           if (dropdownTimeoutRef.current) clearTimeout(dropdownTimeoutRef.current);
                           setSectorsOpen(false);
                         }}
                         className={`flex items-center justify-between p-2.5 rounded-xl hover:bg-white/5 transition-all group/item ${
-                          pathname === '/sectors/manufacturing' ? 'bg-emerald-500/10 border border-emerald-500/20' : ''
+                          isPathActive('/sectors/manufacturing') ? 'bg-emerald-500/10 border border-emerald-500/20' : ''
                         }`}
                       >
                         <div className="flex items-center gap-2.5">
@@ -207,13 +214,13 @@ export default function Navbar() {
                       </Link>
 
                       <Link 
-                        href="/sectors/contracting" 
+                        href={getLocalizedPath('/sectors/contracting')} 
                         onClick={() => {
                           if (dropdownTimeoutRef.current) clearTimeout(dropdownTimeoutRef.current);
                           setSectorsOpen(false);
                         }}
                         className={`flex items-center justify-between p-2.5 rounded-xl hover:bg-white/5 transition-all group/item ${
-                          pathname === '/sectors/contracting' ? 'bg-amber-500/10 border border-amber-500/20' : ''
+                          isPathActive('/sectors/contracting') ? 'bg-amber-500/10 border border-amber-500/20' : ''
                         }`}
                       >
                         <div className="flex items-center gap-2.5">
@@ -240,9 +247,9 @@ export default function Navbar() {
             </div>
 
             <Link 
-              href="/careers" 
+              href={getLocalizedPath('/careers')} 
               className={`px-3 xl:px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap shrink-0 transition-all duration-200 ${
-                pathname === '/careers' 
+                isPathActive('/careers') 
                   ? 'text-white bg-white/15 shadow-sm font-bold' 
                   : 'text-zinc-300 hover:text-white hover:bg-white/5'
               }`}
@@ -250,11 +257,11 @@ export default function Navbar() {
               <span className="whitespace-nowrap">{dict.nav.careers}</span>
             </Link>
 
-            {/* Standalone E-Commerce Title (Prominently Positioned Before Contact Us) */}
+            {/* Standalone E-Commerce Title */}
             <Link 
-              href="/furniture" 
+              href={getLocalizedPath('/furniture')} 
               className={`px-3 xl:px-3.5 py-1.5 rounded-full text-xs font-bold whitespace-nowrap shrink-0 transition-all duration-200 flex items-center gap-1.5 ${
-                pathname.startsWith('/furniture') 
+                pathname.includes('/furniture') 
                   ? 'text-white bg-[#C9A86A]/25 border border-[#C9A86A]/50 shadow-[0_0_15px_rgba(201,168,106,0.3)]' 
                   : 'text-[#C9A86A] hover:text-white hover:bg-[#C9A86A]/15 border border-[#C9A86A]/30'
               }`}
@@ -267,9 +274,9 @@ export default function Navbar() {
             </Link>
 
             <Link 
-              href="/contact" 
+              href={getLocalizedPath('/contact')} 
               className={`px-3 xl:px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap shrink-0 transition-all duration-200 ${
-                pathname === '/contact' 
+                isPathActive('/contact') 
                   ? 'text-white bg-white/15 shadow-sm font-bold' 
                   : 'text-zinc-300 hover:text-white hover:bg-white/5'
               }`}
@@ -278,19 +285,21 @@ export default function Navbar() {
             </Link>
           </nav>
 
-          {/* Right Action: Language & Contact CTA */}
+          {/* Right Action: Pure Anchor Language Switcher & Contact CTA */}
           <div className="hidden lg:flex items-center gap-2 xl:gap-3 shrink-0">
-            <button 
-              onClick={toggleLanguage}
+            <Link 
+              href={siblingPath}
+              lang={lang === 'ar' ? 'en' : 'ar'}
+              dir={lang === 'ar' ? 'ltr' : 'rtl'}
               className="h-9 px-2.5 xl:px-3.5 rounded-xl text-xs font-bold text-zinc-300 hover:text-white bg-[#0F1117]/85 border border-white/10 hover:border-white/25 transition-all inline-flex items-center justify-center gap-1.5 shadow-sm shrink-0 whitespace-nowrap cursor-pointer"
               title={lang === 'ar' ? 'Switch to English' : 'التحويل للغة العربية'}
             >
               <Globe className="w-3.5 h-3.5 text-[#C9A86A] shrink-0" />
               <span className="font-mono text-[11px] leading-none whitespace-nowrap">{dict.nav.lang_toggle}</span>
-            </button>
+            </Link>
 
             <Link 
-              href="/contact"
+              href={getLocalizedPath('/contact')}
               className="h-10 px-4 sm:px-5 xl:px-6 rounded-xl text-xs sm:text-[13px] font-extrabold text-[#08090C] bg-gradient-to-r from-[#C9A86A] via-[#DFBA73] to-[#C9A86A] border border-[#E3C58A]/60 hover:border-[#E3C58A] shadow-[0_0_20px_rgba(201,168,106,0.35)] hover:shadow-[0_0_28px_rgba(201,168,106,0.55)] hover:scale-[1.02] active:scale-[0.98] transition-all inline-flex items-center justify-center gap-2 whitespace-nowrap shrink-0 cursor-pointer"
             >
               <span className="leading-none whitespace-nowrap">{dict.nav.contactCta}</span>
@@ -300,16 +309,18 @@ export default function Navbar() {
 
           {/* Mobile Menu Button */}
           <div className="flex lg:hidden items-center gap-2">
-            <button 
-              onClick={toggleLanguage}
-              className="px-2.5 py-1.5 rounded-lg text-xs font-bold text-white bg-brand-surface border border-white/10"
+            <Link 
+              href={siblingPath}
+              lang={lang === 'ar' ? 'en' : 'ar'}
+              dir={lang === 'ar' ? 'ltr' : 'rtl'}
+              className="px-2.5 py-1.5 rounded-lg text-xs font-bold text-white bg-brand-surface border border-white/10 inline-flex items-center justify-center cursor-pointer"
             >
               {dict.nav.lang_toggle}
-            </button>
+            </Link>
 
             <button 
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-lg text-zinc-300 hover:text-white bg-brand-surface border border-white/10"
+              className="p-2 rounded-lg text-zinc-300 hover:text-white bg-brand-surface border border-white/10 cursor-pointer"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
@@ -323,21 +334,21 @@ export default function Navbar() {
         <div className="lg:hidden bg-brand-surface border-b border-white/10 p-5 mt-3 shadow-2xl animate-in slide-in-from-top-2 duration-150">
           <div className="flex flex-col gap-2.5">
             <Link 
-              href="/"
+              href={getLocalizedPath('/')}
               onClick={() => setMobileMenuOpen(false)}
               className="px-3 py-2 rounded-xl text-sm font-semibold text-zinc-200 hover:bg-white/5"
             >
               {dict.nav.home}
             </Link>
             <Link 
-              href="/about"
+              href={getLocalizedPath('/about')}
               onClick={() => setMobileMenuOpen(false)}
               className="px-3 py-2 rounded-xl text-sm font-semibold text-zinc-200 hover:bg-white/5"
             >
               {dict.nav.about}
             </Link>
             <Link 
-              href="/sectors/hospitality"
+              href={getLocalizedPath('/sectors/hospitality')}
               onClick={() => setMobileMenuOpen(false)}
               className="px-3 py-2 rounded-xl text-sm font-semibold text-sky-400 hover:bg-white/5 flex items-center justify-between"
             >
@@ -347,7 +358,7 @@ export default function Navbar() {
               </span>
             </Link>
             <Link 
-              href="/sectors/manufacturing"
+              href={getLocalizedPath('/sectors/manufacturing')}
               onClick={() => setMobileMenuOpen(false)}
               className="px-3 py-2 rounded-xl text-sm font-semibold text-emerald-400 hover:bg-white/5 flex items-center justify-between"
             >
@@ -357,7 +368,7 @@ export default function Navbar() {
               </span>
             </Link>
             <Link 
-              href="/sectors/contracting"
+              href={getLocalizedPath('/sectors/contracting')}
               onClick={() => setMobileMenuOpen(false)}
               className="px-3 py-2 rounded-xl text-sm font-semibold text-amber-400 hover:bg-white/5 flex items-center justify-between"
             >
@@ -367,14 +378,14 @@ export default function Navbar() {
               </span>
             </Link>
             <Link 
-              href="/careers"
+              href={getLocalizedPath('/careers')}
               onClick={() => setMobileMenuOpen(false)}
               className="px-3 py-2 rounded-xl text-sm font-semibold text-zinc-200 hover:bg-white/5"
             >
               {dict.nav.careers}
             </Link>
             <Link 
-              href="/furniture"
+              href={getLocalizedPath('/furniture')}
               onClick={() => setMobileMenuOpen(false)}
               className="px-3 py-2.5 rounded-xl text-sm font-bold text-[#C9A86A] bg-[#C9A86A]/10 border border-[#C9A86A]/30 hover:bg-[#C9A86A]/20 flex items-center justify-between"
             >
@@ -387,7 +398,7 @@ export default function Navbar() {
               </span>
             </Link>
             <Link 
-              href="/contact"
+              href={getLocalizedPath('/contact')}
               onClick={() => setMobileMenuOpen(false)}
               className="w-full py-3 px-5 rounded-xl text-xs font-bold text-center text-[#08090C] bg-gradient-to-r from-[#C9A86A] via-[#DFBA73] to-[#C9A86A] border border-[#E3C58A]/60 shadow-[0_0_20px_rgba(201,168,106,0.35)] mt-3 block"
             >

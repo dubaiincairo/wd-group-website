@@ -36,7 +36,7 @@ export default function EcommerceNavbar({
   onSearch,
 }: EcommerceNavbarProps) {
   const pathname = usePathname();
-  const { lang, toggleLanguage, dict } = useLanguage();
+  const { lang, dict, siblingPath, getLocalizedPath } = useLanguage();
   const isAr = lang === 'ar';
   const logoSrc = isAr ? '/brand/wd-group-logo-ar-white.png' : '/brand/wd-group-logo-white.png';
   const { wishlistIds, setIsWishlistDrawerOpen } = useWishlist();
@@ -351,7 +351,7 @@ export default function EcommerceNavbar({
           
           {/* Link back to WD Group Holding */}
           <Link 
-            href="/" 
+            href={getLocalizedPath('/')} 
             className="inline-flex items-center gap-1.5 text-[11px] font-mono text-zinc-400 hover:text-[#C9A86A] transition-colors shrink-0 group"
           >
             <span className="w-1.5 h-1.5 rounded-full bg-[#C9A86A] group-hover:scale-125 transition-transform" />
@@ -368,7 +368,7 @@ export default function EcommerceNavbar({
           {/* Right Utility: Track Order, Account & Language Switcher */}
           <div className="flex items-center gap-3 sm:gap-4 text-[11px] font-mono shrink-0">
             <Link 
-              href="/furniture/account" 
+              href={getLocalizedPath('/furniture/account')} 
               className="inline-flex items-center gap-1.5 text-zinc-300 hover:text-[#C9A86A] transition-colors"
             >
               <User className="w-3 h-3 text-[#C9A86A]" />
@@ -378,7 +378,7 @@ export default function EcommerceNavbar({
             <span className="text-white/20">|</span>
 
             <Link 
-              href="/furniture/track" 
+              href={getLocalizedPath('/furniture/track')} 
               className="inline-flex items-center gap-1.5 text-emerald-400 hover:text-emerald-300 transition-colors"
             >
               <Activity className="w-3 h-3 animate-pulse" />
@@ -387,14 +387,16 @@ export default function EcommerceNavbar({
 
             <span className="text-white/20">|</span>
 
-            <button 
-              onClick={toggleLanguage}
+            <Link 
+              href={siblingPath}
+              lang={isAr ? 'en' : 'ar'}
+              dir={isAr ? 'ltr' : 'rtl'}
               className="inline-flex items-center gap-1 text-zinc-300 hover:text-white transition-colors cursor-pointer"
               title={isAr ? 'Switch to English' : 'التحويل للعربية'}
             >
               <Globe className="w-3 h-3 text-[#C9A86A]" />
               <span>{dict.nav.lang_toggle}</span>
-            </button>
+            </Link>
           </div>
 
         </div>
@@ -412,7 +414,7 @@ export default function EcommerceNavbar({
           <div className="flex items-center justify-between gap-4">
             
             {/* Store Brand Identity: Official WD Group Brand Logo */}
-            <Link href="/furniture" className="flex items-center gap-3 group shrink-0">
+            <Link href={getLocalizedPath('/furniture')} className="flex items-center gap-3 group shrink-0">
               <div className={`relative h-9 sm:h-11 ${isAr ? 'w-[84px] sm:w-[103px] aspect-[1024/439]' : 'w-[88px] sm:w-[108px] aspect-[1024/417]'} transition-all duration-300 group-hover:scale-105 shrink-0`}>
                 <Image
                   src={logoSrc}
@@ -544,7 +546,7 @@ export default function EcommerceNavbar({
 
               {/* Customer Account & Orders */}
               <Link
-                href="/furniture/account"
+                href={getLocalizedPath('/furniture/account')}
                 className="p-2.5 rounded-xl bg-[#12151F] hover:bg-[#1A1F2E] border border-white/10 text-zinc-300 hover:text-[#C9A86A] transition-all cursor-pointer flex items-center gap-1.5"
                 title={isAr ? 'حسابي ومتابعة الطلبات' : 'My Account & Orders'}
               >
@@ -635,7 +637,7 @@ export default function EcommerceNavbar({
 
             <div className="flex items-center justify-between pt-2 border-t border-white/10">
               <Link
-                href="/furniture/account"
+                href={getLocalizedPath('/furniture/account')}
                 onClick={() => setMobileMenuOpen(false)}
                 className="text-xs font-semibold text-zinc-300 hover:text-[#C9A86A] flex items-center gap-1.5"
               >
@@ -644,7 +646,7 @@ export default function EcommerceNavbar({
               </Link>
 
               <Link
-                href="/furniture/track"
+                href={getLocalizedPath('/furniture/track')}
                 onClick={() => setMobileMenuOpen(false)}
                 className="text-xs font-mono text-emerald-400 flex items-center gap-1.5"
               >

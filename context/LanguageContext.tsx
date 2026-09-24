@@ -1,6 +1,7 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
+import { usePathname } from 'next/navigation';
 import { translations, Language } from '@/lib/translations';
 
 interface LanguageContextType {
@@ -12,6 +13,8 @@ interface LanguageContextType {
   dict: typeof translations.en;
   dynamicContent: any;
   setDynamicContent: (data: any) => void;
+  siblingPath: string;
+  getLocalizedPath: (path: string) => string;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
@@ -75,12 +78,20 @@ function hashText(str: string): string {
 export function LanguageProvider({ 
   children,
   initialContent = null,
+  initialLocale,
 }: { 
   children: React.ReactNode;
   initialContent?: any;
+  initialLocale?: 'ar' | 'en';
 }) {
+  const pathname = usePathname();
+
   const [lang, setLang] = useState<Language>(() => {
+    if (initialLocale) return initialLocale;
     if (typeof window !== 'undefined') {
+      const p = window.location.pathname;
+      if (p.startsWith('/en')) return 'en';
+      if (p.startsWith('/ar')) return 'ar';
       try {
         const saved = localStorage.getItem('wd_lang') as Language;
         if (saved === 'en' || saved === 'ar') return saved;
@@ -177,14 +188,78 @@ export function LanguageProvider({
       }
     }
     localStorage.setItem('wd_lang', lang);
+    document.cookie = `wd_lang=${lang}; path=/; max-age=31536000; SameSite=Lax`;
   }, [lang, dir]);
+
+  // Synchronize state with pathname if user navigates via browser or link
+  useEffect(() => {
+    if (!pathname) return;
+    if (pathname.startsWith('/en') && lang !== 'en') {
+      setLang('en');
+      try {
+        localStorage.setItem('wd_lang', 'en');
+        document.cookie = 'wd_lang=en; path=/; max-age=31536000; SameSite=Lax';
+        document.documentElement.lang = 'en';
+        document.documentElement.dir = 'ltr';
+      } catch (e) {}
+    } else if (pathname.startsWith('/ar') && lang !== 'ar') {
+      setLang('ar');
+      try {
+        localStorage.setItem('wd_lang', 'ar');
+        document.cookie = 'wd_lang=ar; path=/; max-age=31536000; SameSite=Lax';
+        document.documentElement.lang = 'ar';
+        document.documentElement.dir = 'rtl';
+      } catch (e) {}
+    }
+  }, [pathname, lang]);
+
+  const isArabic = lang === 'ar';
+  const siblingPath = useMemo(() => {
+    if (!pathname) return isArabic ? '/en' : '/ar';
+    if (pathname.startsWith('/ar')) {
+      const replaced = pathname.replace(/^\/ar(\/|$)/, '/en$1');
+      return replaced || '/en';
+    }
+    if (pathname.startsWith('/en')) {
+      const replaced = pathname.replace(/^\/en(\/|$)/, '/ar$1');
+      return replaced || '/ar';
+    }
+    return isArabic ? `/en${pathname === '/' ? '' : pathname}` : `/ar${pathname === '/' ? '' : pathname}`;
+  }, [pathname, isArabic]);
+
+  const getLocalizedPath = useMemo(() => {
+    return (path: string) => {
+      if (!path || path === '/') return `/${lang}`;
+      if (path.startsWith('/ar/') || path.startsWith('/en/')) {
+        return path.replace(/^\/(ar|en)/, `/${lang}`);
+      }
+      if (path === '/ar' || path === '/en') {
+        return `/${lang}`;
+      }
+      return `/${lang}${path.startsWith('/') ? path : `/${path}`}`;
+    };
+  }, [lang]);
 
   const setLanguage = (newLang: Language) => {
     setLang(newLang);
+    try {
+      localStorage.setItem('wd_lang', newLang);
+      document.cookie = `wd_lang=${newLang}; path=/; max-age=31536000; SameSite=Lax`;
+    } catch (e) {}
+    if (typeof window !== 'undefined') {
+      window.location.href = siblingPath;
+    }
   };
 
   const toggleLanguage = () => {
-    setLang((prev) => (prev === 'en' ? 'ar' : 'en'));
+    const nextLang = lang === 'ar' ? 'en' : 'ar';
+    try {
+      localStorage.setItem('wd_lang', nextLang);
+      document.cookie = `wd_lang=${nextLang}; path=/; max-age=31536000; SameSite=Lax`;
+    } catch (e) {}
+    if (typeof window !== 'undefined') {
+      window.location.href = siblingPath;
+    }
   };
 
   const isAr = lang === 'ar';
@@ -627,7 +702,7 @@ export function LanguageProvider({
   };
 
   return (
-    <LanguageContext.Provider value={{ lang, dir, t, setLanguage, toggleLanguage, dict, dynamicContent, setDynamicContent }}>
+    <LanguageContext.Provider value={{ lang, dir, t, setLanguage, toggleLanguage, dict, dynamicContent, setDynamicContent, siblingPath, getLocalizedPath }}>
       {children}
     </LanguageContext.Provider>
   );

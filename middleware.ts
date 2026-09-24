@@ -86,7 +86,72 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  return NextResponse.next();
+  // ---------------------------------------------------------------------------
+  // 4. EXEMPT PUBLIC ASSETS & SPECIAL ROUTES FROM BILINGUAL ROUTING
+  // ---------------------------------------------------------------------------
+  const isStaticOrInternal =
+    pathname.startsWith('/_next') ||
+    pathname.startsWith('/brand') ||
+    pathname.startsWith('/videos') ||
+    pathname.startsWith('/images') ||
+    pathname.startsWith('/api') ||
+    pathname.startsWith('/admin') ||
+    pathname.startsWith('/site-access') ||
+    pathname.startsWith('/icon') ||
+    pathname === '/favicon.ico' ||
+    pathname === '/favicon.png' ||
+    pathname === '/favicon.svg' ||
+    pathname === '/apple-touch-icon.png' ||
+    pathname === '/robots.txt' ||
+    pathname === '/sitemap.xml' ||
+    Boolean(pathname.match(/\.(png|jpg|jpeg|gif|svg|webp|ico|mp4|webm|woff|woff2|ttf|eot|css|js|txt|xml)$/i));
+
+  if (isStaticOrInternal) {
+    return NextResponse.next();
+  }
+
+  // ---------------------------------------------------------------------------
+  // 5. DETERMINISTIC BILINGUAL ROUTE HANDLING (/ar and /en)
+  // ---------------------------------------------------------------------------
+  const isArabicRoute = pathname === '/ar' || pathname.startsWith('/ar/');
+  const isEnglishRoute = pathname === '/en' || pathname.startsWith('/en/');
+
+  if (isArabicRoute || isEnglishRoute) {
+    const locale = isArabicRoute ? 'ar' : 'en';
+    let internalPath = pathname.replace(/^\/(ar|en)/, '');
+    if (!internalPath || internalPath === '') {
+      internalPath = '/';
+    }
+
+    const requestHeaders = new Headers(request.headers);
+    requestHeaders.set('x-locale', locale);
+    requestHeaders.set('x-pathname', pathname);
+    requestHeaders.set('x-internal-path', internalPath);
+
+    const rewriteUrl = new URL(internalPath + search, request.url);
+    const response = NextResponse.rewrite(rewriteUrl, {
+      request: {
+        headers: requestHeaders,
+      },
+    });
+
+    response.cookies.set('wd_lang', locale, {
+      path: '/',
+      maxAge: 31536000,
+      sameSite: 'lax',
+    });
+
+    return response;
+  }
+
+  // ---------------------------------------------------------------------------
+  // 6. UNPREFIXED PUBLIC ROUTES (e.g. /, /about, /sectors/hospitality)
+  // Symmetrically redirect to preferred locale or default to Arabic (Saudi Arabia canonical)
+  // ---------------------------------------------------------------------------
+  const savedLang = request.cookies.get('wd_lang')?.value;
+  const targetLocale = savedLang === 'en' ? 'en' : 'ar';
+  const redirectTarget = `/${targetLocale}${pathname === '/' ? '' : pathname}${search}`;
+  return NextResponse.redirect(new URL(redirectTarget, request.url));
 }
 
 export const config = {
