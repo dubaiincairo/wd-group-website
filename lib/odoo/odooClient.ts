@@ -692,7 +692,7 @@ export async function getOrderTrackingStatus(orderRef: string, customConfig?: Od
     city: 'Riyadh — Al Narjis District',
     orderDate: '28/08/2026',
     estimatedDelivery: '08 September 2026 (Morning Slot)',
-    factory: 'GreenWood Factory 1 & 3 — Riyadh',
+    factory: 'Green Wood Factory (Riyadh)',
     leadTechnician: 'Eng. Fahad Al-Ghamdi',
     currentStageIdx: stageIdx,
     statusText: stageIdx === 2 ? 'Manufacturing in Progress (جاري التصنيع)' : 'Sales Order Created (تم إنشاء أمر البيع)',

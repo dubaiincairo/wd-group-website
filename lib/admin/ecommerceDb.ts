@@ -87,7 +87,7 @@ export async function createEcommerceOrder(input: CreateOrderInput): Promise<Eco
     vatAmount: input.vatAmount,
     totalAmount: input.totalAmount,
     status: 'pending_payment',
-    factory: 'GreenWood Factory 1 & 3 — Riyadh',
+    factory: 'Green Wood Factory (Riyadh)',
     leadTechnician: 'م. فهد الغامدي',
     items: input.items.map((it) => ({
       productId: it.productId,

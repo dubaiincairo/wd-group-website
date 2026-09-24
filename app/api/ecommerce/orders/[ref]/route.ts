@@ -58,7 +58,7 @@ export async function GET(
         city: dbOrder.city + (dbOrder.district ? ` — ${dbOrder.district}` : ''),
         orderDate: new Date(dbOrder.createdAt).toLocaleDateString('en-GB'),
         estimatedDelivery: dbOrder.deliveryDate || 'Within 10–14 Business Days',
-        factory: dbOrder.factory || 'GreenWood Factory 1 & 3 — Riyadh',
+        factory: dbOrder.factory || 'Green Wood Factory (Riyadh)',
         leadTechnician: dbOrder.leadTechnician || 'م. فهد الغامدي',
         currentStageIdx,
         statusText: dbOrder.status,

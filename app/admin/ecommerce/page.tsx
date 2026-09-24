@@ -70,7 +70,7 @@ const INITIAL_ORDERS: EcommerceOrderRecord[] = [
     vatAmount: 6217,
     totalAmount: 47662,
     status: 'delivered',
-    factory: 'GreenWood Factory 1 & 3 — Riyadh',
+    factory: 'Green Wood Factory (Riyadh)',
     leadTechnician: 'م. فهد الغامدي',
     items: [
       {
@@ -145,7 +145,7 @@ const INITIAL_ORDERS: EcommerceOrderRecord[] = [
     vatAmount: 16537,
     totalAmount: 126787,
     status: 'in_production',
-    factory: 'GreenWood Factory 1 & 3 — Riyadh',
+    factory: 'Green Wood Factory (Riyadh) & Watani Factory (Najran)',
     leadTechnician: 'م. ياسر القحطاني',
     items: [
       {
@@ -195,7 +195,7 @@ const INITIAL_ORDERS: EcommerceOrderRecord[] = [
     vatAmount: 2835,
     totalAmount: 21735,
     status: 'ready_for_dispatch',
-    factory: 'GreenWood Factory 3 — Riyadh',
+    factory: 'Green Wood Factory (Riyadh)',
     leadTechnician: 'فريق التركيبات 2',
     items: [
       {
@@ -238,7 +238,7 @@ const INITIAL_ORDERS: EcommerceOrderRecord[] = [
     vatAmount: 10260,
     totalAmount: 78660,
     status: 'in_production',
-    factory: 'GreenWood Factory 1 & 2 — Riyadh',
+    factory: 'Green Wood Factory (Riyadh) & Watani Factory (Najran)',
     leadTechnician: 'م. فهد الغامدي',
     items: [
       {

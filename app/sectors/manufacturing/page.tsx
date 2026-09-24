@@ -171,8 +171,18 @@ export default function ManufacturingPage() {
                 </div>
 
                 <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between text-[11px] font-mono text-zinc-500">
-                  <span>{lang === 'ar' ? 'الرياض ونجران' : 'Riyadh & Najran'}</span>
-                  <span className="text-emerald-400 font-semibold">{lang === 'ar' ? 'جرين وود' : 'GreenWood'}</span>
+                  <span>
+                    {idx === 0
+                      ? (lang === 'ar' ? 'الرياض' : 'Riyadh')
+                      : (lang === 'ar' ? 'نجران' : 'Najran')}
+                  </span>
+                  <span className="text-emerald-400 font-semibold">
+                    {idx === 0
+                      ? (lang === 'ar' ? 'مصنع الأخشاب الخضراء' : 'Green Wood Factory')
+                      : idx === 1
+                        ? (lang === 'ar' ? 'المصنع الوطني' : 'Watani Factory')
+                        : (lang === 'ar' ? 'مصنع تصاميم الوطن' : 'Watan Designs Factory')}
+                  </span>
                 </div>
               </motion.div>
             ))}

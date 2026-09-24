@@ -50,7 +50,7 @@ function OrderTrackerContent() {
     city: isAr ? 'الرياض — حي النرجس' : 'Riyadh — Al Narjis District',
     orderDate: '28/08/2026',
     estimatedDelivery: isAr ? '08 سبتمبر 2026 (الفترة الصباحية)' : 'September 08, 2026 (Morning Slot)',
-    factory: isAr ? 'مصنع جرين وود 1 و 3 — الرياض' : 'GreenWood Factory 1 & 3 — Riyadh',
+    factory: isAr ? 'مصنع الأخشاب الخضراء بالرياض ومصنع تصاميم الوطن بنجران' : 'Green Wood Factory (Riyadh) & Watan Designs Factory (Najran)',
     leadTechnician: isAr ? 'م. فهد الغامدي' : 'Eng. Fahad Al-Ghamdi',
     currentStageIdx: 2, // Stage 3 in progress (0-indexed 2)
     items: [
@@ -266,7 +266,7 @@ function OrderTrackerContent() {
       title: dict.furniture.tracking.stages.stage3,
       desc: dict.furniture.tracking.stages.stage3_desc,
       icon: Factory,
-      location: isAr ? 'مصنع جرين وود 1 و 3 — الرياض' : 'GreenWood CNC Workcenters — Factory 1 & 3',
+      location: isAr ? 'مصنع الأخشاب الخضراء بالرياض' : 'Green Wood Factory (Riyadh) — CNC Workcenters',
       timestamp: isAr ? 'جارٍ التصنيع والتشكيل' : 'Active Manufacturing',
     },
     {
@@ -427,7 +427,7 @@ function OrderTrackerContent() {
                       </span>
                     ) : (
                       <span className="px-2.5 py-1 rounded-full bg-zinc-800/80 border border-white/10 text-zinc-400 text-[11px] font-mono flex items-center gap-1">
-                        <span>GreenWood Factory Sync</span>
+                        <span>WD Group Factory Sync</span>
                       </span>
                     )}
                   </div>

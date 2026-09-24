@@ -22,6 +22,11 @@ const ChatKitLauncher = dynamicComponent(
   { ssr: false }
 );
 
+const WhatsAppServiceWidget = dynamicComponent(
+  () => import('@/components/whatsapp/WhatsAppServiceWidget'),
+  { ssr: false }
+);
+
 const inter = Inter({
   subsets: ['latin'],
   display: 'swap',
@@ -67,12 +72,16 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: '/favicon.svg', type: 'image/svg+xml' },
       { url: '/favicon.ico', sizes: 'any' },
-      { url: '/brand/wd-group-logo-white.png', sizes: '192x192', type: 'image/png' },
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/favicon.png', sizes: '32x32', type: 'image/png' },
+      { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icon-512.png', sizes: '512x512', type: 'image/png' },
     ],
-    shortcut: '/favicon.svg',
-    apple: '/favicon.svg',
+    shortcut: '/favicon.ico',
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
   },
 };
 
@@ -111,9 +120,11 @@ export default async function RootLayout({
             `,
           }}
         />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link rel="icon" href="/favicon.png" type="image/png" sizes="32x32" />
         <link rel="shortcut icon" href="/favicon.ico" />
-        <link rel="apple-touch-icon" href="/favicon.svg" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
         {/* Google tag (gtag.js) */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-FVBW70B8H5"
@@ -147,6 +158,7 @@ export default async function RootLayout({
               <Footer />
               <LiveEditorDock />
               <ChatKitLauncher />
+              <WhatsAppServiceWidget />
             </MaintenanceGate>
           </ToastProvider>
         </LanguageProvider>

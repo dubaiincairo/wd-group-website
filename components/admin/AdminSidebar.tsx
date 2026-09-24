@@ -24,7 +24,8 @@ import {
   Activity, 
   Globe, 
   ExternalLink,
-  Bot
+  Bot,
+  MessageCircle
 } from 'lucide-react';
 import type { AdminRole } from '@/lib/admin/types';
 
@@ -230,6 +231,15 @@ const NAV_GROUPS: NavGroup[] = [
         icon: Mail,
         iconBg: 'bg-[#C9A86A]/15 text-[#C9A86A] border-[#C9A86A]/25 group-hover:bg-[#C9A86A]/25',
         allowedRoles: ['owner', 'admin', 'editor'],
+      },
+      {
+        id: 'whatsapp-service',
+        label: 'WhatsApp Business Service',
+        labelAr: 'رسائل الواتساب للأعمال',
+        href: '/admin/system/whatsapp',
+        icon: MessageCircle,
+        iconBg: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/25 group-hover:bg-emerald-500/25',
+        allowedRoles: ['owner', 'admin', 'crm', 'editor'],
       },
       {
         id: 'users',

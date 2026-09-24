@@ -82,19 +82,19 @@ export const FURNITURE_CATALOG: FurnitureItem[] = [
     featuresEn: [
       'Kiln-dried solid beech inner frame with 10-year structural guarantee',
       'Commercial-grade stain-resistant treatment (PFC-free)',
-      'Engineered & hand-upholstered at GreenWood Factory 3 in Riyadh',
+      'Engineered & hand-upholstered at Green Wood Factory in Riyadh',
       'Modular configuration tailored to room layout'
     ],
     featuresAr: [
       'هيكل داخلي من خشب الزان المعالج حرارياً مع ضمان هيكلي 10 سنوات',
       'معالجة متقدمة مقاومة للبقع والسوائل للاستخدام الفندقي والسكني',
-      'تنجيد يدوي متقن بمصنع جرين وود 3 بالرياض',
+      'تنجيد يدوي متقن بمصنع الأخشاب الخضراء بالرياض',
       'تصميم موديلي قابل للتعديل بحسب مساحة المجلس'
     ],
     inStock: true,
     isHospitalityGrade: true,
-    factoryLocationEn: 'GreenWood Factory 3 — Riyadh',
-    factoryLocationAr: 'مصنع جرين وود 3 — الرياض',
+    factoryLocationEn: 'Green Wood Factory (Riyadh)',
+    factoryLocationAr: 'مصنع الأخشاب الخضراء بالرياض',
   },
   {
     id: 'gw-najran-travertine-table',
@@ -144,8 +144,8 @@ export const FURNITURE_CATALOG: FurnitureItem[] = [
     ],
     inStock: true,
     isHospitalityGrade: true,
-    factoryLocationEn: 'GreenWood Factory 1 — Najran',
-    factoryLocationAr: 'مصنع جرين وود 1 — نجران',
+    factoryLocationEn: 'Watani Factory (Najran)',
+    factoryLocationAr: 'المصنع الوطني بنجران',
   },
   {
     id: 'gw-alula-lounge-armchair',
@@ -195,8 +195,8 @@ export const FURNITURE_CATALOG: FurnitureItem[] = [
     ],
     inStock: true,
     isHospitalityGrade: true,
-    factoryLocationEn: 'GreenWood Factory 3 — Upholstery Center',
-    factoryLocationAr: 'مصنع جرين وود 3 — مركز التنجيد والجلود',
+    factoryLocationEn: 'Watan Designs Factory (Najran)',
+    factoryLocationAr: 'مصنع تصاميم الوطن بنجران',
   },
   {
     id: 'gw-nakheel-l-sectional',
@@ -246,8 +246,8 @@ export const FURNITURE_CATALOG: FurnitureItem[] = [
     ],
     inStock: true,
     isHospitalityGrade: true,
-    factoryLocationEn: 'GreenWood Factory 3 — Riyadh',
-    factoryLocationAr: 'مصنع جرين وود 3 — الرياض',
+    factoryLocationEn: 'Green Wood Factory (Riyadh)',
+    factoryLocationAr: 'مصنع الأخشاب الخضراء بالرياض',
   },
 
   // 2. BEDROOM & HOSPITALITY SUITES
@@ -299,8 +299,8 @@ export const FURNITURE_CATALOG: FurnitureItem[] = [
     ],
     inStock: true,
     isHospitalityGrade: true,
-    factoryLocationEn: 'GreenWood Factory 1 — Woodworking & Joinery',
-    factoryLocationAr: 'مصنع جرين وود 1 — النجارة والأعمال الخشبية',
+    factoryLocationEn: 'Green Wood Factory (Riyadh)',
+    factoryLocationAr: 'مصنع الأخشاب الخضراء بالرياض',
   },
   {
     id: 'gw-ammariyah-master-bed',
@@ -350,8 +350,8 @@ export const FURNITURE_CATALOG: FurnitureItem[] = [
     ],
     inStock: true,
     isHospitalityGrade: true,
-    factoryLocationEn: 'GreenWood Factory 1 & 3 — Riyadh',
-    factoryLocationAr: 'مصنع جرين وود 1 و 3 — الرياض',
+    factoryLocationEn: 'Green Wood Factory (Riyadh) & Watan Designs Factory (Najran)',
+    factoryLocationAr: 'مصنع الأخشاب الخضراء بالرياض ومصنع تصاميم الوطن بنجران',
   },
   {
     id: 'gw-rawdah-smart-nightstand',
@@ -401,8 +401,8 @@ export const FURNITURE_CATALOG: FurnitureItem[] = [
     ],
     inStock: true,
     isHospitalityGrade: true,
-    factoryLocationEn: 'GreenWood Factory 1 — Riyadh',
-    factoryLocationAr: 'مصنع جرين وود 1 — الرياض',
+    factoryLocationEn: 'Green Wood Factory (Riyadh)',
+    factoryLocationAr: 'مصنع الأخشاب الخضراء بالرياض',
   },
 
   // 3. DINING & BANQUET
@@ -454,8 +454,8 @@ export const FURNITURE_CATALOG: FurnitureItem[] = [
     ],
     inStock: true,
     isHospitalityGrade: true,
-    factoryLocationEn: 'GreenWood Factory 1 — Riyadh',
-    factoryLocationAr: 'مصنع جرين وود 1 — الرياض',
+    factoryLocationEn: 'Green Wood Factory (Riyadh)',
+    factoryLocationAr: 'مصنع الأخشاب الخضراء بالرياض',
   },
   {
     id: 'gw-tuwaiq-round-marble-table',
@@ -504,8 +504,8 @@ export const FURNITURE_CATALOG: FurnitureItem[] = [
     ],
     inStock: true,
     isHospitalityGrade: true,
-    factoryLocationEn: 'GreenWood Factory 1 — Riyadh',
-    factoryLocationAr: 'مصنع جرين وود 1 — الرياض',
+    factoryLocationEn: 'Green Wood Factory (Riyadh)',
+    factoryLocationAr: 'مصنع الأخشاب الخضراء بالرياض',
   },
 
   // 4. ARCHITECTURAL JOINERY & EXECUTIVE OFFICES
@@ -557,8 +557,8 @@ export const FURNITURE_CATALOG: FurnitureItem[] = [
     ],
     inStock: false,
     isHospitalityGrade: true,
-    factoryLocationEn: 'GreenWood Factory 1 & 2 — Wood & Aluminum Hub',
-    factoryLocationAr: 'مصنع جرين وود 1 و 2 — مركز الأخشاب والألومنيوم',
+    factoryLocationEn: 'Green Wood Factory (Riyadh) & Watani Factory (Najran)',
+    factoryLocationAr: 'مصنع الأخشاب الخضراء بالرياض والمصنع الوطني بنجران',
   },
   {
     id: 'gw-rawdah-fluted-credenza',
@@ -608,8 +608,8 @@ export const FURNITURE_CATALOG: FurnitureItem[] = [
     ],
     inStock: true,
     isHospitalityGrade: true,
-    factoryLocationEn: 'GreenWood Factory 1 — Riyadh',
-    factoryLocationAr: 'مصنع جرين وود 1 — الرياض',
+    factoryLocationEn: 'Green Wood Factory (Riyadh)',
+    factoryLocationAr: 'مصنع الأخشاب الخضراء بالرياض',
   },
   {
     id: 'gw-waha-executive-desk',
@@ -658,8 +658,8 @@ export const FURNITURE_CATALOG: FurnitureItem[] = [
     ],
     inStock: true,
     isHospitalityGrade: true,
-    factoryLocationEn: 'GreenWood Factory 1 & 2 — Riyadh',
-    factoryLocationAr: 'مصنع جرين وود 1 و 2 — الرياض',
+    factoryLocationEn: 'Green Wood Factory (Riyadh) & Watani Factory (Najran)',
+    factoryLocationAr: 'مصنع الأخشاب الخضراء بالرياض والمصنع الوطني بنجران',
   },
   {
     id: 'gw-acoustic-geometric-panels',
@@ -709,8 +709,8 @@ export const FURNITURE_CATALOG: FurnitureItem[] = [
     ],
     inStock: true,
     isHospitalityGrade: true,
-    factoryLocationEn: 'GreenWood Factory 1 & 2 — Cladding Facility',
-    factoryLocationAr: 'مصنع جرين وود 1 و 2 — منشأة التجاليد',
+    factoryLocationEn: 'Green Wood Factory (Riyadh) & Watani Factory (Najran)',
+    factoryLocationAr: 'مصنع الأخشاب الخضراء بالرياض والمصنع الوطني بنجران',
   },
 
   // 5. DECOR, SCREENS & PARTITIONS
@@ -761,8 +761,8 @@ export const FURNITURE_CATALOG: FurnitureItem[] = [
     ],
     inStock: true,
     isHospitalityGrade: true,
-    factoryLocationEn: 'GreenWood Factory 2 — Metal & Architectural Hub',
-    factoryLocationAr: 'مصنع جرين وود 2 — مركز المعادن والأعمال المعمارية',
+    factoryLocationEn: 'Watani Factory (Najran)',
+    factoryLocationAr: 'المصنع الوطني بنجران',
   },
   {
     id: 'gw-tuwaiq-bronze-mirror',
@@ -811,8 +811,8 @@ export const FURNITURE_CATALOG: FurnitureItem[] = [
     ],
     inStock: true,
     isHospitalityGrade: true,
-    factoryLocationEn: 'GreenWood Factory 2 — Riyadh',
-    factoryLocationAr: 'مصنع جرين وود 2 — الرياض',
+    factoryLocationEn: 'Green Wood Factory (Riyadh)',
+    factoryLocationAr: 'مصنع الأخشاب الخضراء بالرياض',
   },
 ];
 

@@ -296,9 +296,9 @@ export const translations = {
       factories: {
         heading: "Three Specialized Production Centers",
         list: [
-          { title: "Factory 1 — Custom Woodworking & Joinery", desc: "Custom furniture, cabinetry, doors, wall panels, decorative woodwork, and project-specific joinery.", image_url: "https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=800&q=80" },
-          { title: "Factory 2 — Aluminum & Architectural Metal", desc: "Aluminum and architectural metal solutions prepared to meet project drawings and site requirements.", image_url: "https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?auto=format&fit=crop&w=800&q=80" },
-          { title: "Factory 3 — Contract Furniture & Upholstery", desc: "Furniture, curtains, sofas, headboards, and upholstered products for hospitality, commercial, and residential projects.", image_url: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80" },
+          { title: "Green Wood Factory (Riyadh)", desc: "Custom furniture, cabinetry, doors, wall panels, decorative woodwork, and project-specific joinery.", image_url: "https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=800&q=80" },
+          { title: "Watani Factory (Najran)", desc: "Aluminum and architectural metal solutions prepared to meet project drawings and site requirements.", image_url: "https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?auto=format&fit=crop&w=800&q=80" },
+          { title: "Watan Designs Factory (Najran)", desc: "Furniture, curtains, sofas, headboards, and upholstered products for hospitality, commercial, and residential projects.", image_url: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80" },
         ]
       },
       capabilities: {
@@ -587,7 +587,7 @@ export const translations = {
         dimensions: "Dimensions (W x D x H)",
         lead_time_val: "Lead Time: 10–14 Business Days (Customizable)",
         warranty_val: "5-Year Comprehensive Warranty",
-        factory_val: "Manufactured at GreenWood Riyadh & Najran",
+        factory_val: "Manufactured in WD Group Factories (Riyadh & Najran)",
         finishes: "Finish & Fabric Options",
         quantity: "Quantity",
         request_quote: "Add to Cart",
@@ -1144,9 +1144,9 @@ export const translations = {
       factories: {
         heading: "3 مراكز إنتاج متخصصة",
         list: [
-          { title: "المصنع 1 — النجارة والأعمال الخشبية المخصصة", desc: "أثاث حسب الطلب وخزائن وأبواب وكسوات جدارية وأعمال خشبية ديكورية ونجارة مخصصة للمشاريع.", image_url: "https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=800&q=80" },
-          { title: "المصنع 2 — الألومنيوم والمعادن المعمارية", desc: "حلول الألومنيوم والمعادن المعمارية وفق مخططات المشروع ومتطلبات الموقع.", image_url: "https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?auto=format&fit=crop&w=800&q=80" },
-          { title: "المصنع 3 — أثاث المشروعات والمفروشات والتنجيد", desc: "أثاث وستائر وأرائك وألواح خلفية للأسرة ومنتجات منجدة للمشاريع الفندقية والتجارية والسكنية.", image_url: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80" },
+          { title: "مصنع الأخشاب الخضراء بالرياض", desc: "أثاث حسب الطلب وخزائن وأبواب وكسوات جدارية وأعمال خشبية ديكورية ونجارة مخصصة للمشاريع.", image_url: "https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=800&q=80" },
+          { title: "المصنع الوطني بنجران", desc: "حلول الألومنيوم والمعادن المعمارية وفق مخططات المشروع ومتطلبات الموقع.", image_url: "https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?auto=format&fit=crop&w=800&q=80" },
+          { title: "مصنع تصاميم الوطن بنجران", desc: "أثاث وستائر وأرائك وألواح خلفية للأسرة ومنتجات منجدة للمشاريع الفندقية والتجارية والسكنية.", image_url: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80" },
         ]
       },
       capabilities: {
@@ -1435,7 +1435,7 @@ export const translations = {
         dimensions: "الأبعاد (العرض × العمق × الارتفاع)",
         lead_time_val: "مدة التنفيذ: 10 - 14 يوم عمل (متاح للتفصيل)",
         warranty_val: "ضمان شامل 5 سنوات",
-        factory_val: "مُصنّع في مصانع جرين وود (الرياض / نجران)",
+        factory_val: "مُصنّع في مصانع مجموعة دبليو دي (الرياض ونجران)",
         finishes: "خيارات التشطيب والأقمشة",
         quantity: "الكمية",
         request_quote: "أضف إلى السلة",
