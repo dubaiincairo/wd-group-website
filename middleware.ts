@@ -16,12 +16,13 @@ export async function middleware(request: NextRequest) {
       pathname.startsWith('/_next') ||
       pathname.startsWith('/brand') ||
       pathname.startsWith('/videos') ||
+      pathname.startsWith('/docs') ||
       pathname.startsWith('/api/site-access') ||
       pathname === '/site-access' ||
       pathname === '/favicon.ico' ||
       pathname === '/robots.txt' ||
       pathname === '/sitemap.xml' ||
-      pathname.match(/\.(png|jpg|jpeg|gif|svg|webp|ico|mp4|webm|woff|woff2|ttf|eot|css|js)$/i);
+      pathname.match(/\.(png|jpg|jpeg|gif|svg|webp|ico|mp4|webm|woff|woff2|ttf|eot|css|js|html)$/i);
 
     if (!isExempt) {
       const siteAccessCookie = request.cookies.get(SITE_ACCESS_COOKIE_NAME);
@@ -94,6 +95,7 @@ export async function middleware(request: NextRequest) {
     pathname.startsWith('/brand') ||
     pathname.startsWith('/videos') ||
     pathname.startsWith('/images') ||
+    pathname.startsWith('/docs') ||
     pathname.startsWith('/api') ||
     pathname.startsWith('/admin') ||
     pathname.startsWith('/site-access') ||
@@ -104,7 +106,7 @@ export async function middleware(request: NextRequest) {
     pathname === '/apple-touch-icon.png' ||
     pathname === '/robots.txt' ||
     pathname === '/sitemap.xml' ||
-    Boolean(pathname.match(/\.(png|jpg|jpeg|gif|svg|webp|ico|mp4|webm|woff|woff2|ttf|eot|css|js|txt|xml)$/i));
+    Boolean(pathname.match(/\.(png|jpg|jpeg|gif|svg|webp|ico|mp4|webm|woff|woff2|ttf|eot|css|js|txt|xml|html)$/i));
 
   if (isStaticOrInternal) {
     return NextResponse.next();

@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meta WhatsApp Business Platform — Complete Manual & ID Mapping Guide</title>
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&family=Noto+Kufi+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              gold: '#C9A86A',
+              goldLight: '#DFBA73',
+              dark: '#08090C',
+              surface: '#0F1117',
+              card: '#141724',
+              border: 'rgba(255, 255, 255, 0.1)',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['IBM Plex Mono', 'monospace'],
+            arabic: ['Noto Kufi Arabic', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #08090C;
+      color: #E2E8F0;
+      font-family: 'Inter', sans-serif;
+      scroll-behavior: smooth;
+    }
+    code, pre {
+      font-family: 'IBM Plex Mono', monospace;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #0B0D13;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #1E2333;
+      border-radius: 9999px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #C9A86A;
+    }
+    @media print {
+      .no-print { display: none !important; }
+      body { background: #fff !important; color: #000 !important; }
+      .bg-brand-surface, .bg-brand-card { background: #f8fafc !important; border: 1px solid #cbd5e1 !important; color: #000 !important; }
+      .text-white, .text-zinc-200, .text-zinc-300 { color: #0f172a !important; }
+      .text-zinc-400, .text-zinc-500 { color: #475569 !important; }
+      .border-brand-border, .border-white\/10 { border-color: #e2e8f0 !important; }
+    }
+  </style>
+</head>
+<body class="selection:bg-[#C9A86A]/30 selection:text-[#DFBA73] min-h-screen flex flex-col">
+
+  <!-- TOP STATUS BAR -->
+  <header class="sticky top-0 z-50 bg-[#08090C]/95 backdrop-blur-xl border-b border-white/10 px-4 sm:px-8 py-3.5 no-print">
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
+      
+      <div class="flex items-center gap-3">
+        <a href="/" class="flex items-center gap-2.5 group">
+          <div class="w-8 h-8 rounded-lg bg-[#C9A86A] text-[#08090C] font-black text-xs flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform">
+            WD
+          </div>
+          <span class="font-bold text-sm tracking-wide text-white">WD Group Holding</span>
+        </a>
+        <span class="text-zinc-600 hidden sm:inline">/</span>
+        <span class="text-xs font-mono font-semibold text-[#C9A86A] hidden sm:inline">Engineering & Meta Architecture Manual</span>
+      </div>
+
+      <div class="flex items-center gap-2.5">
+        <button onclick="window.print()" class="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-mono text-zinc-300 hover:text-white transition-all flex items-center gap-1.5 cursor-pointer">
+          <svg class="w-3.5 h-3.5 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+          <span>Print / PDF</span>
+        </button>
+
+        <a href="/admin/system/whatsapp" class="px-3.5 py-1.5 rounded-lg bg-[#C9A86A] text-[#08090C] hover:bg-[#DFBA73] font-bold text-xs font-mono transition-all flex items-center gap-1.5 shadow-sm">
+          <span>Open Admin Console ↗</span>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- MAIN LAYOUT (SIDEBAR + CONTENT) -->
+  <div class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 flex-1 grid grid-cols-1 lg:grid-cols-12 gap-8">
+    
+    <!-- LEFT STICKY TABLE OF CONTENTS -->
+    <aside class="hidden lg:block lg:col-span-3">
+      <div class="sticky top-20 space-y-6">
+        <div class="p-4 rounded-2xl bg-brand-surface border border-white/10 space-y-3">
+          <p class="text-[11px] font-mono uppercase tracking-widest text-[#C9A86A] font-bold">Manual Index</p>
+          <nav class="space-y-1 text-xs">
+            <a href="#section-1" class="block py-1.5 px-2 rounded-lg text-zinc-300 hover:text-white hover:bg-white/5 transition-colors">1. The 6-Layer Architecture</a>
+            <a href="#section-2" class="block py-1.5 px-2 rounded-lg text-zinc-300 hover:text-white hover:bg-white/5 transition-colors">2. Glossary of Identifiers</a>
+            <a href="#section-3" class="block py-1.5 px-2 rounded-lg text-zinc-300 hover:text-white hover:bg-white/5 transition-colors">3. SwissBlue vs GreenWood Setup</a>
+            <a href="#section-4" class="block py-1.5 px-2 rounded-lg text-zinc-300 hover:text-white hover:bg-white/5 transition-colors">4. API Payload Assembly</a>
+            <a href="#section-5" class="block py-1.5 px-2 rounded-lg text-zinc-300 hover:text-white hover:bg-white/5 transition-colors">5. Approved Template Catalog</a>
+            <a href="#section-6" class="block py-1.5 px-2 rounded-lg text-zinc-300 hover:text-white hover:bg-white/5 transition-colors">6. Admin Switcher Guide</a>
+          </nav>
+        </div>
+
+        <!-- QUICK SYSTEM STATUS CARD -->
+        <div class="p-4 rounded-2xl bg-[#0B1A14] border border-emerald-500/20 space-y-2">
+          <div class="flex items-center gap-2 text-emerald-400 font-mono text-xs font-bold">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>Meta Cloud API: LIVE</span>
+          </div>
+          <p class="text-[11px] text-zinc-300 leading-relaxed">
+            SwissBlue Group (<span class="font-mono text-emerald-300">+966 50 707 4949</span>) is verified with GREEN health rating.
+          </p>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN ARTICLE CONTENT -->
+    <main class="lg:col-span-9 space-y-12">
+      
+      <!-- HERO HEADER -->
+      <section class="space-y-4 pb-8 border-b border-white/10">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#C9A86A]/10 border border-[#C9A86A]/30 text-xs font-mono text-[#C9A86A]">
+          <span>Official Architecture Reference · Version 1.0</span>
+        </div>
+        <h1 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
+          Meta WhatsApp Business Platform
+          <span class="block text-lg sm:text-2xl text-[#C9A86A] font-semibold mt-1">Complete Architectural Manual & ID Mapping Guide</span>
+        </h1>
+        <p class="text-sm text-zinc-400 leading-relaxed max-w-3xl">
+          This manual provides a single-source-of-truth reference explaining the 6 distinct layers of Meta's WhatsApp Business Cloud API, defining every identifier, and mapping both live accounts (SwissBlue Hospitality and GreenWood Manufacturing) currently integrated into WD Group Holding.
+        </p>
+      </section>
+
+      <!-- SECTION 1: THE 6-LAYER ARCHITECTURE -->
+      <section id="section-1" class="space-y-6">
+        <div class="space-y-1">
+          <span class="text-xs font-mono font-bold uppercase tracking-wider text-[#C9A86A]">Section 1</span>
+          <h2 class="text-xl sm:text-2xl font-bold text-white">The Core Mental Model: The 6-Layer Architecture</h2>
+        </div>
+        
+        <p class="text-xs sm:text-sm text-zinc-300 leading-relaxed">
+          The main source of confusion when integrating Meta WhatsApp is that Meta uses <strong>six separate layers</strong>. They are strictly hierarchical and cannot be used interchangeably:
+        </p>
+
+        <!-- VISUAL HIERARCHY FLOW -->
+        <div class="p-6 rounded-2xl bg-brand-surface border border-white/10 space-y-4">
+          
+          <div class="flex items-start gap-4 p-3.5 rounded-xl bg-brand-card border border-white/5">
+            <span class="w-7 h-7 rounded-lg bg-blue-500/20 text-blue-400 font-mono font-bold text-xs flex items-center justify-center shrink-0">1</span>
+            <div>
+              <h3 class="text-xs sm:text-sm font-bold text-white">Meta Business Portfolio (Business Account)</h3>
+              <p class="text-xs text-zinc-400 mt-0.5">The legal corporate organization in Meta (e.g., <em>Abdallah El Fouly Foundation</em> or <em>شركة تصاميم الوطن</em>). Owns all apps, billing, and accounts.</p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-4 p-3.5 rounded-xl bg-brand-card border border-white/5 ml-4 sm:ml-6">
+            <span class="w-7 h-7 rounded-lg bg-purple-500/20 text-purple-400 font-mono font-bold text-xs flex items-center justify-center shrink-0">2</span>
+            <div>
+              <h3 class="text-xs sm:text-sm font-bold text-white">Meta App + System User (The Software Gateway)</h3>
+              <p class="text-xs text-zinc-400 mt-0.5">The API gateway. The <strong>System User</strong> generates a permanent Access Token that authenticates your website backend.</p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-4 p-3.5 rounded-xl bg-brand-card border border-white/5 ml-8 sm:ml-12">
+            <span class="w-7 h-7 rounded-lg bg-amber-500/20 text-amber-400 font-mono font-bold text-xs flex items-center justify-center shrink-0">3</span>
+            <div>
+              <h3 class="text-xs sm:text-sm font-bold text-white">WhatsApp Business Account (WABA)</h3>
+              <p class="text-xs text-zinc-400 mt-0.5">The container account (e.g., <em>SwissBlue LLC</em>). Holds message templates, compliance status, and payment configuration.</p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-4 p-3.5 rounded-xl bg-brand-card border border-[#C9A86A]/40 bg-[#C9A86A]/5 ml-12 sm:ml-18">
+            <span class="w-7 h-7 rounded-lg bg-[#C9A86A] text-[#08090C] font-mono font-black text-xs flex items-center justify-center shrink-0">4</span>
+            <div>
+              <h3 class="text-xs sm:text-sm font-bold text-[#EAD6B3]">Phone Number ID (The Crucial Target Endpoint!)</h3>
+              <p class="text-xs text-zinc-300 mt-0.5 font-medium">A numeric internal Meta object ID (e.g., <code>978544632005886</code>). <strong>All API send calls MUST be addressed to this ID!</strong></p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-4 p-3.5 rounded-xl bg-brand-card border border-white/5 ml-16 sm:ml-24">
+            <span class="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 font-mono font-bold text-xs flex items-center justify-center shrink-0">5</span>
+            <div>
+              <h3 class="text-xs sm:text-sm font-bold text-white">Display Phone Number (The Human Number)</h3>
+              <p class="text-xs text-zinc-400 mt-0.5">The readable phone number (e.g., <code>+966 50 707 4949</code>) shown on client phones with the green checkmark.</p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-4 p-3.5 rounded-xl bg-brand-card border border-white/5 ml-20 sm:ml-32">
+            <span class="w-7 h-7 rounded-lg bg-sky-500/20 text-sky-400 font-mono font-bold text-xs flex items-center justify-center shrink-0">6</span>
+            <div>
+              <h3 class="text-xs sm:text-sm font-bold text-white">Approved Message Templates</h3>
+              <p class="text-xs text-zinc-400 mt-0.5">Pre-registered messages with variables (<code>{{1}}</code>, <code>{{2}}</code>) approved by Meta for utility, marketing, or order receipts.</p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- SECTION 2: GLOSSARY -->
+      <section id="section-2" class="space-y-6">
+        <div class="space-y-1">
+          <span class="text-xs font-mono font-bold uppercase tracking-wider text-[#C9A86A]">Section 2</span>
+          <h2 class="text-xl sm:text-2xl font-bold text-white">Definitive Glossary of Identifiers</h2>
+        </div>
+
+        <div class="overflow-x-auto rounded-2xl border border-white/10 bg-brand-surface custom-scrollbar">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-brand-card border-b border-white/10 text-zinc-400 font-mono uppercase text-[11px]">
+              <tr>
+                <th class="py-3 px-4">Identifier Name</th>
+                <th class="py-3 px-4">What it represents</th>
+                <th class="py-3 px-4">How it is used in WD Group</th>
+                <th class="py-3 px-4">Where to find it</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-white/5 text-zinc-300">
+              <tr>
+                <td class="py-3.5 px-4 font-mono font-bold text-[#C9A86A]">Business ID</td>
+                <td class="py-3.5 px-4">Root business portfolio in Meta</td>
+                <td class="py-3.5 px-4">Groups company assets</td>
+                <td class="py-3.5 px-4 text-zinc-400">Business Settings URL <code>?business_id=...</code></td>
+              </tr>
+              <tr>
+                <td class="py-3.5 px-4 font-mono font-bold text-[#C9A86A]">App ID</td>
+                <td class="py-3.5 px-4">Meta Developer App identifier</td>
+                <td class="py-3.5 px-4">Identifies the website API connection</td>
+                <td class="py-3.5 px-4 text-zinc-400">developers.facebook.com/apps</td>
+              </tr>
+              <tr>
+                <td class="py-3.5 px-4 font-mono font-bold text-[#C9A86A]">App Secret</td>
+                <td class="py-3.5 px-4">32-character private key</td>
+                <td class="py-3.5 px-4">HMAC webhook authentication</td>
+                <td class="py-3.5 px-4 text-zinc-400">App Settings ➔ Basic</td>
+              </tr>
+              <tr>
+                <td class="py-3.5 px-4 font-mono font-bold text-[#C9A86A]">System User</td>
+                <td class="py-3.5 px-4">Service account bot</td>
+                <td class="py-3.5 px-4">Owns the permanent non-expiring token</td>
+                <td class="py-3.5 px-4 text-zinc-400">Business Settings ➔ System Users</td>
+              </tr>
+              <tr>
+                <td class="py-3.5 px-4 font-mono font-bold text-[#C9A86A]">WABA ID</td>
+                <td class="py-3.5 px-4">WhatsApp Business Account ID</td>
+                <td class="py-3.5 px-4">Contains approved templates and billing</td>
+                <td class="py-3.5 px-4 text-zinc-400">Business Settings ➔ WhatsApp Accounts</td>
+              </tr>
+              <tr class="bg-[#C9A86A]/10">
+                <td class="py-3.5 px-4 font-mono font-black text-[#DFBA73]">Phone Number ID</td>
+                <td class="py-3.5 px-4 font-bold text-white">Internal Meta Object ID (15 digits)</td>
+                <td class="py-3.5 px-4 font-semibold text-emerald-300">Mandatory URL endpoint for sending messages</td>
+                <td class="py-3.5 px-4 text-zinc-300">WhatsApp Manager ➔ Phone Numbers tab</td>
+              </tr>
+              <tr>
+                <td class="py-3.5 px-4 font-mono font-bold text-[#C9A86A]">Display Phone</td>
+                <td class="py-3.5 px-4">Human readable phone number</td>
+                <td class="py-3.5 px-4">Sender identity visible on user's phone</td>
+                <td class="py-3.5 px-4 text-zinc-400">Physical SIM or Virtual Line</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-xs text-amber-200 space-y-1">
+          <p class="font-bold flex items-center gap-1.5">
+            <span>⚠️ CRITICAL GOLDEN RULE</span>
+          </p>
+          <p>
+            Never POST messages to the WABA ID or to the phone number directly. Messages must <strong>always</strong> be sent to:
+            <br>
+            <code class="text-white font-mono bg-black/40 px-2 py-0.5 rounded mt-1 inline-block">POST https://graph.facebook.com/v20.0/{PHONE_NUMBER_ID}/messages</code>
+          </p>
+        </div>
+      </section>
+
+      <!-- SECTION 3: SIDE-BY-SIDE LIVE MAPPING -->
+      <section id="section-3" class="space-y-6">
+        <div class="space-y-1">
+          <span class="text-xs font-mono font-bold uppercase tracking-wider text-[#C9A86A]">Section 3</span>
+          <h2 class="text-xl sm:text-2xl font-bold text-white">Your Two Live Production Channels Compared</h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          
+          <!-- CHANNEL 1: SWISSBLUE -->
+          <div class="p-6 rounded-2xl bg-brand-surface border border-sky-500/30 space-y-4 relative overflow-hidden">
+            <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-sky-400 via-blue-500 to-sky-400"></div>
+            
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-mono font-bold px-2.5 py-1 rounded-md bg-sky-500/20 text-sky-300 border border-sky-500/30">
+                Setup 1: Live Official
+              </span>
+              <span class="text-[11px] font-mono font-bold text-emerald-400 flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Verified Cloud API
+              </span>
+            </div>
+
+            <div>
+              <h3 class="text-lg font-bold text-white">SwissBlue Group</h3>
+              <p class="text-xs text-zinc-400">Hospitality, Hotel Reservations, Guest Reminders & Check-in</p>
+            </div>
+
+            <div class="space-y-2.5 text-xs font-mono pt-2 border-t border-white/10">
+              <div class="flex justify-between items-center py-1 border-b border-white/5">
+                <span class="text-zinc-500">Business Portfolio:</span>
+                <span class="text-zinc-200 font-bold select-all">Abdallah El Fouly Foundation (410777319368963)</span>
+              </div>
+              <div class="flex justify-between items-center py-1 border-b border-white/5">
+                <span class="text-zinc-500">App Name:</span>
+                <span class="text-zinc-200 font-bold select-all">SwissBlue Website</span>
+              </div>
+              <div class="flex justify-between items-center py-1 border-b border-white/5">
+                <span class="text-zinc-500">System User:</span>
+                <span class="text-zinc-200 font-bold select-all">whatsappapiswissblue</span>
+              </div>
+              <div class="flex justify-between items-center py-1 border-b border-white/5">
+                <span class="text-zinc-500">WABA ID:</span>
+                <span class="text-[#C9A86A] font-bold select-all">881895264727770</span>
+              </div>
+              <div class="flex justify-between items-center py-1 border-b border-white/5 bg-sky-500/10 px-2 rounded">
+                <span class="text-sky-300 font-bold">Phone Number ID:</span>
+                <span class="text-white font-extrabold select-all">978544632005886</span>
+              </div>
+              <div class="flex justify-between items-center py-1 border-b border-white/5">
+                <span class="text-zinc-500">Display Phone:</span>
+                <span class="text-emerald-400 font-bold select-all">+966 50 707 4949</span>
+              </div>
+              <div class="flex justify-between items-center py-1">
+                <span class="text-zinc-500">Token Status:</span>
+                <span class="text-emerald-400 font-bold">Active & Configured</span>
+              </div>
+            </div>
+
+            <div class="pt-2">
+              <p class="text-[11px] font-mono text-zinc-400">Approved Templates:</p>
+              <div class="flex flex-wrap gap-1.5 mt-1.5">
+                <span class="px-2 py-0.5 rounded bg-white/5 border border-white/10 text-[10px] font-mono text-zinc-300">guest_service_confirmation</span>
+                <span class="px-2 py-0.5 rounded bg-white/5 border border-white/10 text-[10px] font-mono text-zinc-300">arrival_reminder_2days</span>
+                <span class="px-2 py-0.5 rounded bg-white/5 border border-white/10 text-[10px] font-mono text-zinc-300">check_in_success</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- CHANNEL 2: GREENWOOD / WATAN DESIGNS -->
+          <div class="p-6 rounded-2xl bg-brand-surface border border-emerald-500/30 space-y-4 relative overflow-hidden">
+            <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-emerald-400 via-amber-500 to-emerald-400"></div>
+            
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-mono font-bold px-2.5 py-1 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                Setup 2: Factory & Living
+              </span>
+              <span class="text-[11px] font-mono font-bold text-amber-400 flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span> Quotations & Sales
+              </span>
+            </div>
+
+            <div>
+              <h3 class="text-lg font-bold text-white">GreenWood / Watan Designs</h3>
+              <p class="text-xs text-zinc-400">Factory Quotations, Orders, Invoices & Living Store</p>
+            </div>
+
+            <div class="space-y-2.5 text-xs font-mono pt-2 border-t border-white/10">
+              <div class="flex justify-between items-center py-1 border-b border-white/5">
+                <span class="text-zinc-500">Business Portfolio:</span>
+                <span class="text-zinc-200 font-bold select-all">شركة تصاميم الوطن (2735873883423694)</span>
+              </div>
+              <div class="flex justify-between items-center py-1 border-b border-white/5">
+                <span class="text-zinc-500">App ID:</span>
+                <span class="text-zinc-200 font-bold select-all">Odoo Integration (2707406719606944)</span>
+              </div>
+              <div class="flex justify-between items-center py-1 border-b border-white/5">
+                <span class="text-zinc-500">System User:</span>
+                <span class="text-zinc-200 font-bold select-all">odoointegrationwhatsApp</span>
+              </div>
+              <div class="flex justify-between items-center py-1 border-b border-white/5">
+                <span class="text-zinc-500">WABA ID:</span>
+                <span class="text-[#C9A86A] font-bold select-all">2072896399925199</span>
+              </div>
+              <div class="flex justify-between items-center py-1 border-b border-white/5 bg-emerald-500/10 px-2 rounded">
+                <span class="text-emerald-300 font-bold">Phone Number ID:</span>
+                <span class="text-white font-extrabold select-all">1147702245092804</span>
+              </div>
+              <div class="flex justify-between items-center py-1 border-b border-white/5">
+                <span class="text-zinc-500">Display Phone:</span>
+                <span class="text-zinc-300 font-bold select-all">+1 555-656-8316 (Test) / +966 50 572 5070</span>
+              </div>
+              <div class="flex justify-between items-center py-1">
+                <span class="text-zinc-500">Token Status:</span>
+                <span class="text-emerald-400 font-bold">Active & Configured</span>
+              </div>
+            </div>
+
+            <div class="pt-2">
+              <p class="text-[11px] font-mono text-zinc-400">Approved Templates:</p>
+              <div class="flex flex-wrap gap-1.5 mt-1.5">
+                <span class="px-2 py-0.5 rounded bg-white/5 border border-white/10 text-[10px] font-mono text-zinc-300">send_quotation</span>
+                <span class="px-2 py-0.5 rounded bg-white/5 border border-white/10 text-[10px] font-mono text-zinc-300">sale (order confirmation)</span>
+                <span class="px-2 py-0.5 rounded bg-white/5 border border-white/10 text-[10px] font-mono text-zinc-300">invoice (tax invoice)</span>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      <!-- SECTION 4: API PAYLOAD ASSEMBLY -->
+      <section id="section-4" class="space-y-6">
+        <div class="space-y-1">
+          <span class="text-xs font-mono font-bold uppercase tracking-wider text-[#C9A86A]">Section 4</span>
+          <h2 class="text-xl sm:text-2xl font-bold text-white">How the Identifiers Connect in an API Call</h2>
+        </div>
+
+        <p class="text-xs sm:text-sm text-zinc-300 leading-relaxed">
+          When the WD Group platform sends an automated notification, here is the exact anatomical breakdown of how the fields map to the HTTP request:
+        </p>
+
+        <div class="p-5 rounded-2xl bg-[#0A0C13] border border-white/10 font-mono text-xs overflow-x-auto custom-scrollbar">
+          <div class="text-emerald-400 font-bold">POST https://graph.facebook.com/v20.0/<span class="text-amber-300 underline font-extrabold">978544632005886</span>/messages</div>
+          <div class="text-zinc-400">Authorization: Bearer <span class="text-purple-300">EAFZCkloPu7OoBSvgNVgXsW...</span></div>
+          <div class="text-zinc-400">Content-Type: application/json</div>
+          <br>
+          <pre class="text-zinc-300">{
+  <span class="text-blue-400">"messaging_product"</span>: <span class="text-emerald-300">"whatsapp"</span>,
+  <span class="text-blue-400">"recipient_type"</span>: <span class="text-emerald-300">"individual"</span>,
+  <span class="text-blue-400">"to"</span>: <span class="text-emerald-300">"966505725070"</span>, <span class="text-zinc-500">// Client E.164 phone</span>
+  <span class="text-blue-400">"type"</span>: <span class="text-emerald-300">"template"</span>,
+  <span class="text-blue-400">"template"</span>: {
+    <span class="text-blue-400">"name"</span>: <span class="text-emerald-300">"guest_service_confirmation_experiment_4"</span>,
+    <span class="text-blue-400">"language"</span>: { <span class="text-blue-400">"code"</span>: <span class="text-emerald-300">"en"</span> },
+    <span class="text-blue-400">"components"</span>: [
+      {
+        <span class="text-blue-400">"type"</span>: <span class="text-emerald-300">"body"</span>,
+        <span class="text-blue-400">"parameters"</span>: [
+          { <span class="text-blue-400">"type"</span>: <span class="text-emerald-300">"text"</span>, <span class="text-blue-400">"text"</span>: <span class="text-amber-300">"Abdallah El Fouly"</span> },    <span class="text-zinc-500">// {{1}} Guest Name</span>
+          { <span class="text-blue-400">"type"</span>: <span class="text-emerald-300">"text"</span>, <span class="text-blue-400">"text"</span>: <span class="text-amber-300">"SB-RES-2026-99"</span> },     <span class="text-zinc-500">// {{2}} Booking Reference</span>
+          { <span class="text-blue-400">"type"</span>: <span class="text-emerald-300">"text"</span>, <span class="text-blue-400">"text"</span>: <span class="text-amber-300">"Executive Suite"</span> },    <span class="text-zinc-500">// {{3}} Room Type</span>
+          { <span class="text-blue-400">"type"</span>: <span class="text-emerald-300">"text"</span>, <span class="text-blue-400">"text"</span>: <span class="text-amber-300">"28 Sep 2026"</span> },        <span class="text-zinc-500">// {{4}} Check-In</span>
+          { <span class="text-blue-400">"type"</span>: <span class="text-emerald-300">"text"</span>, <span class="text-blue-400">"text"</span>: <span class="text-amber-300">"02 Oct 2026"</span> },        <span class="text-zinc-500">// {{5}} Check-Out</span>
+          { <span class="text-blue-400">"type"</span>: <span class="text-emerald-300">"text"</span>, <span class="text-blue-400">"text"</span>: <span class="text-amber-300">"02:00 PM"</span> },           <span class="text-zinc-500">// {{6}} Arrival Time</span>
+          { <span class="text-blue-400">"type"</span>: <span class="text-emerald-300">"text"</span>, <span class="text-blue-400">"text"</span>: <span class="text-amber-300">"SwissBlue Hotel"</span> }      <span class="text-zinc-500">// {{7}} Hotel Name</span>
+        ]
+      }
+    ]
+  }
+}</pre>
+        </div>
+      </section>
+
+      <!-- SECTION 5: APPROVED TEMPLATES -->
+      <section id="section-5" class="space-y-6">
+        <div class="space-y-1">
+          <span class="text-xs font-mono font-bold uppercase tracking-wider text-[#C9A86A]">Section 5</span>
+          <h2 class="text-xl sm:text-2xl font-bold text-white">Catalog of Approved Meta Cloud Templates</h2>
+        </div>
+
+        <div class="space-y-4">
+          
+          <div class="p-4 rounded-xl bg-brand-surface border border-white/10 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="font-mono font-bold text-xs text-[#C9A86A]">guest_service_confirmation_experiment_4</span>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">APPROVED · UTILITY</span>
+            </div>
+            <p class="text-xs text-zinc-300">
+              <em>"Hi {{1}}, Your booking on {{7}} is confirmed. Booking ID: {{2}}, Room type: {{3}}, Arrival date: {{4}}, Departure date: {{5}}..."</em>
+            </p>
+          </div>
+
+          <div class="p-4 rounded-xl bg-brand-surface border border-white/10 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="font-mono font-bold text-xs text-[#C9A86A]">send_quotation</span>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">APPROVED · UTILITY</span>
+            </div>
+            <p class="text-xs text-zinc-300">
+              <em>"Hello {{1}}, Your quotation {{2}} has been prepared by GreenWood Factory. Total: SAR {{3}}, Valid until: {{4}}..."</em>
+            </p>
+          </div>
+
+          <div class="p-4 rounded-xl bg-brand-surface border border-white/10 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="font-mono font-bold text-xs text-[#C9A86A]">sale</span>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">APPROVED · UTILITY</span>
+            </div>
+            <p class="text-xs text-zinc-300">
+              <em>"Hello {{1}}, Congratulations! Your order {{2}} from {{3}} has been confirmed for a total of {{4}}{{5}}. To track your order: {{6}}..."</em>
+            </p>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- SECTION 6: HOW TO SWITCH IN ADMIN -->
+      <section id="section-6" class="space-y-6">
+        <div class="space-y-1">
+          <span class="text-xs font-mono font-bold uppercase tracking-wider text-[#C9A86A]">Section 6</span>
+          <h2 class="text-xl sm:text-2xl font-bold text-white">How to Switch Channels in the Admin Hub</h2>
+        </div>
+
+        <p class="text-xs sm:text-sm text-zinc-300 leading-relaxed">
+          In your WD Group Admin Hub, you do not need to type or copy/paste these long strings manually. A one-click preset switcher is active:
+        </p>
+
+        <div class="p-6 rounded-2xl bg-brand-surface border border-[#C9A86A]/30 space-y-4">
+          <div class="flex flex-wrap items-center gap-3">
+            <a href="/admin/system/whatsapp" class="px-3.5 py-2 rounded-xl bg-sky-500/20 text-sky-300 border border-sky-500/40 text-xs font-mono font-bold hover:bg-sky-500/30 transition-all">
+              ★ SwissBlue Group (+966 50 707 4949 · Live Cloud API)
+            </a>
+            <a href="/admin/system/whatsapp" class="px-3.5 py-2 rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-xs font-mono font-bold hover:bg-emerald-500/30 transition-all">
+              GreenWood / WatanDesigns (Quotation & Sales WABA)
+            </a>
+          </div>
+          <p class="text-xs text-zinc-400">
+            Clicking either preset instantly populates the exact Token, Phone Number ID, WABA ID, and Dispatch Phone. Click <strong>"Save Gateway Configuration"</strong> to apply it to live traffic immediately.
+          </p>
+        </div>
+      </section>
+
+      <!-- FOOTER -->
+      <footer class="pt-8 border-t border-white/10 text-xs text-zinc-500 flex flex-col sm:flex-row justify-between items-center gap-4">
+        <p>© 2026 WD Group Holding. All rights reserved.</p>
+        <div class="flex items-center gap-4 font-mono text-[11px]">
+          <a href="/admin/system/whatsapp" class="text-zinc-400 hover:text-white transition-colors">WhatsApp Console</a>
+          <span>·</span>
+          <a href="/" class="text-zinc-400 hover:text-white transition-colors">Corporate Portal</a>
+        </div>
+      </footer>
+
+    </main>
+
+  </div>
+
+</body>
+</html>
