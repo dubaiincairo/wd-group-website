@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '@/context/LanguageContext';
 import { WishlistProvider, useWishlist } from '@/context/WishlistContext';
-import { FurnitureItem, FURNITURE_CATALOG } from '@/lib/furnitureData';
+import { FurnitureItem, FURNITURE_CATALOG, normalizeCartItem } from '@/lib/furnitureData';
 
 // Dedicated Standalone eCommerce Components
 import EcommerceNavbar from '@/components/furniture/EcommerceNavbar';
@@ -52,31 +52,52 @@ function FurniturePageContent() {
   const [quickViewProduct, setQuickViewProduct] = useState<FurnitureItem | null>(null);
   const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [isHydrated, setIsHydrated] = useState(false);
 
   // Sync cart with localStorage
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem('wd_furniture_cart');
-      if (saved) {
-        setCartItems(JSON.parse(saved));
+    const loadCart = () => {
+      try {
+        const saved = localStorage.getItem('wd_furniture_cart');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed)) {
+            const normalized = parsed.map(normalizeCartItem).filter(Boolean) as CartItem[];
+            setCartItems(normalized);
+          }
+        }
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setIsHydrated(true);
       }
-    } catch (e) {
-      console.error(e);
-    }
+    };
+
+    loadCart();
+
+    const handleCartSync = () => loadCart();
+    window.addEventListener('wd_cart_updated', handleCartSync);
+    window.addEventListener('storage', handleCartSync);
+
+    return () => {
+      window.removeEventListener('wd_cart_updated', handleCartSync);
+      window.removeEventListener('storage', handleCartSync);
+    };
   }, []);
 
   useEffect(() => {
+    if (!isHydrated) return;
     try {
       localStorage.setItem('wd_furniture_cart', JSON.stringify(cartItems));
     } catch (e) {
       console.error(e);
     }
-  }, [cartItems]);
+  }, [cartItems, isHydrated]);
 
   const handleAddToCart = (product: FurnitureItem, selectedFinish: string, quantity: number) => {
     setCartItems((prev) => {
       const existingIdx = prev.findIndex(
-        (i) => i.product.id === product.id && i.selectedFinishId === selectedFinish
+        (i) => i.product?.id === product.id && i.selectedFinishId === selectedFinish
       );
       if (existingIdx > -1) {
         const updated = [...prev];
@@ -92,7 +113,7 @@ function FurniturePageContent() {
     setCartItems((prev) => {
       return prev
         .map((item) => {
-          if (item.product.id === productId && item.selectedFinishId === selectedFinishId) {
+          if (item.product?.id === productId && item.selectedFinishId === selectedFinishId) {
             const newQty = item.quantity + delta;
             return newQty > 0 ? { ...item, quantity: newQty } : null;
           }
@@ -105,12 +126,12 @@ function FurniturePageContent() {
   const handleRemoveItem = (productId: string, selectedFinishId: string) => {
     setCartItems((prev) =>
       prev.filter(
-        (item) => !(item.product.id === productId && item.selectedFinishId === selectedFinishId)
+        (item) => !(item.product?.id === productId && item.selectedFinishId === selectedFinishId)
       )
     );
   };
 
-  const totalCartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+  const totalCartCount = cartItems.reduce((sum, item) => sum + (item.quantity || 1), 0);
 
   return (
     <div className="min-h-screen bg-[#08090C] text-white selection:bg-[#C9A86A]/30 selection:text-white flex flex-col justify-between">
@@ -293,7 +314,7 @@ function FurniturePageContent() {
               type="button"
               onClick={() => setCartDrawerOpen(true)}
               className="p-3.5 sm:px-4 sm:py-3.5 rounded-2xl bg-gradient-to-r from-[#C9A86A] via-[#DFBA73] to-[#C9A86A] text-[#08090C] shadow-[0_0_30px_rgba(201,168,106,0.6)] border border-[#E3C58A] flex items-center gap-3 cursor-pointer group hover:scale-105 active:scale-95 transition-all"
-              aria-label={dict.furniture.cart.title}
+              aria-label={dict?.furniture?.cart?.title || (isAr ? 'سلة التسوق' : 'Cart')}
             >
               <div className="relative">
                 <ShoppingBag className="w-5 h-5 text-[#08090C]" />
@@ -302,7 +323,7 @@ function FurniturePageContent() {
                 </span>
               </div>
               <span className="text-xs font-black hidden sm:inline">
-                {dict.furniture.cart.title}
+                {dict?.furniture?.cart?.title || (isAr ? 'سلة التسوق' : 'Cart')}
               </span>
               <span className="text-[11px] font-mono font-black bg-[#08090C]/15 px-2 py-0.5 rounded">
                 {totalCartCount} {isAr ? 'قطع' : 'items'}

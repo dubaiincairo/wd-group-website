@@ -850,3 +850,58 @@ export function getAllFurnitureSlugs(): string[] {
   return FURNITURE_CATALOG.map((item) => item.id);
 }
 
+export interface CartItem {
+  product: FurnitureItem;
+  selectedFinishId: string;
+  quantity: number;
+}
+
+/**
+ * Normalizes any cart item payload (e.g. from localStorage or legacy formats)
+ * into a guaranteed valid CartItem, cross-referencing FURNITURE_CATALOG to repair
+ * missing fields and prevent any client runtime exceptions.
+ */
+export function normalizeCartItem(raw: any): CartItem | null {
+  if (!raw || typeof raw !== 'object') return null;
+
+  const rawProduct = raw.product || raw;
+  const productId = rawProduct?.id || raw.productId || raw.id;
+  const sku = rawProduct?.sku || raw.sku;
+
+  const catalogProduct = FURNITURE_CATALOG.find(
+    (p) => (productId && p.id === productId) || (sku && p.sku === sku)
+  );
+
+  const baseProduct: FurnitureItem | null = catalogProduct || (rawProduct?.id && typeof rawProduct.price === 'number' ? rawProduct : null);
+  if (!baseProduct || !baseProduct.id) return null;
+
+  const images = Array.isArray(baseProduct.images) && baseProduct.images.length > 0 && typeof baseProduct.images[0] === 'string'
+    ? baseProduct.images
+    : ['/brand/wd-group-logo-white.png'];
+
+  const finishes = Array.isArray(baseProduct.finishes) && baseProduct.finishes.length > 0
+    ? baseProduct.finishes
+    : [{ id: 'standard', nameEn: 'Standard Finish', nameAr: 'تشطيب قياسي', colorCode: '#C9A86A' }];
+
+  const safeProduct: FurnitureItem = {
+    ...baseProduct,
+    price: typeof baseProduct.price === 'number' && !isNaN(baseProduct.price) ? baseProduct.price : 0,
+    images,
+    finishes,
+  };
+
+  const selectedFinishId = typeof raw.selectedFinishId === 'string' && raw.selectedFinishId
+    ? raw.selectedFinishId
+    : safeProduct.finishes[0]?.id || 'standard';
+
+  const quantity = typeof raw.quantity === 'number' && raw.quantity > 0 && !isNaN(raw.quantity)
+    ? Math.floor(raw.quantity)
+    : 1;
+
+  return {
+    product: safeProduct,
+    selectedFinishId,
+    quantity,
+  };
+}
+

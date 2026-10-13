@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '@/context/LanguageContext';
 import { WishlistProvider, useWishlist } from '@/context/WishlistContext';
-import { FurnitureItem } from '@/lib/furnitureData';
+import { FurnitureItem, normalizeCartItem } from '@/lib/furnitureData';
 import EcommerceNavbar from '@/components/furniture/EcommerceNavbar';
 import CartQuoteDrawer, { CartItem } from '@/components/furniture/CartQuoteDrawer';
 import WishlistDrawer from '@/components/furniture/WishlistDrawer';
@@ -66,10 +66,28 @@ function ProductDetailInner({ product, relatedProducts }: ProductDetailClientPro
 
   // Sync cart with localStorage
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem('wd_furniture_cart');
-      if (saved) setCartItems(JSON.parse(saved));
-    } catch (e) {}
+    const loadCart = () => {
+      try {
+        const saved = localStorage.getItem('wd_furniture_cart');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed)) {
+            setCartItems(parsed.map(normalizeCartItem).filter(Boolean) as CartItem[]);
+          }
+        }
+      } catch (e) {}
+    };
+
+    loadCart();
+
+    const handleSync = () => loadCart();
+    window.addEventListener('wd_cart_updated', handleSync);
+    window.addEventListener('storage', handleSync);
+
+    return () => {
+      window.removeEventListener('wd_cart_updated', handleSync);
+      window.removeEventListener('storage', handleSync);
+    };
   }, []);
 
   const saveCart = (items: CartItem[]) => {
@@ -82,7 +100,7 @@ function ProductDetailInner({ product, relatedProducts }: ProductDetailClientPro
 
   const handleAddToCart = () => {
     const existingIdx = cartItems.findIndex(
-      (i) => i.product.id === product.id && i.selectedFinishId === selectedFinishId
+      (i) => i.product?.id === product.id && i.selectedFinishId === selectedFinishId
     );
 
     let updated: CartItem[];
@@ -91,6 +109,23 @@ function ProductDetailInner({ product, relatedProducts }: ProductDetailClientPro
       updated[existingIdx].quantity += quantity;
     } else {
       updated = [...cartItems, { product, selectedFinishId, quantity }];
+    }
+
+    saveCart(updated);
+    setCartDrawerOpen(true);
+  };
+
+  const handleAddCustomToCart = (prod: FurnitureItem, finishId: string, qty: number) => {
+    const existingIdx = cartItems.findIndex(
+      (i) => i.product?.id === prod.id && i.selectedFinishId === finishId
+    );
+
+    let updated: CartItem[];
+    if (existingIdx > -1) {
+      updated = [...cartItems];
+      updated[existingIdx].quantity += qty;
+    } else {
+      updated = [...cartItems, { product: prod, selectedFinishId: finishId, quantity: qty }];
     }
 
     saveCart(updated);
@@ -539,7 +574,7 @@ function ProductDetailInner({ product, relatedProducts }: ProductDetailClientPro
         onUpdateQuantity={(pid, fid, delta) => {
           const updated = cartItems
             .map((item) => {
-              if (item.product.id === pid && item.selectedFinishId === fid) {
+              if (item.product?.id === pid && item.selectedFinishId === fid) {
                 const nq = item.quantity + delta;
                 return nq > 0 ? { ...item, quantity: nq } : null;
               }
@@ -549,12 +584,12 @@ function ProductDetailInner({ product, relatedProducts }: ProductDetailClientPro
           saveCart(updated);
         }}
         onRemoveItem={(pid, fid) => {
-          saveCart(cartItems.filter((i) => !(i.product.id === pid && i.selectedFinishId === fid)));
+          saveCart(cartItems.filter((i) => !(i.product?.id === pid && i.selectedFinishId === fid)));
         }}
         onClearCart={() => saveCart([])}
       />
 
-      <WishlistDrawer />
+      <WishlistDrawer onAddToCart={handleAddCustomToCart} />
 
       {/* Footer */}
       <EcommerceFooter />

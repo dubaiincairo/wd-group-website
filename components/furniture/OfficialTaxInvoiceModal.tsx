@@ -62,16 +62,24 @@ export default function OfficialTaxInvoiceModal({
   const { lang } = useLanguage();
   const isAr = lang === 'ar';
 
-  if (!isOpen) return null;
+  if (!isOpen || !order) return null;
 
   // Generate ZATCA QR Code Data
-  const orderDateIso = order.orderDate ? new Date(order.orderDate).toISOString() : new Date().toISOString();
+  let orderDateIso = new Date().toISOString();
+  try {
+    if (order.orderDate) {
+      orderDateIso = new Date(order.orderDate).toISOString();
+    }
+  } catch (e) {
+    orderDateIso = new Date().toISOString();
+  }
+
   const zatcaTlvBase64 = generateZatcaQrBase64({
     sellerName: 'شركة تصاميم الوطن المحدودة - مجموعة دبليو دي',
     vatRegistrationNumber: '310492817400003',
     timestamp: orderDateIso,
-    totalWithVat: order.totalAmount,
-    vatTotal: order.vatAmount,
+    totalWithVat: order.totalAmount || 0,
+    vatTotal: order.vatAmount || 0,
   });
 
   const qrImageUrl = generateQrCodeDataUrl(zatcaTlvBase64, 150);
@@ -209,20 +217,20 @@ export default function OfficialTaxInvoiceModal({
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-zinc-200 font-mono">
-                  {order.items.map((item, idx) => {
-                    const lineTotal = item.unitPrice * item.quantity;
+                  {(Array.isArray(order.items) ? order.items : []).map((item, idx) => {
+                    const lineTotal = (item.unitPrice || 0) * (item.quantity || 1);
                     return (
                       <tr key={idx} className="hover:bg-zinc-50">
                         <td className="p-3.5 text-zinc-400">{idx + 1}</td>
-                        <td className="p-3.5 font-bold text-zinc-900">{item.sku}</td>
+                        <td className="p-3.5 font-bold text-zinc-900">{item.sku || 'WD-ITEM'}</td>
                         <td className="p-3.5 font-sans">
                           <span className="font-bold text-zinc-950 block">{isAr && item.nameAr ? item.nameAr : item.nameEn}</span>
                           <span className="text-[10px] text-zinc-500 font-mono">EN 16139 Commercial Hospitality Grade</span>
                         </td>
                         <td className="p-3.5 text-zinc-600 font-sans">{item.finishName || 'Standard'}</td>
-                        <td className="p-3.5 text-center font-bold">{item.quantity}</td>
+                        <td className="p-3.5 text-center font-bold">{item.quantity || 1}</td>
                         <td className="p-3.5 text-right rtl:text-left text-zinc-700">
-                          {item.unitPrice.toLocaleString('en-US')} SAR
+                          {(item.unitPrice || 0).toLocaleString('en-US')} SAR
                         </td>
                         <td className="p-3.5 text-right rtl:text-left font-bold text-zinc-950">
                           {lineTotal.toLocaleString('en-US')} SAR
@@ -249,24 +257,24 @@ export default function OfficialTaxInvoiceModal({
               <div className="w-full sm:w-72 space-y-2 text-xs font-mono">
                 <div className="flex items-center justify-between text-zinc-600">
                   <span>{isAr ? 'المجموع الفرعي (Subtotal):' : 'Subtotal:'}</span>
-                  <span className="font-bold text-zinc-900">{order.subtotal.toLocaleString('en-US')} SAR</span>
+                  <span className="font-bold text-zinc-900">{(order.subtotal || 0).toLocaleString('en-US')} SAR</span>
                 </div>
 
                 {order.discountAmount && order.discountAmount > 0 ? (
                   <div className="flex items-center justify-between text-emerald-600">
                     <span>{isAr ? 'الخصم الترويجي:' : 'Discount:'}</span>
-                    <span>-{order.discountAmount.toLocaleString('en-US')} SAR</span>
+                    <span>-{(order.discountAmount || 0).toLocaleString('en-US')} SAR</span>
                   </div>
                 ) : null}
 
                 <div className="flex items-center justify-between text-zinc-600">
                   <span>{isAr ? 'ضريبة القيمة المضافة (15% VAT):' : '15% Saudi VAT:'}</span>
-                  <span className="font-bold text-zinc-900">{order.vatAmount.toLocaleString('en-US')} SAR</span>
+                  <span className="font-bold text-zinc-900">{(order.vatAmount || 0).toLocaleString('en-US')} SAR</span>
                 </div>
 
                 <div className="pt-2 border-t-2 border-zinc-900 flex items-center justify-between text-sm font-black text-zinc-950">
                   <span>{isAr ? 'الإجمالي النهائي (Total):' : 'Grand Total:'}</span>
-                  <span className="text-base text-[#966E2E] font-bold">{order.totalAmount.toLocaleString('en-US')} SAR</span>
+                  <span className="text-base text-[#966E2E] font-bold">{(order.totalAmount || 0).toLocaleString('en-US')} SAR</span>
                 </div>
               </div>
             </div>

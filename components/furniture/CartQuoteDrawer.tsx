@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '@/context/LanguageContext';
-import { FurnitureItem } from '@/lib/furnitureData';
+import { FurnitureItem, CartItem, normalizeCartItem } from '@/lib/furnitureData';
 import { 
   X, 
   Trash2, 
@@ -20,15 +20,12 @@ import {
   ShieldCheck,
   ArrowRight,
   FileText,
-  FileDown
+  FileDown,
+  CreditCard
 } from 'lucide-react';
 import OfficialTaxInvoiceModal, { InvoiceOrderData } from './OfficialTaxInvoiceModal';
 
-export interface CartItem {
-  product: FurnitureItem;
-  selectedFinishId: string;
-  quantity: number;
-}
+export type { CartItem };
 
 interface CartQuoteDrawerProps {
   isOpen: boolean;
@@ -42,13 +39,47 @@ interface CartQuoteDrawerProps {
 export default function CartQuoteDrawer({
   isOpen,
   onClose,
-  items,
+  items = [],
   onUpdateQuantity,
   onRemoveItem,
   onClearCart,
 }: CartQuoteDrawerProps) {
   const { lang, dict, getLocalizedPath } = useLanguage();
   const isAr = lang === 'ar';
+
+  const cartDict = dict?.furniture?.cart || {
+    title: isAr ? 'سلة التسوق' : 'Shopping Cart',
+    item_singular: isAr ? 'قطعة' : 'Item',
+    items_plural: isAr ? 'قطع' : 'Items',
+    clear_all: isAr ? 'تفريغ السلة' : 'Clear Cart',
+    empty_title: isAr ? 'سلة التسوق فارغة' : 'Your Cart is Empty',
+    empty_desc: isAr ? 'استعرض مجموعتنا الفاخرة وأضف القطع إلى سلة التسوق للمتابعة إلى الدفع الفوري.' : 'Browse our luxury collection and add items to your cart.',
+    start_shopping: isAr ? 'تصفح المنتجات' : 'Start Shopping',
+    subtotal: isAr ? 'المجموع الفرعي' : 'Subtotal',
+    vat: isAr ? 'ضريبة القيمة المضافة التقديرية (15%)' : 'Estimated 15% VAT',
+    delivery_note: isAr ? 'يشمل التوصيل الفاخر والتركيب المتخصص في المدن الرئيسية بالمملكة.' : 'White-glove delivery & professional installation included for major KSA cities.',
+    direct_checkout: isAr ? 'متابعة الدفع والشراء' : 'Proceed to Checkout',
+  };
+
+  const cardDict = dict?.furniture?.card || {
+    sar: isAr ? 'ر.س' : 'SAR',
+  };
+
+  const checkoutModalDict = dict?.furniture?.checkout_modal || {
+    title: isAr ? 'طلب تسعير مشروعات وتوريد' : 'Complete Furniture Order / RFQ',
+    order_type: isAr ? 'نوع الطلب' : 'Order Type',
+    type_retail: isAr ? 'شراء سكني / فردي' : 'Individual / Residential Purchase',
+    type_b2b: isAr ? 'توريد مشاريع وفنادق' : 'Commercial / Hotel Project Procurement',
+    name: isAr ? 'الاسم الكامل' : 'Full Name',
+    email: isAr ? 'البريد الإلكتروني' : 'Email Address',
+    phone: isAr ? 'رقم الجوال' : 'Phone Number',
+    city: isAr ? 'المدينة' : 'Delivery City',
+    notes: isAr ? 'ملاحظات خاصة' : 'Special Notes',
+    submit_btn: isAr ? 'تأكيد وإرسال الطلب' : 'Confirm & Send Order Request',
+    submitting: isAr ? 'جارٍ الإرسال...' : 'Processing...',
+    success_title: isAr ? 'تم استلام طلبك بنجاح!' : 'Order Request Submitted Successfully!',
+    success_desc: isAr ? 'شكراً لتواصلك مع جرين وود. تم تسجيل طلبك وسيتواصل معك مستشار الأثاث خلال 24 ساعة.' : 'Thank you. A GreenWood furniture consultant has received your order request and will contact you within 24 hours.',
+  };
 
   const [checkoutModalOpen, setCheckoutModalOpen] = useState(false);
   const [quoteModalOpen, setQuoteModalOpen] = useState(false);
@@ -64,9 +95,11 @@ export default function CartQuoteDrawer({
     notes: '',
   });
 
-  const totalItemsCount = items.reduce((sum, item) => sum + item.quantity, 0);
-  const subtotal = items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
-  const vatAmount = subtotal * 0.15;
+  const safeItems = (Array.isArray(items) ? items : []).map(normalizeCartItem).filter(Boolean) as CartItem[];
+
+  const totalItemsCount = safeItems.reduce((sum, item) => sum + (item.quantity || 1), 0);
+  const subtotal = safeItems.reduce((sum, item) => sum + (item.product?.price || 0) * (item.quantity || 1), 0);
+  const vatAmount = Math.round(subtotal * 0.15);
   const grandTotal = subtotal + vatAmount;
 
   const quotationData: InvoiceOrderData = {
@@ -79,15 +112,15 @@ export default function CartQuoteDrawer({
     subtotal: subtotal,
     vatAmount: vatAmount,
     totalAmount: grandTotal,
-    items: items.map((i) => {
-      const finishObj = i.product.finishes.find((f) => f.id === i.selectedFinishId);
+    items: safeItems.map((i) => {
+      const finishObj = i.product?.finishes?.find((f) => f.id === i.selectedFinishId);
       return {
-        sku: i.product.sku,
-        nameEn: i.product.nameEn,
-        nameAr: i.product.nameAr,
-        finishName: finishObj ? (isAr ? finishObj.nameAr : finishObj.nameEn) : i.selectedFinishId,
-        quantity: i.quantity,
-        unitPrice: i.product.price,
+        sku: i.product?.sku || 'WD-ITEM',
+        nameEn: i.product?.nameEn || 'Furniture Piece',
+        nameAr: i.product?.nameAr || 'قطعة أثاث',
+        finishName: finishObj ? (isAr ? finishObj.nameAr : finishObj.nameEn) : (i.selectedFinishId || 'Standard'),
+        quantity: i.quantity || 1,
+        unitPrice: i.product?.price || 0,
       };
     }),
   };
@@ -96,7 +129,7 @@ export default function CartQuoteDrawer({
     e.preventDefault();
     setSubmitting(true);
     try {
-      const itemsSummary = items
+      const itemsSummary = safeItems
         .map(
           (i, idx) =>
             `${idx + 1}. ${isAr ? i.product.nameAr : i.product.nameEn} (${i.product.sku}) - Qty: ${i.quantity} - Finish: ${i.selectedFinishId || 'Default'} - ${i.product.price * i.quantity} SAR`
@@ -155,8 +188,8 @@ ${formData.notes || 'None'}
 
   const whatsappCheckoutMessage = encodeURIComponent(
     isAr
-      ? `السلام عليكم، أود إرسال طلب أثاث من متجر جرين وود:\n${items.map((i) => `• ${i.product.nameAr} (${i.quantity} قطعة - ${i.product.sku})`).join('\n')}\nالمجموع التقديري: ${grandTotal.toLocaleString('en-US')} ر.س\nيرجى تأكيد التوافر وموعد التوصيل.`
-      : `Hello WD Group, I would like to place an order from GreenWood Furniture Store:\n${items.map((i) => `• ${i.product.nameEn} (${i.quantity} pcs - ${i.product.sku})`).join('\n')}\nEstimated Total: ${grandTotal.toLocaleString('en-US')} SAR\nPlease confirm availability and delivery schedule.`
+      ? `السلام عليكم، أود إرسال طلب أثاث من متجر جرين وود:\n${safeItems.map((i) => `• ${i.product.nameAr} (${i.quantity} قطعة - ${i.product.sku})`).join('\n')}\nالمجموع التقديري: ${grandTotal.toLocaleString('en-US')} ر.س\nيرجى تأكيد التوافر وموعد التوصيل.`
+      : `Hello WD Group, I would like to place an order from GreenWood Furniture Store:\n${safeItems.map((i) => `• ${i.product.nameEn} (${i.quantity} pcs - ${i.product.sku})`).join('\n')}\nEstimated Total: ${grandTotal.toLocaleString('en-US')} SAR\nPlease confirm availability and delivery schedule.`
   );
 
   return (
@@ -190,22 +223,22 @@ ${formData.notes || 'None'}
                     </div>
                     <div>
                       <h3 className="text-sm font-extrabold text-white">
-                        {dict.furniture.cart.title}
+                        {cartDict.title}
                       </h3>
                       <span className="text-[11px] font-mono text-zinc-400">
-                        {totalItemsCount} {totalItemsCount === 1 ? dict.furniture.cart.item_singular : dict.furniture.cart.items_plural}
+                        {totalItemsCount} {totalItemsCount === 1 ? (cartDict.item_singular || 'Item') : (cartDict.items_plural || 'Items')}
                       </span>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-2">
-                    {items.length > 0 && (
+                    {safeItems.length > 0 && (
                       <button
                         onClick={onClearCart}
                         className="text-[11px] text-zinc-400 hover:text-rose-400 transition-colors px-2 py-1 rounded hover:bg-white/5"
-                        title={dict.furniture.cart.clear_all}
+                        title={cartDict.clear_all}
                       >
-                        {dict.furniture.cart.clear_all}
+                        {cartDict.clear_all}
                       </button>
                     )}
                     <button
@@ -220,33 +253,33 @@ ${formData.notes || 'None'}
 
                 {/* Items List Body */}
                 <div className="flex-1 overflow-y-auto p-6 space-y-4">
-                  {items.length === 0 ? (
+                  {safeItems.length === 0 ? (
                     <div className="h-full flex flex-col items-center justify-center text-center p-6 space-y-4">
                       <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-zinc-500">
                         <ShoppingBag className="w-8 h-8" />
                       </div>
                       <div className="space-y-1">
                         <h4 className="text-base font-bold text-white">
-                          {dict.furniture.cart.empty_title}
+                          {cartDict.empty_title}
                         </h4>
                         <p className="text-xs text-zinc-400 max-w-xs leading-relaxed">
-                          {dict.furniture.cart.empty_desc}
+                          {cartDict.empty_desc}
                         </p>
                       </div>
                       <button
                         onClick={onClose}
                         className="mt-2 px-5 py-2.5 rounded-xl text-xs font-bold text-[#08090C] bg-[#C9A86A] hover:bg-[#E3C58A] transition-all shadow-md"
                       >
-                        {dict.furniture.cart.start_shopping}
+                        {cartDict.start_shopping}
                       </button>
                     </div>
                   ) : (
-                    items.map((item, idx) => {
-                      const finishObj = item.product.finishes.find((f) => f.id === item.selectedFinishId);
-                      const itemTotal = item.product.price * item.quantity;
+                    safeItems.map((item, idx) => {
+                      const finishObj = item.product?.finishes?.find((f) => f.id === item.selectedFinishId);
+                      const itemTotal = (item.product?.price || 0) * (item.quantity || 1);
                       return (
                         <motion.div
-                          key={`${item.product.id}-${item.selectedFinishId}-${idx}`}
+                          key={`${item.product?.id || idx}-${item.selectedFinishId}-${idx}`}
                           layout
                           initial={{ opacity: 0, y: 15 }}
                           animate={{ opacity: 1, y: 0 }}
@@ -256,8 +289,8 @@ ${formData.notes || 'None'}
                           {/* Image */}
                           <div className="relative w-20 h-20 rounded-xl overflow-hidden shrink-0 border border-white/10 bg-black/40">
                             <Image
-                              src={item.product.images[0]}
-                              alt={isAr ? item.product.nameAr : item.product.nameEn}
+                              src={item.product?.images?.[0] || '/brand/wd-group-logo-white.png'}
+                              alt={isAr ? (item.product?.nameAr || '') : (item.product?.nameEn || '')}
                               fill
                               sizes="80px"
                               className="object-cover"
@@ -269,10 +302,10 @@ ${formData.notes || 'None'}
                           <div className="flex-1 min-w-0 space-y-1">
                             <div className="flex items-start justify-between gap-1">
                               <h4 className="text-xs font-bold text-white truncate group-hover:text-[#C9A86A] transition-colors">
-                                {isAr ? item.product.nameAr : item.product.nameEn}
+                                {isAr ? item.product?.nameAr : item.product?.nameEn}
                               </h4>
                               <button
-                                onClick={() => onRemoveItem(item.product.id, item.selectedFinishId)}
+                                onClick={() => onRemoveItem(item.product?.id || '', item.selectedFinishId)}
                                 className="text-zinc-500 hover:text-rose-400 transition-colors p-1"
                                 title="Remove item"
                               >
@@ -291,13 +324,13 @@ ${formData.notes || 'None'}
                                 </span>
                               )}
                               <span className="font-mono text-zinc-600">·</span>
-                              <span className="font-mono text-zinc-500">{item.product.sku}</span>
+                              <span className="font-mono text-zinc-500">{item.product?.sku}</span>
                             </div>
 
                             <div className="flex items-center justify-between pt-1">
                               <div className="flex items-center rounded-lg bg-black/40 border border-white/10 p-0.5">
                                 <button
-                                  onClick={() => onUpdateQuantity(item.product.id, item.selectedFinishId, -1)}
+                                  onClick={() => onUpdateQuantity(item.product?.id || '', item.selectedFinishId, -1)}
                                   className="w-6 h-6 rounded flex items-center justify-center text-zinc-400 hover:text-white hover:bg-white/10 text-xs"
                                 >
                                   <Minus className="w-3 h-3" />
@@ -306,7 +339,7 @@ ${formData.notes || 'None'}
                                   {item.quantity}
                                 </span>
                                 <button
-                                  onClick={() => onUpdateQuantity(item.product.id, item.selectedFinishId, 1)}
+                                  onClick={() => onUpdateQuantity(item.product?.id || '', item.selectedFinishId, 1)}
                                   className="w-6 h-6 rounded flex items-center justify-center text-zinc-400 hover:text-white hover:bg-white/10 text-xs"
                                 >
                                   <Plus className="w-3 h-3" />
@@ -318,7 +351,7 @@ ${formData.notes || 'None'}
                                   {itemTotal.toLocaleString('en-US')}
                                 </span>
                                 <span className="text-[10px] text-zinc-400 ml-1 rtl:ml-0 rtl:mr-1">
-                                  {dict.furniture.card.sar}
+                                  {cardDict.sar}
                                 </span>
                               </div>
                             </div>
@@ -330,21 +363,21 @@ ${formData.notes || 'None'}
                 </div>
 
                 {/* Footer / Summary & Actions */}
-                {items.length > 0 && (
+                {safeItems.length > 0 && (
                   <div className="p-6 border-t border-white/10 bg-[#141721] space-y-4">
                     {/* Financial Calculations */}
                     <div className="space-y-2 text-xs">
                       <div className="flex justify-between text-zinc-400">
-                        <span>{dict.furniture.cart.subtotal}</span>
-                        <span className="font-mono text-zinc-200">{subtotal.toLocaleString('en-US')} {dict.furniture.card.sar}</span>
+                        <span>{cartDict.subtotal}</span>
+                        <span className="font-mono text-zinc-200">{subtotal.toLocaleString('en-US')} {cardDict.sar}</span>
                       </div>
                       <div className="flex justify-between text-zinc-400">
-                        <span>{dict.furniture.cart.vat}</span>
-                        <span className="font-mono text-zinc-200">{vatAmount.toLocaleString('en-US')} {dict.furniture.card.sar}</span>
+                        <span>{cartDict.vat}</span>
+                        <span className="font-mono text-zinc-200">{vatAmount.toLocaleString('en-US')} {cardDict.sar}</span>
                       </div>
                       <div className="flex items-center gap-1.5 text-[11px] text-emerald-400">
                         <Truck className="w-3.5 h-3.5 shrink-0" />
-                        <span>{dict.furniture.cart.delivery_note}</span>
+                        <span>{cartDict.delivery_note}</span>
                       </div>
                       <div className="pt-2 border-t border-white/10 flex justify-between items-baseline">
                         <span className="font-extrabold text-sm text-white">
@@ -355,7 +388,7 @@ ${formData.notes || 'None'}
                             {grandTotal.toLocaleString('en-US')}
                           </span>
                           <span className="text-xs font-bold text-[#E3C58A] ml-1 rtl:ml-0 rtl:mr-1 uppercase">
-                            {dict.furniture.card.sar}
+                            {cardDict.sar}
                           </span>
                         </div>
                       </div>
@@ -367,7 +400,7 @@ ${formData.notes || 'None'}
                         href={getLocalizedPath('/furniture/checkout')}
                         onClick={() => {
                           try {
-                            localStorage.setItem('wd_furniture_cart', JSON.stringify(items));
+                            localStorage.setItem('wd_furniture_cart', JSON.stringify(safeItems));
                           } catch (e) {}
                           onClose();
                         }}
@@ -436,7 +469,7 @@ ${formData.notes || 'None'}
             >
               <div className="flex items-center justify-between border-b border-white/10 pb-4">
                 <h3 className="text-lg font-bold text-white">
-                  {dict.furniture.checkout_modal.title}
+                  {checkoutModalDict.title}
                 </h3>
                 <button
                   onClick={() => setCheckoutModalOpen(false)}
@@ -452,10 +485,10 @@ ${formData.notes || 'None'}
                     <CheckCircle2 className="w-8 h-8" />
                   </div>
                   <h4 className="text-xl font-bold text-white">
-                    {dict.furniture.checkout_modal.success_title}
+                    {checkoutModalDict.success_title}
                   </h4>
                   <p className="text-xs text-zinc-300 leading-relaxed max-w-sm mx-auto">
-                    {dict.furniture.checkout_modal.success_desc}
+                    {checkoutModalDict.success_desc}
                   </p>
                   <div className="pt-2 flex flex-col sm:flex-row gap-2 justify-center">
                     <button
@@ -483,7 +516,7 @@ ${formData.notes || 'None'}
                   {/* Order Type Toggle */}
                   <div className="space-y-1">
                     <label className="block text-zinc-300 font-semibold">
-                      {dict.furniture.checkout_modal.order_type}
+                      {checkoutModalDict.order_type}
                     </label>
                     <div className="grid grid-cols-2 gap-2">
                       <button
@@ -495,7 +528,7 @@ ${formData.notes || 'None'}
                             : 'bg-white/5 border-white/10 text-zinc-400'
                         }`}
                       >
-                        {dict.furniture.checkout_modal.type_retail}
+                        {checkoutModalDict.type_retail}
                       </button>
                       <button
                         type="button"
@@ -506,7 +539,7 @@ ${formData.notes || 'None'}
                             : 'bg-white/5 border-white/10 text-zinc-400'
                         }`}
                       >
-                        {dict.furniture.checkout_modal.type_b2b}
+                        {checkoutModalDict.type_b2b}
                       </button>
                     </div>
                   </div>
@@ -514,7 +547,7 @@ ${formData.notes || 'None'}
                   {/* Client Full Name */}
                   <div>
                     <label className="block text-zinc-300 font-semibold mb-1">
-                      {dict.furniture.checkout_modal.name} *
+                      {checkoutModalDict.name} *
                     </label>
                     <input
                       type="text"
@@ -530,7 +563,7 @@ ${formData.notes || 'None'}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
                       <label className="block text-zinc-300 font-semibold mb-1">
-                        {dict.furniture.checkout_modal.email} *
+                        {checkoutModalDict.email} *
                       </label>
                       <input
                         type="email"
@@ -543,7 +576,7 @@ ${formData.notes || 'None'}
                     </div>
                     <div>
                       <label className="block text-zinc-300 font-semibold mb-1">
-                        {dict.furniture.checkout_modal.phone} *
+                        {checkoutModalDict.phone} *
                       </label>
                       <input
                         type="tel"
@@ -560,7 +593,7 @@ ${formData.notes || 'None'}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
                       <label className="block text-zinc-300 font-semibold mb-1">
-                        {dict.furniture.checkout_modal.city} *
+                        {checkoutModalDict.city} *
                       </label>
                       <select
                         value={formData.city}
@@ -596,7 +629,7 @@ ${formData.notes || 'None'}
                   {/* Notes / Special Requests */}
                   <div>
                     <label className="block text-zinc-300 font-semibold mb-1">
-                      {dict.furniture.checkout_modal.notes}
+                      {checkoutModalDict.notes}
                     </label>
                     <textarea
                       rows={2}
@@ -616,7 +649,7 @@ ${formData.notes || 'None'}
                     >
                       <Send className="w-4 h-4 rtl:-scale-x-100" />
                       <span>
-                        {submitting ? dict.furniture.checkout_modal.submitting : dict.furniture.checkout_modal.submit_btn}
+                        {submitting ? checkoutModalDict.submitting : checkoutModalDict.submit_btn}
                       </span>
                     </button>
                   </div>

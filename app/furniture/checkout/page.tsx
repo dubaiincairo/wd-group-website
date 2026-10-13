@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '@/context/LanguageContext';
-import { FurnitureItem, FURNITURE_CATALOG } from '@/lib/furnitureData';
+import { FurnitureItem, FURNITURE_CATALOG, normalizeCartItem } from '@/lib/furnitureData';
 import OfficialTaxInvoiceModal from '@/components/furniture/OfficialTaxInvoiceModal';
 import { 
   ShoppingBag, 
@@ -82,9 +82,12 @@ function FurnitureCheckoutContent() {
       if (saved) {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          setCartItems(parsed);
-          setLoaded(true);
-          return;
+          const normalized = parsed.map(normalizeCartItem).filter(Boolean) as CartItemState[];
+          if (normalized.length > 0) {
+            setCartItems(normalized);
+            setLoaded(true);
+            return;
+          }
         }
       }
     } catch (e) {
@@ -92,13 +95,15 @@ function FurnitureCheckoutContent() {
     }
     // Fallback: Default to signature piece for instant checkout experience
     const defaultItem = FURNITURE_CATALOG[0];
-    setCartItems([
-      {
-        product: defaultItem,
-        selectedFinishId: defaultItem.finishes[0].id,
-        quantity: 1,
-      },
-    ]);
+    if (defaultItem) {
+      setCartItems([
+        {
+          product: defaultItem,
+          selectedFinishId: defaultItem.finishes[0]?.id || 'default',
+          quantity: 1,
+        },
+      ]);
+    }
     setLoaded(true);
   }, []);
 
@@ -178,6 +183,7 @@ function FurnitureCheckoutContent() {
 
   // Promo Code State
   const [promoCode, setPromoCode] = useState('');
+  const [appliedPromo, setAppliedPromo] = useState<string | null>(null);
   const [discountPercent, setDiscountPercent] = useState(0);
   const [promoError, setPromoError] = useState('');
   const [promoSuccess, setPromoSuccess] = useState('');
@@ -252,7 +258,7 @@ function FurnitureCheckoutContent() {
 
   // Cart Totals Calculation
   const subtotal = cartItems.reduce(
-    (sum, item) => sum + item.product.price * item.quantity,
+    (sum, item) => sum + (item.product?.price || 0) * (item.quantity || 1),
     0
   );
   const discountAmount = Math.round(subtotal * (discountPercent / 100));
@@ -270,7 +276,7 @@ function FurnitureCheckoutContent() {
     setCartItems((prev) =>
       prev
         .map((item) => {
-          if (item.product.id === productId && item.selectedFinishId === finishId) {
+          if (item.product?.id === productId && item.selectedFinishId === finishId) {
             const nextQty = item.quantity + delta;
             return nextQty > 0 ? { ...item, quantity: nextQty } : null;
           }
@@ -284,7 +290,7 @@ function FurnitureCheckoutContent() {
   const handleRemoveItem = (productId: string, finishId: string) => {
     setCartItems((prev) =>
       prev.filter(
-        (i) => !(i.product.id === productId && i.selectedFinishId === finishId)
+        (i) => !(i.product?.id === productId && i.selectedFinishId === finishId)
       )
     );
   };
@@ -298,11 +304,15 @@ function FurnitureCheckoutContent() {
 
     if (code === 'WDVIP10' || code === 'WD10') {
       setDiscountPercent(10);
+      setAppliedPromo(code);
       setPromoSuccess(isAr ? 'تم تطبيق خصم 10% لكبار العملاء بنجاح!' : '10% VIP Discount Applied Successfully!');
     } else if (code === 'GREENWOOD5' || code === 'SAUDI2030') {
       setDiscountPercent(5);
+      setAppliedPromo(code);
       setPromoSuccess(isAr ? 'تم تطبيق خصم 5% الخاص بالمصنع!' : '5% Factory Discount Applied Successfully!');
     } else {
+      setAppliedPromo(null);
+      setDiscountPercent(0);
       setPromoError(isAr ? 'كود الخصم غير صالح أو منتهي الصلاحية' : 'Invalid or expired promo code');
     }
   };
@@ -461,18 +471,18 @@ function FurnitureCheckoutContent() {
               year: cardForm.expiry.split('/')[1] || '28',
             },
             items: cartItems.map((i) => {
-              const finishObj = i.product.finishes.find((f) => f.id === i.selectedFinishId);
+              const finishObj = i.product?.finishes?.find((f) => f.id === i.selectedFinishId);
               return {
-                productId: i.product.id,
-                sku: i.product.sku,
-                nameEn: i.product.nameEn,
-                nameAr: i.product.nameAr,
+                productId: i.product?.id || '',
+                sku: i.product?.sku || 'WD-ITEM',
+                nameEn: i.product?.nameEn || '',
+                nameAr: i.product?.nameAr || '',
                 finishId: i.selectedFinishId,
-                finishNameEn: finishObj?.nameEn || i.selectedFinishId,
-                finishNameAr: finishObj?.nameAr || i.selectedFinishId,
-                unitPrice: i.product.price,
-                quantity: i.quantity,
-                image: i.product.images[0] || '',
+                finishNameEn: finishObj?.nameEn || i.selectedFinishId || 'Default',
+                finishNameAr: finishObj?.nameAr || i.selectedFinishId || 'الافتراضي',
+                unitPrice: i.product?.price || 0,
+                quantity: i.quantity || 1,
+                image: i.product?.images?.[0] || '/brand/wd-group-logo-white.png',
               };
             }),
             subtotal,
@@ -545,18 +555,18 @@ function FurnitureCheckoutContent() {
             wallAnchoring,
             installmentsCount: selectedPayment === 'tamara' ? tamaraInstallmentsCount : 4,
             items: cartItems.map((i) => {
-              const finishObj = i.product.finishes.find((f) => f.id === i.selectedFinishId);
+              const finishObj = i.product?.finishes?.find((f) => f.id === i.selectedFinishId);
               return {
-                productId: i.product.id,
-                sku: i.product.sku,
-                nameEn: i.product.nameEn,
-                nameAr: i.product.nameAr,
+                productId: i.product?.id || '',
+                sku: i.product?.sku || 'WD-ITEM',
+                nameEn: i.product?.nameEn || '',
+                nameAr: i.product?.nameAr || '',
                 finishId: i.selectedFinishId,
-                finishNameEn: finishObj?.nameEn || i.selectedFinishId,
-                finishNameAr: finishObj?.nameAr || i.selectedFinishId,
-                unitPrice: i.product.price,
-                quantity: i.quantity,
-                image: i.product.images[0] || '',
+                finishNameEn: finishObj?.nameEn || i.selectedFinishId || 'Default',
+                finishNameAr: finishObj?.nameAr || i.selectedFinishId || 'الافتراضي',
+                unitPrice: i.product?.price || 0,
+                quantity: i.quantity || 1,
+                image: i.product?.images?.[0] || '/brand/wd-group-logo-white.png',
               };
             }),
             subtotal,
@@ -618,23 +628,23 @@ function FurnitureCheckoutContent() {
           _hp_website: deliveryForm._hp_website || undefined,
           orderType: deliveryForm.orderType,
           deliveryDate: selectedDeliveryDate,
-          timeSlot: deliveryForm.timeSlot,
-          whiteGloveAssembly: deliveryForm.whiteGloveAssembly,
-          wallAnchoring: deliveryForm.wallAnchoring,
+          timeSlot: selectedTimeSlot,
+          whiteGloveAssembly,
+          wallAnchoring,
           paymentMethod: selectedPayment,
           items: cartItems.map((i) => {
-            const finishObj = i.product.finishes.find((f) => f.id === i.selectedFinishId);
+            const finishObj = i.product?.finishes?.find((f) => f.id === i.selectedFinishId);
             return {
-              productId: i.product.id,
-              sku: i.product.sku,
-              nameEn: i.product.nameEn,
-              nameAr: i.product.nameAr,
+              productId: i.product?.id || '',
+              sku: i.product?.sku || 'WD-ITEM',
+              nameEn: i.product?.nameEn || '',
+              nameAr: i.product?.nameAr || '',
               finishId: i.selectedFinishId,
-              finishNameEn: finishObj?.nameEn || i.selectedFinishId,
-              finishNameAr: finishObj?.nameAr || i.selectedFinishId,
-              unitPrice: i.product.price,
-              quantity: i.quantity,
-              image: i.product.images[0] || '',
+              finishNameEn: finishObj?.nameEn || i.selectedFinishId || 'Default',
+              finishNameAr: finishObj?.nameAr || i.selectedFinishId || 'الافتراضي',
+              unitPrice: i.product?.price || 0,
+              quantity: i.quantity || 1,
+              image: i.product?.images?.[0] || '/brand/wd-group-logo-white.png',
             };
           }),
           subtotal,
@@ -2208,16 +2218,16 @@ function FurnitureCheckoutContent() {
                     </div>
                   ) : (
                     cartItems.map((item, idx) => {
-                      const finish = item.product.finishes.find((f) => f.id === item.selectedFinishId);
+                      const finish = item.product?.finishes?.find((f) => f.id === item.selectedFinishId);
                       return (
                         <div
-                          key={`${item.product.id}-${item.selectedFinishId}-${idx}`}
+                          key={`${item.product?.id || idx}-${item.selectedFinishId}-${idx}`}
                           className="p-3 rounded-2xl bg-[#141721] border border-white/5 flex gap-3 items-center justify-between"
                         >
                           <div className="relative w-16 h-16 rounded-xl overflow-hidden shrink-0 border border-white/10 bg-black/40">
                             <Image
-                              src={item.product.images[0]}
-                              alt={isAr ? item.product.nameAr : item.product.nameEn}
+                              src={item.product?.images?.[0] || '/brand/wd-group-logo-white.png'}
+                              alt={isAr ? (item.product?.nameAr || '') : (item.product?.nameEn || '')}
                               fill
                               sizes="64px"
                               className="object-cover"
@@ -2227,7 +2237,7 @@ function FurnitureCheckoutContent() {
 
                           <div className="flex-1 min-w-0 space-y-0.5">
                             <h4 className="text-xs font-bold text-white truncate">
-                              {isAr ? item.product.nameAr : item.product.nameEn}
+                              {isAr ? item.product?.nameAr : item.product?.nameEn}
                             </h4>
                             <div className="flex items-center gap-1.5 text-[10px] text-zinc-400">
                               <span
@@ -2237,7 +2247,7 @@ function FurnitureCheckoutContent() {
                               <span>{isAr ? finish?.nameAr : finish?.nameEn}</span>
                             </div>
                             <div className="text-[11px] font-mono text-[#C9A86A]">
-                              {item.product.price.toLocaleString('en-US')} {isAr ? 'ر.س' : 'SAR'}
+                              {(item.product?.price || 0).toLocaleString('en-US')} {isAr ? 'ر.س' : 'SAR'}
                             </div>
                           </div>
 
@@ -2245,7 +2255,7 @@ function FurnitureCheckoutContent() {
                           <div className="flex items-center gap-1.5 bg-black/40 px-2 py-1 rounded-lg border border-white/10 font-mono text-xs">
                             <button
                               type="button"
-                              onClick={() => handleUpdateQty(item.product.id, item.selectedFinishId, -1)}
+                              onClick={() => handleUpdateQty(item.product?.id || '', item.selectedFinishId, -1)}
                               className="text-zinc-400 hover:text-white px-1"
                             >
                               -
@@ -2253,7 +2263,7 @@ function FurnitureCheckoutContent() {
                             <span className="text-white font-bold">{item.quantity}</span>
                             <button
                               type="button"
-                              onClick={() => handleUpdateQty(item.product.id, item.selectedFinishId, 1)}
+                              onClick={() => handleUpdateQty(item.product?.id || '', item.selectedFinishId, 1)}
                               className="text-zinc-400 hover:text-white px-1"
                             >
                               +
@@ -2676,14 +2686,14 @@ function FurnitureCheckoutContent() {
             vatAmount,
             totalAmount: finalTotal,
             items: cartItems.map((i) => {
-              const finishObj = i.product.finishes.find((f) => f.id === i.selectedFinishId);
+              const finishObj = i.product?.finishes?.find((f) => f.id === i.selectedFinishId);
               return {
-                sku: i.product.sku,
-                nameEn: i.product.nameEn,
-                nameAr: i.product.nameAr,
-                finishName: finishObj?.nameEn || i.selectedFinishId,
-                quantity: i.quantity,
-                unitPrice: i.product.price,
+                sku: i.product?.sku || 'WD-ITEM',
+                nameEn: i.product?.nameEn || '',
+                nameAr: i.product?.nameAr || '',
+                finishName: finishObj?.nameEn || i.selectedFinishId || 'Default',
+                quantity: i.quantity || 1,
+                unitPrice: i.product?.price || 0,
               };
             }),
           }}

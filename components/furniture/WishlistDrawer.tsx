@@ -21,7 +21,7 @@ import {
 } from 'lucide-react';
 
 interface WishlistDrawerProps {
-  onAddToCart: (product: FurnitureItem, finishId: string, quantity: number) => void;
+  onAddToCart?: (product: FurnitureItem, finishId: string, quantity: number) => void;
 }
 
 export default function WishlistDrawer({ onAddToCart }: WishlistDrawerProps) {
@@ -52,7 +52,7 @@ export default function WishlistDrawer({ onAddToCart }: WishlistDrawerProps) {
     }
   });
 
-  const totalValue = savedProducts.reduce((sum, item) => sum + item.price, 0);
+  const totalValue = savedProducts.reduce((sum, item) => sum + (item.price || 0), 0);
 
   const handleCreateProjectSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -64,9 +64,23 @@ export default function WishlistDrawer({ onAddToCart }: WishlistDrawerProps) {
   };
 
   const handleMoveAllToCart = () => {
-    savedProducts.forEach((prod) => {
-      onAddToCart(prod, prod.finishes[0].id, 1);
-    });
+    if (onAddToCart) {
+      savedProducts.forEach((prod) => {
+        onAddToCart(prod, prod.finishes?.[0]?.id || 'default', 1);
+      });
+    } else {
+      try {
+        const saved = localStorage.getItem('wd_furniture_cart');
+        const curr = saved ? JSON.parse(saved) : [];
+        const toAdd = savedProducts.map(p => ({
+          product: p,
+          selectedFinishId: p.finishes?.[0]?.id || 'default',
+          quantity: 1
+        }));
+        localStorage.setItem('wd_furniture_cart', JSON.stringify([...curr, ...toAdd]));
+        window.dispatchEvent(new Event('wd_cart_updated'));
+      } catch (e) {}
+    }
     setIsWishlistDrawerOpen(false);
   };
 
@@ -203,8 +217,8 @@ export default function WishlistDrawer({ onAddToCart }: WishlistDrawerProps) {
                     >
                       <div className="relative w-20 h-20 rounded-xl overflow-hidden shrink-0 border border-white/10 bg-black/40">
                         <Image
-                          src={item.images[0]}
-                          alt={isAr ? item.nameAr : item.nameEn}
+                          src={item.images?.[0] || '/brand/wd-group-logo-white.png'}
+                          alt={isAr ? (item.nameAr || '') : (item.nameEn || '')}
                           fill
                           sizes="80px"
                           className="object-cover"
@@ -231,11 +245,22 @@ export default function WishlistDrawer({ onAddToCart }: WishlistDrawerProps) {
 
                         <div className="flex items-center justify-between pt-1">
                           <span className="text-xs font-extrabold text-[#E3C58A] font-mono">
-                            {item.price.toLocaleString('en-US')} {dict.furniture.card.sar}
+                            {(item.price || 0).toLocaleString('en-US')} {dict?.furniture?.card?.sar || (isAr ? 'ر.س' : 'SAR')}
                           </span>
 
                           <button
-                            onClick={() => onAddToCart(item, item.finishes[0].id, 1)}
+                            onClick={() => {
+                              if (onAddToCart) {
+                                onAddToCart(item, item.finishes?.[0]?.id || 'default', 1);
+                              } else {
+                                try {
+                                  const saved = localStorage.getItem('wd_furniture_cart');
+                                  const curr = saved ? JSON.parse(saved) : [];
+                                  localStorage.setItem('wd_furniture_cart', JSON.stringify([...curr, { product: item, selectedFinishId: item.finishes?.[0]?.id || 'default', quantity: 1 }]));
+                                  window.dispatchEvent(new Event('wd_cart_updated'));
+                                } catch (e) {}
+                              }
+                            }}
                             className="px-2.5 py-1 rounded-lg bg-[#C9A86A]/15 hover:bg-[#C9A86A] text-[#C9A86A] hover:text-[#08090C] border border-[#C9A86A]/30 text-[10px] font-bold flex items-center gap-1 transition-all"
                           >
                             <ShoppingBag className="w-3 h-3" />
